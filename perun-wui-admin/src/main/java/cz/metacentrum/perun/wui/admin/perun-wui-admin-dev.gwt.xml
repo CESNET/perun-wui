@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='PerunWuiAdmin'>
+
+	<!-- inherits base wui module  -->
+	<inherits name="cz.metacentrum.perun.wui.admin.perun-wui-admin"/>
+
+	<!--  Support only these browsers for devel -->
+	<set-property name="user.agent" value="gecko1_8"/>
+
+	<!-- enable source maps -->
+	<set-property name="compiler.useSourceMaps" value="true" />
+	<set-configuration-property name="devModeRedirectEnabled" value="true"/>
+
+</module>

@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<!-- PERUN -->
+	<groupId>cz.metacentrum.perun</groupId>
+	<artifactId>wui</artifactId>
+	<version>3.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<!-- PERUN MODULES -->
+	<modules>
+		<module>perun-wui-core</module>
+		<module>perun-wui-admin</module>
+		<module>perun-wui-cabinet</module>
+		<module>perun-wui-registrar</module>
+	</modules>
+
+	<!-- common environmental and version properties-->
+	<properties>
+
+		<!-- USE UTF-8 in whole project -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- by default we build devel version of perun and do tests -->
+		<perun.build.type>devel</perun.build.type>
+		<maven.test.skip>false</maven.test.skip>
+
+		<!-- libraries versions -->
+		<junit.version>4.11</junit.version>
+
+	</properties>
+
+	<!-- DEFAULT MAVEN BUILD SETTINGS
+
+	 - child modules inherits settings (e.g. version, encoding), not plugin usage itself
+	 - to explicitly use one of listed plugins in module just specify groupId and artifactId in it's plugins section for each plugin
+	 - child module can override any setting of plugin by defining value in child module (or it's profile)
+	 - beware, that default action on plugins configurations, executions etc. is MERGE !!
+	 - if merged values are defined in both (parent and child module), than module value if used
+
+	-->
+	<build>
+
+		<!-- by default we build + install artifact in local repository -->
+		<defaultGoal>install</defaultGoal>
+
+		<!-- Common plugin settings is inherited by child modules -->
+		<pluginManagement>
+
+			<plugins>
+
+				<!-- mvn clean - cleans output folder (target) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+
+				<!-- mvn compile - compile as Java 1.7 app in UTF-8 -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.1</version>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+						<verbose>false</verbose>
+						<encoding>UTF-8</encoding>
+					</configuration>
+				</plugin>
+
+				<!-- mvn install - build artifact and install it in local repository (.m2 folder) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+
+
+				<!-- mvn javadoc - creates javadoc from source (we do append spring javadoc if found) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9</version>
+					<configuration>
+						<detectLinks/>
+						<links>
+							<link>http://static.springsource.org/spring/docs/3.0.x/javadoc-api/</link>
+						</links>
+					</configuration>
+				</plugin>
+
+				<!-- mvn source:jar - packages sources -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.2.1</version>
+				</plugin>
+
+				<!-- mvn jar:jar - creates final jar -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+
+				<!-- mvn jar:jar - creates final war -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-war-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+
+				<!-- mvn shade - creates shaded jar (1 jar containing e.g. core + spring) -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-shade-plugin</artifactId>
+					<version>2.1</version>
+				</plugin>
+
+				<!-- plugin used to apply jUnit tests settings in maven and to generate report (target/surefire-reports)-->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.15</version>
+					<configuration>
+						<!-- disable logging for maven's tests / Test in you IDE will log normally -->
+						<argLine>-Dlog4j.configuration=</argLine>
+						<testFailureIgnore>false</testFailureIgnore>
+						<skip>false</skip>
+					</configuration>
+				</plugin>
+
+				<!-- Copy dependencies plug-in -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.8</version>
+				</plugin>
+
+				<!-- Executing plug-in: mvn exec:java -->
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>exec-maven-plugin</artifactId>
+					<version>1.2.1</version>
+				</plugin>
+
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											gwt-maven-plugin
+										</artifactId>
+										<versionRange>
+											[2.6.1,)
+										</versionRange>
+										<goals>
+											<goal>i18n</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-war-plugin
+										</artifactId>
+										<versionRange>
+											[2.4,)
+										</versionRange>
+										<goals>
+											<goal>exploded</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+
+			</plugins>
+
+		</pluginManagement>
+
+	</build>
+
+	<!-- DEFAULT MAVEN DEPENDENCY SETTINGS
+
+	 - child modules inherits settings (e.g. version, scope), not dependency itself
+	 - to explicitly use one of listed dependencies in module just specify groupId and artifactId in it's dependencies section
+	 - child module can override any setting by defining value in child module (or it's profile)
+	 - beware, that default action on dependency configuration is MERGE !!
+	 - if merged values are defined in both (parent and child module), than module value if used
+
+	-->
+	<dependencyManagement>
+		<dependencies>
+
+			<!-- TESTS -->
+
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>${junit.version}</version>
+				<scope>test</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>1.0.0.GA</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>javax.validation</groupId>
+				<artifactId>validation-api</artifactId>
+				<version>1.0.0.GA</version>
+				<classifier>sources</classifier>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- LOGGING -->
+
+			<!-- OTHERS -->
+
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-servlet</artifactId>
+				<version>${gwtVersion}</version>
+				<scope>runtime</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>com.google.gwt</groupId>
+				<artifactId>gwt-user</artifactId>
+				<version>${gwtVersion}</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<!-- GWT Bootstrap 3 -->
+
+			<dependency>
+				<groupId>org.gwtbootstrap3</groupId>
+				<artifactId>gwtbootstrap3</artifactId>
+				<version>0.9-SNAPSHOT</version>
+				<scope>provided</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.gwtbootstrap3</groupId>
+				<artifactId>gwtbootstrap3-extras</artifactId>
+				<version>0.9-SNAPSHOT</version>
+				<scope>provided</scope>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- Perun project info -->
+	<name>perun-wui</name>
+	<description>Web interface for Perun using GWT and Bootstrap3.</description>
+
+	<organization>
+		<name>CESNET, z.s.p.o.</name>
+		<url>http://www.cesnet.cz/</url>
+	</organization>
+
+	<inceptionYear>2014</inceptionYear>
+
+	<url>http://perun.cesnet.cz/web/</url>
+
+	<scm>
+		<connection>scm:git:https://github.com/zlamalp/perun-wui.git</connection>
+		<url>scm:git:https://github.com/zlamalp/perun-wui.git</url>
+		<developerConnection>scm:git:https://github.com/zlamalp/perun-wui.git</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+
+</project>

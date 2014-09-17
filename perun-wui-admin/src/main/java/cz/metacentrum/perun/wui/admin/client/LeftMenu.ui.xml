@@ -1,0 +1,205 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:b='urn:import:org.gwtbootstrap3.client.ui' xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
+             xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui">
+
+	<ui:style>
+		.top { padding: 5px !important; }
+	</ui:style>
+
+	<b.html:Div styleName="{style.top}">
+
+		<b:PanelGroup b:id="accordion" addStyleNames="{style.top}" marginTop="5">
+
+			<!-- PERUN ADMIN MENU -->
+
+			<b:Panel visible="false" ui:field="perunManager">
+				<b:PanelHeader dataToggle="COLLAPSE" dataParent="#accordion" dataTarget="#collapseOne" >
+					<b:Heading size="H4">
+						<b:Icon type="BOLT" fixedWidth="true" />
+						<b.html:Text text="Perun management" />
+					</b:Heading>
+				</b:PanelHeader>
+				<b:PanelCollapse b:id="collapseOne" ui:field="perunManagerMenu">
+					<b:PanelBody addStyleNames="{style.top}">
+
+						<b:NavPills stacked="true" ui:field="menu">
+							<b:AnchorListItem ui:field="perunVos" icon="BUILDING" iconFixedWidth="true">Virtual organizations
+							</b:AnchorListItem>
+							<b:AnchorListItem ui:field="perunFacs" icon="DATABASE" iconFixedWidth="true">Facilities
+							</b:AnchorListItem>
+							<b:AnchorListItem ui:field="perunUsr" icon="USER" iconFixedWidth="true">Users
+							</b:AnchorListItem>
+							<b:AnchorListItem ui:field="perunAttrs" icon="LIGHTBULB_O" iconFixedWidth="true">Attributes
+							</b:AnchorListItem>
+							<b:AnchorListItem ui:field="perunServ" icon="BOLT" iconFixedWidth="true">Services
+							</b:AnchorListItem>
+							<b:AnchorListItem ui:field="perunOwn" icon="BANK" iconFixedWidth="true">Owners
+							</b:AnchorListItem>
+							<b:AnchorListItem ui:field="perunExtsrc" icon="GLOBE" iconFixedWidth="true">External sources
+							</b:AnchorListItem>
+							<b:AnchorListItem ui:field="perunName" icon="CREDIT_CARD" iconFixedWidth="true">Namespaces
+							</b:AnchorListItem>
+							<b:AnchorListItem ui:field="perunSearch" icon="SEARCH" iconFixedWidth="true">Searcher
+							</b:AnchorListItem>
+
+						</b:NavPills>
+
+					</b:PanelBody>
+				</b:PanelCollapse>
+			</b:Panel>
+
+			<!-- VO ADMIN MENU -->
+
+			<b:Panel visible="false" ui:field="voManager">
+				<b:PanelHeader dataToggle="COLLAPSE" dataParent="#accordion" dataTarget="#collapseTwo" >
+					<b:Heading size="H4">
+						<b:Icon type="BUILDING" fixedWidth="true" />
+						<b.html:Text text="VO management" />
+					</b:Heading>
+				</b:PanelHeader>
+				<b:PanelCollapse b:id="collapseTwo" ui:field="voManagerMenu">
+					<b:PanelBody addStyleNames="{style.top}">
+
+						<b:NavPills stacked="true" addStyleNames="{style.top}">
+
+							<b:ListDropDown>
+								<b:AnchorButton dataToggle="DROPDOWN" icon="BUILDING">Select VO
+								</b:AnchorButton>
+								<b:DropDownMenu>
+									<b:AnchorListItem>MetaCentrum</b:AnchorListItem>
+									<b:AnchorListItem>Provoz MetaCentra</b:AnchorListItem>
+									<b:AnchorListItem>CESNET</b:AnchorListItem>
+									<b:AnchorListItem>DU</b:AnchorListItem>
+								</b:DropDownMenu>
+							</b:ListDropDown>
+
+							<b:AnchorListItem icon="DASHBOARD">Overview
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="USER">Members
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="USERS">Groups
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="DATABASE">Resources
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="SIGN_IN">Registrations
+							</b:AnchorListItem>
+
+							<b:Heading size="H5" text="Settings"/>
+
+							<b:AnchorListItem icon="COGS">Settings
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="USER">Managers
+							</b:AnchorListItem>
+
+						</b:NavPills>
+
+					</b:PanelBody>
+				</b:PanelCollapse>
+			</b:Panel>
+
+			<!-- GROUP ADMIN MENU -->
+
+			<b:Panel visible="false" ui:field="groupManager">
+				<b:PanelHeader dataToggle="COLLAPSE" dataParent="#accordion" dataTarget="#collapseThree" >
+					<b:Heading size="H4">
+						<b:Icon type="GROUP" fixedWidth="true" />
+						<b.html:Text text="Group management" />
+					</b:Heading>
+				</b:PanelHeader>
+				<b:PanelCollapse b:id="collapseThree" ui:field="groupManagerMenu">
+					<b:PanelBody addStyleNames="{style.top}">
+
+						<b:NavPills stacked="true" addStyleNames="{style.top}">
+
+							<b:ListDropDown>
+								<b:AnchorButton dataToggle="DROPDOWN" icon="GROUP">Select group
+								</b:AnchorButton>
+								<b:DropDownMenu>
+									<b:AnchorListItem>MetaCentrum</b:AnchorListItem>
+									<b:AnchorListItem>Provoz MetaCentra</b:AnchorListItem>
+									<b:AnchorListItem>CESNET</b:AnchorListItem>
+									<b:AnchorListItem>DU</b:AnchorListItem>
+								</b:DropDownMenu>
+							</b:ListDropDown>
+
+							<b:AnchorListItem icon="DASHBOARD">Overview
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="USER">Members
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="USERS">Sub-groups
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="DATABASE">Resources
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="SIGN_IN">Registrations
+							</b:AnchorListItem>
+
+							<b:Heading size="H5" text="Settings"/>
+
+							<b:AnchorListItem icon="COGS">Settings
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="USER">Managers
+							</b:AnchorListItem>
+
+						</b:NavPills>
+
+					</b:PanelBody>
+				</b:PanelCollapse>
+			</b:Panel>
+
+			<!-- FACILITY ADMIN MENU -->
+
+			<b:Panel visible="false" ui:field="facilityManager">
+				<b:PanelHeader dataToggle="COLLAPSE" dataParent="#accordion" dataTarget="#collapseFour" >
+					<b:Heading size="H4">
+						<b:Icon type="DATABASE" fixedWidth="true" />
+						<b.html:Text text="Facility management" />
+					</b:Heading>
+				</b:PanelHeader>
+				<b:PanelCollapse b:id="collapseFour" ui:field="facilityManagerMenu">
+					<b:PanelBody addStyleNames="{style.top}">
+
+						<b:NavPills stacked="true" addStyleNames="{style.top}">
+
+							<b:ListDropDown>
+								<b:AnchorButton dataToggle="DROPDOWN" icon="DATABASE">Select facility
+								</b:AnchorButton>
+								<b:DropDownMenu>
+									<b:AnchorListItem>MetaCentrum</b:AnchorListItem>
+									<b:AnchorListItem>Provoz MetaCentra</b:AnchorListItem>
+									<b:AnchorListItem>CESNET</b:AnchorListItem>
+									<b:AnchorListItem>DU</b:AnchorListItem>
+								</b:DropDownMenu>
+							</b:ListDropDown>
+
+							<b:AnchorListItem icon="DASHBOARD">Overview
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="DATABASE">Resources
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="USERS">Allowed Groups
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="BOLT">Services
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="BAR_CHART_O">Propagation status
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="INSTITUTION">Owners
+							</b:AnchorListItem>
+
+							<b:Heading size="H5" text="Settings"/>
+
+							<b:AnchorListItem icon="COGS">Settings
+							</b:AnchorListItem>
+							<b:AnchorListItem icon="USER">Managers
+							</b:AnchorListItem>
+
+						</b:NavPills>
+
+					</b:PanelBody>
+				</b:PanelCollapse>
+			</b:Panel>
+
+		</b:PanelGroup>
+
+
+	</b.html:Div>
+
+</ui:UiBinder>

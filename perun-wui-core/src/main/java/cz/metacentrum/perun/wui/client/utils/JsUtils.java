@@ -1,0 +1,250 @@
+package cz.metacentrum.perun.wui.client.utils;
+
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.core.client.JsArrayString;
+
+import java.util.ArrayList;
+
+/**
+ * Class with JavaScript native utilities functions.
+ *
+ * @author Pavel Zlámal <zlamal@cesnet.cz>
+ */
+public class JsUtils {
+
+	/**
+	 * Clone any JavaScriptObject
+	 *
+	 * @param obj object to clone
+	 * @return clone of original object
+	 */
+	public static final native JavaScriptObject clone(JavaScriptObject obj)/*-{
+        return $wnd.jQuery.extend(true, {}, obj);
+    }-*/;
+
+	/**
+	 * Helping method which can be used to access any basic object property.
+	 * Value is returned as String if exists, or as null if not present in object
+	 * or it's value is really null.
+	 *
+	 * @param jso object to get property from
+	 * @param propertyName object property to get
+	 * @return property value
+	 */
+	public static final native String getNativePropertyString(JavaScriptObject jso, String propertyName) /*-{
+        if (!jso[propertyName]) return null;
+        if (typeof jso[propertyName] === 'undefined') return null;
+        if (jso[propertyName] === null) return null;
+        return jso[propertyName];
+    }-*/;
+
+	/**
+	 * Helping method which can be used to access any basic object property.
+	 * Value is returned as "int" if exists, or as null if not present in object
+	 * or it's value is really null.
+	 *
+	 * @param jso object to get property from
+	 * @param propertyName object property to get
+	 * @return property value
+	 */
+	public static final native int getNativePropertyInt(JavaScriptObject jso, String propertyName) /*-{
+        if (!jso[propertyName]) return 0;
+        if (typeof jso[propertyName] === 'undefined') return 0;
+        if (jso[propertyName] === null) return 0;
+        return jso[propertyName];
+    }-*/;
+
+	/**
+	 * Helping method which can be used to access any basic object property.
+	 * Value is returned as boolean if exists, or as FALSE if not present in object
+	 * or it's value is null.
+	 *
+	 * @param jso object to get property from
+	 * @param propertyName object property to get
+	 * @return property value
+	 */
+	public static final native boolean getNativePropertyBoolean(JavaScriptObject jso, String propertyName) /*-{
+        if (!jso[propertyName]) return false;
+        if (typeof jso[propertyName] === 'undefined') return false;
+        if (jso[propertyName] === null) return false;
+        return jso[propertyName];
+    }-*/;
+
+	/**
+	 * Helping method which can be used to access any basic object property.
+	 * Value is returned as float if exists, or as null if not present in object
+	 * or it's value is null.
+	 *
+	 * @param jso object to get property from
+	 * @param propertyName object property to get
+	 * @return property value
+	 */
+	public static final native float getNativePropertyFloat(JavaScriptObject jso, String propertyName) /*-{
+        if (!jso[propertyName]) return null;
+        if (typeof jso[propertyName] === 'undefined') return null;
+        if (jso[propertyName] === null) return null;
+        return jso[propertyName];
+    }-*/;
+
+	/**
+	 * Helping method which can be used to access any basic object property.
+	 * Value is returned as double if exists, or as null if not present in object
+	 * or it's value is null.
+	 *
+	 * @param jso object to get property from
+	 * @param propertyName object property to get
+	 * @return property value
+	 */
+	public static final native double getNativePropertyDouble(JavaScriptObject jso, String propertyName) /*-{
+        if (!jso[propertyName]) return null;
+        if (typeof jso[propertyName] === 'undefined') return null;
+        if (jso[propertyName] === null) return null;
+        return jso[propertyName];
+    }-*/;
+
+	/**
+	 * Helping method which can be used to access any basic object property.
+	 *
+	 * Value is returned as JavaScriptObject if exists, or as null if not present in object
+	 * or it's value is really null. If property is not (typeof === 'object') then null is returned.
+	 *
+	 * @param jso object to get property from
+	 * @param propertyName object property to get
+	 * @return property value
+	 */
+	public static final native JavaScriptObject getNativePropertyObject(JavaScriptObject jso, String propertyName) /*-{
+        if (!jso[propertyName]) return null;
+        if (typeof jso[propertyName] === 'undefined') return null;
+        if (jso[propertyName] === null) return null;
+        if (typeof jso[propertyName] !== 'object') return null;
+        return jso[propertyName];
+    }-*/;
+
+	/**
+	 * Helping method which can be used to access any basic object property.
+	 *
+	 * Value is returned as JsArray<T> if exists, or as null if not present in object
+	 * or it's value is really null. If property is not (typeof === 'array') then null is returned.
+	 *
+	 * @param jso object to get property from
+	 * @param propertyName object property to get
+	 * @return property value
+	 */
+	public static final native <T extends JavaScriptObject> JsArray<T> getNativePropertyArray(JavaScriptObject jso, String propertyName) /*-{
+        if (!jso[propertyName]) return null;
+        if (typeof jso[propertyName] === 'undefined') return null;
+        if (jso[propertyName] === null) return null;
+        if (jso[propertyName].constructor.toString().indexOf("Array") == -1) return null;
+        return jso[propertyName];
+    }-*/;
+
+	/**
+	 * Helping method which can be used to access any basic object property.
+	 *
+	 * Value is returned as JsArrayString if exists, or as null if not present in object
+	 * or it's value is really null. If property is not (typeof === 'array') then null is returned.
+	 *
+	 * @param jso object to get property from
+	 * @param propertyName object property to get
+	 * @return property value
+	 */
+	public static final native JsArrayString getNativePropertyArrayString(JavaScriptObject jso, String propertyName) /*-{
+		if (!jso[propertyName]) return null;
+		if (typeof jso[propertyName] === 'undefined') return null;
+		if (jso[propertyName] === null) return null;
+		if (jso[propertyName].constructor.toString().indexOf("Array") == -1) return null;
+		return jso[propertyName];
+	}-*/;
+
+	/**
+	 * Check if String input can be parsed as Integer
+	 *
+	 * @param value String input from some text box
+	 * @return true if input is number (integer), false otherwise
+	 */
+	public static final native boolean checkParseInt(String value)/*-{
+        // true on any number format, false otherwise
+        if (!isNaN(parseFloat(value)) && isFinite(value)) {
+            return true;
+        } else {
+            return false;
+        }
+    }-*/;
+
+	/**
+	 * Returns true if the JS object is an array
+	 *
+	 * @param jso javscript object to check
+	 * @return TRUE if JS object is an array / FALSE otherwise
+	 */
+	public static final native boolean isJsArray(JavaScriptObject jso) /*-{
+        return !(jso.constructor.toString().indexOf("Array") == -1);
+    }-*/;
+
+	/**
+	 * Returns JS Array made from JavaScriptObject
+	 *
+	 * @param jso any javascript object
+	 * @return JSArray<T> array of javascript objects
+	 */
+	public static final native <T extends JavaScriptObject> JsArray<T> jsoAsArray(JavaScriptObject jso) /*-{
+        return jso;
+    }-*/;
+
+	/**
+	 * Returns passed unknown javascript object as ArrayList<T>.
+	 *
+	 * If object is null, then empty list is returned (for code safety reasons)
+	 *
+	 * @param jso Unknown javascript object
+	 * @return ArrayList<T> list of unknown objects
+	 */
+	public static final <T extends JavaScriptObject> ArrayList<T> jsoAsList(JavaScriptObject jso) {
+
+		JsArray<T> arr = jsoAsArray(jso);
+		ArrayList<T> list = new ArrayList<T>();
+
+		// return empty list
+		if (arr == null) return list;
+
+		// fill list with data
+		for (int i = 0; i < arr.length(); i++) {
+			list.add(arr.get(i));
+		}
+
+		return list;
+
+	}
+
+	/**
+	 * Returns passed single object as ArrayList<T> of required type.
+	 *
+	 * @param jso Unknown javascript object
+	 * @return ArrayList<T> list of objects of specified type
+	 */
+	public static final <T extends JavaScriptObject> ArrayList<T> toList(JavaScriptObject jso) {
+
+		ArrayList<T> l = new ArrayList<T>();
+		T object = jso.cast();
+		l.add(object);
+		return l;
+
+	}
+
+	/**
+	 * Returns a Java List from JsArrayString.
+	 *
+	 * @param jsa javascript array of strings
+	 * @return ArrayList<String> list of strings
+	 */
+	public static final ArrayList<String> listFromJsArrayString(JsArrayString jsa) {
+		ArrayList<String> arrayList = new ArrayList<String>();
+		for (int i = 0; i < jsa.length(); i++) {
+			String str = jsa.get(i).toString();
+			arrayList.add(str);
+		}
+		return arrayList;
+	}
+
+}
