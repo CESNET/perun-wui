@@ -3,7 +3,7 @@ Perun WUI
 
 ### Web interface for Perun using GWT and Bootstrap3 ###
 
-This project aims to deliver rich user graphical interface for Perun components. Project uses GWT (Google Web Toolkit), GwtBootstrap3 (GWT wrapper around Bootstrap) and Bootstrap3 itself.
+This project aims to deliver rich user graphical interface for Perun components. Project uses [Google Web Toolkit](http://www.gwtproject.org/), [GwtBootstrap3](https://github.com/gwtbootstrap3/gwtbootstrap3) (GWT wrapper around Bootstrap) and [Bootstrap3](http://getbootstrap.com/) itself.
 
 See http://perun.cesnet.cz/web/ for more details about the base project.
 
