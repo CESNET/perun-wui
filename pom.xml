@@ -278,6 +278,19 @@
 		</dependencies>
 	</dependencyManagement>
 
+	<repositories>
+		<repository>
+			<id>sonatype-nexus-snapshots</id>
+			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+	</repositories>
+
 	<!-- Perun project info -->
 	<name>perun-wui</name>
 	<description>Web interface for Perun using GWT and Bootstrap3.</description>
