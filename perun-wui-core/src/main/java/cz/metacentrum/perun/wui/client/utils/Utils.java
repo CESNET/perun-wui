@@ -174,6 +174,45 @@ public class Utils {
 	}
 
 	/**
+	 * Return list of VO`s short names for which application form should skip CAPTCHA verification.
+	 *
+	 * @return list of VO` short names
+	 */
+	public static ArrayList<String> getVosToSkipCaptchaFor() {
+
+		ArrayList<String> result = new ArrayList<String>();
+		String skip = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "vosToSkipCaptchaFor");
+		if (skip != null) {
+			for (int i = 0; i < skip.split(",").length; i++) {
+				result.add(skip.split(",")[i]);
+			}
+		}
+
+		return result;
+
+	}
+
+	/**
+	 * Return list of unix group name namespaces in which is allowed to set preferences in group names.
+	 *
+	 * Used to set attribute: urn:perun:user:attribute-def:def:preferredUnixGroupName-namespace:[namespace]
+	 *
+	 * @return list of supported namespaces
+	 */
+	public static ArrayList<String> getNamespacesForPreferredGroupNames() {
+
+		ArrayList<String> result = new ArrayList<String>();
+		String skip = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "namespacesForPreferredGroupNames");
+		if (skip != null) {
+			for (int i = 0; i < skip.split(",").length; i++) {
+				result.add(skip.split(",")[i]);
+			}
+		}
+		return result;
+
+	}
+
+	/**
 	 * Returns public key part of Re-Captcha widgetsWrapper (by GOOGLE)
 	 * which is used for anonymous access to application form.
 	 * <p/>
