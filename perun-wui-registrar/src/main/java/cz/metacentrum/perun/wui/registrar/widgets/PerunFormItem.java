@@ -9,6 +9,7 @@ import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Widget;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
@@ -26,7 +27,10 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
+import org.gwtbootstrap3.extras.select.client.ui.Option;
+import org.gwtbootstrap3.extras.select.client.ui.Select;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -287,122 +291,126 @@ public class PerunFormItem extends FormGroup {
 			if (!getValue().equalsIgnoreCase("")) {
 				// item was prefilled
 				setDefaultInputChecker();
-			}
+				box.setEnabled(false);
 
-			validator = new PerunFormItemValidator() {
+			} else {
 
-				private boolean processing = false;
-				private boolean valid = true;
-				private Map<String, Boolean> validMap = new HashMap<String, Boolean>();
-				String loginNamespace = item.getFormItem().getPerunAttribute().substring(PERUN_ATTRIBUTE_LOGIN_NAMESPACE_POSITION);
+				validator = new PerunFormItemValidator() {
 
-				@Override
-				public boolean validate(boolean forceNew) {
+					private boolean processing = false;
+					private boolean valid = true;
+					private Map<String, Boolean> validMap = new HashMap<String, Boolean>();
+					String loginNamespace = item.getFormItem().getPerunAttribute().substring(PERUN_ATTRIBUTE_LOGIN_NAMESPACE_POSITION);
 
-					// use value of previous check
-					if (!forceNew) return valid;
+					@Override
+					public boolean validate(boolean forceNew) {
 
-					valid = true;
+						// use value of previous check
+						if (!forceNew) return valid;
 
-					// CHECK IF IS EMPTY (ONLY FOR REQUIRED)
-					if (isRequired()) {
-						valid = !getValue().isEmpty();
+						valid = true;
+
+						// CHECK IF IS EMPTY (ONLY FOR REQUIRED)
+						if (isRequired()) {
+							valid = !getValue().isEmpty();
+							if (!valid) {
+								// TODO - lang selection
+								setValidationState(ValidationState.ERROR, "Value can't be empty !");
+								// hard error
+								return valid;
+							}
+						}
+
+						// CHECK MAX-LENGTH
+						valid = checkMaxLength();
 						if (!valid) {
 							// TODO - lang selection
-							setValidationState(ValidationState.ERROR, "Value can't be empty !");
+							setValidationState(ValidationState.ERROR, "Value is too long !");
 							// hard error
 							return valid;
 						}
-					}
 
-					// CHECK MAX-LENGTH
-					valid = checkMaxLength();
-					if (!valid) {
-						// TODO - lang selection
-						setValidationState(ValidationState.ERROR, "Value is too long !");
-						// hard error
-						return valid;
-					}
-
-					// CHECK NATIVE REGEX VALUE
-					valid = checkRegex(Utils.LOGIN_VALUE_MATCHER);
-					if (!valid) {
-						if (getErrorText().isEmpty()) {
-							// TODO - lang selection
-							setValidationState(ValidationState.ERROR, "Incorrect format !");
-						} else {
-							setValidationState(ValidationState.ERROR);
-						}
-						return valid;
-					}
-
-					// CHECK AVAILABILITY IF NOT CHECKED BEFORE
-					if (validMap.get(getValue()) == null) {
-
-						UsersManager.isLoginAvailable(loginNamespace, getValue(), new JsonEvents() {
-
-							private String login = getValue();
-
-							@Override
-							public void onFinished(JavaScriptObject jso) {
-								// store to map
-								BasicOverlayObject object = jso.cast();
-								validMap.put(login, object.getBoolean());
-								// if value is current
-								if (login.equals(getValue())) {
-									valid = object.getBoolean();
-									processing = false;
-									addon.setIcon(IconType.USER);
-									addon.setIconSpin(false);
-									if (!valid) setValidationState(ValidationState.ERROR, "Login not available !");
-								}
-								// re-done validation
-								validate(true);
-							}
-
-							@Override
-							public void onError(PerunException error) {
-								if (login.equals(getValue())) {
-									valid = false;
-									processing = false;
-									addon.setIcon(IconType.USER);
-									addon.setIconSpin(false);
-									setValidationState(ValidationState.ERROR, "Unable to check login availability !");
-								}
-							}
-
-							@Override
-							public void onLoadingStart() {
-								setValidationState(ValidationState.WARNING, "Checking...");
-								processing = true;
-								addon.setIcon(IconType.SPINNER);
-								addon.setIconSpin(true);
-							}
-
-						});
-
-					} else {
-						processing = false;
-						valid = validMap.get(getValue());
+						// CHECK NATIVE REGEX VALUE
+						valid = checkRegex(Utils.LOGIN_VALUE_MATCHER);
 						if (!valid) {
-							// TODO - language selection
-							setValidationState(ValidationState.ERROR, "Login not available !");
+							if (getErrorText().isEmpty()) {
+								// TODO - lang selection
+								setValidationState(ValidationState.ERROR, "Incorrect format !");
+							} else {
+								setValidationState(ValidationState.ERROR);
+							}
+							return valid;
 						}
-						addon.setIcon(IconType.USER);
-						addon.setIconSpin(false);
+
+						// CHECK AVAILABILITY IF NOT CHECKED BEFORE
+						if (validMap.get(getValue()) == null) {
+
+							UsersManager.isLoginAvailable(loginNamespace, getValue(), new JsonEvents() {
+
+								private String login = getValue();
+
+								@Override
+								public void onFinished(JavaScriptObject jso) {
+									// store to map
+									BasicOverlayObject object = jso.cast();
+									validMap.put(login, object.getBoolean());
+									// if value is current
+									if (login.equals(getValue())) {
+										valid = object.getBoolean();
+										processing = false;
+										addon.setIcon(IconType.USER);
+										addon.setIconSpin(false);
+										if (!valid) setValidationState(ValidationState.ERROR, "Login not available !");
+									}
+									// re-done validation
+									validate(true);
+								}
+
+								@Override
+								public void onError(PerunException error) {
+									if (login.equals(getValue())) {
+										valid = false;
+										processing = false;
+										addon.setIcon(IconType.USER);
+										addon.setIconSpin(false);
+										setValidationState(ValidationState.ERROR, "Unable to check login availability !");
+									}
+								}
+
+								@Override
+								public void onLoadingStart() {
+									setValidationState(ValidationState.WARNING, "Checking...");
+									processing = true;
+									addon.setIcon(IconType.SPINNER);
+									addon.setIconSpin(true);
+								}
+
+							});
+
+						} else {
+							processing = false;
+							valid = validMap.get(getValue());
+							if (!valid) {
+								// TODO - language selection
+								setValidationState(ValidationState.ERROR, "Login not available !");
+							}
+							addon.setIcon(IconType.USER);
+							addon.setIconSpin(false);
+						}
+
+						if (valid && !processing) setValidationState(ValidationState.SUCCESS);
+						return valid && !processing;
+
 					}
 
-					if (valid && !processing) setValidationState(ValidationState.SUCCESS);
-					return valid && !processing;
+					@Override
+					public boolean isProcessing() {
+						return processing;
+					}
 
-				}
+				};
 
-				@Override
-				public boolean isProcessing() {
-					return processing;
-				}
-
-			};
+			}
 
 			widget = box;
 
@@ -529,6 +537,44 @@ public class PerunFormItem extends FormGroup {
 			fw.add(group);
 
 			return fw;
+
+		} else if (ApplicationFormItem.ApplicationFormItemType.SELECTIONBOX.equals(item.getFormItem().getType())) {
+
+			currentValue = new ExtendedTextBox();
+			currentValue.setValue(preFilledValue);
+
+			final ListBox box = new ListBox();
+
+			Map<String,String> opts = parseSelectionBox(item.getFormItem().getItemTexts(lang).getOptions());
+
+			ArrayList<String> keyList = Utils.setToList(opts.keySet());
+
+			int i = 0;
+			for(String key : keyList){
+				boolean selected = getValue().equals(key);
+				box.addItem(opts.get(key), key);
+				box.setItemSelected(i, selected);
+				i++;
+			}
+
+			// when changed, update value
+			box.addChangeHandler(new ChangeHandler() {
+				public void onChange(ChangeEvent event) {
+					String value = box.getValue(box.getSelectedIndex());
+					// fire change event to check for correct input
+					currentValue.setValue(value, true);
+				}
+			});
+
+			if (box.getItemCount() != 0) {
+				// set default value
+				currentValue.setValue(box.getValue(box.getSelectedIndex()));
+			}
+
+			setDefaultInputChecker();
+
+			widget = box;
+			return getFormItemWidget();
 
 		} else if (ApplicationFormItem.ApplicationFormItemType.FROM_FEDERATION_SHOW.equals(item.getFormItem().getType())) {
 
@@ -912,6 +958,42 @@ public class PerunFormItem extends FormGroup {
 			statusText.setVisible(false);
 		}
 
+	}
+
+	/**
+	 * Parses the "options" into MAP
+	 *
+	 * Standard HTML selection box, options are in for each locale in ItemTexts.label separated by | with values separated by #.
+	 * Thus a language selection box would have for English locale the label <code>cs#Czech|en#English</code>.
+	 *
+	 * @param options Source string
+	 * @return Map with key/value pairs of options
+	 */
+	static private Map<String, String> parseSelectionBox(String options){
+
+		Map<String, String> map = new HashMap<String, String>();
+
+		if(options == null || options.length() == 0){
+			return map;
+		}
+
+		String[] keyValue = options.split("\\|");
+
+		for(int i = 0; i < keyValue.length; i++){
+
+			String kv = keyValue[i];
+
+			String[] split = kv.split("#", 2);
+
+			if(split.length != 2){
+				continue;
+			}
+
+			String key = split[0];
+			String value = split[1];
+			map.put(key, value);
+		}
+		return map;
 	}
 
 	/**
