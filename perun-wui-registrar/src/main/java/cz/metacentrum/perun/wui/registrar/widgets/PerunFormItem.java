@@ -1,14 +1,19 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
+import com.google.gwt.dom.client.NativeEvent;
+import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.ui.HTML;
-import com.google.gwt.user.client.ui.Widget;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.ui.*;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -22,6 +27,7 @@ import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextArea;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.CheckBox;
 import org.gwtbootstrap3.client.ui.base.ValueBoxBase;
 import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
@@ -155,6 +161,77 @@ public class PerunFormItem extends FormGroup {
 			((HTML)widget).setHTML(getLabelOrShortName());
 		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
 			((Legend)widget).setHTML(getLabelOrShortName());
+		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.SELECTIONBOX)) {
+
+			final cz.metacentrum.perun.wui.registrar.widgets.Select select = ((cz.metacentrum.perun.wui.registrar.widgets.Select)getFormItemWidget());
+
+			select.clear();
+
+			Map<String,String> opts = parseSelectionBox(item.getFormItem().getItemTexts(lang).getOptions());
+
+			ArrayList<String> keyList = Utils.setToList(opts.keySet());
+
+			int i = 0;
+			for(String key : keyList){
+				boolean selected = getValue().equals(key);
+				select.addItem(opts.get(key), key);
+				select.setItemSelected(i, selected);
+				i++;
+			}
+
+			if (select.getItemCount() != 0) {
+				// set default value
+				currentValue.setValue(select.getAllSelectedValues().get(0));
+			}
+
+			select.refresh();
+
+		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.CHECKBOX)) {
+
+			((FlowPanel)widget).clear();
+
+			String options = item.getFormItem().getItemTexts(lang).getOptions();
+			Map<String,String> boxContents = parseSelectionBox(options);
+			final Map<CheckBox, String> boxValueMap = new HashMap<CheckBox, String>();
+
+			ArrayList<String> keyList = Utils.setToList(boxContents.keySet());
+
+			for(String key : keyList) {
+
+				final CheckBox checkbox = new CheckBox(boxContents.get(key));
+				// pre-fill
+				for (String s : getValue().split("\\|")) {
+					if (key.trim().equals(s.trim())) {
+						checkbox.setValue(true);
+					}
+				}
+				boxValueMap.put(checkbox, key);
+
+				checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+
+						// rebuild value
+						String value = "";
+						for(Map.Entry<CheckBox, String> innerEntry : boxValueMap.entrySet()) {
+							if (innerEntry.getKey().getValue()) {
+								// put in selected values
+								value += innerEntry.getValue()+"|";
+							}
+						}
+						if (value.length() > 1) {
+							value = value.substring(0, value.length()-1);
+						}
+
+						currentValue.setValue(value, true);
+
+					}
+				});
+
+				((FlowPanel)widget).add(checkbox);
+
+			}
+
 		}
 
 	}
@@ -543,37 +620,81 @@ public class PerunFormItem extends FormGroup {
 			currentValue = new ExtendedTextBox();
 			currentValue.setValue(preFilledValue);
 
-			final ListBox box = new ListBox();
-
-			Map<String,String> opts = parseSelectionBox(item.getFormItem().getItemTexts(lang).getOptions());
-
-			ArrayList<String> keyList = Utils.setToList(opts.keySet());
-
-			int i = 0;
-			for(String key : keyList){
-				boolean selected = getValue().equals(key);
-				box.addItem(opts.get(key), key);
-				box.setItemSelected(i, selected);
-				i++;
-			}
+			final cz.metacentrum.perun.wui.registrar.widgets.Select select = new cz.metacentrum.perun.wui.registrar.widgets.Select();
+			select.setWidth("400px");
+			select.setShowTick(true);
 
 			// when changed, update value
-			box.addChangeHandler(new ChangeHandler() {
+			select.addChangeHandler(new ChangeHandler() {
 				public void onChange(ChangeEvent event) {
-					String value = box.getValue(box.getSelectedIndex());
+					String value = select.getAllSelectedValues().get(0);
 					// fire change event to check for correct input
 					currentValue.setValue(value, true);
+					select.refresh();
 				}
 			});
 
-			if (box.getItemCount() != 0) {
-				// set default value
-				currentValue.setValue(box.getValue(box.getSelectedIndex()));
-			}
-
+			// check on hidden TextBox
+			setDefaultValidationTriggers();
 			setDefaultInputChecker();
 
-			widget = box;
+			widget = select;
+			return getFormItemWidget();
+
+		} else if (ApplicationFormItem.ApplicationFormItemType.CHECKBOX.equals(item.getFormItem().getType())) {
+
+			currentValue = new ExtendedTextBox();
+			currentValue.setValue(preFilledValue);
+
+			String options = item.getFormItem().getItemTexts(lang).getOptions();
+			Map<String,String> boxContents = parseSelectionBox(options);
+			final Map<CheckBox, String> boxValueMap = new HashMap<CheckBox, String>();
+
+			ArrayList<String> keyList = Utils.setToList(boxContents.keySet());
+
+			FlowPanel wrapper = new FlowPanel();
+
+			for(String key : keyList) {
+
+				final CheckBox checkbox = new CheckBox(boxContents.get(key));
+				// pre-fill
+				for (String s : getValue().split("\\|")) {
+					if (key.trim().equals(s.trim())) {
+						checkbox.setValue(true);
+					}
+				}
+				boxValueMap.put(checkbox, key);
+
+				checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+
+						// rebuild value
+						String value = "";
+						for(Map.Entry<CheckBox, String> innerEntry : boxValueMap.entrySet()) {
+							if (innerEntry.getKey().getValue()) {
+								// put in selected values
+								value += innerEntry.getValue()+"|";
+							}
+						}
+						if (value.length() > 1) {
+							value = value.substring(0, value.length()-1);
+						}
+
+						currentValue.setValue(value, true);
+
+					}
+				});
+
+				wrapper.add(checkbox);
+
+			}
+
+			// check on hidden TextBox
+			setDefaultValidationTriggers();
+			setDefaultInputChecker();
+
+			widget = wrapper;
 			return getFormItemWidget();
 
 		} else if (ApplicationFormItem.ApplicationFormItemType.FROM_FEDERATION_SHOW.equals(item.getFormItem().getType())) {
