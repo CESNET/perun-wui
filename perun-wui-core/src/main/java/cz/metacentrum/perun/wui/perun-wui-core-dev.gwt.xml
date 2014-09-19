@@ -8,7 +8,7 @@
 	<set-property name="user.agent" value="gecko1_8"/>
 
 	<!-- enable source maps -->
-	<set-property name="compiler.useSourceMaps" value="true" />
+	<set-property name="compiler.useSourceMaps" value="true"/>
 	<set-configuration-property name="devModeRedirectEnabled" value="true"/>
 
 </module>
