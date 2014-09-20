@@ -232,6 +232,11 @@ public class PerunFormItem extends FormGroup {
 
 			}
 
+		} else if (ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON.equals(item.getFormItem().getType()) ||
+				ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON.equals(item.getFormItem().getType())) {
+
+			((PerunButton)widget).setText(getLabelOrShortName());
+
 		}
 
 	}
@@ -725,6 +730,7 @@ public class PerunFormItem extends FormGroup {
 			final PerunButton button = new PerunButton();
 			button.setIcon(IconType.CHEVRON_RIGHT);
 			button.setIconFixedWidth(true);
+			// TODO - translation
 			button.setTooltipText("Check & submit the form");
 			button.getTooltip().setPlacement(Placement.TOP);
 			button.setType(ButtonType.SUCCESS);
