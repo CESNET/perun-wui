@@ -219,6 +219,12 @@ public class ContentManager extends Div implements PerunContentManager {
 							displayedPage.open();
 							displayedPage.onResize();
 							changePageActive = false;
+
+							// update context by page
+							for (PerunContextListener listener : contextListeners) {
+								listener.setContext(pageToShow.getUrl());
+							}
+
 							break;
 						}
 					}
