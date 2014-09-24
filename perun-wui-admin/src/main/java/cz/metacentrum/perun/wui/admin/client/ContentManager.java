@@ -2,13 +2,17 @@ package cz.metacentrum.perun.wui.admin.client;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.History;
+import cz.metacentrum.perun.wui.client.resources.PerunContentManager;
 import cz.metacentrum.perun.wui.client.resources.PerunContextListener;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.pages.NotAuthorizedPage;
 import cz.metacentrum.perun.wui.pages.NotFoundPage;
 import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.admin.pages.perunManagement.VosManagementPage;
+import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.html.Div;
+
+import java.util.ArrayList;
 
 /**
  * Class for content management (displaying pages) based on URLs
@@ -16,7 +20,7 @@ import org.gwtbootstrap3.client.ui.html.Div;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class ContentManager extends Div {
+public class ContentManager extends Div implements PerunContentManager {
 
 	private NotFoundPage notFoundPage = new NotFoundPage();
 	private NotAuthorizedPage notAuthorizedPage = new NotAuthorizedPage();
@@ -26,6 +30,9 @@ public class ContentManager extends Div {
 	private PerunContextListener[] contextListeners = new PerunContextListener[1];
 
 	private String lastContext = "";
+
+	private ArrayList<Page> history = new ArrayList<Page>();
+	private static boolean changePageActive = false;
 
 	/**
 	 * Create instance of content manager, which handle all actions related to changing the page.
@@ -46,11 +53,13 @@ public class ContentManager extends Div {
 	 *
 	 * After page resolution, openPage(Page page) method is called to actually change the content.
 	 *
-	 * @param context history tag in URL (after #)
+	 * @param sourceContext history tag in URL (after #)
 	 */
-	public void openPage(String context) {
+	public void openPage(final String sourceContext) {
 
-		if (context == null || context.isEmpty()) {
+		String context = sourceContext;
+
+		if (sourceContext == null || sourceContext.isEmpty()) {
 
 			if (PerunSession.getInstance().isPerunAdmin()) {
 				context = "perun";
@@ -66,85 +75,101 @@ public class ContentManager extends Div {
 
 		}
 
+		final String finalContext = context;
 
-		if ("perun".equals(context.split("/")[0])) {
+		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+			@Override
+			public boolean execute() {
 
-			if (context.split("/").length > 1) {
+				if (changePageActive) return true;
 
-				if ("vos".equals(context.split("/")[1])) {
+				changePageActive = true;
 
-					openPage(new VosManagementPage());
+				if ("perun".equals(finalContext.split("/")[0])) {
+
+					if (finalContext.split("/").length > 1) {
+
+						if ("vos".equals(finalContext.split("/")[1])) {
+
+							openPage(new VosManagementPage(), true);
+
+						} else {
+
+							// not found
+							openPage(notFoundPage, true);
+
+						}
+
+					} else {
+
+						// open default perun admin page
+						changePageActive = false;
+						History.newItem("perun/vos");
+						return false;
+
+					}
+
+				} else if ("vo".equals(finalContext.split("/")[0])) {
+
+					// TODO
+
+					if (finalContext.split("/").length > 1) {
+
+						if ("select".equals(finalContext.split("/")[1])) {
+
+							//openPage(new VosManagementPage());
+
+						} else {
+
+							// not found
+							openPage(notFoundPage, true);
+
+						}
+
+					} else {
+
+						// open default perun admin page
+						changePageActive = false;
+						History.newItem("vo/select");
+						return false;
+
+					}
+
+				} else if ("group".equals(finalContext.split("/")[0])) {
+
+					// TODO
+
+					openPage(notFoundPage, true);
+
+				} else if ("facility".equals(finalContext.split("/")[0])) {
+
+					// TODO
+
+					openPage(notFoundPage, true);
+
+				} else if ("notfound".equals(finalContext.split("/")[0])) {
+
+					openPage(notFoundPage, true);
+
+				} else if ("notauthorized".equals(finalContext.split("/")[0])) {
+
+					openPage(notAuthorizedPage, true);
+
+				} else if ("settings".equals(finalContext.split("/")[0])) {
+
+				} else if ("logout".equals(finalContext.split("/")[0])) {
 
 				} else {
 
-					// not found
-					openPage(notFoundPage);
+					// unknown page - redirect to notfound
+					openPage(notFoundPage, true);
 
 				}
 
-			} else {
-
-				// open default perun admin page
-				History.newItem("perun/vos");
-				return;
+				return false;
 
 			}
-
-		} else if ("vo".equals(context.split("/")[0])) {
-
-			// TODO
-
-			if (context.split("/").length > 1) {
-
-				if ("select".equals(context.split("/")[1])) {
-
-					//openPage(new VosManagementPage());
-
-				} else {
-
-					// not found
-					openPage(notFoundPage);
-
-				}
-
-			} else {
-
-				// open default perun admin page
-				History.newItem("vo/select");
-				return;
-
-			}
-
-		} else if ("group".equals(context.split("/")[0])) {
-
-			// TODO
-
-			openPage(notFoundPage);
-
-		} else if ("facility".equals(context.split("/")[0])) {
-
-			// TODO
-
-			openPage(notFoundPage);
-
-		} else if ("notfound".equals(context.split("/")[0])) {
-
-			openPage(notFoundPage);
-
-		} else if ("notauthorized".equals(context.split("/")[0])) {
-
-			openPage(notAuthorizedPage);
-
-		} else if ("settings".equals(context.split("/")[0])) {
-
-		} else if ("logout".equals(context.split("/")[0])) {
-
-		} else {
-
-			// unknown page - redirect to notfound
-			openPage(notFoundPage);
-
-		}
+		}, 200);
 
 	}
 
@@ -154,57 +179,112 @@ public class ContentManager extends Div {
 	 * @param page page to open
 	 */
 	public void openPage(final Page page) {
+		openPage(page, false);
+	}
+
+	/**
+	 * Open passed page if it's prepared and user is authorized. Then context is updated to menu.
+	 *
+	 * @param pageToShow page to open
+	 * @param force force opening even when "page change" is active now.
+	 */
+	public void openPage(final Page pageToShow, final boolean force) {
 
 		// FIXME & TODO - get/store page from history
 		// TODO - handle also context to be passed to open() method
 
+		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+			@Override
+			public boolean execute() {
 
-		if (displayedPage != null && displayedPage.equals(page)) {
+				if (changePageActive && !force) return true;
 
-			page.open();
-			page.onResize();
+				changePageActive = true;
 
-		} else {
+				// if already displayed
+				if (displayedPage != null && displayedPage.equals(pageToShow)) {
 
-			if (page.isAuthorized()) {
+					displayedPage.open();
+					displayedPage.onResize();
+					changePageActive = false;
 
-				// display page when all data all loaded (check every 200ms)
-				Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
-					@Override
-					public boolean execute() {
+				} else if (history.contains(pageToShow)) {
 
-						// wait for loading data
-						if (!page.isPrepared()) return true;
-
-						// data loaded
-						displayedPage = page;
-						contentManager.clear();
-						contentManager.add(page.draw());
-						page.open();
-						page.onResize();
-
-						// update context by page
-						for (PerunContextListener listener : contextListeners) {
-							listener.setContext(page.getUrl());
+					// get page from history if possible
+					for (Page p : history) {
+						if (p.equals(pageToShow)) {
+							contentManager.clear();
+							displayedPage = p;
+							contentManager.add(displayedPage.getWidget());
+							displayedPage.open();
+							displayedPage.onResize();
+							changePageActive = false;
+							break;
 						}
+					}
 
-						return false;
+				} else {
+
+					if (pageToShow.isAuthorized()) {
+
+						// display page when all data all loaded (check every 200ms)
+						Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+
+							boolean firstRun = true;
+
+							@Override
+							public boolean execute() {
+
+								// wait for loading data
+								if (!pageToShow.isPrepared()) {
+									if (firstRun) {
+										PerunLoader loader = new PerunLoader();
+										contentManager.clear();
+										contentManager.add(loader);
+										loader.onLoading();
+										firstRun = false;
+									}
+									return true;
+								}
+
+								// data loaded
+								displayedPage = pageToShow;
+								contentManager.clear();
+								contentManager.add(pageToShow.draw());
+								displayedPage.open();
+								displayedPage.onResize();
+
+								// update context by page
+								for (PerunContextListener listener : contextListeners) {
+									listener.setContext(pageToShow.getUrl());
+								}
+
+								history.add(pageToShow);
+								changePageActive = false;
+
+								return false;
+
+							}
+						}, 200);
+
+					} else {
+
+						// not authorized to view page
+						displayedPage = notAuthorizedPage;
+						contentManager.clear();
+						contentManager.add(displayedPage.draw());
+						displayedPage.open();
+						displayedPage.onResize();
+						changePageActive = false;
 
 					}
-				}, 200);
 
-			} else {
+				}
 
-				// not authorized to view page
-				this.displayedPage = notAuthorizedPage;
-				this.clear();
-				this.add(displayedPage.draw());
-				displayedPage.open();
-				displayedPage.onResize();
+				return false;
 
 			}
-
-		}
+		}, 200);
 
 	}
 

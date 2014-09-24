@@ -6,6 +6,8 @@ import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.FieldSet;
+import org.gwtbootstrap3.extras.growl.client.ui.Growl;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 import java.util.ArrayList;
 
@@ -161,6 +163,7 @@ public class PerunForm extends FieldSet {
 				} else {
 
 					// TODO - SUBMIT THE FORM
+					Growl.growl("Form submitted", GrowlType.SUCCESS);
 					return false;
 
 				}

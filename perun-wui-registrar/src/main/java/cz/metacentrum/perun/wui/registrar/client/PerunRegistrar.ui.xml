@@ -7,30 +7,34 @@
 
 	</ui:style>
 
-		<b:Container fluid="true">
-				<b:Column size="MD_12" ui:field="content">
-				</b:Column>
+	<b:Container fluid="true">
 
-			<!--
+		<b:Navbar position="FIXED_TOP">
+			<b:NavbarHeader>
+				<b:NavbarBrand>Perun registrar</b:NavbarBrand>
+				<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
+			</b:NavbarHeader>
 
-				<b:Column size="MD_3" pull="MD_9">
-					<b:Panel>
-						<b:PanelHeader>
-							<b:Heading size="H4">
-								<b:Icon type="SIGN_IN" fixedWidth="true" />
-								<b.html:Text text="Menu" />
-							</b:Heading>
-						</b:PanelHeader>
-						<b:PanelBody>
-							<b:NavPills stacked="true">
-								<b:AnchorListItem active="true" icon="BOOKMARK" iconFixedWidth="true">Registration form</b:AnchorListItem>
-								<b:AnchorListItem icon="BOOK" iconFixedWidth="true">Submitted applications</b:AnchorListItem>
-								<b:AnchorListItem icon="SIGN_OUT" iconFixedWidth="true">Logout</b:AnchorListItem>
-							</b:NavPills>
-						</b:PanelBody>
-					</b:Panel>
-				</b:Column>
-				-->
-		</b:Container>
+			<b:NavbarCollapse b:id="navbar-collapse">
+				<b:NavbarNav>
+					<b:AnchorListItem icon="FILE_O" ui:field="application">Registration form</b:AnchorListItem>
+					<b:AnchorListItem icon="COPY" ui:field="myApplications">My registrations</b:AnchorListItem>
+					<b:AnchorListItem icon="QUESTION_CIRCLE" ui:field="help">Help</b:AnchorListItem>
+					<b:ListDropDown>
+						<b:AnchorButton icon="FLAG" dataToggle="DROPDOWN" ui:field="language">Language</b:AnchorButton>
+						<b:DropDownMenu>
+							<b:AnchorListItem ui:field="english" iconPosition="RIGHT">English</b:AnchorListItem>
+							<b:AnchorListItem ui:field="czech" iconPosition="RIGHT">Czech</b:AnchorListItem>
+						</b:DropDownMenu>
+					</b:ListDropDown>
+					<b:AnchorListItem icon="SIGN_OUT" ui:field="logout">Logout</b:AnchorListItem>
+				</b:NavbarNav>
+			</b:NavbarCollapse>
+		</b:Navbar>
+
+		<b:Column size="MD_12" ui:field="content">
+		</b:Column>
+
+	</b:Container>
 
 </ui:UiBinder>

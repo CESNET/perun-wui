@@ -48,6 +48,11 @@ public class NotAuthorizedPage extends Page {
 	}
 
 	@Override
+	public Widget getWidget() {
+		return rootElement;
+	}
+
+	@Override
 	public void open() {
 
 	}

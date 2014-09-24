@@ -4,18 +4,18 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.resources.PerunWuiCss;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
@@ -23,9 +23,15 @@ import cz.metacentrum.perun.wui.json.managers.PerunManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
+import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.registrar.pages.FormPage;
+import cz.metacentrum.perun.wui.registrar.pages.TranslatablePage;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import org.gwtbootstrap3.client.ui.AnchorButton;
+import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Column;
+import org.gwtbootstrap3.client.ui.constants.IconPosition;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 
 /**
  * Entry point class of Registrar wui. Handles URL changes, sets context and open pages based on that change.
@@ -45,6 +51,74 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String> {
 	private static PerunLoader loader = new PerunLoader();
 	private PerunRegistrar gui = this;
 	public static String LOCALE = getLang();
+
+	private Page activePage = null;
+
+	@UiField
+	AnchorButton language;
+
+	@UiField
+	AnchorListItem czech;
+
+	@UiField
+	AnchorListItem english;
+
+	@UiField
+	AnchorListItem application;
+
+	@UiField
+	AnchorListItem myApplications;
+
+	@UiField
+	AnchorListItem help;
+
+	@UiField
+	AnchorListItem logout;
+
+	@UiHandler(value="czech")
+	public void czechClick(ClickEvent event) {
+		LOCALE = "cs";
+		setLocale();
+	}
+
+	@UiHandler(value="english")
+	public void englishClick(ClickEvent event) {
+		LOCALE = "en";
+		setLocale();
+	}
+
+	public void setLocale() {
+
+		if (LOCALE.equals("cs")) {
+			if (activePage != null) {
+				((TranslatablePage) activePage).setLanguage("cs");
+			}
+			application.setText("Refistrační formulář");
+			myApplications.setText("Moje registrace");
+			help.setText("Pomoc");
+			logout.setText("Odhlásit");
+			english.setText("Anglicky");
+			english.setIcon(null);
+			czech.setText("Česky");
+			czech.setIcon(IconType.CHECK);
+			language.setText("Jazyk");
+		} else {
+			if (activePage != null) {
+				((TranslatablePage) activePage).setLanguage("en");
+			}
+			application.setText("Registration form");
+			myApplications.setText("My registrations");
+			help.setText("Help");
+			logout.setText("Logout");
+			english.setText("English");
+			english.setIcon(IconType.CHECK);
+			english.setIconPosition(IconPosition.RIGHT);
+			czech.setText("Czech");
+			czech.setIcon(null);
+			language.setText("Language");
+		}
+
+	}
 
 	@Override
 	public void onModuleLoad() {
@@ -86,8 +160,11 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String> {
 
 						// OPEN PAGE BASED ON URL
 						//content.openPage(History.getToken());
+						activePage = new FormPage();
 						content.clear();
-						content.add(new FormPage().draw());
+						content.add(activePage.draw());
+
+						setLocale();
 
 					}
 
@@ -179,19 +256,22 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String> {
 			if (newToken.isEmpty()) {
 				// token was empty anyway - load default
 				//content.openPage(newToken);
+				activePage = new FormPage();
 				content.clear();
-				content.add(new FormPage().draw());
+				content.add(activePage.draw());
 			} else {
 				// token is now correct - load it
 				//content.openPage(newToken);
+				activePage = new FormPage();
 				content.clear();
-				content.add(new FormPage().draw());
+				content.add(activePage.draw());
 			}
 
 		} else {
 			//content.openPage(History.getToken());
+			activePage = new FormPage();
 			content.clear();
-			content.add(new FormPage().draw());
+			content.add(activePage.draw());
 		}
 
 	}

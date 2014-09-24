@@ -43,6 +43,13 @@ public abstract class Page {
 	public abstract Widget draw();
 
 	/**
+	 * Return pages wrapper widget without any action.
+	 *
+	 * @return tab content wrapper
+	 */
+	public abstract Widget getWidget();
+
+	/**
 	 * Perform any necessary action on tab opening,
 	 * like setting focus to search inputs etc.
 	 * <p/>

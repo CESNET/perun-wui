@@ -239,6 +239,11 @@ public class VosManagementPage extends Page {
 	}
 
 	@Override
+	public Widget getWidget() {
+		return rootElement;
+	}
+
+	@Override
 	public void open() {
 
 		textBox.setFocus(true);
@@ -271,7 +276,6 @@ public class VosManagementPage extends Page {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		VosManagementPage other = (VosManagementPage) obj;
 		return true;
 	}
 

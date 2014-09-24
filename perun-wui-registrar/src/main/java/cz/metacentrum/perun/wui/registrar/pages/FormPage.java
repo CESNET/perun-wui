@@ -3,13 +3,9 @@ package cz.metacentrum.perun.wui.registrar.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
@@ -22,10 +18,8 @@ import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.pages.Page;
-import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import org.gwtbootstrap3.client.ui.AnchorListItem;
 
 import java.util.ArrayList;
 
@@ -34,7 +28,7 @@ import java.util.ArrayList;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class FormPage extends Page {
+public class FormPage extends Page implements TranslatablePage {
 
 	interface FormPageUiBinder extends UiBinder<Widget, FormPage> {
 	}
@@ -46,52 +40,6 @@ public class FormPage extends Page {
 
 	@UiField
 	PerunForm form;
-
-	/*
-	@UiField
-	AnchorListItem czech;
-	*/
-
-	@UiField
-	AnchorListItem english;
-
-	@UiField
-	AnchorListItem application;
-
-	@UiField
-	AnchorListItem myApplications;
-
-	@UiField
-	AnchorListItem help;
-
-	@UiField
-	AnchorListItem logout;
-
-	/*
-	@UiHandler(value="czech")
-	public void czechClick(ClickEvent event) {
-		form.setLang("cs");
-	}
-	*/
-
-	@UiHandler(value="english")
-	public void englishClick(ClickEvent event) {
-		if (PerunRegistrar.LOCALE.equals("cs")) {
-			form.setLang("en");
-			application.setText("Registration form");
-			myApplications.setText("My registrations");
-			help.setText("Help");
-			logout.setText("Logout");
-			english.setText("Česky");
-		} else {
-			form.setLang("cs");
-			application.setText("Refistrační formulář");
-			myApplications.setText("Moje registrace");
-			help.setText("Pomoc");
-			logout.setText("Odhlásit");
-			english.setText("English");
-		}
-	}
 
 	private Widget rootElement;
 
@@ -118,8 +66,6 @@ public class FormPage extends Page {
 
 	@Override
 	public Widget draw() {
-
-		englishClick(null);
 
 		final PerunLoader loader = new PerunLoader();
 		form.add(loader);
@@ -221,8 +167,6 @@ public class FormPage extends Page {
 					RegistrarManager.getFormItemsWithValue(vo.getId(), "en", formEvents);
 				}
 
-
-
 			}
 
 			@Override
@@ -248,6 +192,11 @@ public class FormPage extends Page {
 	}
 
 	@Override
+	public Widget getWidget() {
+		return rootElement;
+	}
+
+	@Override
 	public void open() {
 
 	}
@@ -260,6 +209,13 @@ public class FormPage extends Page {
 	@Override
 	public void toggleHelp() {
 
+	}
+
+	@Override
+	public void setLanguage(String lang) {
+		if (form != null && lang != null && !lang.isEmpty()) {
+			form.setLang(lang);
+		}
 	}
 
 }

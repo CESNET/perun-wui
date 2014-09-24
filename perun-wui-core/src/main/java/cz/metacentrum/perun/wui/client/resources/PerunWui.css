@@ -1,7 +1,10 @@
 
-/* Style for PerunLoader */
-
+/* Styles for PerunLoader */
 .GIM-RRTCH, .GIM-RRTCH table {
+	height: 100% !important;
+}
+
+.GBJYVSDH, .GBJYVSDH table {
 	height: 100% !important;
 }
 
