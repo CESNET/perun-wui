@@ -4,9 +4,12 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
+import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.FieldSet;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlPosition;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 import java.util.ArrayList;
@@ -16,23 +19,18 @@ import java.util.ArrayList;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunForm extends FieldSet {
+public class PerunForm extends FieldSet implements Translatable {
 
 	private String lang = PerunRegistrar.LOCALE;
 
 	ArrayList<PerunFormItem> items = new ArrayList<PerunFormItem>();
 
-	public void setLang(String lang) {
+	@Override
+	public void changeLanguage() {
 
-		if (lang != null && !lang.isEmpty()) {
-
-			PerunRegistrar.LOCALE = lang;
-			this.lang = lang;
-
-			for (PerunFormItem item : items) {
-				item.setTexts(lang);
-			}
-
+		lang = PerunRegistrar.LOCALE;
+		for (PerunFormItem item : items) {
+			item.setTexts();
 		}
 
 	}
@@ -163,7 +161,10 @@ public class PerunForm extends FieldSet {
 				} else {
 
 					// TODO - SUBMIT THE FORM
-					Growl.growl("Form submitted", GrowlType.SUCCESS);
+					GrowlOptions go = new GrowlOptions();
+					go.setPosition(GrowlPosition.TOP_CENTER);
+					go.setType(GrowlType.SUCCESS);
+					Growl.growl("Form submitted !!", go);
 					return false;
 
 				}

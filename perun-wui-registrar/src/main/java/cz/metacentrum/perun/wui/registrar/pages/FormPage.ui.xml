@@ -6,12 +6,11 @@
 		>
 
 	<ui:style>
-		.top { padding-top: 60px; }
 	</ui:style>
 
 	<b.html:Div>
 
-		<b:Form type="HORIZONTAL" addStyleNames="{style.top}">
+		<b:Form type="HORIZONTAL">
 			<p:PerunForm ui:field="form">
 
 			</p:PerunForm>

@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
@@ -28,7 +29,7 @@ import java.util.ArrayList;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class FormPage extends Page implements TranslatablePage {
+public class FormPage extends Page implements Translatable {
 
 	interface FormPageUiBinder extends UiBinder<Widget, FormPage> {
 	}
@@ -212,10 +213,22 @@ public class FormPage extends Page implements TranslatablePage {
 	}
 
 	@Override
-	public void setLanguage(String lang) {
-		if (form != null && lang != null && !lang.isEmpty()) {
-			form.setLang(lang);
+	public void changeLanguage() {
+		if (form != null) {
+			form.changeLanguage();
 		}
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o) return true;
+		if (o == null || getClass() != o.getClass()) return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		return 31;
 	}
 
 }

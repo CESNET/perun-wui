@@ -1,32 +1,30 @@
-package cz.metacentrum.perun.wui.admin.client;
+package cz.metacentrum.perun.wui.registrar.client;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.History;
 import cz.metacentrum.perun.wui.client.resources.PerunContentManager;
 import cz.metacentrum.perun.wui.client.resources.PerunContextListener;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.pages.NotAuthorizedPage;
 import cz.metacentrum.perun.wui.pages.NotFoundPage;
 import cz.metacentrum.perun.wui.pages.Page;
-import cz.metacentrum.perun.wui.admin.pages.perunManagement.VosManagementPage;
+import cz.metacentrum.perun.wui.registrar.pages.FormPage;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.html.Div;
 
 import java.util.ArrayList;
 
 /**
- * Class for content management (displaying pages) based on URLs
- * and passed Page objects.
+ * Class for managing the content of Registrar App.
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class ContentManager extends Div implements PerunContentManager {
+public class RegistrarContentManager extends Div implements PerunContentManager {
 
 	private NotFoundPage notFoundPage = new NotFoundPage();
 	private NotAuthorizedPage notAuthorizedPage = new NotAuthorizedPage();
 
 	private Page displayedPage;
-	private ContentManager contentManager = this;
+	private RegistrarContentManager contentManager = this;
 	private PerunContextListener[] contextListeners = new PerunContextListener[1];
 
 	private String lastContext = "";
@@ -39,7 +37,7 @@ public class ContentManager extends Div implements PerunContentManager {
 	 *
 	 * @param contextListeners classes, which listens to the changes of context
 	 */
-	public ContentManager(PerunContextListener... contextListeners) {
+	public RegistrarContentManager(PerunContextListener... contextListeners) {
 
 		if (contextListeners != null) this.contextListeners = contextListeners;
 
@@ -51,19 +49,9 @@ public class ContentManager extends Div implements PerunContentManager {
 		String context = sourceContext;
 
 		if (sourceContext == null || sourceContext.isEmpty()) {
-
-			if (PerunSession.getInstance().isPerunAdmin()) {
-				context = "perun";
-			} else if (PerunSession.getInstance().isVoAdmin() || PerunSession.getInstance().isVoObserver()) {
-				context = "vo";
-			} else if (PerunSession.getInstance().isFacilityAdmin()) {
-				context = "facility";
-			} else if (PerunSession.getInstance().isGroupAdmin()) {
-				context = "group";
-			}
-
-			// TODO - open overview page if admin of 1 entity. Open select page if admin of more entities.
-
+			context = "form";
+			History.newItem(context);
+			return;
 		}
 
 		final String finalContext = context;
@@ -76,79 +64,22 @@ public class ContentManager extends Div implements PerunContentManager {
 
 				changePageActive = true;
 
-				if ("perun".equals(finalContext.split("/")[0])) {
+				if ("form".equals(finalContext)) {
 
-					if (finalContext.split("/").length > 1) {
+					openPage(new FormPage(), true);
 
-						if ("vos".equals(finalContext.split("/")[1])) {
-
-							openPage(new VosManagementPage(), true);
-
-						} else {
-
-							// not found
-							openPage(notFoundPage, true);
-
-						}
-
-					} else {
-
-						// open default perun admin page
-						changePageActive = false;
-						History.newItem("perun/vos");
-						return false;
-
-					}
-
-				} else if ("vo".equals(finalContext.split("/")[0])) {
-
-					// TODO
-
-					if (finalContext.split("/").length > 1) {
-
-						if ("select".equals(finalContext.split("/")[1])) {
-
-							//openPage(new VosManagementPage());
-
-						} else {
-
-							// not found
-							openPage(notFoundPage, true);
-
-						}
-
-					} else {
-
-						// open default perun admin page
-						changePageActive = false;
-						History.newItem("vo/select");
-						return false;
-
-					}
-
-				} else if ("group".equals(finalContext.split("/")[0])) {
-
-					// TODO
+				} else if ("notfound".equals(finalContext)) {
 
 					openPage(notFoundPage, true);
 
-				} else if ("facility".equals(finalContext.split("/")[0])) {
-
-					// TODO
-
-					openPage(notFoundPage, true);
-
-				} else if ("notfound".equals(finalContext.split("/")[0])) {
-
-					openPage(notFoundPage, true);
-
-				} else if ("notauthorized".equals(finalContext.split("/")[0])) {
+				} else if ("notauthorized".equals(finalContext)) {
 
 					openPage(notAuthorizedPage, true);
 
-				} else if ("settings".equals(finalContext.split("/")[0])) {
+				} else if ("logout".equals(finalContext)) {
 
-				} else if ("logout".equals(finalContext.split("/")[0])) {
+					// todo - remove when page is defined
+					changePageActive = false;
 
 				} else {
 

@@ -10,16 +10,15 @@
 	<b:Container fluid="true">
 
 		<b:Navbar position="FIXED_TOP">
-			<b:NavbarHeader>
-				<b:NavbarBrand>Perun registrar</b:NavbarBrand>
+			<b:NavbarHeader ui:field="navbarHeader">
 				<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
 			</b:NavbarHeader>
 
 			<b:NavbarCollapse b:id="navbar-collapse">
 				<b:NavbarNav>
-					<b:AnchorListItem icon="FILE_O" ui:field="application">Registration form</b:AnchorListItem>
-					<b:AnchorListItem icon="COPY" ui:field="myApplications">My registrations</b:AnchorListItem>
-					<b:AnchorListItem icon="QUESTION_CIRCLE" ui:field="help">Help</b:AnchorListItem>
+					<b:AnchorListItem icon="FILE_O" ui:field="application" targetHistoryToken="form">Registration form</b:AnchorListItem>
+					<b:AnchorListItem icon="COPY" ui:field="myApplications" targetHistoryToken="submitted">My registrations</b:AnchorListItem>
+					<b:AnchorListItem icon="QUESTION_CIRCLE" ui:field="help" targetHistoryToken="help">Help</b:AnchorListItem>
 					<b:ListDropDown>
 						<b:AnchorButton icon="FLAG" dataToggle="DROPDOWN" ui:field="language">Language</b:AnchorButton>
 						<b:DropDownMenu>
@@ -27,12 +26,13 @@
 							<b:AnchorListItem ui:field="czech" iconPosition="RIGHT">Czech</b:AnchorListItem>
 						</b:DropDownMenu>
 					</b:ListDropDown>
-					<b:AnchorListItem icon="SIGN_OUT" ui:field="logout">Logout</b:AnchorListItem>
+					<b:AnchorListItem icon="SIGN_OUT" ui:field="logout" targetHistoryToken="logout">Logout</b:AnchorListItem>
 				</b:NavbarNav>
 			</b:NavbarCollapse>
 		</b:Navbar>
 
-		<b:Column size="MD_12" ui:field="content">
+		<b:Column size="MD_12" marginTop="60">
+			<p.client:RegistrarContentManager ui:field="content" />
 		</b:Column>
 
 	</b:Container>

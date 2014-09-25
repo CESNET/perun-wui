@@ -22,6 +22,8 @@ import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
+import cz.metacentrum.perun.wui.registrar.client.Translations;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextArea;
@@ -55,7 +57,7 @@ public class PerunFormItem extends FormGroup {
 	// form item storage
 	ApplicationFormItemData item;
 	// default is EN
-	private String lang = "en";
+	private String lang = PerunRegistrar.LOCALE;
 	// pre-filled value
 	private String preFilledValue = "";
 	// value box used to handle changes
@@ -91,6 +93,24 @@ public class PerunFormItem extends FormGroup {
 		 * @return TRUE = validation is processing / FALSE = validation is done
 		 */
 		public boolean isProcessing();
+
+		/**
+		 * Translate error messages based on inner return codes.
+		 *
+		 * -1 = no message
+		 * 0 = OK
+		 * 1 = isEmpty
+		 * 2 = isEmptySelect
+		 * 3 = tooLong
+		 * 4 = invalid format
+		 * 5 = invalid format email
+		 * 6 = login not available
+		 * 7 = can't check login
+		 * 9 = checking login...
+		 * 10 = password can't be empty
+		 * 11 = password mismatch
+		 */
+		public void translate();
 
 	}
 
@@ -135,12 +155,10 @@ public class PerunFormItem extends FormGroup {
 
 	/**
 	 * Changes item texts to specified language.
-	 *
-	 * @param lang lang to display text for.
 	 */
-	public void setTexts(String lang) {
+	public void setTexts() {
 
-		this.lang = lang;
+		this.lang = PerunRegistrar.LOCALE;
 
 		if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON) &&
 				!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON)) {
@@ -155,6 +173,8 @@ public class PerunFormItem extends FormGroup {
 		if (item.getFormItem() != null) {
 			helpText.setText(item.getFormItem().getItemTexts(lang).getHelp());
 		}
+
+		if (validator != null) validator.translate();
 
 		// TODO - regenerate other widgets !!
 		if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT)) {
@@ -270,7 +290,7 @@ public class PerunFormItem extends FormGroup {
 			wrapper.add(generateWidget());
 			wrapper.add(statusText);
 			wrapper.add(helpText);
-			setTexts(lang);
+			setTexts();
 
 			formLabel.addStyleName("col-lg-2");
 			wrapper.addStyleName("col-lg-9");
@@ -379,6 +399,7 @@ public class PerunFormItem extends FormGroup {
 
 				validator = new PerunFormItemValidator() {
 
+					private int returnCode = -1;
 					private boolean processing = false;
 					private boolean valid = true;
 					private Map<String, Boolean> validMap = new HashMap<String, Boolean>();
@@ -396,8 +417,8 @@ public class PerunFormItem extends FormGroup {
 						if (isRequired()) {
 							valid = !getValue().isEmpty();
 							if (!valid) {
-								// TODO - lang selection
-								setValidationState(ValidationState.ERROR, "Value can't be empty !");
+								setValidationState(ValidationState.ERROR, Translations.cantBeEmpty());
+								returnCode = 1;
 								// hard error
 								return valid;
 							}
@@ -406,8 +427,8 @@ public class PerunFormItem extends FormGroup {
 						// CHECK MAX-LENGTH
 						valid = checkMaxLength();
 						if (!valid) {
-							// TODO - lang selection
-							setValidationState(ValidationState.ERROR, "Value is too long !");
+							setValidationState(ValidationState.ERROR, Translations.tooLong());
+							returnCode = 3;
 							// hard error
 							return valid;
 						}
@@ -416,8 +437,8 @@ public class PerunFormItem extends FormGroup {
 						valid = checkRegex(Utils.LOGIN_VALUE_MATCHER);
 						if (!valid) {
 							if (getErrorText().isEmpty()) {
-								// TODO - lang selection
-								setValidationState(ValidationState.ERROR, "Incorrect format !");
+								setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+								returnCode = 4;
 							} else {
 								setValidationState(ValidationState.ERROR);
 							}
@@ -442,7 +463,10 @@ public class PerunFormItem extends FormGroup {
 										processing = false;
 										addon.setIcon(IconType.USER);
 										addon.setIconSpin(false);
-										if (!valid) setValidationState(ValidationState.ERROR, "Login not available !");
+										if (!valid) {
+											setValidationState(ValidationState.ERROR, Translations.loginNotAvailable());
+											returnCode = 6;
+										}
 									}
 									// re-done validation
 									validate(true);
@@ -455,13 +479,15 @@ public class PerunFormItem extends FormGroup {
 										processing = false;
 										addon.setIcon(IconType.USER);
 										addon.setIconSpin(false);
-										setValidationState(ValidationState.ERROR, "Unable to check login availability !");
+										setValidationState(ValidationState.ERROR, Translations.checkingLoginFailed());
+										returnCode = 7;
 									}
 								}
 
 								@Override
 								public void onLoadingStart() {
-									setValidationState(ValidationState.WARNING, "Checking...");
+									setValidationState(ValidationState.WARNING, Translations.checkingLogin());
+									returnCode = 9;
 									processing = true;
 									addon.setIcon(IconType.SPINNER);
 									addon.setIconSpin(true);
@@ -473,14 +499,17 @@ public class PerunFormItem extends FormGroup {
 							processing = false;
 							valid = validMap.get(getValue());
 							if (!valid) {
-								// TODO - language selection
-								setValidationState(ValidationState.ERROR, "Login not available !");
+								setValidationState(ValidationState.ERROR, Translations.loginNotAvailable());
+								returnCode = 6;
 							}
 							addon.setIcon(IconType.USER);
 							addon.setIconSpin(false);
 						}
 
-						if (valid && !processing) setValidationState(ValidationState.SUCCESS);
+						if (valid && !processing) {
+							setValidationState(ValidationState.SUCCESS);
+							returnCode = 0;
+						}
 						return valid && !processing;
 
 					}
@@ -488,6 +517,33 @@ public class PerunFormItem extends FormGroup {
 					@Override
 					public boolean isProcessing() {
 						return processing;
+					}
+
+					@Override
+					public void translate() {
+
+						if (returnCode == 0) {
+							setValidationState(ValidationState.SUCCESS);
+						} else if (returnCode == -1) {
+							setValidationState(ValidationState.NONE);
+						} else if (returnCode == 1) {
+							setValidationState(ValidationState.ERROR, Translations.cantBeEmpty());
+						} else if (returnCode == 3) {
+							setValidationState(ValidationState.ERROR, Translations.tooLong());
+						} else if (returnCode == 4) {
+							if (getErrorText().isEmpty()) {
+								setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+							} else {
+								setValidationState(ValidationState.ERROR);
+							}
+						} else if (returnCode == 6) {
+							setValidationState(ValidationState.ERROR, Translations.loginNotAvailable());
+						} else if (returnCode == 7) {
+							setValidationState(ValidationState.ERROR, Translations.checkingLoginFailed());
+						} else if (returnCode == 9) {
+							setValidationState(ValidationState.ERROR, Translations.checkingLogin());
+						}
+
 					}
 
 				};
@@ -523,6 +579,7 @@ public class PerunFormItem extends FormGroup {
 			validator = new PerunFormItemValidator() {
 
 				private boolean valid = true;
+				private int returnCode = -1;
 
 				@Override
 				public boolean validate(boolean forceNew) {
@@ -533,8 +590,8 @@ public class PerunFormItem extends FormGroup {
 
 					valid = box.getValue().equals(box2.getValue());
 					if (!valid) {
-						// TODO - lang selection
-						setValidationState(ValidationState.ERROR, "Passwords doesn't match !");
+						setValidationState(ValidationState.ERROR, Translations.passMismatch());
+						returnCode = 11;
 						// hard error
 						return valid;
 					}
@@ -543,8 +600,8 @@ public class PerunFormItem extends FormGroup {
 					if (isRequired()) {
 						valid = (!box.getValue().isEmpty() && !box2.getValue().isEmpty());
 						if (!valid) {
-							// TODO - lang selection
-							setValidationState(ValidationState.ERROR, "Password can't be empty !");
+							setValidationState(ValidationState.ERROR, Translations.passEmpty());
+							returnCode = 10;
 							// hard error
 							return valid;
 						}
@@ -553,7 +610,8 @@ public class PerunFormItem extends FormGroup {
 					// check max-length
 					if (box.getValue().length() > TEXT_BOX_MAX_LENGTH || box2.getValue().length() > TEXT_BOX_MAX_LENGTH) {
 						valid = false;
-						setValidationState(ValidationState.ERROR, "Value is too long !");
+						setValidationState(ValidationState.ERROR, Translations.tooLong());
+						returnCode = 3;
 						// hard error
 						return valid;
 					}
@@ -567,17 +625,20 @@ public class PerunFormItem extends FormGroup {
 							if(!matchFound){
 								valid = false;
 								if (getErrorText().isEmpty()) {
-									// TODO - lang selection
-									setValidationState(ValidationState.ERROR, "Incorrect format !");
+									setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
 								} else {
 									setValidationState(ValidationState.ERROR);
 								}
+								returnCode = 4;
 								return valid;
 							}
 						}
 					}
 
-					if (valid) setValidationState(ValidationState.SUCCESS);
+					if (valid) {
+						setValidationState(ValidationState.SUCCESS);
+						returnCode = 0;
+					}
 
 					return valid;
 
@@ -586,6 +647,29 @@ public class PerunFormItem extends FormGroup {
 				@Override
 				public boolean isProcessing() {
 					return false;
+				}
+
+				@Override
+				public void translate() {
+
+					if (returnCode == 0) {
+						setValidationState(ValidationState.SUCCESS);
+					} else if (returnCode == -1) {
+						setValidationState(ValidationState.NONE);
+					} else if (returnCode == 10) {
+						setValidationState(ValidationState.ERROR, Translations.passEmpty());
+					} else if (returnCode == 3) {
+						setValidationState(ValidationState.ERROR, Translations.tooLong());
+					} else if (returnCode == 4) {
+						if (getErrorText().isEmpty()) {
+							setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+						} else {
+							setValidationState(ValidationState.ERROR);
+						}
+					} else if (returnCode == 11) {
+						setValidationState(ValidationState.ERROR, Translations.passMismatch());
+					}
+
 				}
 
 			};
@@ -730,8 +814,7 @@ public class PerunFormItem extends FormGroup {
 			final PerunButton button = new PerunButton();
 			button.setIcon(IconType.CHEVRON_RIGHT);
 			button.setIconFixedWidth(true);
-			// TODO - translation
-			button.setTooltipText("Check & submit the form");
+			button.setTooltipText(Translations.checkAndSubmit());
 			button.getTooltip().setPlacement(Placement.TOP);
 			button.setType(ButtonType.SUCCESS);
 			button.setText(getLabelOrShortName());
@@ -782,6 +865,7 @@ public class PerunFormItem extends FormGroup {
 
 			// last check value
 			boolean valid = true;
+			private int returnCode = -1;
 
 			@Override
 			public boolean validate(boolean forceNew) {
@@ -796,8 +880,8 @@ public class PerunFormItem extends FormGroup {
 					if (isRequired()) {
 						// is required = CHECK
 						if (!(Utils.isValidEmail(getValue()) && !getValue().isEmpty())) {
-							// TODO - lang selection
-							setValidationState(ValidationState.ERROR, "Incorrect email address format !");
+							setValidationState(ValidationState.ERROR, Translations.incorrectEmail());
+							returnCode = 5;
 							valid = false;
 							// hard error
 							return valid;
@@ -806,8 +890,8 @@ public class PerunFormItem extends FormGroup {
 						if (!getValue().isEmpty()) {
 							// not required but non empty = CHECK
 							if (!Utils.isValidEmail(getValue())) {
-								// TODO - lang selection
-								setValidationState(ValidationState.ERROR, "Incorrect email address format !");
+								setValidationState(ValidationState.ERROR, Translations.incorrectEmail());
+								returnCode = 5;
 								valid = false;
 								// hard error
 								return valid;
@@ -820,8 +904,16 @@ public class PerunFormItem extends FormGroup {
 				if (isRequired()) {
 					valid = !getValue().isEmpty();
 					if (!valid) {
-						// TODO - lang selection
-						setValidationState(ValidationState.ERROR, "Value can't be empty !");
+						if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.SELECTIONBOX) ||
+								item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.COMBOBOX) ||
+								item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.RADIO) ||
+						item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.CHECKBOX)) {
+							setValidationState(ValidationState.ERROR, Translations.cantBeEmptySelect());
+							returnCode = 2;
+						} else {
+							setValidationState(ValidationState.ERROR, Translations.cantBeEmpty());
+							returnCode = 1;
+						}
 						// hard error
 						return valid;
 					}
@@ -830,8 +922,8 @@ public class PerunFormItem extends FormGroup {
 				// CHECK MAX-LENGTH
 				valid = checkMaxLength();
 				if (!valid) {
-					// TODO - lang selection
-					setValidationState(ValidationState.ERROR, "Value is too long !");
+					setValidationState(ValidationState.ERROR, Translations.tooLong());
+					returnCode = 3;
 					// hard error
 					return valid;
 				}
@@ -840,14 +932,17 @@ public class PerunFormItem extends FormGroup {
 				valid = checkRegex();
 				if (!valid) {
 					if (getErrorText().isEmpty()) {
-						// TODO - lang selection
-						setValidationState(ValidationState.ERROR, "Incorrect format !");
+						setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
 					} else {
 						setValidationState(ValidationState.ERROR);
 					}
+					returnCode = 4;
 				}
 
-				if (valid) setValidationState(ValidationState.SUCCESS);
+				if (valid) {
+					setValidationState(ValidationState.SUCCESS);
+					returnCode = 0;
+				}
 
 				return valid;
 
@@ -856,6 +951,32 @@ public class PerunFormItem extends FormGroup {
 			@Override
 			public boolean isProcessing() {
 				return false;
+			}
+
+			@Override
+			public void translate() {
+
+				if (returnCode == 0) {
+					setValidationState(ValidationState.SUCCESS);
+				} else if (returnCode == -1) {
+					setValidationState(ValidationState.NONE);
+				} else if (returnCode == 1) {
+					setValidationState(ValidationState.ERROR, Translations.cantBeEmpty());
+				} else if (returnCode == 2) {
+					setValidationState(ValidationState.ERROR, Translations.cantBeEmptySelect());
+				} else if (returnCode == 3) {
+					setValidationState(ValidationState.ERROR, Translations.tooLong());
+				} else if (returnCode == 4) {
+					if (getErrorText().isEmpty()) {
+						setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+					} else {
+						setValidationState(ValidationState.ERROR);
+					}
+				}else if (returnCode == 5) {
+					setValidationState(ValidationState.ERROR, Translations.incorrectEmail());
+				}
+
+
 			}
 
 		};

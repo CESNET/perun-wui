@@ -37,6 +37,19 @@ public interface PerunContentManager {
 	public void openPage(Page page);
 
 	/**
+	 * Opens specific page. Implementation must honor:
+	 *
+	 * - authorization before displaying.
+	 * - open page only if it's prepared.
+	 * - call Page#draw() on first run.
+	 * - call Page.open() every time (page was once opened).
+	 *
+	 * @param page Instance of page to display.
+	 * @param force TRUE = force opening even if page change is processing / FALSE = default
+	 */
+	public void openPage(Page page, boolean force);
+
+	/**
 	 * Return instance of currently displayed page.
 	 *
 	 * @return Displayed page or NULL.
