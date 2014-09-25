@@ -77,7 +77,7 @@ public class ContentManager extends Div implements PerunContentManager {
 
 		final String finalContext = context;
 
-		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+		Scheduler.get().scheduleIncremental(new Scheduler.RepeatingCommand() {
 			@Override
 			public boolean execute() {
 
@@ -169,7 +169,7 @@ public class ContentManager extends Div implements PerunContentManager {
 				return false;
 
 			}
-		}, 200);
+		});
 
 	}
 
@@ -193,7 +193,7 @@ public class ContentManager extends Div implements PerunContentManager {
 		// FIXME & TODO - get/store page from history
 		// TODO - handle also context to be passed to open() method
 
-		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+		Scheduler.get().scheduleIncremental(new Scheduler.RepeatingCommand() {
 			@Override
 			public boolean execute() {
 
@@ -234,7 +234,7 @@ public class ContentManager extends Div implements PerunContentManager {
 					if (pageToShow.isAuthorized()) {
 
 						// display page when all data all loaded (check every 200ms)
-						Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+						Scheduler.get().scheduleIncremental(new Scheduler.RepeatingCommand() {
 
 							boolean firstRun = true;
 
@@ -271,7 +271,7 @@ public class ContentManager extends Div implements PerunContentManager {
 								return false;
 
 							}
-						}, 200);
+						});
 
 					} else {
 
@@ -290,7 +290,7 @@ public class ContentManager extends Div implements PerunContentManager {
 				return false;
 
 			}
-		}, 200);
+		});
 
 	}
 
