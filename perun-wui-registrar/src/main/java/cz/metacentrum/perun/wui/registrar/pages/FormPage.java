@@ -19,6 +19,7 @@ import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.pages.Page;
+import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 

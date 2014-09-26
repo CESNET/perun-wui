@@ -50,6 +50,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 	static ContentManager content;
 
 	private static boolean perunLoaded = false;
+	private static boolean perunLoading = false;
 	private static PerunLoader loader = new PerunLoader();
 	private PerunWui gui = this;
 
@@ -137,6 +138,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 						});
 
 						perunLoaded = true;
+						perunLoading = false;
 
 						// OPEN PAGE BASED ON URL
 						content.openPage(History.getToken());
@@ -146,6 +148,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 					@Override
 					public void onError(PerunException error) {
 						perunLoaded = false;
+						perunLoading = false;
 						loader.onError(error, null);
 					}
 
@@ -160,6 +163,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 			@Override
 			public void onError(PerunException error) {
 				perunLoaded = false;
+				perunLoading = false;
 				loader.onError(error, null);
 			}
 
@@ -177,6 +181,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 				});
 
 				perunLoaded = false;
+				perunLoading = true;
 			}
 		});
 
@@ -187,7 +192,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 
 		// if GUI not loaded, change should force module loading
 		if (!perunLoaded) {
-			onModuleLoad();
+			if (!perunLoading) onModuleLoad();
 			return;
 		}
 

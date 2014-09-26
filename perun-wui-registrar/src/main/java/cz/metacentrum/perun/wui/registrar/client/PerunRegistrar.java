@@ -14,6 +14,7 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunContextListener;
@@ -25,6 +26,7 @@ import cz.metacentrum.perun.wui.json.managers.PerunManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
+import cz.metacentrum.perun.wui.pages.LogoutPage;
 import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
@@ -48,7 +50,8 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 	@UiField(provided = true)
 	static RegistrarContentManager content;
 
-	private static boolean perunLoaded = false;
+	public static boolean perunLoaded = false;
+	private static boolean perunLoading = false;
 	private static PerunLoader loader = new PerunLoader();
 	private PerunRegistrar gui = this;
 	public static String LOCALE = getLang();
@@ -115,7 +118,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 	public void setLocale() {
 
 		if (LOCALE.equals("cs")) {
-			application.setText("Refistrační formulář");
+			application.setText("Registrační formulář");
 			myApplications.setText("Moje registrace");
 			help.setText("Pomoc");
 			logout.setText("Odhlásit");
@@ -164,6 +167,9 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 				help.setActive(true);
 				logout.setActive(false);
 			} else if ("logout".equals(context)) {
+				application.setEnabled(false);
+				myApplications.setEnabled(false);
+				help.setEnabled(false);
 				application.setActive(false);
 				myApplications.setActive(false);
 				help.setActive(false);
@@ -182,7 +188,6 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 		disableLinks();
 
 	}
-
 
 	@Override
 	public void onModuleLoad() {
@@ -226,6 +231,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 						navbarHeader.insert(logo, 0);
 
 						perunLoaded = true;
+						perunLoading = false;
 
 						// OPEN PAGE BASED ON URL
 						content.openPage(History.getToken());
@@ -237,6 +243,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 					@Override
 					public void onError(PerunException error) {
 						perunLoaded = false;
+						perunLoading = false;
 						loader.onError(error, null);
 					}
 
@@ -251,6 +258,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 			@Override
 			public void onError(PerunException error) {
 				perunLoaded = false;
+				perunLoading = false;
 				loader.onError(error, null);
 			}
 
@@ -268,6 +276,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 				});
 
 				perunLoaded = false;
+				perunLoading = true;
 			}
 		});
 
@@ -277,8 +286,8 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 	public void onValueChange(ValueChangeEvent<String> stringValueChangeEvent) {
 
 		// if GUI not loaded, change should force module loading
-		if (!perunLoaded) {
-			onModuleLoad();
+		if (!perunLoaded && !History.getToken().equals("logout")) {
+			if (!perunLoading) onModuleLoad();
 			return;
 		}
 
@@ -338,7 +347,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 	 *
 	 * @return language string
 	 */
-	private static final native String getLang() /*-{
+	public static final native String getLang() /*-{
 
 		var l_lang = "en";
 		if (navigator.userLanguage) // Explorer

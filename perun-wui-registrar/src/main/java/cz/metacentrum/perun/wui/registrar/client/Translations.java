@@ -7,8 +7,6 @@ package cz.metacentrum.perun.wui.registrar.client;
  */
 public class Translations {
 
-
-
 	public static String tooLong() {
 
 		if (PerunRegistrar.LOCALE.equals("cs")) {
@@ -105,6 +103,33 @@ public class Translations {
 			return "Kontrola dostupnosti selhala!";
 		}
 		return "Unable to check login availability!";
+
+	}
+
+	public static String logoutText() {
+
+		if (PerunRegistrar.LOCALE.equals("cs")) {
+			return "Byli jste odhlášeni.";
+		}
+		return "You have been logged out.";
+
+	}
+
+	public static String logoutSubText() {
+
+		if (PerunRegistrar.LOCALE.equals("cs")) {
+			return "Zavřete prosím okno prohlížeče.";
+		}
+		return "Please close the browser window.";
+
+	}
+
+	public static String logoutButton() {
+
+		if (PerunRegistrar.LOCALE.equals("cs")) {
+			return "Přihlásit se zpět";
+		}
+		return "Log me back";
 
 	}
 

@@ -4,10 +4,12 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.History;
 import cz.metacentrum.perun.wui.client.resources.PerunContentManager;
 import cz.metacentrum.perun.wui.client.resources.PerunContextListener;
+import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.pages.NotAuthorizedPage;
 import cz.metacentrum.perun.wui.pages.NotFoundPage;
 import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.registrar.pages.FormPage;
+import cz.metacentrum.perun.wui.registrar.pages.LogoutPage;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.html.Div;
 
@@ -22,6 +24,7 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 
 	private NotFoundPage notFoundPage = new NotFoundPage();
 	private NotAuthorizedPage notAuthorizedPage = new NotAuthorizedPage();
+	private LogoutPage logoutPage = new LogoutPage();
 
 	private Page displayedPage;
 	private RegistrarContentManager contentManager = this;
@@ -78,8 +81,7 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 
 				} else if ("logout".equals(finalContext)) {
 
-					// todo - remove when page is defined
-					changePageActive = false;
+					openPage(logoutPage, true);
 
 				} else {
 
@@ -119,6 +121,10 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 
 					displayedPage.open();
 					displayedPage.onResize();
+					// translate
+					if (displayedPage instanceof Translatable) {
+						((Translatable)displayedPage).changeLanguage();
+					}
 					changePageActive = false;
 
 				} else if (history.contains(pageToShow)) {
@@ -131,6 +137,10 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 							contentManager.add(displayedPage.getWidget());
 							displayedPage.open();
 							displayedPage.onResize();
+							// translate
+							if (displayedPage instanceof Translatable) {
+								((Translatable)displayedPage).changeLanguage();
+							}
 							changePageActive = false;
 
 							// update context by page
@@ -172,6 +182,10 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 								contentManager.add(pageToShow.draw());
 								displayedPage.open();
 								displayedPage.onResize();
+								// translate
+								if (displayedPage instanceof Translatable) {
+									((Translatable)displayedPage).changeLanguage();
+								}
 
 								// update context by page
 								for (PerunContextListener listener : contextListeners) {
@@ -194,6 +208,10 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 						contentManager.add(displayedPage.draw());
 						displayedPage.open();
 						displayedPage.onResize();
+						// translate
+						if (displayedPage instanceof Translatable) {
+							((Translatable)displayedPage).changeLanguage();
+						}
 						changePageActive = false;
 
 					}
