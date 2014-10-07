@@ -1,12 +1,5 @@
 
-/* Styles for PerunLoader */
-.GIM-RRTCH, .GIM-RRTCH table {
-	height: 100% !important;
-}
-
-.GBJYVSDH, .GBJYVSDH table {
-	height: 100% !important;
-}
+/* MAIN LAYOUT */
 
 body {
 	min-height: 700px;
@@ -15,10 +8,19 @@ body {
 	height: 100%;
 }
 
+/* PERUN TABLE */
+
+/* Styles for PerunLoader */
+.GIM-RRTCH, .GIM-RRTCH table {
+	height: 100% !important;
+}
+.GBJYVSDH, .GBJYVSDH table {
+	height: 100% !important;
+}
 .table {
 	margin-bottom: 0px;
 }
-
+/* table borders */
 .table table thead {
 	border-bottom: 1px solid #ddd;
 }
@@ -26,7 +28,38 @@ body {
 	border-top: 1px solid #ddd;
 }
 
-/* Custom Growl styles */
+/* link cell */
+a.linkCell {
+	display: inline-block !important;
+	height: 100% !important;
+}
+/* break long IDs in ID column */
+.idColumn {
+	word-break: break-all !important;
+}
+
+/* standard cell */
+.gwtb3-cell {
+	/* Minimum row height */
+	min-height: 30px !important;
+	line-height: 2em !important;
+	/* Word wrapping and align */
+	word-wrap: break-word !important;
+	/*word-break: break-all !important;*/
+	vertical-align: text-top !important;
+	padding: 8px 5px;
+}
+/* Fix padding of cell in last column to prevent content from hiding beneath the table's scroll bar */
+td.gwtb3-cell:last-of-type {
+	padding-right: 15px !important;
+}
+/* fix select box alignment */
+th.gwtb3-d input, td.gwtb3-d input {
+	vertical-align: text-top;
+	margin: 0px !important;
+}
+
+/* GROWL */
 
 .growl-icon {
 	padding-right: 10px;
