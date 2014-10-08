@@ -1,0 +1,9 @@
+
+/* MAIN LAYOUT */
+
+body {
+	min-height: 700px;
+	min-width: 1200px;
+	width: 100%;
+	height: 100%;
+}

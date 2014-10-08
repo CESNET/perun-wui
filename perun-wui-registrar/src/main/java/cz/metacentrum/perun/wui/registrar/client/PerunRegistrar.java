@@ -225,7 +225,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 						RootPanel.get().add(uiBinder.createAndBindUi(gui));
 
 						// put logo
-						Image logo = new Image("perun.png");
+						Image logo = new Image("PerunRegistrar/image/perun.png");
 						logo.setWidth("235px");
 						logo.setHeight("50px");
 						navbarHeader.insert(logo, 0);

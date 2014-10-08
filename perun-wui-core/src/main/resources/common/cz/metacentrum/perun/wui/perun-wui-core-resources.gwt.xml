@@ -1,0 +1,12 @@
+<module>
+
+	<public path="resources">
+		<include name="css/PerunWui.css"/>
+
+		<include name="image/perun.png"/>
+		<include name="image/perun-ico.png"/>
+	</public>
+
+	<stylesheet src="css/PerunWui.css"/>
+
+</module>

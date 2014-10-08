@@ -16,7 +16,7 @@ public interface PerunWuiCss extends ClientBundle {
 
 	public static final PerunWuiCss INSTANCE =  GWT.create(PerunWuiCss.class);
 
-	@Source("PerunWui.css")
+	@Source("../../../../../../../resources/common/cz/metacentrum/perun/wui/resources/css/PerunWui.css")
 	@CssResource.NotStrict
 	public CssResource css();
 

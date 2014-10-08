@@ -7,6 +7,9 @@
 	<!-- support GWT Bootstrap 3 with Bootstrap2 look-alike theme -->
 	<inherits name="org.gwtbootstrap3.GwtBootstrap3Theme"/>
 
+	<!-- inherit custom styles -->
+	<inherits name="cz.metacentrum.perun.wui.admin.perun-wui-admin-resources"/>
+
 	<!-- Specify the app entry point class. -->
 	<entry-point class='cz.metacentrum.perun.wui.admin.client.PerunWui'/>
 

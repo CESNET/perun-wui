@@ -18,6 +18,9 @@
 	<!-- support for Gwt Bootstrap 3 nice selections -->
 	<inherits name="org.gwtbootstrap3.extras.select.Select"/>
 
+	<!-- inherit our custom styles as LAST !! -->
+	<inherits name="cz.metacentrum.perun.wui.perun-wui-core-resources" />
+
 	<!-- Mask compilation error messages for unsupported browsers -->
 	<set-configuration-property name="user.agent.runtimeWarning" value="false"/>
 

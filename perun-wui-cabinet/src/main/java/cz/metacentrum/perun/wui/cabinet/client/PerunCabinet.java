@@ -67,7 +67,7 @@ public class PerunCabinet implements EntryPoint, ValueChangeHandler<String> {
 						RootLayoutPanel.get().clear();
 						RootLayoutPanel.get().add(uiBinder.createAndBindUi(gui));
 
-						Image logo = new Image("perun.png");
+						Image logo = new Image("PerunCabinet/image/perun.png");
 						logo.setWidth("260px");
 						logo.setHeight("65px");
 						navbarHeader.insert(logo, 0);
