@@ -1,20 +1,13 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.dom.client.Document;
-import com.google.gwt.dom.client.Element;
-import com.google.gwt.dom.client.NativeEvent;
-import com.google.gwt.dom.client.SelectElement;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.*;
-import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
@@ -35,8 +28,6 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
-import org.gwtbootstrap3.extras.select.client.ui.Option;
-import org.gwtbootstrap3.extras.select.client.ui.Select;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -164,9 +155,9 @@ public class PerunFormItem extends FormGroup {
 				!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON)) {
 			if (!getLabelOrShortName().equals("")) {
 				if (isRequired()) {
-					formLabel.setText(getLabelOrShortName()+"*:");
+					formLabel.setHTML(getLabelOrShortName()+" <span style=\"color: red;\">*</span>");
 				} else {
-					formLabel.setText(getLabelOrShortName()+":");
+					formLabel.setHTML(getLabelOrShortName()+"&nbsp;&nbsp;");
 				}
 			}
 		}
@@ -794,6 +785,9 @@ public class PerunFormItem extends FormGroup {
 			box.setValue(preFilledValue);
 			box.setEnabled(false);
 			currentValue = box;
+
+			setDefaultInputChecker();
+
 			widget = box;
 			return getFormItemWidget();
 
