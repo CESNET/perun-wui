@@ -133,4 +133,22 @@ public class Translations {
 
 	}
 
+	public static String customValueEmail() {
+
+		if (PerunRegistrar.LOCALE.equals("cs")) {
+			return "--- Jiný ---";
+		}
+		return "--- Custom ---";
+
+	}
+
+	public static String mustValidateEmail() {
+
+		if (PerunRegistrar.LOCALE.equals("cs")) {
+			return "Na zadanou adresu bude zaslán email s odkazem pro ověření.";
+		}
+		return "Email with verifiaction link will be sent to provided email address.";
+
+	}
+
 }

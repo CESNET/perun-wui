@@ -60,6 +60,9 @@ public class PerunFormItem extends FormGroup {
 	// form item validator
 	private PerunFormItemValidator validator;
 
+	// generic select for pre-filled email addresses
+	final Select emailSelect = new Select();
+
 	// form item widgets
 	private FormLabel formLabel = new FormLabel();
 	private Paragraph helpText = new Paragraph();
@@ -100,6 +103,7 @@ public class PerunFormItem extends FormGroup {
 		 * 9 = checking login...
 		 * 10 = password can't be empty
 		 * 11 = password mismatch
+		 * 12 = must validate email
 		 */
 		public void translate();
 
@@ -248,6 +252,16 @@ public class PerunFormItem extends FormGroup {
 
 			((PerunButton)widget).setText(getLabelOrShortName());
 
+		} else if (ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL.equals(item.getFormItem().getType())) {
+
+			if (preFilledValue.contains(";")) {
+				if (emailSelect.getValue(emailSelect.getItemCount()-1).equals("custom")) {
+					emailSelect.setItemText(emailSelect.getItemCount() - 1, Translations.customValueEmail());
+					emailSelect.refresh();
+
+				}
+			}
+
 		}
 
 	}
@@ -345,9 +359,15 @@ public class PerunFormItem extends FormGroup {
 			group.setWidth("400px");
 			InputGroupAddon addon = new InputGroupAddon();
 			addon.setIcon(IconType.ENVELOPE);
-			ExtendedTextBox box = new ExtendedTextBox();
+			final ExtendedTextBox box = new ExtendedTextBox();
 			box.setMaxLength(TEXT_BOX_MAX_LENGTH);
-			box.setValue(preFilledValue);
+
+			if (preFilledValue.contains(";")) {
+				box.setValue(preFilledValue.split(";")[0]);
+			} else {
+				box.setValue(preFilledValue);
+			}
+
 			currentValue = box;
 
 			if (item.getFormItem().getRegex() != null) {
@@ -361,6 +381,37 @@ public class PerunFormItem extends FormGroup {
 
 			group.add(addon);
 			group.add(box);
+
+			if (preFilledValue.contains(";")) {
+
+				InputGroupButton addon2 = new InputGroupButton();
+
+				for (String val : preFilledValue.split(";")) {
+					emailSelect.addItem(val, val);
+				}
+
+				emailSelect.addItem(Translations.customValueEmail(), "custom");
+
+				emailSelect.addChangeHandler(new ChangeHandler() {
+					@Override
+					public void onChange(ChangeEvent event) {
+
+						if (!emailSelect.getValue(emailSelect.getSelectedIndex()).equals("custom")) {
+							box.setValue(emailSelect.getValue(emailSelect.getSelectedIndex()));
+						} else {
+							box.setValue("");
+						}
+						ValueChangeEvent.fire(box, box.getValue());
+
+					}
+				});
+
+				emailSelect.setWidth("35px");
+				addon2.add(emailSelect);
+
+				group.add(addon2);
+
+			}
 
 			return group;
 
@@ -901,7 +952,7 @@ public class PerunFormItem extends FormGroup {
 						if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.SELECTIONBOX) ||
 								item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.COMBOBOX) ||
 								item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.RADIO) ||
-						item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.CHECKBOX)) {
+								item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.CHECKBOX)) {
 							setValidationState(ValidationState.ERROR, Translations.cantBeEmptySelect());
 							returnCode = 2;
 						} else {
@@ -934,8 +985,49 @@ public class PerunFormItem extends FormGroup {
 				}
 
 				if (valid) {
-					setValidationState(ValidationState.SUCCESS);
-					returnCode = 0;
+
+					// better check on emails
+					if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL)) {
+
+						// multivalue pre-fill
+						if (preFilledValue.contains(";")) {
+
+							for (String s : preFilledValue.split(";")) {
+								if (s.equals(getValue())) {
+
+									setValidationState(ValidationState.SUCCESS);
+									returnCode = 0;
+									return valid;
+
+								}
+							}
+
+						} else {
+
+							// single value pre-fill
+							if (getValue().equals(preFilledValue)) {
+
+								setValidationState(ValidationState.SUCCESS);
+								returnCode = 0;
+								return valid;
+
+							}
+
+						}
+
+						// must validate email
+						setValidationState(ValidationState.WARNING, Translations.mustValidateEmail());
+						returnCode = 12;
+						return valid;
+
+					} else {
+
+						// normal form item
+						setValidationState(ValidationState.SUCCESS);
+						returnCode = 0;
+
+					}
+
 				}
 
 				return valid;
@@ -966,8 +1058,10 @@ public class PerunFormItem extends FormGroup {
 					} else {
 						setValidationState(ValidationState.ERROR);
 					}
-				}else if (returnCode == 5) {
+				} else if (returnCode == 5) {
 					setValidationState(ValidationState.ERROR, Translations.incorrectEmail());
+				} else if (returnCode == 12) {
+					setValidationState(ValidationState.WARNING, Translations.mustValidateEmail());
 				}
 
 
