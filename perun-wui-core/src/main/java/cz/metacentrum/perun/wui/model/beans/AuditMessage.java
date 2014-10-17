@@ -41,15 +41,6 @@ public class AuditMessage extends GeneralObject {
 	}
 
 	/**
-	 * Get date and time, when message was audited (action performed)
-	 *
-	 * @return date & time as string
-	 */
-	public final String getCreatedAt() {
-		return JsUtils.getNativePropertyString(this, "createdAt");
-	}
-
-	/**
 	 * Compares to another object
 	 *
 	 * @param o Object to compare

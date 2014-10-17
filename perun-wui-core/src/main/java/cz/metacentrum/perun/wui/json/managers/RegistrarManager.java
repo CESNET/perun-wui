@@ -75,4 +75,22 @@ public class RegistrarManager {
 
 	}
 
+	/**
+	 * Retrieve applications for User.
+	 *
+	 * @param userId ID of user to get applications for or 0 if user unknown (search by authorization)
+	 * @param events Events done on callback
+	 *
+	 * @return int unique ID of callback
+	 */
+	public static int getApplicationsForUser(int userId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(12000);
+		if (userId > 0) {
+			client.put("id", userId);
+		}
+		return client.getData(REGISTRAR_MANAGER + "getApplicationsForUser", events);
+
+	}
+
 }

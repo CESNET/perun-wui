@@ -39,6 +39,7 @@ public class PerunLoader extends Composite {
 	Widget rootElement;
 	@UiField ProgressBar bar;
 	@UiField Alert alert;
+	@UiField Alert message;
 	@UiField ButtonToolBar tool;
 	@UiField PerunButton retry;
 	@UiField PerunButton report;
@@ -98,19 +99,33 @@ public class PerunLoader extends Composite {
 	public void onEmpty(){
 
 		state = PerunLoaderState.finished;
+
+		/*
+		bar.setVisible(false);
+		alert.setVisible(false);
+
 		// TODO ALERT
+		message.setText("No items found.");
+		message.setVisible(true);
+		*/
 
 	}
 
 	public void onFinished(){
 
 		state = PerunLoaderState.finished;
+		bar.setVisible(false);
+
+		// TODO ALERT
+		message.setText("Loading finished.");
+		message.setVisible(true);
 
 	}
 
 	public void onError(PerunException error, final ClickHandler handler) {
 
 		state = PerunLoaderState.error;
+		bar.setVisible(true);
 		bar.setType(ProgressBarType.DANGER);
 		alert.setText(error.getName()+": "+error.getMessage());
 		alert.setVisible(true);

@@ -91,7 +91,10 @@ public class Application extends JavaScriptObject {
 	 * @return VO this application belongs to.
 	 */
 	public final Vo getVo() {
-		return JsUtils.getNativePropertyObject(this, "vo").cast();
+		if (JsUtils.getNativePropertyObject(this, "vo") != null) {
+			return JsUtils.getNativePropertyObject(this, "vo").cast();
+		}
+		return null;
 	}
 
 	/**
@@ -109,7 +112,10 @@ public class Application extends JavaScriptObject {
 	 * @return Group this application belongs to.
 	 */
 	public final Group getGroup() {
-		return JsUtils.getNativePropertyObject(this, "group").cast();
+		if (JsUtils.getNativePropertyObject(this, "group") != null) {
+			return JsUtils.getNativePropertyObject(this, "group").cast();
+		}
+		return null;
 	}
 
 	/**

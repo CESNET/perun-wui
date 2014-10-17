@@ -183,13 +183,15 @@ public class JsUtils {
     }-*/;
 
 	/**
-	 * Returns JS Array made from JavaScriptObject
+	 * Return JS Array made from JavaScriptObject.
+	 * Return empty array if JavaScriptObject is null.
 	 *
 	 * @param jso any javascript object
 	 * @return JSArray<T> array of javascript objects
 	 */
 	public static final native <T extends JavaScriptObject> JsArray<T> jsoAsArray(JavaScriptObject jso) /*-{
-        return jso;
+		if (jso === null) return new Array();
+		return jso;
     }-*/;
 
 	/**

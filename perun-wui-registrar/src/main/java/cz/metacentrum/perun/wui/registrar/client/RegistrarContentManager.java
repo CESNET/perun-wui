@@ -8,6 +8,7 @@ import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.pages.NotAuthorizedPage;
 import cz.metacentrum.perun.wui.pages.NotFoundPage;
 import cz.metacentrum.perun.wui.pages.Page;
+import cz.metacentrum.perun.wui.registrar.pages.AppsPage;
 import cz.metacentrum.perun.wui.registrar.pages.FormPage;
 import cz.metacentrum.perun.wui.registrar.pages.LogoutPage;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
@@ -43,6 +44,7 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 	public RegistrarContentManager(PerunContextListener... contextListeners) {
 
 		if (contextListeners != null) this.contextListeners = contextListeners;
+		setId("web-content");
 
 	}
 
@@ -70,6 +72,10 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 				if ("form".equals(finalContext)) {
 
 					openPage(new FormPage(), true);
+
+				} else if ("submitted".equals(finalContext)) {
+
+					openPage(new AppsPage(), true);
 
 				} else if ("notfound".equals(finalContext)) {
 

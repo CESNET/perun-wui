@@ -106,4 +106,22 @@ public class TableSorter {
 		return list;
 	}
 
+	/**
+	 * Returns sorted list of Facilities by their Owner's names (only technical)
+	 *
+	 * @param list    of Facilities to be sorted
+	 * @param reverse TRUE if sorting should be descending
+	 * @return ArrayList<T> sorted list of Facilities by their owner's names
+	 */
+	public static <T extends JavaScriptObject> ArrayList<T> sortByCreatedAt(ArrayList<T> list, boolean reverse) {
+		if (list == null) return null;
+		if (reverse) {
+			Collections.sort(list, Collections.reverseOrder(new PerunComparator<T>(PerunColumnType.CREATED_AT)));
+		} else {
+			Collections.sort(list, new PerunComparator<T>(PerunColumnType.CREATED_AT));
+		}
+
+		return list;
+	}
+
 }

@@ -48,6 +48,10 @@ th.gwtb3-d input, td.gwtb3-d input {
 	vertical-align: text-top;
 	margin: 0px !important;
 }
+/* Word wrapping in table headers */
+th.gwtb3-d {
+	word-wrap: break-word !important;
+}
 
 /* GROWL */
 

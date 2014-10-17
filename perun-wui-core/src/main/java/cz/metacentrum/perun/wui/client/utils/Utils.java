@@ -45,43 +45,69 @@ public class Utils {
 
 	/**
 	 * Return URL to identity consolidator GUI
-	 * with optional ?target= param having current Perun GUI URL.
+	 * with optional ?target_url= param having current Perun GUI URL.
 	 *
-	 * @param target TRUE if use ?target= param in identity consolidator URL / FALSE otherwise
+	 * @param target TRUE if use ?target_url= param in identity consolidator URL / FALSE otherwise
 	 * @return URL to identity consolidator
 	 */
 	public static String getIdentityConsolidatorLink(boolean target) {
+		return getIdentityConsolidatorLink(null, target);
+	}
 
-		// always use URL of machine, where GUI runs
-		String baseUrl = Window.Location.getProtocol() + "//" + Window.Location.getHost();
+	/**
+	 * Return URL to identity consolidator GUI
+	 * with optional ?target= param having current Perun GUI URL.
+	 *
+	 * @param authz destination authorization ("fed", "krb", "cert")
+	 * @param target TRUE if use ?target= param in identity consolidator URL / FALSE otherwise
+	 * @return URL to identity consolidator
+	 */
+	public static String getIdentityConsolidatorLink(String authz, boolean target) {
 
-		// FIXME - production consolidator is still using old URL scheme
-		final String URL_KRB = baseUrl + "/perun-identity-consolidator-krb/";
-		final String URL_FED = baseUrl + "/perun-identity-consolidator-fed/";
-		final String URL_CERT = baseUrl + "/perun-identity-consolidator-cert/";
-		String rpc = "";
-		String link = "";
-
-		if (PerunSession.getInstance().getRpcServer() != null) {
-			rpc = PerunSession.getInstance().getRpcServer();
+		// wrong authz, return basic
+		if (authz == null || authz.isEmpty()) {
+			if (PerunSession.getInstance().getRpcServer() != null) {
+				authz = PerunSession.getInstance().getRpcServer();
+			}
 		}
 
-		if (rpc.equalsIgnoreCase("krb")) {
-			link = URL_KRB;
-		} else if (rpc.equalsIgnoreCase("fed")) {
-			link = URL_FED;
-		} else if (rpc.equalsIgnoreCase("cert")) {
-			link = URL_CERT;
+		String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "getIdentityConsolidatorUrl");
+
+		if (value != null && !value.isEmpty()) {
+
+			if (target) {
+				value += "?target_url=" + Window.Location.getHref();
+			}
+			return value;
+
 		} else {
-			// KRB AS BACKUP - "default"
-			link = URL_KRB;
-		}
 
-		if (target) {
-			link += "?target=" + Window.Location.getHref();
-		}
+			// always use URL of machine, where GUI runs
+			String baseUrl = Window.Location.getProtocol() + "//" + Window.Location.getHost();
 
-		return link;
+			// FIXME - production consolidator is still using old URL scheme
+			final String URL_KRB = baseUrl + "/perun-identity-consolidator-krb/";
+			final String URL_FED = baseUrl + "/perun-identity-consolidator-fed/";
+			final String URL_CERT = baseUrl + "/perun-identity-consolidator-cert/";
+			String link = "";
+
+			if (authz.equalsIgnoreCase("krb")) {
+				link = URL_KRB;
+			} else if (authz.equalsIgnoreCase("fed")) {
+				link = URL_FED;
+			} else if (authz.equalsIgnoreCase("cert")) {
+				link = URL_CERT;
+			} else {
+				// KRB AS BACKUP - "default"
+				link = URL_KRB;
+			}
+
+			if (target) {
+				link += "?target_url=" + Window.Location.getHref();
+			}
+
+			return link;
+		}
 
 	}
 
@@ -1102,5 +1128,32 @@ public class Utils {
 		}
 		return list;
 	}
+
+	/**
+	 * If passed string is DN of certificate(recognized by "/CN=") then returns only CN part with unescaped chars.
+	 * If passed string is not DN of certificate, original string is returned.
+	 *
+	 * @param toConvert
+	 * @return
+	 */
+	static public String convertCertCN(String toConvert) {
+
+		if (toConvert.contains("/CN=")) {
+			String[] splitted = toConvert.split("/");
+			for (String s : splitted) {
+				if (s.startsWith("CN=")) {
+					return unescapeDN(s.substring(3));
+				}
+			}
+		}
+		return toConvert;
+
+	}
+
+	static public final native String unescapeDN(String string) /*-{
+
+		return decodeURIComponent(string.replace(/\\x/g, '%'))
+
+	}-*/;
 
 }

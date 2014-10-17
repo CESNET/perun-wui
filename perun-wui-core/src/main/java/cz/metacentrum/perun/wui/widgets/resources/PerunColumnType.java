@@ -18,4 +18,12 @@ public enum PerunColumnType {
 	// facility columns
 	OWNERS,
 
+	// application columns
+	TYPE,
+	STATE,
+	CREATED_AT,
+	MODIFIED_BY,
+	VO_NAME,
+	GROUP_NAME
+
 }

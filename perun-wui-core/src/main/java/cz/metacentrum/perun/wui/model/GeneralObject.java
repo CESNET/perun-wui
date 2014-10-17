@@ -203,44 +203,117 @@ public class GeneralObject extends JavaScriptObject {
         this.isChecked = value;
     }-*/;
 
-	/**
-	 * Get object's type, equals to Class.getSimpleName().
-	 * Value is stored to object on server side and only
-	 * for PerunBeans object.
-	 * <p/>
-	 * If value not present in object, "JavaScriptObject"
-	 * is returned instead.
-	 *
-	 * @return type of object
-	 */
-	public final String getObjectType() {
+    /**
+     * Get login/unique id of user from external system who created the object.
+     *
+     * @return Login/unique id of user who created the object.
+     */
+    public final String getCreatedBy() {
+        return JsUtils.getNativePropertyString(this, "createdBy");
+    }
 
-		if (JsUtils.getNativePropertyString(this, "beanName") == null) return "JavaScriptObject";
-		return JsUtils.getNativePropertyString(this, "beanName");
+    /**
+     * Set login/unique id of user from external system who created the object.
+     *
+     * @param created Login/unique id of user who created the object.
+     */
+    public final native void setCreatedBy(String created) /*-{
+		this.createdBy = created;
+	}-*/;
 
-	}
+    /**
+     * Get login/unique id of user from external system who modified object the last time.
+     *
+     * @return Login/unique id of user who modified object the last time.
+     */
+    public final String getModifiedBy() {
+        return JsUtils.getNativePropertyString(this, "modifiedBy");
+    }
 
-	/**
-	 * Set object's type. It should be specific name
-	 * of PerunBean equals to Class.getSimpleName().
-	 * <p/>
-	 * This property is not defined for non-PerunBeans
-	 * objects in base system (server side).
-	 *
-	 * @param type type of object
-	 */
-	public final native void setObjectType(String type) /*-{
-        this.beanName = type;
-    }-*/;
+    /**
+     * Set login/unique id of user from external system who last modified the object.
+     *
+     * @param modified Login/unique id of user who modified object the last time.
+     */
+    public final native void setModifiedBy(String modified) /*-{
+		this.modifiedBy = modified;
+	}-*/;
 
-	/**
-	 * Compares to another object
-	 *
-	 * @param o Object to compare
-	 * @return true, if they are the same
-	 */
-	public final boolean equals(GeneralObject o) {
-		return o.getId() == this.getId();
-	}
+    /**
+     * Get timestamp of object creation as String.
+     *
+     * @return Timestamp of object creation.
+     */
+    public final String getCreatedAt() {
+        return JsUtils.getNativePropertyString(this, "createdAt");
+    }
+
+    /**
+     * Set timestamp of object creation as String.
+     *
+     * @param date Timestamp of object creation.
+     */
+    public final native void setCreatedAt(String date) /*-{
+		this.createdAt = date;
+	}-*/;
+
+    /**
+     * Get timestamp of object last modification as String.
+     *
+     * @return Timestamp of object last modification.
+     */
+    public final String getModifiedAt() {
+        return JsUtils.getNativePropertyString(this, "modifiedAt");
+    }
+
+    /**
+     * Set timestamp of object last modification as String.
+     *
+     * @param date Timestamp of object last modification.
+     */
+    public final native void setModifiedAt(String date) /*-{
+		this.modifiedAt = date;
+	}-*/;
+
+
+    /**
+     * Get object's type, equals to Class.getSimpleName().
+     * Value is stored to object on server side and only
+     * for PerunBeans object.
+     * <p/>
+     * If value not present in object, "JavaScriptObject"
+     * is returned instead.
+     *
+     * @return type of object
+     */
+    public final String getObjectType() {
+
+        if (JsUtils.getNativePropertyString(this, "beanName") == null) return "JavaScriptObject";
+        return JsUtils.getNativePropertyString(this, "beanName");
+
+    }
+
+    /**
+     * Set object's type. It should be specific name
+     * of PerunBean equals to Class.getSimpleName().
+     * <p/>
+     * This property is not defined for non-PerunBeans
+     * objects in base system (server side).
+     *
+     * @param type type of object
+     */
+    public final native void setObjectType(String type) /*-{
+		this.beanName = type;
+	}-*/;
+
+    /**
+     * Compares to another object
+     *
+     * @param o Object to compare
+     * @return true, if they are the same
+     */
+    public final boolean equals(GeneralObject o) {
+        return o.getId() == this.getId();
+    }
 
 }

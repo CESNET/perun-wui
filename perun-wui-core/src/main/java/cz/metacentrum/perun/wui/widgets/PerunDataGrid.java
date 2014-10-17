@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.widgets;
 
+import cz.metacentrum.perun.wui.client.resources.Translatable;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -44,7 +45,7 @@ import java.util.Map;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
+public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> implements Translatable {
 
 	// list of items displayed in table
 	ArrayList<T> content = new ArrayList<>();
@@ -525,6 +526,9 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 		} else if (PerunColumnType.OWNERS.equals(column)) {
 			backup = TableSorter.sortByOwnersNames(backup, descending);
 			content = TableSorter.sortByOwnersNames(content, descending);
+		} else if (PerunColumnType.CREATED_AT.equals(column)) {
+			backup = TableSorter.sortByCreatedAt(backup, descending);
+			content = TableSorter.sortByCreatedAt(content, descending);
 		} else {
 			// if column for sorting not found, use columns provider's default, if possible
 			if (columnProvider != null) {
@@ -1134,6 +1138,15 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 		columnHeaders.put(col, header);
 		columnFooters.put(col, footer);
 		super.insertColumn(beforeIndex, col, header, footer);
+	}
+
+	@Override
+	public void changeLanguage() {
+
+		// TODO - redraw headers which can't be simple string, must be also translatable
+		this.flush();
+		this.redraw();
+
 	}
 
 }

@@ -72,6 +72,17 @@ public class PerunPrincipal extends JavaScriptObject {
 	}
 
 	/**
+	 * Get User ID associated with authz info user used
+	 * to log into Perun's RPC server. If user is unknown (null)
+	 * then -1 is returned.
+	 *
+	 * @return ID of user logged to RPC or -1.
+	 */
+	public final int getUserId() {
+		return JsUtils.getNativePropertyInt(this, "userId");
+	}
+
+	/**
 	 * Get any additional information provided by IDP in session.
 	 *
 	 * @param shibAttrName valid shibbolleth attribute name:

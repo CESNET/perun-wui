@@ -54,7 +54,6 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 	private static boolean perunLoading = false;
 	private static PerunLoader loader = new PerunLoader();
 	private PerunRegistrar gui = this;
-	public static String LOCALE = getLang();
 
 	@UiField
 	AnchorButton language;
@@ -82,13 +81,13 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 
 	@UiHandler(value="czech")
 	public void czechClick(ClickEvent event) {
-		LOCALE = "cs";
+		PerunSession.LOCALE = "cs";
 		setLocale();
 	}
 
 	@UiHandler(value="english")
 	public void englishClick(ClickEvent event) {
-		LOCALE = "en";
+		PerunSession.LOCALE = "en";
 		setLocale();
 	}
 
@@ -117,7 +116,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 	 */
 	public void setLocale() {
 
-		if (LOCALE.equals("cs")) {
+		if (PerunSession.LOCALE.equals("cs")) {
 			application.setText("Registrační formulář");
 			myApplications.setText("Moje registrace");
 			help.setText("Pomoc");

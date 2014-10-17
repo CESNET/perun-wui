@@ -2,8 +2,8 @@ package cz.metacentrum.perun.wui.registrar.widgets;
 
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.client.Window;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
 import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.FieldSet;
@@ -21,14 +21,14 @@ import java.util.ArrayList;
  */
 public class PerunForm extends FieldSet implements Translatable {
 
-	private String lang = PerunRegistrar.LOCALE;
+	private String lang = PerunSession.LOCALE;
 
 	ArrayList<PerunFormItem> items = new ArrayList<PerunFormItem>();
 
 	@Override
 	public void changeLanguage() {
 
-		lang = PerunRegistrar.LOCALE;
+		lang = PerunSession.LOCALE;
 		for (PerunFormItem item : items) {
 			item.setTexts();
 		}

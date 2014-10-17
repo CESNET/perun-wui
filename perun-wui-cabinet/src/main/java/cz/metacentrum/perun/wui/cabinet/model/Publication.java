@@ -210,15 +210,6 @@ public class Publication extends GeneralObject {
     }-*/;
 
 	/**
-	 * Get CreatedBy (login of user who created this Publication)
-	 *
-	 * @return createdBy
-	 */
-	public final String getCreatedBy() {
-		return JsUtils.getNativePropertyString(this, "createdBy");
-	}
-
-	/**
 	 * Get CreatedByUid (ID of user, who created this Publication)
 	 * <p/>
 	 * IMPORTANT: this property might not be set even if getCreatedBy() returns non-NULL value.

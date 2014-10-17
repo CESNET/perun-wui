@@ -23,6 +23,8 @@ public class PerunSession {
 	// Only instance
 	static private PerunSession INSTANCE;
 
+	static public String LOCALE = "en";
+
 	// User roles constants
 	static public final String PERUN_ADMIN_PRINCIPAL_ROLE = "PERUNADMIN";
 	static public final String GROUP_ADMIN_PRINCIPAL_ROLE = "GROUPADMIN";
@@ -67,7 +69,31 @@ public class PerunSession {
 	 * Creates new instance of the Session
 	 */
 	private PerunSession() {
+
+		LOCALE = getLOCALE();
+
 	}
+
+	/**
+	 * Get default language from browser
+	 *
+	 * @return language string
+	 */
+	public static final native String getLOCALE() /*-{
+
+		var l_lang = "en";
+		if (navigator.userLanguage) // Explorer
+			l_lang = navigator.userLanguage;
+		else if (navigator.language) // FF
+			l_lang = navigator.language;
+		else
+			l_lang = "en";
+
+		return l_lang;
+
+		//$wnd.jQuery("meta[name='gwt:property']").attr('content', 'locale='+l_lang);
+
+	}-*/;
 
 	/**
 	 * Returns the instance of PerunWebSession
@@ -148,6 +174,16 @@ public class PerunSession {
 	 */
 	public User getUser() {
 		return perunPrincipal.getUser();
+	}
+
+	/**
+	 * Safe return User ID from PerunPrincipal.
+	 * If user == null then -1 is returned
+	 *
+	 * @return User ID or -1 if user == null
+	 */
+	public int getUserId() {
+		return perunPrincipal.getUserId();
 	}
 
 	/**

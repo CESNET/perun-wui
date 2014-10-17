@@ -36,6 +36,8 @@
 
 			</b:Alert>
 
+			<b:Alert dismissable="false" ui:field="message" width="40%" type="INFO" addStyleNames="{style.alert}" visible="false" />
+
 		</b:Row>
 	</b:Container>
 

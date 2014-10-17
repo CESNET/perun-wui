@@ -8,6 +8,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.*;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
@@ -15,7 +16,6 @@ import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
 import cz.metacentrum.perun.wui.registrar.client.Translations;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
@@ -48,7 +48,7 @@ public class PerunFormItem extends FormGroup {
 	// form item storage
 	ApplicationFormItemData item;
 	// default is EN
-	private String lang = PerunRegistrar.LOCALE;
+	private String lang = PerunSession.LOCALE;
 	// pre-filled value
 	private String preFilledValue = "";
 	// value box used to handle changes
@@ -153,7 +153,7 @@ public class PerunFormItem extends FormGroup {
 	 */
 	public void setTexts() {
 
-		this.lang = PerunRegistrar.LOCALE;
+		this.lang = PerunSession.LOCALE;
 
 		if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON) &&
 				!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON)) {

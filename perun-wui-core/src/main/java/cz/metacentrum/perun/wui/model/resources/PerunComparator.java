@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.model.resources;
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
+import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.Facility;
 import cz.metacentrum.perun.wui.model.beans.Owner;
 import cz.metacentrum.perun.wui.model.beans.Vo;
@@ -85,6 +86,8 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		// Facility columns
 		if (PerunColumnType.OWNERS.equals(this.column)) return this.compareByOwnersNames(o1, o2);
 
+		if (PerunColumnType.CREATED_AT.equals(this.column)) return this.compareByCreatedAt(o1, o2);
+
 		return 0;
 
 	}
@@ -163,6 +166,29 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		Collections.sort(result2, getNativeComparator());
 
 		return nativeCompare(Utils.join(result, ", "), Utils.join(result2, ", "));
+
+	}
+
+	/**
+	 * Compares PerunBeans by createdAt
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByCreatedAt(GeneralObject o1, GeneralObject o2) {
+
+		if (o1.getObjectType().equals("Application") && o2.getObjectType().equals("Application")) {
+
+			Application app1 = o1.cast();
+			Application app2 = o2.cast();
+			return nativeCompare(app1.getCreatedAt(), app2.getCreatedAt());
+
+		} else {
+
+			return nativeCompare(o1.getCreatedAt(), o2.getCreatedAt());
+
+		}
 
 	}
 

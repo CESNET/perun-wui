@@ -32,7 +32,7 @@
 		</b:Navbar>
 
 		<b:Column size="MD_12" marginTop="60">
-			<p.client:RegistrarContentManager ui:field="content" />
+			<p.client:RegistrarContentManager ui:field="content"/>
 		</b:Column>
 
 	</b:Container>
