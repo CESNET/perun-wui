@@ -1,30 +1,28 @@
 package cz.metacentrum.perun.wui.json;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.http.client.URL;
+import com.google.gwt.http.client.*;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.model.PerunException;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Client class performing GET requests to Perun's API.
+ * Client class performing GET/POST requests to Perun's API.
  * For each call, new instance must be created.
  *
- * @author Vaclav Mach <374430@mail.muni.cz>
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
 public class JsonClient {
 
-	// Request number counter
-	private static int jsonRequestId = 0;
+	private static final String CALLBACK_NAME = "callback";
 
-	// map with active requests info
-	// KEY = requestId, VALUE = JsonClientRequest
-	static private Map<Integer, JsonRequest> activeRequestsMap = new HashMap<Integer, JsonRequest>();
-
-	// event to handle result of callback
 	private JsonEvents events = new JsonEvents() {
 		@Override
 		public void onFinished(JavaScriptObject jso) {
@@ -39,62 +37,78 @@ public class JsonClient {
 		}
 	};
 
-	// base URL of Perun's API
 	private String urlPrefix = PerunSession.getInstance().getRpcUrl();
-	// timeout
-	int timeout = 30000;
-	// storage for parameters to send to Perun's API
+	private String requestUrl;
+	private JSONObject json = null;
 	Map<String, Object> parameters = new HashMap<>();
+	private RequestBuilder.Method method = RequestBuilder.GET;
 
 	/**
-	 * Create client to make GET call with custom timeout.
-	 *
-	 * @param timeout time in milliseconds to wait for server response
-	 */
-	public JsonClient(int timeout) {
-		this.timeout = (timeout <= 0) ? PerunWebConstants.INSTANCE.jsonTimeout() : timeout;
-	}
-
-	/**
-	 * Default instance of the client.
+	 * New JsonClient using GET method
 	 */
 	public JsonClient() {
-		this(PerunWebConstants.INSTANCE.jsonTimeout());
 	}
 
 	/**
-	 * Put param=value pair into request params
+	 * New JsonClient
 	 *
-	 * @param key
-	 * @param value
+	 * @param method specify request method (GET or POST)
 	 */
-	public void put(String key, Object value) {
-		parameters.put(key, value);
+	public JsonClient(RequestBuilder.Method method) {
+		if (method != null) this.method = method;
 	}
 
 	/**
-	 * Makes a call to Perun's API with specific URL.
-	 * URL parameters (if any), must be passed to JsonClient by put() method before making a call.
-	 * Passed events are used to handle response.
+	 * New JsonClient
 	 *
-	 * @param url    URL specifying manager/method to call
-	 * @param events events which handles callback response
-	 * @return int unique ID of callback
+	 * @param method specify request method (GET or POST)
+	 * @param events events, which handles retrieved response
 	 */
-	public int getData(String url, JsonEvents events) {
-		return this.getData(url, parameters, events);
+	public JsonClient(RequestBuilder.Method method, JsonEvents events) {
+		if (method != null) this.method = method;
+		if (events != null) this.events = events;
 	}
 
 	/**
-	 * Makes a call to Perun's API with specific URL and specific parameters (passed as map object).
-	 * Passed events are used to handle response.
-	 *
-	 * @param url    URL specifying manager/method to call
-	 * @param parameters URL parameters used in call
-	 * @param events events which handles callback response
-	 * @return int unique ID of callback
+	 * New JsonClient2 using GET method
+	 * @param events events, which handles retrieved response
 	 */
-	public int getData(String url, Map<String, Object> parameters, JsonEvents events) {
+	public JsonClient(JsonEvents events) {
+		if (events != null) this.events = events;
+	}
+
+	/**
+	 * Puts custom parameters into payload or URL (based on call type) in a request.
+	 *
+	 * @param key key (parameter name)
+	 * @param data data to send (parameter value)
+	 */
+	public void put(String key, Object data) {
+
+		if (method.equals(RequestBuilder.GET)) {
+
+			//GET request
+			parameters.put(key, data);
+
+		} else {
+
+			// POST request
+			if (json == null) json = new JSONObject();
+			if (data instanceof JSONValue) {
+				json.put(key, (JSONValue)data);
+			}
+
+		}
+
+	}
+
+	/**
+	 * Call specific URL with custom events.
+	 *
+	 * @param url URL to send data to
+	 * @return Request unique handling Request
+	 */
+	public Request call(String url) {
 
 		String parametersString = "";
 		if (parameters != null && !parameters.isEmpty()) {
@@ -110,179 +124,125 @@ public class JsonClient {
 				}
 			}
 		}
-		return getData(url, parametersString, events);
 
-	}
+		// build request URL
+		this.requestUrl = URL.encode(urlPrefix + url + "?callback=" + CALLBACK_NAME + parametersString);
 
-	/**
-	 * Makes a call to Perun's API with specific URL and parameters.
-	 * Passed events are used to handle response.
-	 *
-	 * @param url        URL specifying manager/method to call
-	 * @param parameters string representation of URL parameters to send with call (is expected to start with '&')
-	 * @param events     events which handles callback response
-	 * @return int unique ID of callback
-	 */
-	public int getData(String url, String parameters, JsonEvents events) {
+		RequestBuilder builder = new RequestBuilder(method, requestUrl);
 
-		if (events != null) this.events = events;
+		try {
 
-		this.events.onLoadingStart();
+			events.onLoadingStart();
 
-		// encode URL to allow passing special characters as param values
-		String rpcUrl = URL.encode(urlPrefix + url);
+			String data = (json != null && json.isObject() != null) ? json.toString() : "";
 
-		// process parameters and check, if correctly starts with '&'
-		if (parameters != null && !parameters.isEmpty()) {
-			if (parameters.startsWith("?")) {
-				// replace ? for &
-				parameters.replaceFirst("\\?", "&");
-			}
-			if (!parameters.startsWith("&")) {
-				// add missing &
-				parameters += "&"+parameters;
-			}
-			parameters = URL.encode(parameters);
+			Request request = builder.sendRequest(data, new RequestCallback() {
+				@Override
+				public void onResponseReceived(Request req, Response resp) {
+
+					// make JSO from textual JSON response
+					JavaScriptObject jso = parseResponse(resp.getText());
+
+					// HTTP status code is OK
+					if (resp.getStatusCode() == 200) {
+
+						// check JSO, if not PerunException
+						if (jso != null) {
+
+							PerunException error = (PerunException)jso;
+
+							if (error.getErrorId() != null && error.getMessage() != null) {
+								error.setRequestURL(requestUrl);
+								error.setPostData((json != null) ? json.toString() : "");
+								events.onError(error);
+								return;
+							}
+
+						}
+
+						// Response is OK (object or null)
+						events.onFinished(jso);
+
+					} else {
+
+						// HTTP status code != OK (200)
+						handleErrors(jso);
+
+					}
+
+				}
+
+				@Override
+				public void onError(Request req, Throwable exc) {
+					// request not sent
+					handleErrors(parseResponse(exc.toString()));
+				}
+			});
+
+			return request;
+
+		} catch (RequestException exc) {
+			// usually couldn't connect to server
+			handleErrors(parseResponse(exc.toString()));
 		}
 
-		// new request ID
-		jsonRequestId++;
-		get(jsonRequestId, rpcUrl, parameters, this, timeout);
-
-		return jsonRequestId;
+		// request failed
+		return null;
 
 	}
 
 	/**
-	 * Makes a native call to the remote server (Appends script to the DOM).
+	 * Handles callback errors before passing them to events handler.
 	 *
-	 * @param requestId Request unique identification
-	 * @param url       URL specifying manager/method to call
-	 * @param params    string representation of URL parameters to send with call (is expected to start with '&')
-	 * @param handler   instance of this class (JsonClient)
-	 * @param timeout   time in milliseconds to wait for server response
+	 * @param jso retrieved data (error response)
 	 */
-	private native static void get(int requestId, String url, String params, JsonClient handler, int timeout) /*-{
+	private void handleErrors(JavaScriptObject jso) {
 
-        var callback = "callback" + requestId;
-
-        // [2] Define the callback function on the window object.
-        window[callback] = function (jso) {
-
-            // if not already done - expired?
-            if (window[callback + "done"]) {
-                return;
-            }
-            // [3] If response is not JSON object, try to create BasicOverlayType from it.
-            try {
-                if ((typeof jso) != "object") {
-                    jso = {value: jso};
-                }
-            } catch (err) {
-
-            }
-            window[callback + "done"] = true;
-            setTimeout(function () {
-                handler.@cz.metacentrum.perun.wui.json.JsonClient::handleResponse(ILcom/google/gwt/core/client/JavaScriptObject;)(requestId, jso);
-            }, 1500);
-
-        };
-
-        // [1] Create a script element.
-        var script = document.createElement("script");
-        script.setAttribute("src", url + "?callback=" + callback + params);
-        script.setAttribute("type", "text/javascript");
-
-        // [4] JSON download has a timeout.
-        setTimeout(
-            function () {
-                if (!window[callback + "done"]) {
-                    handler.@cz.metacentrum.perun.wui.json.JsonClient::handleResponse(ILcom/google/gwt/core/client/JavaScriptObject;)(requestId, null);
-                }
-                // [5] Cleanup. Remove script and callback elements.
-                document.body.removeChild(script);
-                delete window[callback];
-                delete window[callback + "done"];
-            }, timeout);
-
-        // [6] Attach the script element to the document body.
-        document.body.appendChild(script);
-
-    }-*/;
-
-	/**
-	 * Handle the response from server. Based on result either onFinished()
-	 * or onError() is called.
-	 *
-	 * @param requestId ID of the called request
-	 * @param jso       JavaScriptObject to be processed. If null, the error is called.
-	 */
-	private void handleResponse(int requestId, final JavaScriptObject jso) {
-
-		activeRequestsMap.remove(requestId);
-
-		if (jso == null) {
-			// timeout
-			events.onError(null);
+		if (jso != null) {
+			events.onError((PerunException) jso);
 		} else {
-
-			PerunException error = (PerunException) jso.cast();
-			if (error.getErrorId() != null && !error.getErrorId().isEmpty()) {
-				// retrieved data is error object
-				events.onError(error);
-			} else {
-				// retrieved data is correct
-				events.onFinished(jso);
-			}
-
+			PerunException error = PerunException.createNew("0", "Cross-site request", "Cross-site request was blocked by browser.");
+			error.setRequestURL(requestUrl);
+			error.setPostData(json.toString());
+			events.onError(error);
 		}
-
 	}
 
 	/**
-	 * Removes all running requests
-	 */
-	public static void removeRunningRequests() {
-
-		Set<Integer> requestsToRemove = new HashSet<Integer>();
-
-		for (Map.Entry<Integer, JsonRequest> entry : activeRequestsMap.entrySet()) {
-			JsonRequest request = entry.getValue();
-			requestsToRemove.add(request.getId());
-		}
-
-		for (int request : requestsToRemove) {
-			removeRunningRequest(request);
-		}
-
-	}
-
-	/**
-	 * Removes one running request
+	 * Parse server response so it can be evaluated as JSON.
+	 * If primitive type is returned, it's wrapped as BasicOverlayObject
 	 *
-	 * @param requestId ID of request to remove
+	 * @param resp server response
+	 * @return returned data as JavaScriptObject
 	 */
-	public static boolean removeRunningRequest(int requestId) {
+	private JavaScriptObject parseResponse(String resp) {
 
-		// if the request doesn't exist, return false
-		if (!activeRequestsMap.containsKey(requestId)) {
-			return false;
+		if (resp == null || resp.isEmpty()) return null;
+
+		// trims the whitespace
+		resp = resp.trim();
+
+		// short comparing
+		if ((CALLBACK_NAME + "(null);").equalsIgnoreCase(resp)) {
+			return null;
 		}
 
-		// remove request
-		removeRunningRequestNative(requestId);
-		activeRequestsMap.remove(requestId);
-		return true;
-	}
+		// if starts with 'callbackPost(' and ends with ')'or ');' == wrapped => must be unwrapped
+		RegExp re = RegExp.compile("^" + CALLBACK_NAME + "\\((.*)\\)|\\);$");
+		MatchResult result = re.exec(resp);
+		if (result != null) {
+			resp = result.getGroup(1);
+		}
 
-	/**
-	 * Removes the request from DOM.
-	 *
-	 * @param requestId ID of request to remove
-	 */
-	private static native void removeRunningRequestNative(int requestId) /*-{
-        var callback = "callback" + requestId;
-        window[callback + "done"] = true;
-    }-*/;
+		// if response == null => return null
+		if (resp.equalsIgnoreCase("null")) {
+			return null;
+		}
+
+		// normal object
+		JavaScriptObject jso = JsonUtils.parseJson(resp);
+		return jso;
+
+	}
 
 }

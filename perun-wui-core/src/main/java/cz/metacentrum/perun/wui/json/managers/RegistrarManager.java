@@ -1,12 +1,13 @@
 package cz.metacentrum.perun.wui.json.managers;
 
+import com.google.gwt.http.client.Request;
 import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 
 /**
  * Manager with standard callbacks to Perun's API (RegistrarManager).
  * <p/>
- * Each callback returns unique ID used to make call. Such call can be removed
+ * Each callback returns unique Request used to make call. Such call can be removed
  * while processing to prevent any further actions based on it's {@link cz.metacentrum.perun.wui.json.JsonEvents JsonEvents}.
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
@@ -25,9 +26,9 @@ public class RegistrarManager {
 	 * @param locale Required localization of form texts
 	 * @param events Events done on callback
 	 *
-	 * @return int unique ID of callback
+	 * @return Request unique request
 	 */
-	public static int getFormItemsWithValue(int voId, String locale, JsonEvents events) {
+	public static Request getFormItemsWithValue(int voId, String locale, JsonEvents events) {
 		return getFormItemsWithValue(voId, 0, locale, events);
 	}
 
@@ -40,18 +41,18 @@ public class RegistrarManager {
 	 * @param locale Required localization of form texts
 	 * @param events Events done on callback
 	 *
-	 * @return int unique ID of callback
+	 * @return Request unique request
 	 */
-	public static int getFormItemsWithValue(int voId, int groupId, String locale, JsonEvents events) {
+	public static Request getFormItemsWithValue(int voId, int groupId, String locale, JsonEvents events) {
 
-		JsonClient client = new JsonClient(12000);
+		JsonClient client = new JsonClient(events);
 		client.put("vo", voId);
 		if (groupId != 0) client.put("group", groupId);
 		client.put("locale", locale);
 
 		// FIXME - switch to new implementation
 		client.put("type", "INITIAL");
-		return client.getData(REGISTRAR_MANAGER + "getFormItemsWithPrefilledValues", events);
+		return client.call(REGISTRAR_MANAGER + "getFormItemsWithPrefilledValues");
 		//return client.getData(REGISTRAR_MANAGER + "getFormItemsWithValue", events);
 
 	}
@@ -63,15 +64,15 @@ public class RegistrarManager {
 	 * @param groupName Optional name of Group to get data for
 	 * @param events Events done on callback
 	 *
-	 * @return int unique ID of callback
+	 * @return Request unique request
 	 */
-	public static int initialize(String voName, String groupName, JsonEvents events) {
+	public static Request initialize(String voName, String groupName, JsonEvents events) {
 
-		JsonClient client = new JsonClient(12000);
+		JsonClient client = new JsonClient(events);
 		client.put("vo", voName);
 		if (groupName != null && !groupName.isEmpty()) client.put("group", groupName);
 
-		return client.getData(REGISTRAR_MANAGER + "initialize", events);
+		return client.call(REGISTRAR_MANAGER + "initialize");
 
 	}
 
@@ -81,15 +82,15 @@ public class RegistrarManager {
 	 * @param userId ID of user to get applications for or 0 if user unknown (search by authorization)
 	 * @param events Events done on callback
 	 *
-	 * @return int unique ID of callback
+	 * @return Request unique request
 	 */
-	public static int getApplicationsForUser(int userId, JsonEvents events) {
+	public static Request getApplicationsForUser(int userId, JsonEvents events) {
 
-		JsonClient client = new JsonClient(12000);
+		JsonClient client = new JsonClient(events);
 		if (userId > 0) {
 			client.put("id", userId);
 		}
-		return client.getData(REGISTRAR_MANAGER + "getApplicationsForUser", events);
+		return client.call(REGISTRAR_MANAGER + "getApplicationsForUser");
 
 	}
 

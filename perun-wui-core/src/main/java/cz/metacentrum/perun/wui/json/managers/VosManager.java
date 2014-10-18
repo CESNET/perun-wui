@@ -1,17 +1,16 @@
 package cz.metacentrum.perun.wui.json.managers;
 
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
-import cz.metacentrum.perun.wui.json.JsonClient;
-import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.JsonPostClient;
-import cz.metacentrum.perun.wui.json.JsonUtils;
+import cz.metacentrum.perun.wui.json.*;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 
 /**
  * Manager with standard callbacks to Perun's API (VosManager).
  * <p/>
- * Each callback returns unique ID used to make call. Such call can be removed
+ * Each callback returns unique Request used to make call. Such call can be removed
  * while processing to prevent any further actions based on it's {@link JsonEvents JsonEvents}.
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
@@ -26,15 +25,15 @@ public class VosManager {
 	 *
 	 * @param listAll TRUE = to get all VOs in Perun / FALSE = get Vos where user is manager
 	 * @param events  events done on callback
-	 * @return int unique ID of callback
+	 * @return Request unique request
 	 */
-	public static int getVos(boolean listAll, JsonEvents events) {
+	public static Request getVos(boolean listAll, JsonEvents events) {
 
-		JsonClient client = new JsonClient();
+		JsonClient client = new JsonClient(events);
 		if (listAll) {
-			return client.getData(VOS_MANAGER + "getAllVos", events);
+			return client.call(VOS_MANAGER + "getAllVos");
 		} else {
-			return client.getData(VOS_MANAGER + "getVos", events);
+			return client.call(VOS_MANAGER + "getVos");
 		}
 
 	}
@@ -44,15 +43,15 @@ public class VosManager {
 	 *
 	 * @param id     ID of VO to get
 	 * @param events events done on callback
-	 * @return int unique ID of callback
+	 * @return Request unique request
 	 */
-	public static int getVoById(int id, JsonEvents events) {
+	public static Request getVoById(int id, JsonEvents events) {
 
-		if (id <= 0) return 0;
+		if (id <= 0) return null;
 
 		JsonClient client = new JsonClient();
 		client.put("id", id);
-		return client.getData(VOS_MANAGER + "getVoById", events);
+		return client.call(VOS_MANAGER + "getVoById");
 
 	}
 
@@ -62,14 +61,15 @@ public class VosManager {
 	 *
 	 * @param vo Vo to create with all necessary properties set.
 	 * @param events events done on callback
+	 * @return Request unique request
 	 */
-	public static void createVo(Vo vo, JsonEvents events) {
+	public static Request createVo(Vo vo, JsonEvents events) {
 
-		if (vo == null) return;
+		if (vo == null) return null;
 
-		JsonPostClient client = new JsonPostClient(events);
+		JsonClient client = new JsonClient(RequestBuilder.POST, events);
 		client.put("vo", new JSONObject(vo));
-		client.sendData(VOS_MANAGER + "createVo");
+		return client.call(VOS_MANAGER + "createVo");
 
 	}
 
@@ -80,15 +80,16 @@ public class VosManager {
 	 * @param vo VO to delete
 	 * @param force TRUE = force delete / FALSE = standard delete (default)
 	 * @param events events done on callback
+	 * @return Request unique request
 	 */
-	public static void deleteVo(Vo vo, boolean force, JsonEvents events) {
+	public static Request deleteVo(Vo vo, boolean force, JsonEvents events) {
 
-		if (vo == null) return;
+		if (vo == null) return null;
 
-		JsonPostClient client = new JsonPostClient(events);
+		JsonClient client = new JsonClient(RequestBuilder.POST, events);
 		client.put("vo", new JSONNumber(vo.getId()));
 		if (force) client.put("force", null);
-		client.sendData(VOS_MANAGER + "deleteVo");
+		return client.call(VOS_MANAGER + "deleteVo");
 
 	}
 
@@ -98,14 +99,15 @@ public class VosManager {
 	 *
 	 * @param vo VO to update
 	 * @param events events done on callback
+	 * @return Request unique request
 	 */
-	public static void updateVo(Vo vo, JsonEvents events) {
+	public static Request updateVo(Vo vo, JsonEvents events) {
 
-		if (vo == null) return;
+		if (vo == null) return null;
 
-		JsonPostClient client = new JsonPostClient(events);
+		JsonClient client = new JsonClient(RequestBuilder.POST, events);
 		client.put("vo", JsonUtils.convertToJSON(vo));
-		client.sendData(VOS_MANAGER + "updateVo");
+		return client.call(VOS_MANAGER + "updateVo");
 
 	}
 
@@ -116,16 +118,16 @@ public class VosManager {
 	 * @param vo VO to search external sources for
 	 * @param searchString string to search by
 	 * @param events events done on callback
-	 * @return List of Candidates to be VO members
+	 * @return Request unique request
 	 */
-	public static int findCandidates(Vo vo, String searchString, JsonEvents events) {
+	public static Request findCandidates(Vo vo, String searchString, JsonEvents events) {
 
-		if (vo == null || searchString == null || searchString.trim().isEmpty()) return 0;
+		if (vo == null || searchString == null || searchString.trim().isEmpty()) return null;
 
-		JsonClient client = new JsonClient(120000);
+		JsonClient client = new JsonClient(events);
 		client.put("vo", vo.getId());
 		client.put("searchString", searchString);
-		return client.getData(VOS_MANAGER + "findCandidates", events);
+		return client.call(VOS_MANAGER + "findCandidates");
 
 	}
 

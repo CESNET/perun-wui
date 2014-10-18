@@ -1,12 +1,13 @@
 package cz.metacentrum.perun.wui.json.managers;
 
+import com.google.gwt.http.client.Request;
 import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 
 /**
  * Manager with standard callbacks to Perun's API (FacilitiesManager).
  * <p/>
- * Each callback returns unique ID used to make call. Such call can be removed
+ * Each callback returns unique Request used to make call. Such call can be removed
  * while processing to prevent any further actions based on it's {@link JsonEvents JsonEvents}.
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
@@ -21,15 +22,15 @@ public class FacilitiesManager {
 	 *
 	 * @param getRich TRUE = get RichFacilities / FALSE = get Facilities (default)
 	 * @param events events done on callback
-	 * @return int unique ID of callback
+	 * @return Request unique request
 	 */
-	public static int getFacilities(boolean getRich, JsonEvents events) {
+	public static Request getFacilities(boolean getRich, JsonEvents events) {
 
-		JsonClient client = new JsonClient();
+		JsonClient client = new JsonClient(events);
 		if (getRich) {
-			return client.getData(FACILITIES_MANAGER + "getRichFacilities", events);
+			return client.call(FACILITIES_MANAGER + "getRichFacilities");
 		} else {
-			return client.getData(FACILITIES_MANAGER + "getFacilities", events);
+			return client.call(FACILITIES_MANAGER + "getFacilities");
 		}
 
 	}
@@ -39,15 +40,15 @@ public class FacilitiesManager {
 	 *
 	 * @param id ID of facility to get
 	 * @param events events done on callback
-	 * @return int unique ID of callback
+	 * @return Request unique request
 	 */
-	public static int getFacilityById(int id, JsonEvents events) {
+	public static Request getFacilityById(int id, JsonEvents events) {
 
-		if (id <= 0) return 0;
+		if (id <= 0) return null;
 
-		JsonClient client = new JsonClient();
+		JsonClient client = new JsonClient(events);
 		client.put("id", id);
-		return client.getData(FACILITIES_MANAGER + "getFacilityById", events);
+		return client.call(FACILITIES_MANAGER + "getFacilityById");
 
 	}
 

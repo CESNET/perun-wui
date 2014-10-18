@@ -1,7 +1,6 @@
 package cz.metacentrum.perun.wui.model.columnProviders;
 
 import com.google.gwt.cell.client.FieldUpdater;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.beans.Application;
