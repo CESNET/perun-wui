@@ -31,6 +31,10 @@
 		<!-- libraries versions -->
 		<junit.version>4.11</junit.version>
 
+		<!-- Project wide GWT version -->
+		<gwtVersion>2.6.1</gwtVersion>
+		<gwtPluginVersion>2.6.1</gwtPluginVersion>
+
 	</properties>
 
 	<!-- DEFAULT MAVEN BUILD SETTINGS
@@ -282,6 +286,16 @@
 		<repository>
 			<id>sonatype-nexus-snapshots</id>
 			<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+		</repository>
+		<repository>
+			<id>sonatype-nexus-snapshots2</id>
+			<url>http://oss.sonatype.org/content/repositories/google-snapshots</url>
 			<snapshots>
 				<enabled>true</enabled>
 			</snapshots>

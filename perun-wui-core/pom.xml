@@ -25,8 +25,9 @@
     </scm>
 
     <properties>
-        <!-- Convenience property to set the GWT version -->
-        <gwtVersion>2.6.1</gwtVersion>
+        <!-- Convenience property to set the GWT version
+        <gwtVersion>2.7.0-SNAPSHOT</gwtVersion>
+        <gwtPluginVersion>2.7.0-beta1</gwtPluginVersion> -->
         <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
     </properties>
 
@@ -102,7 +103,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>${gwtVersion}</version>
+                <version>${gwtPluginVersion}</version>
                 <executions>
                     <execution>
                         <goals>
@@ -205,7 +206,7 @@
                     <plugin>
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>gwt-maven-plugin</artifactId>
-                        <version>${gwtVersion}</version>
+                        <version>${gwtPluginVersion}</version>
                         <executions>
                             <execution>
                                 <goals>
