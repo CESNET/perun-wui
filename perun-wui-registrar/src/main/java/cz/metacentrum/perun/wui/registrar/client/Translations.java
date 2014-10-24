@@ -149,7 +149,71 @@ public class Translations {
 		if (PerunSession.LOCALE.equals("cs")) {
 			return "Na zadanou adresu bude zaslán email s odkazem pro ověření.";
 		}
-		return "Email with verifiaction link will be sent to provided email address.";
+		return "Email with verification link will be sent to provided email address.";
+
+	}
+
+	public static String similarUsersFound() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Podobní uživatelé jsou v systému registrováni. Pokud jste to Vy, prokažte se přihlášením pomocí některé z Vašich registrovaných identit.";
+		}
+		return "Similar user(s) are already registered in system. If it`s you, prove your identity by logging-in using one of the registered identities.";
+
+	}
+
+	public static String similarUsersFoundTitle(int count) {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			if (count > 1) return "Nalezeni podobní uživatelé";
+			return "Nalezen podobný uživatel";
+		}
+		return "Similar user(s) found";
+
+	}
+
+	public static String noThanks() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Nejsem to já";
+		}
+		return "It's not me";
+
+	}
+
+	public static String byCertificate() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Pomocí certifikátu";
+		}
+		return "By certificate";
+
+	}
+
+	public static String byIdp() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Pomocí poskytovatele identit";
+		}
+		return "By identity provider";
+
+	}
+
+	public static String notSelected() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "--- Nevybráno ---";
+		}
+		return "--- Not selected ---";
+
+	}
+
+	public static String customValue() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "--- Ruční zadání ---";
+		}
+		return "--- Custom value ---";
 
 	}
 

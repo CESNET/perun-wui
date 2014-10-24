@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.*;
@@ -111,6 +112,7 @@ public class PerunFormItem extends FormGroup {
 
 	public PerunFormItem(ApplicationFormItemData item) {
 		this.item = item;
+		this.formLabel.getElement().addClassName("formLabel");
 		if (item != null) {
 			generateFormItem();
 		}
@@ -119,6 +121,7 @@ public class PerunFormItem extends FormGroup {
 	public PerunFormItem(ApplicationFormItemData item, String lang) {
 		this.item = item;
 		this.lang = lang;
+		this.formLabel.getElement().addClassName("formLabel");
 		if (item != null) {
 			generateFormItem();
 		}
@@ -159,9 +162,9 @@ public class PerunFormItem extends FormGroup {
 				!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON)) {
 			if (!getLabelOrShortName().equals("")) {
 				if (isRequired()) {
-					formLabel.setHTML(getLabelOrShortName()+" <span style=\"color: red;\">*</span>");
+					formLabel.setHTML(getLabelOrShortName().replaceAll(" ", "&nbsp;")+"&nbsp;<span style=\"color: red;\">*</span>");
 				} else {
-					formLabel.setHTML(getLabelOrShortName()+"&nbsp;&nbsp;");
+					formLabel.setHTML(getLabelOrShortName().replaceAll(" ", "&nbsp;")+"&nbsp;&nbsp;");
 				}
 			}
 		}
@@ -187,6 +190,12 @@ public class PerunFormItem extends FormGroup {
 			ArrayList<String> keyList = Utils.setToList(opts.keySet());
 
 			int i = 0;
+
+			if (!isRequired()) {
+				select.addItem(Translations.notSelected(), "");
+				i++;
+			}
+
 			for(String key : keyList){
 				boolean selected = getValue().equals(key);
 				select.addItem(opts.get(key), key);
@@ -199,6 +208,55 @@ public class PerunFormItem extends FormGroup {
 				currentValue.setValue(select.getAllSelectedValues().get(0));
 			}
 
+			select.refresh();
+
+		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.COMBOBOX)) {
+
+			final FlowPanel group = ((FlowPanel)getFormItemWidget());
+			final cz.metacentrum.perun.wui.registrar.widgets.Select select = (cz.metacentrum.perun.wui.registrar.widgets.Select)group.getWidget(0);
+			int selectedIndex = select.getSelectedIndex();
+			select.clear();
+
+			Map<String,String> opts = parseSelectionBox(item.getFormItem().getItemTexts(lang).getOptions());
+			ArrayList<String> keyList = Utils.setToList(opts.keySet());
+
+			if (!isRequired()) {
+				select.addItem(Translations.notSelected(), "");
+			}
+
+			select.addItem(Translations.customValue(), "custom");
+			int customIndex = select.getItemCount()-1;
+
+			for(String key : keyList){
+				select.addItem(opts.get(key), key);
+				// set pre-filled value as selected
+				if (preFilledValue.equals(key) && selectedIndex == -1) selectedIndex = select.getItemCount()-1;
+			}
+
+			// when nothing selected
+			if (selectedIndex < 0)  {
+
+				if (preFilledValue.isEmpty()) {
+					selectedIndex = 0;
+				} else {
+					selectedIndex = customIndex;
+				}
+
+			}
+
+			// select proper item
+			select.setItemSelected(selectedIndex, true);
+
+			if (select.getSelectedIndex() != customIndex) {
+				currentValue.setValue(select.getValue(select.getSelectedIndex()));
+				select.removeStyleName("comboboxFormItemFirst");
+				// FIXME - hack bug in BootstrapSelect
+				select.getElement().getNextSiblingElement().removeClassName("comboboxFormItemFirst");
+			} else {
+				select.addStyleName("comboboxFormItemFirst");
+			}
+
+			// rework group
 			select.refresh();
 
 		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.CHECKBOX)) {
@@ -251,14 +309,15 @@ public class PerunFormItem extends FormGroup {
 				ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON.equals(item.getFormItem().getType())) {
 
 			((PerunButton)widget).setText(getLabelOrShortName());
+			((PerunButton)widget).getTooltip().setTitle(Translations.checkAndSubmit());
+			((PerunButton)widget).getTooltip().reconfigure();
 
 		} else if (ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL.equals(item.getFormItem().getType())) {
 
-			if (preFilledValue.contains(";")) {
+			if (!preFilledValue.isEmpty()) {
 				if (emailSelect.getValue(emailSelect.getItemCount()-1).equals("custom")) {
 					emailSelect.setItemText(emailSelect.getItemCount() - 1, Translations.customValueEmail());
 					emailSelect.refresh();
-
 				}
 			}
 
@@ -382,12 +441,18 @@ public class PerunFormItem extends FormGroup {
 			group.add(addon);
 			group.add(box);
 
-			if (preFilledValue.contains(";")) {
+			emailSelect.addStyleName("emailFormItem");
+
+			if (!preFilledValue.isEmpty()) {
 
 				InputGroupButton addon2 = new InputGroupButton();
 
-				for (String val : preFilledValue.split(";")) {
-					emailSelect.addItem(val, val);
+				if (preFilledValue.contains(";")) {
+					for (String val : preFilledValue.split(";")) {
+						emailSelect.addItem(val, val);
+					}
+				} else {
+					emailSelect.addItem(preFilledValue, preFilledValue);
 				}
 
 				emailSelect.addItem(Translations.customValueEmail(), "custom");
@@ -610,6 +675,8 @@ public class PerunFormItem extends FormGroup {
 			final ExtendedPasswordTextBox box2 = new ExtendedPasswordTextBox();
 			box.setMaxLength(TEXT_BOX_MAX_LENGTH);
 			box2.setMaxLength(TEXT_BOX_MAX_LENGTH);
+			box.addStyleName("passwordFormItemFirst");
+			box2.addStyleName("passwordFormItemLast");
 
 			if (item.getFormItem().getRegex() != null) {
 				box.setRegex(item.getFormItem().getRegex());
@@ -760,8 +827,9 @@ public class PerunFormItem extends FormGroup {
 				public void onChange(ChangeEvent event) {
 					String value = select.getAllSelectedValues().get(0);
 					// fire change event to check for correct input
-					currentValue.setValue(value, true);
+					currentValue.setValue(value);
 					select.refresh();
+					ValueChangeEvent.fire(currentValue, currentValue.getValue());
 				}
 			});
 
@@ -770,6 +838,54 @@ public class PerunFormItem extends FormGroup {
 			setDefaultInputChecker();
 
 			widget = select;
+			return getFormItemWidget();
+
+		} else if (ApplicationFormItem.ApplicationFormItemType.COMBOBOX.equals(item.getFormItem().getType())) {
+
+			currentValue = new ExtendedTextBox();
+			currentValue.setWidth("400px");
+			currentValue.setValue(preFilledValue);
+			currentValue.addStyleName("comboboxFormItemLast");
+
+			final cz.metacentrum.perun.wui.registrar.widgets.Select select = new cz.metacentrum.perun.wui.registrar.widgets.Select();
+			select.setWidth("400px");
+			select.setShowTick(true);
+
+			// when changed, update value
+			select.addChangeHandler(new ChangeHandler() {
+				public void onChange(ChangeEvent event) {
+					String value = select.getAllSelectedValues().get(0);
+					// fire change event to check for correct input
+					if (value.equals("custom")) {
+						currentValue.setVisible(true);
+						currentValue.setValue("");
+						currentValue.setFocus(true);
+						select.addStyleName("comboboxFormItemFirst");
+					} else {
+						currentValue.setVisible(false);
+						currentValue.setValue(value);
+						select.removeStyleName("comboboxFormItemFirst");
+						// FIXME - hack bug in BootstrapSelect
+						select.getElement().getNextSiblingElement().removeClassName("comboboxFormItemFirst");
+
+					}
+					select.refresh();
+					ValueChangeEvent.fire(currentValue, currentValue.getValue());
+				}
+			});
+
+			currentValue.setVisible(false);
+
+			FlowPanel group = new FlowPanel();
+			group.setWidth("400px");
+			group.add(select);
+			group.add(currentValue);
+
+			// check on hidden TextBox
+			setDefaultValidationTriggers();
+			setDefaultInputChecker();
+
+			widget = group;
 			return getFormItemWidget();
 
 		} else if (ApplicationFormItem.ApplicationFormItemType.CHECKBOX.equals(item.getFormItem().getType())) {
@@ -784,6 +900,7 @@ public class PerunFormItem extends FormGroup {
 			ArrayList<String> keyList = Utils.setToList(boxContents.keySet());
 
 			FlowPanel wrapper = new FlowPanel();
+			wrapper.getElement().addClassName("checkboxFormItem");
 
 			for(String key : keyList) {
 
@@ -989,7 +1106,7 @@ public class PerunFormItem extends FormGroup {
 					// better check on emails
 					if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL)) {
 
-						// multivalue pre-fill
+						// multi-value pre-fill
 						if (preFilledValue.contains(";")) {
 
 							for (String s : preFilledValue.split(";")) {
@@ -1096,6 +1213,20 @@ public class PerunFormItem extends FormGroup {
 			currentValue.addKeyUpHandler(new KeyUpHandler() {
 				public void onKeyUp(KeyUpEvent event) {
 					DomEvent.fireNativeEvent(Document.get().createChangeEvent(), currentValue);
+
+					// select proper value in selection box for emails
+					if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL)) {
+						for (int i=0; i<emailSelect.getItemCount(); i++) {
+							if (emailSelect.getValue(i).equals(getValue())) {
+								emailSelect.setSelectedIndex(i);
+								emailSelect.refresh();
+								return;
+							}
+						}
+						emailSelect.setSelectedIndex(emailSelect.getItemCount()-1);
+						emailSelect.refresh();
+					}
+
 				}
 			});
 
@@ -1103,13 +1234,42 @@ public class PerunFormItem extends FormGroup {
 				@Override
 				public void onBlur(BlurEvent event) {
 					isValid(true);
+
+					// select proper value in selection box for emails
+					if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL)) {
+						for (int i=0; i<emailSelect.getItemCount(); i++) {
+							if (emailSelect.getValue(i).equals(getValue())) {
+								emailSelect.setSelectedIndex(i);
+								emailSelect.refresh();
+								return;
+							}
+						}
+						emailSelect.setSelectedIndex(emailSelect.getItemCount()-1);
+						emailSelect.refresh();
+					}
+
 				}
 			});
 
 			currentValue.addValueChangeHandler(new ValueChangeHandler<String>() {
 				@Override
 				public void onValueChange(ValueChangeEvent<String> event) {
+
 					isValid(true);
+
+					// select proper value in selection box for emails
+					if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL)) {
+						for (int i=0; i<emailSelect.getItemCount(); i++) {
+							if (emailSelect.getValue(i).equals(getValue())) {
+								emailSelect.setSelectedIndex(i);
+								emailSelect.refresh();
+								return;
+							}
+						}
+						emailSelect.setSelectedIndex(emailSelect.getItemCount()-1);
+						emailSelect.refresh();
+					}
+
 				}
 			});
 

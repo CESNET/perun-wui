@@ -77,6 +77,27 @@ public class RegistrarManager {
 	}
 
 	/**
+	 * Retrieve init data for Registrar GUI in one big call.
+	 * Retrieves all possible forms, objects and relevant exceptions
+	 * if thrown in order to determine actual users state in registration process.
+	 *
+	 * @param voName Name of VO to get data for
+	 * @param groupName Full name of Group to get data for (optional)
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request initializeRegistrar(String voName, String groupName, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		client.put("vo", voName);
+		if (groupName != null && !groupName.isEmpty()) client.put("group", groupName);
+
+		return client.call(REGISTRAR_MANAGER + "initializeRegistrar");
+
+	}
+
+	/**
 	 * Retrieve applications for User.
 	 *
 	 * @param userId ID of user to get applications for or 0 if user unknown (search by authorization)
