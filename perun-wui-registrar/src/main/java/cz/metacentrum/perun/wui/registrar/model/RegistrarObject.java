@@ -3,10 +3,7 @@ package cz.metacentrum.perun.wui.registrar.model;
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.model.beans.Group;
-import cz.metacentrum.perun.wui.model.beans.Identity;
-import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.model.beans.*;
 
 import java.util.ArrayList;
 
@@ -28,6 +25,18 @@ public class RegistrarObject extends JavaScriptObject {
 	public final Vo getVo() {
 		if (JsUtils.getNativePropertyObject(this, "vo") != null) {
 			return JsUtils.getNativePropertyObject(this, "vo").cast();
+		}
+		return null;
+	}
+
+	/**
+	 * Get VO attributes
+	 *
+	 * @return VO attributes
+	 */
+	public final ArrayList<Attribute> getVoAttributes() {
+		if (JsUtils.getNativePropertyArray(this, "voAttributes") != null) {
+			return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "voAttributes").cast());
 		}
 		return null;
 	}

@@ -305,6 +305,54 @@ public class PerunFormItem extends FormGroup {
 
 			}
 
+		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.RADIO)) {
+
+			((FlowPanel)widget).clear();
+
+			String options = item.getFormItem().getItemTexts(lang).getOptions();
+			Map<String,String> boxContents = parseSelectionBox(options);
+			ArrayList<String> keyList = Utils.setToList(boxContents.keySet());
+
+			// fill not selected option
+			if (!isRequired()) {
+
+				final Radio radio = new Radio(Translations.notSelected());
+				radio.setName("radio"+item.getFormItem().getId());
+				// pre-fill
+				if ("".equals(getValue().trim())) {
+					radio.setValue(true);
+				}
+
+				radio.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+						currentValue.setValue("", true);
+					}
+				});
+
+				((FlowPanel)widget).add(radio);
+
+			}
+
+			for(final String key : keyList) {
+
+				final Radio radio = new Radio(boxContents.get(key));
+				radio.setName("radio"+item.getFormItem().getId());
+				// pre-fill
+				if (key.trim().equals(getValue().trim())) {
+					radio.setValue(true);
+				}
+				radio.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+						currentValue.setValue(key, true);
+					}
+				});
+
+				((FlowPanel)widget).add(radio);
+
+			}
+
 		} else if (ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON.equals(item.getFormItem().getType()) ||
 				ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON.equals(item.getFormItem().getType())) {
 
@@ -935,6 +983,66 @@ public class PerunFormItem extends FormGroup {
 				});
 
 				wrapper.add(checkbox);
+
+			}
+
+			// check on hidden TextBox
+			setDefaultValidationTriggers();
+			setDefaultInputChecker();
+
+			widget = wrapper;
+			return getFormItemWidget();
+
+		} else if (ApplicationFormItem.ApplicationFormItemType.RADIO.equals(item.getFormItem().getType())) {
+
+			currentValue = new ExtendedTextBox();
+			currentValue.setValue(preFilledValue);
+
+			String options = item.getFormItem().getItemTexts(lang).getOptions();
+			Map<String,String> boxContents = parseSelectionBox(options);
+			ArrayList<String> keyList = Utils.setToList(boxContents.keySet());
+
+			FlowPanel wrapper = new FlowPanel();
+
+			// fill not selected option
+			if (!isRequired()) {
+
+				final Radio radio = new Radio(Translations.notSelected());
+				radio.setName("radio"+item.getFormItem().getId());
+				// pre-fill
+				if ("".equals(getValue().trim())) {
+					radio.setValue(true);
+				}
+
+				radio.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+						currentValue.setValue("", true);
+					}
+				});
+
+				wrapper.add(radio);
+
+			}
+
+			// fill standard values
+			for(final String key : keyList) {
+
+				final Radio radio = new Radio(boxContents.get(key));
+				radio.setName("radio"+item.getFormItem().getId());
+				// pre-fill
+				if (key.trim().equals(getValue().trim())) {
+					radio.setValue(true);
+				}
+
+				radio.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+					@Override
+					public void onValueChange(ValueChangeEvent<Boolean> event) {
+						currentValue.setValue(key, true);
+					}
+				});
+
+				wrapper.add(radio);
 
 			}
 

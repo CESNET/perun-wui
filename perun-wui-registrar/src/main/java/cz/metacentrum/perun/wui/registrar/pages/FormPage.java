@@ -16,11 +16,9 @@ import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.ExtSource;
-import cz.metacentrum.perun.wui.model.beans.Group;
-import cz.metacentrum.perun.wui.model.beans.Identity;
-import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.model.beans.*;
 import cz.metacentrum.perun.wui.pages.Page;
+import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
 import cz.metacentrum.perun.wui.registrar.client.Translations;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
@@ -31,6 +29,8 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
+
+import java.util.ArrayList;
 
 /**
  * Page to display application form for VO or Group.
@@ -49,6 +49,9 @@ public class FormPage extends Page implements Translatable {
 
 	@UiField
 	PerunForm form;
+
+	@UiField
+	Image logo;
 
 	private Widget rootElement;
 
@@ -96,6 +99,16 @@ public class FormPage extends Page implements Translatable {
 
 				if (groupName != null && !groupName.isEmpty()) {
 					group = object.getGroup();
+				}
+
+				ArrayList<Attribute> attrList = object.getVoAttributes();
+				for (Attribute a : attrList) {
+					if (a.getFriendlyName().equals("voLogoURL")) {
+						//PerunRegistrar.setLogo(a.getValue().replace("https://", "http://"));
+						// FIXME - for testing remove https
+						logo.setUrl(a.getValue().replace("https://", "http://"));
+						logo.setVisible(true);
+					}
 				}
 
 				if (object.getException() != null) {
@@ -364,7 +377,7 @@ public class FormPage extends Page implements Translatable {
 
 		ModalFooter footer = new ModalFooter();
 
-		final Button noThanks = new Button("  ...5...  ", new ClickHandler() {
+		final Button noThanks = new Button("...5...", new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				modal.hide();
@@ -383,7 +396,7 @@ public class FormPage extends Page implements Translatable {
 					return false;
 				}
 				counter--;
-				noThanks.setText("  ..."+counter+"...  ");
+				noThanks.setText("..."+counter+"...");
 				return true;
 			}
 		}, 1000);

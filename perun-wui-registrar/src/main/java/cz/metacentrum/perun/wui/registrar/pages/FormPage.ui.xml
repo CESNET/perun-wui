@@ -10,6 +10,8 @@
 
 	<b.html:Div>
 
+		<b:Image visible="false" ui:field="logo"/>
+
 		<b:Form type="HORIZONTAL">
 			<p:PerunForm ui:field="form">
 

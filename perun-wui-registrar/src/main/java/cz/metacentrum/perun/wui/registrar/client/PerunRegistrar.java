@@ -13,8 +13,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Image;
-import com.google.gwt.user.client.ui.RootLayoutPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunContextListener;
@@ -26,12 +24,11 @@ import cz.metacentrum.perun.wui.json.managers.PerunManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
-import cz.metacentrum.perun.wui.pages.LogoutPage;
-import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
+import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
@@ -77,7 +74,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 	AnchorListItem logout;
 
 	@UiField
-	NavbarHeader navbarHeader;
+	static NavbarHeader navbarHeader;
 
 	@UiHandler(value="czech")
 	public void czechClick(ClickEvent event) {
@@ -371,5 +368,11 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 			e.preventDefault();
 		});
 	}-*/;
+
+	/*
+	public static void setLogo(String url) {
+		((Image)navbarHeader.getWidget(0)).setUrl(url);
+	}
+	*/
 
 }
