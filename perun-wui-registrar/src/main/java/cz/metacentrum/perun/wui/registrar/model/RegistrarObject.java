@@ -35,10 +35,7 @@ public class RegistrarObject extends JavaScriptObject {
 	 * @return VO attributes
 	 */
 	public final ArrayList<Attribute> getVoAttributes() {
-		if (JsUtils.getNativePropertyArray(this, "voAttributes") != null) {
-			return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "voAttributes").cast());
-		}
-		return null;
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "voAttributes"));
 	}
 
 	/**
@@ -59,10 +56,7 @@ public class RegistrarObject extends JavaScriptObject {
 	 * @return VOs initial form
 	 */
 	public final ArrayList<ApplicationFormItemData> getVoFormInitial() {
-		if (JsUtils.getNativePropertyArray(this, "voFormInitial") != null) {
-			return JsUtils.jsoAsList(JsUtils.getNativePropertyObject(this, "voFormInitial"));
-		}
-		return null;
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "voFormInitial"));
 	}
 
 	/**
@@ -83,10 +77,7 @@ public class RegistrarObject extends JavaScriptObject {
 	 * @return VOs extension form
 	 */
 	public final ArrayList<ApplicationFormItemData> getVoFormExtension() {
-		if (JsUtils.getNativePropertyArray(this, "voFormExtension") != null) {
-			return JsUtils.jsoAsList(JsUtils.getNativePropertyObject(this, "voFormExtension"));
-		}
-		return null;
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "voFormExtension"));
 	}
 
 	/**
@@ -107,10 +98,7 @@ public class RegistrarObject extends JavaScriptObject {
 	 * @return groups initial form
 	 */
 	public final ArrayList<ApplicationFormItemData> getGroupFormInitial() {
-		if (JsUtils.getNativePropertyArray(this, "groupFormInitial") != null) {
-			return JsUtils.jsoAsList(JsUtils.getNativePropertyObject(this, "groupFormInitial"));
-		}
-		return null;
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "groupFormInitial"));
 	}
 
 	/**
@@ -145,10 +133,7 @@ public class RegistrarObject extends JavaScriptObject {
 	 * @return List of similar identities
 	 */
 	public final ArrayList<Identity> getSimilarUsers() {
-		if (JsUtils.getNativePropertyArray(this, "similarUsers") != null) {
-			return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "similarUsers"));
-		}
-		return null;
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "similarUsers"));
 	}
 
 }

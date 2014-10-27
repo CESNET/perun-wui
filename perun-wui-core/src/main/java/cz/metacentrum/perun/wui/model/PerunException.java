@@ -3,6 +3,9 @@ package cz.metacentrum.perun.wui.model;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+
+import java.util.ArrayList;
 
 /**
  * Overlay type for PerunException object from Perun.
@@ -115,6 +118,11 @@ public class PerunException extends JavaScriptObject {
 	 */
 	public final String getReason() {
 		return JsUtils.getNativePropertyString(this, "reason");
+	}
+
+
+	public final ArrayList<ApplicationFormItemData> getFormItems() {
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "formItems"));
 	}
 
 	/**

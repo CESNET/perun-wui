@@ -12,6 +12,8 @@
 
 		<b:Image visible="false" ui:field="logo"/>
 
+		<b:Alert visible="false" type="WARNING" ui:field="notice" dismissable="false" marginTop="20"/>
+
 		<b:Form type="HORIZONTAL">
 			<p:PerunForm ui:field="form">
 

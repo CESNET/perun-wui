@@ -1,6 +1,8 @@
 package cz.metacentrum.perun.wui.registrar.client;
 
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 
 /**
  * Class providing dynamic translations to Registrar GUI.
@@ -225,6 +227,143 @@ public class Translations {
 			return "Moje registrace";
 		}
 		return "My registrations";
+
+	}
+
+	// --------------- EXCEPTIONS -------------------------------- //
+
+	public static String continueButton() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Pokračovat";
+		}
+		return "Continue";
+
+	}
+
+	public static String alreadyRegistered() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Již jste registrován(a) v ";
+		}
+		return "You are already registered in ";
+
+	}
+
+	public static String alreadySubmitted(String voOrGroupName) {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Již máte podanou přihlášku do "+voOrGroupName;
+		}
+		return "You already have submitted registration to "+voOrGroupName;
+
+	}
+
+	public static String visitSubmitted() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Stav podané přihlášky můžete zkontrolovat v části <a href=\""+Window.Location.getHref().split("#")[0]+"#submitted"+"\">"+ Translations.submittedTitle()+"</a>.";
+		}
+		return "You can check state of your application in <a href=\""+Window.Location.getHref().split("#")[0]+"#submitted"+"\">"+ Translations.submittedTitle()+"</a>.";
+
+	}
+
+	public static String cantExtendMembership() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Nyní nelze členství prodloužit";
+		}
+		return "You can't extend membership right now";
+
+	}
+
+	public static String cantExtendMembershipOutside() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Prodlužování členství je aktivní pouze určitou dobu před jeho vypršením a nebo poté.";
+		}
+		return "Membership can be extended only in a short time before membership expiration or after.";
+
+	}
+
+	public static String cantExtendMembershipInsufficientLoa() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Pro prodloužení členství nemáte dostatečně ověřenou identitu (LoA = Level of Assurance). Kontaktujte svého poskytovatele identity ("+ Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())+") a prokažte mu svoji identitu předložením oficiálního dokladu (občanský průkaz, pas). Pokud máte k dispozici jinou identitu s vyšším stupněm ověření, zkuste se přihlásit pomocí ní.";
+		}
+		return "You don't have required Level of Assurance (LoA) to extend membership. Contact your IDP ("+ Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())+") and prove your identity to him by official ID card (passport, driving license). If you have another identity with higher Level of Assurance, try to use it instead.";
+
+	}
+
+	public static String cantBecomeMember(String voOrGroupName) {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Nemůžete se registrovat do "+voOrGroupName;
+		}
+		return "You can't register to "+voOrGroupName;
+
+	}
+
+	public static String cantBecomeMemberLoa() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Poskytovatel Vaší identity, kterého jste použili při přihlášení ("+ Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())+") neposkytuje informaci o stupni Vašeho ověření (LoA = Level of Assurance). Prosím požádejte svého poskytovatele identity o zveřejěnní této informace nebo použijte jiného poskytovatele identity.";
+		}
+		return "<p>The Identity Provider you used to log-in ("+ Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())+") doesn't provide information about your Level of Assurance (LoA). Please ask your IDP to publish such information or use different IDP.";
+
+	}
+
+	public static String cantBecomeMemberInsufficientLoa() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Pro zobrazení registračního formuláře nemáte dostatečně ověřenou identitu (LoA = Level of Assurance). Kontaktujte svého poskytovatele identity ("+ Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())+") a prokažte mu svoji identitu předložením oficiálního dokladu (občanský průkaz, pas). Pokud máte k dispozici jinou identitu s vyšším stupněm ověření, zkuste se přihlásit pomocí ní.";
+		}
+		return "You don't have required Level of Assurance (LoA) to display registration form. Contact your IDP ("+ Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())+") and prove your identity to him by official ID card (passport, driving license). If you have another identity with higher Level of Assurance, try to use it instead.";
+
+	}
+
+	public static String missingRequiredData() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "<h4>Nemůžete se registrovat</h4><p>Poskytovatel Vaší identity, kterého jste použili při přihlášení ("+ Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())+") neposkytuje ověřená data vyžadovaná registračním formulářem. Prosím požádejte svého poskytovatele identity, aby zveřejnil následující atributy nebo použijte jiného poskytovatele identity.";
+		}
+		return "<h4>You can't submit the registration</h4><p>The Identity Provider you used to log-in ("+ Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())+") doesn't provide data required by the registration form. Please ask your IDP to publish following attributes or use different IDP.";
+
+	}
+
+	public static String missingAttribute(String attributeName) {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Chybějící atribut: "+attributeName;
+		}
+		return "Missing attribute: "+attributeName;
+
+	}
+
+	public static String voNotExistsException(String voName) {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Organizace / projekt s názvem '<i>"+voName+"</i>' neexistuje. Zkontrolujte si prosím správnost odkazu v adresním řádku prohlížeče.";
+		}
+		return "Organization / project with name '<i>"+voName+"</i>' not exist. Please check the address used in a browser.";
+
+	}
+
+	public static String groupNotExistsException(String groupName) {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Skupina s názvem '<i>"+groupName+"</i>' neexistuje. Zkontrolujte si prosím správnost odkazu v adresním řádku prohlížeče.";
+		}
+		return "Group with name '<i>"+groupName+"</i>' not exist. Please check the address used in a browser.";
+
+	}
+
+	public static String missingVoInURL() {
+
+		if (PerunSession.LOCALE.equals("cs")) {
+			return "Není zadána organizace / projekt do kterého se chcete registrovat. V adresním řádku chybí parametr ?vo=[jméno].";
+		}
+		return "Organization / project you wish to register to is missing in browser's address bar. Please specify it by ?vo=[name].";
 
 	}
 
