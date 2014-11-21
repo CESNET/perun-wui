@@ -112,7 +112,6 @@
                     <execution>
                         <goals>
                             <goal>compile</goal>
-                            <goal>generateAsync</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -214,6 +213,12 @@
 
             <id>production</id>
 
+	        <activation>
+		        <property>
+			        <name>production</name>
+		        </property>
+	        </activation>
+
             <properties>
                 <perun.build.type>production</perun.build.type>
                 <maven.test.skip>true</maven.test.skip>
@@ -232,7 +237,6 @@
                             <execution>
                                 <goals>
                                     <goal>compile</goal>
-                                    <goal>generateAsync</goal>
                                 </goals>
                             </execution>
                         </executions>

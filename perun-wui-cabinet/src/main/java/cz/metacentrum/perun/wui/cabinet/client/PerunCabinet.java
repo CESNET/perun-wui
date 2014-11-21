@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
@@ -43,6 +44,9 @@ public class PerunCabinet implements EntryPoint, ValueChangeHandler<String> {
 	@Override
 	public void onModuleLoad() {
 
+		// ensure injecting custom CSS styles of PerunWui
+		PerunResources.INSTANCE.css().ensureInjected();
+
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
@@ -67,7 +71,7 @@ public class PerunCabinet implements EntryPoint, ValueChangeHandler<String> {
 						RootLayoutPanel.get().clear();
 						RootLayoutPanel.get().add(uiBinder.createAndBindUi(gui));
 
-						Image logo = new Image("PerunCabinet/image/perun.png");
+						Image logo = new Image(PerunResources.INSTANCE.getPerunLogo());
 						logo.setWidth("260px");
 						logo.setHeight("65px");
 						navbarHeader.insert(logo, 0);

@@ -16,6 +16,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunContextListener;
+import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -191,6 +192,9 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 		// set default for Growl plugin
 		Utils.getDefaultGrowlOptions().makeDefault();
 
+		// ensure injecting custom CSS styles of PerunWui
+		PerunResources.INSTANCE.css().ensureInjected();
+
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
@@ -221,10 +225,12 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 						RootPanel.get().add(uiBinder.createAndBindUi(gui));
 
 						// put logo
-						Image logo = new Image("PerunRegistrar/image/perun.png");
+						Image logo = new Image(PerunResources.INSTANCE.getPerunLogo());
 						logo.setWidth("235px");
 						logo.setHeight("50px");
 						navbarHeader.insert(logo, 0);
+
+						//RootPanel.get().add(new Image(PerunResources.INSTANCE.getPerunIcon()));
 
 						perunLoaded = true;
 						perunLoading = false;
@@ -337,27 +343,6 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 		}
 
 	}
-
-	/**
-	 * Get default language from browser
-	 *
-	 * @return language string
-	 */
-	public static final native String getLang() /*-{
-
-		var l_lang = "en";
-		if (navigator.userLanguage) // Explorer
-			l_lang = navigator.userLanguage;
-		else if (navigator.language) // FF
-			l_lang = navigator.language;
-		else
-			l_lang = "en";
-
-		return l_lang;
-
-		//$wnd.jQuery("meta[name='gwt:property']").attr('content', 'locale='+l_lang);
-
-	}-*/;
 
 	/**
 	 * Prevent default click action on links in menu. Href is present but ignored, only

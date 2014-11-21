@@ -14,8 +14,8 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.resources.PerunWuiCss;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
@@ -61,7 +61,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 	public void onModuleLoad() {
 
 		// ensure injecting custom CSS styles of PerunWui
-		//PerunWuiCss.INSTANCE.css().ensureInjected();
+		PerunResources.INSTANCE.css().ensureInjected();
 
 		// set default for Growl plugin
 		Utils.getDefaultGrowlOptions().makeDefault();

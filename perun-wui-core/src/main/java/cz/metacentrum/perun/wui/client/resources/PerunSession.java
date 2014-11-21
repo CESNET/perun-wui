@@ -83,9 +83,9 @@ public class PerunSession {
 
 		var l_lang = "en";
 		if (navigator.userLanguage) // Explorer
-			l_lang = navigator.userLanguage;
+			l_lang = navigator.userLanguage.split("-")[0];
 		else if (navigator.language) // FF
-			l_lang = navigator.language;
+			l_lang = navigator.language.split("-")[0];
 		else
 			l_lang = "en";
 
