@@ -24,8 +24,6 @@
 	<!-- IE 9 -->
 	<extend-property name="user.agent" values="ie10"/>
 	<!--  IE 10 -->
-	<extend-property name="user.agent" values="opera"/>
-	<!-- OPERA -->
 
 	<!-- Specify the paths for translatable code -->
 	<source path='client'/>

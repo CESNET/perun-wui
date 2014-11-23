@@ -32,8 +32,8 @@
 		<junit.version>4.11</junit.version>
 
 		<!-- Project wide GWT version -->
-		<gwtVersion>2.6.1</gwtVersion>
-		<gwtPluginVersion>2.6.1</gwtPluginVersion>
+		<gwtVersion>2.7.0</gwtVersion>
+		<gwtPluginVersion>2.7.0</gwtPluginVersion>
 
 	</properties>
 
@@ -221,40 +221,9 @@
 	<dependencyManagement>
 		<dependencies>
 
-			<!-- TESTS -->
-
-			<dependency>
-				<groupId>junit</groupId>
-				<artifactId>junit</artifactId>
-				<version>${junit.version}</version>
-				<scope>test</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>javax.validation</groupId>
-				<artifactId>validation-api</artifactId>
-				<version>1.0.0.GA</version>
-				<scope>provided</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>javax.validation</groupId>
-				<artifactId>validation-api</artifactId>
-				<version>1.0.0.GA</version>
-				<classifier>sources</classifier>
-				<scope>provided</scope>
-			</dependency>
-
 			<!-- LOGGING -->
 
 			<!-- OTHERS -->
-
-			<dependency>
-				<groupId>com.google.gwt</groupId>
-				<artifactId>gwt-servlet</artifactId>
-				<version>${gwtVersion}</version>
-				<scope>runtime</scope>
-			</dependency>
 
 			<dependency>
 				<groupId>com.google.gwt</groupId>

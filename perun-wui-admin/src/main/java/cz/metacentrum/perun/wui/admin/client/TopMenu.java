@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Image;
 import cz.metacentrum.perun.wui.client.resources.PerunContextListener;
+import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import org.gwtbootstrap3.client.ui.*;
 
 /**
@@ -43,7 +44,7 @@ public class TopMenu implements PerunContextListener {
 
 		rootElement = ourUiBinder.createAndBindUi(this);
 
-		Image logo = new Image("PerunWuiAdmin/image/perun.png");
+		Image logo = new Image(PerunResources.INSTANCE.getPerunLogo());
 		logo.setWidth("235px");
 		logo.setHeight("50px");
 		navbarHeader.insert(logo, 0);
