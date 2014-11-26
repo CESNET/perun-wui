@@ -28,9 +28,6 @@
 		<perun.build.type>devel</perun.build.type>
 		<maven.test.skip>false</maven.test.skip>
 
-		<!-- libraries versions -->
-		<junit.version>4.11</junit.version>
-
 		<!-- Project wide GWT version -->
 		<gwtVersion>2.7.0</gwtVersion>
 		<gwtPluginVersion>2.7.0</gwtPluginVersion>
