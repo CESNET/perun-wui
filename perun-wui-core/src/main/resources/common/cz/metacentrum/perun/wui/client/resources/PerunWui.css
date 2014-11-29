@@ -53,6 +53,18 @@ th.gwtb3-d {
 	word-wrap: break-word !important;
 }
 
+/* PERUN TOOLBAR */
+.perun-toolbar .btn-group,
+.perun-toolbar .input-group {
+    margin-bottom: 5px;
+}
+.perun-toolbar .input-group {
+    float: left;
+}
+.perun-toolbar .input-group .form-control:only-child {
+    border-radius: 4px;
+}
+
 /* GROWL */
 
 .growl-icon {

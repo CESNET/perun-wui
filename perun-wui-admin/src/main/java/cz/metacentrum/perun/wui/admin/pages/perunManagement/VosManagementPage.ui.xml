@@ -5,9 +5,6 @@
 		>
 
 	<ui:style>
-		.margin{ margin-top: 5px; margin-bottom: 5px; }
-		.notBlock { display: inline-block !important; }
-		.button { margin-bottom: 2px; }
 	</ui:style>
 
 	<b.html:Div>
@@ -18,20 +15,20 @@
 			<b.html:Small text=""/>
 		</b:Heading>
 
-		<b:ButtonToolBar addStyleNames="{style.margin}" ui:field="menu">
+		<p:PerunToolbar ui:field="menu">
+
+			<b:InputGroup addStyleNames="col-md-4">
+				<b:TextBox placeholder="Filer by VO name" focus="true" autoComplete="false" ui:field="textBox"/>
+			</b:InputGroup>
 
 			<b:ButtonGroup>
-				<b:TextBox placeholder="Filer by VO name" focus="true" autoComplete="false" width="250px" addStyleNames="{style.notBlock}" ui:field="textBox"/>
-			</b:ButtonGroup>
-
-			<b:ButtonGroup>
-				<p:PerunButton icon="FILTER" type="PRIMARY" addStyleNames="{style.button}">Filter</p:PerunButton>
+				<p:PerunButton icon="FILTER" type="PRIMARY">Filter</p:PerunButton>
 			</b:ButtonGroup>
 			<b:ButtonGroup>
-				<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" addStyleNames="{style.button}" ui:field="button">New...</p:PerunButton>
+				<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="button">New...</p:PerunButton>
 			</b:ButtonGroup>
 			<b:ButtonGroup>
-				<p:PerunButton type="DANGER" icon="TRASH_O" addStyleNames="{style.button}" ui:field="remove">Remove</p:PerunButton>
+				<p:PerunButton type="DANGER" icon="TRASH_O" ui:field="remove">Remove</p:PerunButton>
 			</b:ButtonGroup>
 			<b:ButtonGroup>
 				<p:PerunButton dataToggle="DROPDOWN" text="Growl" icon="ASTERISK"/>
@@ -42,7 +39,7 @@
 					<b:AnchorListItem ui:field="growl4">Growl - success</b:AnchorListItem>
 				</b:DropDownMenu>
 			</b:ButtonGroup>
-		</b:ButtonToolBar>
+		</p:PerunToolbar>
 
 		<p:PerunDataGrid condensed="true" striped="true" hover="true" ui:field="grid"/>
 
