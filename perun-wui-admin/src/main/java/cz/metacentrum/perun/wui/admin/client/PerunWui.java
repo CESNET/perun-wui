@@ -173,13 +173,6 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 				RootPanel.get().add(loader);
 				loader.onLoading();
 
-				Scheduler.get().scheduleDeferred(new Command() {
-					@Override
-					public void execute() {
-						loader.getWidget().getElement().getFirstChildElement().setAttribute("style", "height: "+Window.getClientHeight()+"px;");
-					}
-				});
-
 				perunLoaded = false;
 				perunLoading = true;
 			}
