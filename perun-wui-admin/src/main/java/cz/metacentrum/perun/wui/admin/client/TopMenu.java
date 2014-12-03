@@ -45,7 +45,7 @@ public class TopMenu implements PerunContextListener {
 		rootElement = ourUiBinder.createAndBindUi(this);
 
 		Image logo = new Image(PerunResources.INSTANCE.getPerunLogo());
-		logo.setWidth("235px");
+		logo.setWidth("auto");
 		logo.setHeight("50px");
 		navbarHeader.insert(logo, 0);
 

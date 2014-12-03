@@ -11,7 +11,9 @@ import org.gwtbootstrap3.client.ui.ButtonToolBar;
  */
 public class PerunToolbar extends ButtonToolBar {
 
-
-
+    public PerunToolbar() {
+        super();
+        this.addStyleName("perun-toolbar");
+    }
 
 }
