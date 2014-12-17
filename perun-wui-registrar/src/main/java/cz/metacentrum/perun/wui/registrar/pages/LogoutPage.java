@@ -7,12 +7,11 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.AuthzManager;
+import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
@@ -88,7 +87,7 @@ public class LogoutPage extends Page implements Translatable {
 	@Override
 	public void open() {
 
-		AuthzManager.logout(new JsonEvents() {
+		UtilsManager.logout(new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 				content.setVisible(true);

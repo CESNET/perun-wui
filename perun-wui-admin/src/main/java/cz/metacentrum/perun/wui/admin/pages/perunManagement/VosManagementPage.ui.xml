@@ -39,6 +39,17 @@
 					<b:AnchorListItem ui:field="growl4">Growl - success</b:AnchorListItem>
 				</b:DropDownMenu>
 			</b:ButtonGroup>
+
+			<!--
+			<b:ButtonGroup>
+				<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="addMember">Add member</p:PerunButton>
+			</b:ButtonGroup>
+			<b:ButtonGroup>
+				<p:PerunButton type="DANGER" icon="MINUS_CIRCLE" ui:field="removeMember">Remove member</p:PerunButton>
+			</b:ButtonGroup>
+			-->
+
+
 		</p:PerunToolbar>
 
 		<p:PerunDataGrid condensed="true" striped="true" hover="true" ui:field="grid"/>

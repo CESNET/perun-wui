@@ -15,7 +15,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
-import cz.metacentrum.perun.wui.json.managers.PerunManager;
+import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
@@ -61,7 +61,7 @@ public class PerunCabinet implements EntryPoint, ValueChangeHandler<String> {
 
 				History.addValueChangeHandler(gui);
 
-				PerunManager.getGuiConfiguration(new JsonEvents() {
+				UtilsManager.getGuiConfiguration(new JsonEvents() {
 					@Override
 					public void onFinished(JavaScriptObject jso) {
 
@@ -72,7 +72,7 @@ public class PerunCabinet implements EntryPoint, ValueChangeHandler<String> {
 						RootLayoutPanel.get().add(uiBinder.createAndBindUi(gui));
 
 						Image logo = new Image(PerunResources.INSTANCE.getPerunLogo());
-						logo.setWidth("260px");
+						logo.setWidth("auto");
 						logo.setHeight("65px");
 						navbarHeader.insert(logo, 0);
 

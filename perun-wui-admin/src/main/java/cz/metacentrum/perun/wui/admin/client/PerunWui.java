@@ -19,7 +19,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
-import cz.metacentrum.perun.wui.json.managers.PerunManager;
+import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
@@ -47,7 +47,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 	Div menu;
 
 	@UiField(provided = true)
-	static ContentManager content;
+	ContentManager content;
 
 	private static boolean perunLoaded = false;
 	private static boolean perunLoading = false;
@@ -80,7 +80,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 
 				History.addValueChangeHandler(gui);
 
-				PerunManager.getGuiConfiguration(new JsonEvents() {
+				UtilsManager.getGuiConfiguration(new JsonEvents() {
 					@Override
 					public void onFinished(JavaScriptObject jso) {
 
@@ -96,6 +96,9 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 						content = new ContentManager(topMenu, leftMenu);
 						navbar = topMenu.getWidget();
 						menu = leftMenu.getWidget();
+
+						// store content manager
+						PerunSession.getInstance().setContentManager(content);
 
 						// BIND LAYOUT
 						RootPanel.get().add(uiBinder.createAndBindUi(gui));
@@ -238,15 +241,6 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 			content.openPage(History.getToken());
 		}
 
-	}
-
-	/**
-	 * Return instance of web page ContentManager to handle page displaying
-	 *
-	 * @return ContentManager
-	 */
-	public static ContentManager getContentManager() {
-		return content;
 	}
 
 }

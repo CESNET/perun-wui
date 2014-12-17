@@ -25,6 +25,19 @@ public interface PerunContentManager {
 	public void openPage(String context);
 
 	/**
+	 * Opens specific page by context (like from URL) but with passed array of objects. Implementation must honor:
+	 *
+	 * - authorization before displaying.
+	 * - open page only if it's prepared.
+	 * - call Page#draw() on first run.
+	 * - call Page.open() every time (page was once opened).
+	 *
+	 * @param context Context to open page by.
+	 * @param objects array of objects representing values from URL (like for voId object Vo is passed)
+	 */
+	public void openPage(String context, Object[]... objects);
+
+	/**
 	 * Opens specific page. Implementation must honor:
 	 *
 	 * - authorization before displaying.

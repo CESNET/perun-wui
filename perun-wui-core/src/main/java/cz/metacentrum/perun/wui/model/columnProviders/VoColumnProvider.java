@@ -126,6 +126,7 @@ public class VoColumnProvider extends ColumnProvider<Vo> {
 
 								@Override
 								public void onClick() {
+									// FIXME - PerunSession.getInstance().getContentManager().setState(new State(getUrl(),vo));
 									//PerunWui.getContent().setTab(new VoDetailTabItem(object));
 								}
 

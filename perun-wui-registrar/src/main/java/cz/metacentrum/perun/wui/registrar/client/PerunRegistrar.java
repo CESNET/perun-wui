@@ -21,7 +21,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
-import cz.metacentrum.perun.wui.json.managers.PerunManager;
+import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
@@ -46,7 +46,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 	private static PerunRegistrarUiBinder uiBinder = GWT.create(PerunRegistrarUiBinder.class);
 
 	@UiField(provided = true)
-	static RegistrarContentManager content;
+	RegistrarContentManager content;
 
 	public static boolean perunLoaded = false;
 	private static boolean perunLoading = false;
@@ -209,7 +209,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 
 				History.addValueChangeHandler(gui);
 
-				PerunManager.getGuiConfiguration(new JsonEvents() {
+				UtilsManager.getGuiConfiguration(new JsonEvents() {
 					@Override
 					public void onFinished(JavaScriptObject jso) {
 
@@ -220,6 +220,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 						RootPanel.get().clear();
 
 						content = new RegistrarContentManager(gui);
+						PerunSession.getInstance().setContentManager(content);
 
 						// BIND LAYOUT
 						RootPanel.get().add(uiBinder.createAndBindUi(gui));

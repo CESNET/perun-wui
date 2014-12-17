@@ -60,6 +60,8 @@ public class PerunSession {
 	private User activeUser;
 	private BasicOverlayObject configuration;
 
+	private PerunContentManager contentManager;
+
 	// RPC URL
 	private String rpcUrl = "";
 
@@ -128,8 +130,6 @@ public class PerunSession {
 			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrlFed();
 		} else if (rpcType.equals("cert")) {
 			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrlCert();
-		} else if (rpcType.equals("forceAuthn-fed")) {
-			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrlForceAuthFed();
 		} else if (rpcType.equals("einfra")) {
 			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrlKrbEinfra();
 		} else {
@@ -601,6 +601,14 @@ public class PerunSession {
 
 	public void setConfiguration(BasicOverlayObject configuration) {
 		this.configuration = configuration;
+	}
+
+	public PerunContentManager getContentManager() {
+		return contentManager;
+	}
+
+	public void setContentManager(PerunContentManager contentManager) {
+		this.contentManager = contentManager;
 	}
 
 }

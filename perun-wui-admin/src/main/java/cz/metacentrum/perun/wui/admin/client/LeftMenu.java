@@ -192,7 +192,7 @@ public class LeftMenu implements PerunContextListener {
 
 	@UiHandler("perunVos")
 	public void click1(ClickEvent handler) {
-		PerunWui.getContentManager().openPage(new VosManagementPage());
+		PerunSession.getInstance().getContentManager().openPage(new VosManagementPage());
 	}
 
 	@UiHandler("perunFacs")

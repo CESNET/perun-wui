@@ -15,6 +15,7 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.managers.GroupsManager;
 import cz.metacentrum.perun.wui.json.managers.VosManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Vo;
@@ -70,6 +71,14 @@ public class VosManagementPage extends Page {
 	@UiField
 	AnchorListItem growl4;
 
+	/*
+	@UiField
+	PerunButton addMember;
+
+	@UiField
+	PerunButton removeMember;
+	*/
+
 	@UiField
 	TextBox textBox;
 
@@ -112,6 +121,20 @@ public class VosManagementPage extends Page {
 		});
 
 	}
+
+	/*
+	@UiHandler(value = "addMember")
+	public void addMember(ClickEvent event) {
+		GroupsManager.addMember(7842, 5723, null);
+		GroupsManager.addMember(7842, 3973, null);
+	}
+
+	@UiHandler(value = "removeMember")
+	public void removeMember(ClickEvent event) {
+		GroupsManager.removeMember(7842, 5723, null);
+		GroupsManager.removeMember(7842, 3973, null);
+	}
+	*/
 
 	@UiHandler(value = "remove")
 	public void removeOnClick(ClickEvent event) {

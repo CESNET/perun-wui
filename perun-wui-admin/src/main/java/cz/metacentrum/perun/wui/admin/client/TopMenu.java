@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Image;
 import cz.metacentrum.perun.wui.client.resources.PerunContextListener;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import org.gwtbootstrap3.client.ui.*;
 
 /**
@@ -89,8 +90,8 @@ public class TopMenu implements PerunContextListener {
 		signout.setActive(false);
 		help.setActive(false);
 		refresh.setActive(true);
-		if (PerunWui.getContentManager().getDisplayedPage() != null) {
-			PerunWui.getContentManager().getDisplayedPage().draw();
+		if (PerunSession.getInstance().getContentManager().getDisplayedPage() != null) {
+			PerunSession.getInstance().getContentManager().getDisplayedPage().draw();
 			refresh.setIconSpin(true);
 			Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
 				@Override

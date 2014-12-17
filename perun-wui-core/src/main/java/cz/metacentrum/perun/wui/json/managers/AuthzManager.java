@@ -31,17 +31,4 @@ public class AuthzManager {
 
 	}
 
-	/**
-	 * Logout user from Perun server (destroy session on Server side)
-	 *
-	 * @param events events done on callback
-	 * @return Request unique request
-	 */
-	public static Request logout(JsonEvents events) {
-
-		JsonClient client = new JsonClient(events);
-		return client.call("utils/logout");
-
-	}
-
 }

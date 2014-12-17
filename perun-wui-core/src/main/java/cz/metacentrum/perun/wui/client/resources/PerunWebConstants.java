@@ -35,20 +35,12 @@ public interface PerunWebConstants extends Constants {
 	 */
 	String perunRpcUrlCert();
 
-
 	/**
 	 * Kerberos RPC URL
 	 *
 	 * @return RPC URL string
 	 */
 	String perunRpcUrlKrb();
-
-	/**
-	 * Federation RPC URL for forceAuth
-	 *
-	 * @return RPC URL string
-	 */
-	String perunRpcUrlForceAuthFed();
 
 	/**
 	 * Kerberos authz with EINFRA namespace
