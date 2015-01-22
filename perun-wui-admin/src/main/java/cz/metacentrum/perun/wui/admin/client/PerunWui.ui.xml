@@ -16,9 +16,9 @@
 
 		<b:Navbar ui:field="navbar" addStyleNames="{style.minWidthTop}"/>
 
-		<p.client:ContentManager ui:field="content" marginRight="10" addStyleNames="{style.content}" pull="RIGHT" />
+		<b.html:Div ui:field="menu" width="250px" marginBottom="10" addStyleNames="{style.minWidthMenu}" pull="LEFT"/>
 
-		<b.html:Div ui:field="menu" width="250px" marginBottom="10" addStyleNames="{style.minWidthMenu}"/>
+		<p.client:ContentManager ui:field="content" marginRight="10" addStyleNames="{style.content}" pull="RIGHT" />
 
 	</b.html:Div>
 

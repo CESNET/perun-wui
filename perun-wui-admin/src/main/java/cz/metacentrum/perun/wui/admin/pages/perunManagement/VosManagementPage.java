@@ -15,7 +15,6 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.GroupsManager;
 import cz.metacentrum.perun.wui.json.managers.VosManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Vo;
@@ -31,7 +30,6 @@ import org.gwtbootstrap3.client.ui.ButtonGroup;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
-import org.gwtbootstrap3.extras.growl.client.shared.event.*;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
@@ -167,35 +165,6 @@ public class VosManagementPage extends Page {
 	public void onClick2(ClickEvent event) {
 
 		final GrowlOptions opts = new GrowlOptions();
-		opts.addShowHandler(new GrowlShowHandler() {
-			@Override
-			public void onShow(GrowlShowEvent growlShowEvent) {
-				Scheduler.get().scheduleDeferred(new Command() {
-					@Override
-					public void execute() {
-						Growl.growl("onShow", GrowlType.SUCCESS);
-					}
-				});
-			}
-		});
-		opts.addShownHandler(new GrowlShownHandler() {
-			@Override
-			public void onShown(GrowlShownEvent growlShowEvent) {
-				Growl.growl("onShown", GrowlType.SUCCESS);
-			}
-		});
-		opts.addHideHandler(new GrowlHideHandler() {
-			@Override
-			public void onHide(GrowlHideEvent growlHideEvent) {
-				Growl.growl("onHide", GrowlType.SUCCESS);
-			}
-		});
-		opts.addHiddenHandler(new GrowlHiddenHandler() {
-			@Override
-			public void onHidden(GrowlHiddenEvent growlHiddenEvent) {
-				Growl.growl("onHidden", GrowlType.SUCCESS);
-			}
-		});
 		Growl.growl("Clicked on Growl", opts);
 
 	}

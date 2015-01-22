@@ -104,6 +104,11 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 	}
 
 	@Override
+	public void openPage(String context, Object[]... objects) {
+
+	}
+
+	@Override
 	public void openPage(final Page page) {
 		openPage(page, false);
 	}

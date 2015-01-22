@@ -104,24 +104,6 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwtPluginVersion}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <!-- Plugin configuration. There are many available options, see
-                  gwt-maven-plugin documentation at codehaus.org -->
-                <configuration>
-                    <module>cz.metacentrum.perun.wui.perun-wui-core-dev</module>
-                    <runTarget>PerunWui.html</runTarget>
-                    <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <!-- skip code optimization for devel not necessary -->
-                    <draftCompile>true</draftCompile>
-                    <persistentunitcache>false</persistentunitcache>
-                </configuration>
-
             </plugin>
 
         </plugins>
@@ -189,20 +171,6 @@
                         <groupId>org.codehaus.mojo</groupId>
                         <artifactId>gwt-maven-plugin</artifactId>
                         <version>${gwtPluginVersion}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <!-- Plugin configuration. There are many available options, see
-                          gwt-maven-plugin documentation at codehaus.org -->
-                        <configuration>
-                            <module>cz.metacentrum.perun.wui.perun-wui-core</module>
-                            <runTarget>PerunWui.html</runTarget>
-                            <hostedWebapp>${webappDirectory}</hostedWebapp>
-                        </configuration>
                     </plugin>
 
                 </plugins>
