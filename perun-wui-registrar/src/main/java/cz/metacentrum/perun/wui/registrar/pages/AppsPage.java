@@ -20,7 +20,7 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.*;
 import cz.metacentrum.perun.wui.model.columnProviders.ApplicationColumnProvider;
 import cz.metacentrum.perun.wui.pages.Page;
-import cz.metacentrum.perun.wui.registrar.client.Translations;
+import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import org.gwtbootstrap3.client.ui.html.Text;
 
@@ -43,6 +43,8 @@ public class AppsPage extends Page implements Translatable {
 	Text text;
 
 	private Widget rootElement;
+
+	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
 	public AppsPage() {
 
@@ -137,7 +139,7 @@ public class AppsPage extends Page implements Translatable {
 	@Override
 	public void changeLanguage() {
 
-		text.setText(Translations.submittedTitle());
+		text.setText(translation.submittedTitle());
 		grid.changeLanguage();
 
 	}

@@ -14,11 +14,11 @@
 
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="EXCLAMATION_TRIANGLE" fixedWidth="true" pull="LEFT" />
-			<b.html:Text text="Not authorized"/>
+			<b.html:Text text="Not authorized" ui:field="title"/>
 			<b.html:Small text=""/>
 		</b:Heading>
 
-		<b:Alert width="100%" type="DANGER" text="You are not authorized to view requested content. Please check your URL." />
+		<b:Alert width="100%" type="DANGER" text="You are not authorized to view requested content. Please check your URL." ui:field="message"/>
 
 	</b.html:Div>
 

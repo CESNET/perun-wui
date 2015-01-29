@@ -14,11 +14,11 @@
 
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="SEARCH" fixedWidth="true" pull="LEFT" />
-			<b.html:Text text="Not found"/>
+			<b.html:Text text="Not found" ui:field="title"/>
 			<b.html:Small text=""/>
 		</b:Heading>
 
-		<b:Alert width="100%" type="WARNING" text="Requested page was not found. Please check your URL and try again." />
+		<b:Alert width="100%" type="WARNING" text="Requested page was not found. Please check your URL and try again." ui:field="message"/>
 
 	</b.html:Div>
 

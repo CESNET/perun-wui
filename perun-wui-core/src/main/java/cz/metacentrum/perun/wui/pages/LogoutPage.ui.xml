@@ -14,13 +14,13 @@
 
 		<b:Heading size="H2" ui:field="pageTitle" alignment="CENTER">
 			<b:Icon ui:field="icon" type="INFO_CIRCLE" fixedWidth="true" />
-			<b.html:Text text="You have been logged out."/>
+			<b.html:Text text="You have been logged out." ui:field="title"/>
 			<b.html:Small text=""/>
 		</b:Heading>
 
 		<b:Heading size="H2" alignment="CENTER">
 			<b.html:Text text=""/>
-			<b.html:Small text="Please close the browser window."/>
+			<b.html:Small text="Please close the browser window." ui:field="title2"/>
 		</b:Heading>
 
 		<b.html:Div addStyleNames="{style.center}">

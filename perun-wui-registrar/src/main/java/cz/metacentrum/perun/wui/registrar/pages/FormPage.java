@@ -11,14 +11,14 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
-import cz.metacentrum.perun.wui.client.resources.Translatable;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.*;
 import cz.metacentrum.perun.wui.pages.Page;
-import cz.metacentrum.perun.wui.registrar.client.Translations;
+import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
@@ -33,12 +33,14 @@ import java.util.ArrayList;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class FormPage extends Page implements Translatable {
+public class FormPage extends Page {
 
 	interface FormPageUiBinder extends UiBinder<Widget, FormPage> {
 	}
 
 	private static FormPageUiBinder ourUiBinder = GWT.create(FormPageUiBinder.class);
+
+	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
 	private Vo vo;
 	private Group group;
@@ -277,16 +279,6 @@ public class FormPage extends Page implements Translatable {
 	}
 
 	@Override
-	public void changeLanguage() {
-		if (form != null) {
-			form.changeLanguage();
-		}
-		if (displayedException != null) {
-			displayException(null, displayedException);
-		}
-	}
-
-	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
@@ -302,7 +294,7 @@ public class FormPage extends Page implements Translatable {
 
 		this.displayedException = ex;
 
-		Button continueButton = new Button(Translations.continueButton());
+		Button continueButton = new Button(translation.continueButton());
 		continueButton.setIcon(IconType.CHEVRON_RIGHT);
 		continueButton.setType(ButtonType.WARNING);
 		continueButton.setIconPosition(IconPosition.RIGHT);
@@ -312,7 +304,7 @@ public class FormPage extends Page implements Translatable {
 
 			if (ex.getReason().equals("OUTSIDEEXTENSIONPERIOD")) {
 
-				notice.getElement().setInnerHTML("<h4>"+Translations.cantExtendMembership()+"</h4><p>"+Translations.cantExtendMembershipOutside());
+				notice.getElement().setInnerHTML("<h4>"+translation.cantExtendMembership()+"</h4><p>"+translation.cantExtendMembershipOutside());
 
 				if (Window.Location.getParameter("targetexisting") != null) {
 
@@ -328,21 +320,21 @@ public class FormPage extends Page implements Translatable {
 
 			} else if (ex.getReason().equals("NOUSERLOA")) {
 
-				notice.getElement().setInnerHTML("<h4>"+Translations.cantBecomeMember((group != null) ? group.getShortName() : vo.getName())+"</h4><p>"+Translations.cantBecomeMemberLoa());
+				notice.getElement().setInnerHTML("<h4>"+translation.cantBecomeMember((group != null) ? group.getShortName() : vo.getName())+"</h4><p>"+translation.cantBecomeMemberLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 
 			} else if (ex.getReason().equals("INSUFFICIENTLOA")) {
 
-				notice.getElement().setInnerHTML("<h4>"+Translations.cantBecomeMember((group != null) ? group.getShortName() : vo.getName())+"</h4><p>"+Translations.cantBecomeMemberInsufficientLoa());
+				notice.getElement().setInnerHTML("<h4>"+translation.cantBecomeMember((group != null) ? group.getShortName() : vo.getName())+"</h4><p>"+translation.cantBecomeMemberInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 
 			} else if (ex.getReason().equals("INSUFFICIENTLOAFOREXTENSION")) {
 
-				notice.getElement().setInnerHTML("<h4>"+Translations.cantExtendMembership()+"</h4><p>"+Translations.cantExtendMembershipInsufficientLoa());
+				notice.getElement().setInnerHTML("<h4>"+translation.cantExtendMembership()+"</h4><p>"+translation.cantExtendMembershipInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 
 			}
 
 		} else if (ex.getName().equals("AlreadyRegisteredException")) {
 
-			notice.getElement().setInnerHTML("<h4>"+Translations.alreadyRegistered()+((group != null) ? group.getShortName() : vo.getName())+"</h4>");
+			notice.getElement().setInnerHTML("<h4>"+translation.alreadyRegistered((group != null) ? group.getShortName() : vo.getName())+"</h4>");
 
 			if (Window.Location.getParameter("targetexisting") != null) {
 
@@ -358,7 +350,7 @@ public class FormPage extends Page implements Translatable {
 
 		} else if (ex.getName().equals("DuplicateRegistrationAttemptException")) {
 
-			notice.getElement().setInnerHTML("<h4>"+ Translations.alreadySubmitted(((group != null) ? group.getShortName() : vo.getName())) + "</h4><p>"+Translations.visitSubmitted());
+			notice.getElement().setInnerHTML("<h4>"+ translation.alreadySubmitted(((group != null) ? group.getShortName() : vo.getName())) + "</h4><p>"+translation.visitSubmitted(Window.Location.getHref().split("#")[0], translation.submittedTitle()));
 
 			if (Window.Location.getParameter("targetnew") != null) {
 
@@ -377,24 +369,24 @@ public class FormPage extends Page implements Translatable {
 			String missingItems = "<p><ul>";
 			if (!ex.getFormItems().isEmpty()) {
 				for (ApplicationFormItemData item : ex.getFormItems()) {
-					missingItems += "<li>" + Translations.missingAttribute(item.getFormItem().getFederationAttribute());
+					missingItems += "<li>" + translation.missingAttribute(item.getFormItem().getFederationAttribute());
 				}
 			}
 			missingItems += "<ul/>";
 
-			notice.getElement().setInnerHTML(Translations.missingRequiredData() + missingItems);
+			notice.getElement().setInnerHTML(translation.missingRequiredData(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())) + missingItems);
 
 		} else if (ex.getName().equalsIgnoreCase("VoNotExistsException")) {
 
-			notice.getElement().setInnerHTML("<h4>"+Translations.voNotExistsException(Window.Location.getParameter("vo"))+"</h4>");
+			notice.getElement().setInnerHTML("<h4>"+translation.voNotExistsException(Window.Location.getParameter("vo"))+"</h4>");
 
 		} else if (ex.getName().equalsIgnoreCase("GroupNotExistsException")) {
 
-			notice.getElement().setInnerHTML("<h4>"+Translations.groupNotExistsException(Window.Location.getParameter("group"))+"</h4>");
+			notice.getElement().setInnerHTML("<h4>"+translation.groupNotExistsException(Window.Location.getParameter("group"))+"</h4>");
 
 		} else if (ex.getName().equalsIgnoreCase("WrongURL")) {
 
-			notice.getElement().setInnerHTML("<h4>"+Translations.missingVoInURL()+"</h4>");
+			notice.getElement().setInnerHTML("<h4>"+translation.missingVoInURL()+"</h4>");
 
 		}
 
@@ -409,7 +401,7 @@ public class FormPage extends Page implements Translatable {
 	private void showSimilarUsersDialog(RegistrarObject object) {
 
 		final Modal modal = new Modal();
-		modal.setTitle(Translations.similarUsersFoundTitle(object.getSimilarUsers().size()));
+		modal.setTitle(object.getSimilarUsers().size() > 1 ? translation.similarUsersFoundTitle() : translation.similarUserFoundTitle());
 		modal.setFade(true);
 		modal.setDataKeyboard(false);
 		modal.setDataBackdrop(ModalBackdrop.STATIC);
@@ -481,7 +473,7 @@ public class FormPage extends Page implements Translatable {
 		}
 
 		ModalBody body = new ModalBody();
-		body.add(new Paragraph(Translations.similarUsersFound()));
+		body.add(new Paragraph(translation.similarUsersFound()));
 		body.add(ft);
 		modal.add(body);
 
@@ -501,7 +493,7 @@ public class FormPage extends Page implements Translatable {
 			@Override
 			public boolean execute() {
 				if (counter <= 0) {
-					noThanks.setText(Translations.noThanks());
+					noThanks.setText(translation.noThanks());
 					noThanks.setEnabled(true);
 					return false;
 				}
@@ -519,7 +511,7 @@ public class FormPage extends Page implements Translatable {
 
 	private DropDownMenu getCertificatesJoinButton(ButtonGroup certGroup) {
 
-		Button certButt = new Button(Translations.byCertificate(), IconType.CERTIFICATE, new ClickHandler() {
+		Button certButt = new Button(translation.byCertificate(), IconType.CERTIFICATE, new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 
@@ -539,7 +531,7 @@ public class FormPage extends Page implements Translatable {
 
 	private DropDownMenu getIdpJoinButton(ButtonGroup certGroup) {
 
-		Button idpButt = new Button(Translations.byIdp(), IconType.USER, new ClickHandler() {
+		Button idpButt = new Button(translation.byIdp(), IconType.USER, new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 

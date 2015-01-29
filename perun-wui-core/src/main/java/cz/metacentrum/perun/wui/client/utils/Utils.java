@@ -277,21 +277,25 @@ public class Utils {
 	}
 
 	/**
-	 * Returns URL of Perun`s logo
-	 * <p/>
-	 * if not set, use default: "img/logo11.png"
+	 * Returns list of Strings representing native language in order "code","native name","english name"
 	 *
-	 * @return URL of Perun`s logo
+	 * e,g. "cs","Česky","Czech" for Czech language.
+	 *
+	 * @return list of strings representing native language
 	 */
-	public static String logoUrl() {
+	public static ArrayList<String> getNativeLanguage() {
 
+		ArrayList<String> list = new ArrayList<String>();
 		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "logoUrl");
+			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "nativeLanguage");
 			if (value != null && !value.isEmpty()) {
-				return value;
+				String[] parts = value.split(",");
+				for (int i=0; i<parts.length; i++) {
+					list.add(parts[i]);
+				}
 			}
 		}
-		return "Logo_bw.png";
+		return list;
 
 	}
 

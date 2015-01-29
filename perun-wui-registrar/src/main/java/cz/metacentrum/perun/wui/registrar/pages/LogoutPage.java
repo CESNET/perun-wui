@@ -15,7 +15,7 @@ import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.registrar.client.PerunRegistrar;
-import cz.metacentrum.perun.wui.registrar.client.Translations;
+import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Small;
@@ -38,6 +38,8 @@ public class LogoutPage extends Page implements Translatable {
 	public LogoutPage() {
 		rootElement = ourUiBinder.createAndBindUi(this);
 	}
+
+	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
 	@UiField
 	Button button;
@@ -122,9 +124,9 @@ public class LogoutPage extends Page implements Translatable {
 
 	@Override
 	public void changeLanguage() {
-		text.setText(Translations.logoutText());
-		subText.setText(Translations.logoutSubText());
-		button.setText(Translations.logoutButton());
+		text.setText(translation.logoutPageTitle());
+		subText.setText(translation.logoutPageSubTitle());
+		button.setText(translation.logoutPageButton());
 	}
 
 }

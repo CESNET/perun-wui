@@ -1,14 +1,15 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.ui.*;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
@@ -16,7 +17,7 @@ import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.Translations;
+import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextArea;
@@ -45,10 +46,12 @@ public class PerunFormItem extends FormGroup {
 	public final static int TEXT_BOX_MAX_LENGTH = 1024;
 	private static final int PERUN_ATTRIBUTE_LOGIN_NAMESPACE_POSITION = 49;
 
+	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+
 	// form item storage
 	ApplicationFormItemData item;
 	// default is EN
-	private String lang = PerunSession.LOCALE;
+	private String lang = LocaleInfo.getCurrentLocale().getLocaleName().equals("default") ? "en" : LocaleInfo.getCurrentLocale().getLocaleName();
 	// pre-filled value
 	private String preFilledValue = "";
 	// value box used to handle changes
@@ -155,8 +158,6 @@ public class PerunFormItem extends FormGroup {
 	 */
 	public void setTexts() {
 
-		this.lang = PerunSession.LOCALE;
-
 		if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON) &&
 				!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON)) {
 			if (!getLabelOrShortName().equals("")) {
@@ -191,7 +192,7 @@ public class PerunFormItem extends FormGroup {
 			int i = 0;
 
 			if (!isRequired()) {
-				select.addItem(Translations.notSelected(), "");
+				select.addItem(translation.notSelected(), "");
 				i++;
 			}
 
@@ -220,10 +221,10 @@ public class PerunFormItem extends FormGroup {
 			ArrayList<String> keyList = Utils.setToList(opts.keySet());
 
 			if (!isRequired()) {
-				select.addItem(Translations.notSelected(), "");
+				select.addItem(translation.notSelected(), "");
 			}
 
-			select.addItem(Translations.customValue(), "custom");
+			select.addItem(translation.customValue(), "custom");
 			int customIndex = select.getItemCount()-1;
 
 			for(String key : keyList){
@@ -315,7 +316,7 @@ public class PerunFormItem extends FormGroup {
 			// fill not selected option
 			if (!isRequired()) {
 
-				final Radio radio = new Radio("radio"+item.getFormItem().getId(), Translations.notSelected());
+				final Radio radio = new Radio("radio"+item.getFormItem().getId(), translation.notSelected());
 				// pre-fill
 				if ("".equals(getValue().trim())) {
 					radio.setValue(true);
@@ -354,14 +355,14 @@ public class PerunFormItem extends FormGroup {
 				ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON.equals(item.getFormItem().getType())) {
 
 			((PerunButton)widget).setText(getLabelOrShortName());
-			((PerunButton)widget).getTooltip().setTitle(Translations.checkAndSubmit());
+			((PerunButton)widget).getTooltip().setTitle(translation.checkAndSubmit());
 			((PerunButton)widget).getTooltip().reconfigure();
 
 		} else if (ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL.equals(item.getFormItem().getType())) {
 
 			if (!preFilledValue.isEmpty()) {
 				if (emailSelect.getValue(emailSelect.getItemCount()-1).equals("custom")) {
-					emailSelect.setItemText(emailSelect.getItemCount() - 1, Translations.customValueEmail());
+					emailSelect.setItemText(emailSelect.getItemCount() - 1, translation.customValueEmail());
 					emailSelect.refresh();
 				}
 			}
@@ -390,7 +391,7 @@ public class PerunFormItem extends FormGroup {
 		} else {
 
 			// normal items
-			preFilledValue = (item.getPrefilledValue() != null) ? item.getPrefilledValue() : "";
+			preFilledValue = (item.getPrefilledValue() != null && !item.getPrefilledValue().equalsIgnoreCase("null")) ? item.getPrefilledValue() : "";
 
 			statusText.setVisible(false);
 			helpText.setEmphasis(Emphasis.MUTED);
@@ -500,7 +501,7 @@ public class PerunFormItem extends FormGroup {
 					emailSelect.addItem(preFilledValue, preFilledValue);
 				}
 
-				emailSelect.addItem(Translations.customValueEmail(), "custom");
+				emailSelect.addItem(translation.customValueEmail(), "custom");
 
 				emailSelect.addChangeHandler(new ChangeHandler() {
 					@Override
@@ -569,7 +570,7 @@ public class PerunFormItem extends FormGroup {
 						if (isRequired()) {
 							valid = !getValue().isEmpty();
 							if (!valid) {
-								setValidationState(ValidationState.ERROR, Translations.cantBeEmpty());
+								setValidationState(ValidationState.ERROR, translation.cantBeEmpty());
 								returnCode = 1;
 								// hard error
 								return valid;
@@ -579,7 +580,7 @@ public class PerunFormItem extends FormGroup {
 						// CHECK MAX-LENGTH
 						valid = checkMaxLength();
 						if (!valid) {
-							setValidationState(ValidationState.ERROR, Translations.tooLong());
+							setValidationState(ValidationState.ERROR, translation.tooLong());
 							returnCode = 3;
 							// hard error
 							return valid;
@@ -589,7 +590,7 @@ public class PerunFormItem extends FormGroup {
 						valid = checkRegex(Utils.LOGIN_VALUE_MATCHER);
 						if (!valid) {
 							if (getErrorText().isEmpty()) {
-								setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+								setValidationState(ValidationState.ERROR, translation.incorrectFormat());
 								returnCode = 4;
 							} else {
 								setValidationState(ValidationState.ERROR);
@@ -616,7 +617,7 @@ public class PerunFormItem extends FormGroup {
 										addon.setIcon(IconType.USER);
 										addon.setIconSpin(false);
 										if (!valid) {
-											setValidationState(ValidationState.ERROR, Translations.loginNotAvailable());
+											setValidationState(ValidationState.ERROR, translation.loginNotAvailable());
 											returnCode = 6;
 										}
 									}
@@ -631,14 +632,14 @@ public class PerunFormItem extends FormGroup {
 										processing = false;
 										addon.setIcon(IconType.USER);
 										addon.setIconSpin(false);
-										setValidationState(ValidationState.ERROR, Translations.checkingLoginFailed());
+										setValidationState(ValidationState.ERROR, translation.checkingLoginFailed());
 										returnCode = 7;
 									}
 								}
 
 								@Override
 								public void onLoadingStart() {
-									setValidationState(ValidationState.WARNING, Translations.checkingLogin());
+									setValidationState(ValidationState.WARNING, translation.checkingLogin());
 									returnCode = 9;
 									processing = true;
 									addon.setIcon(IconType.SPINNER);
@@ -651,7 +652,7 @@ public class PerunFormItem extends FormGroup {
 							processing = false;
 							valid = validMap.get(getValue());
 							if (!valid) {
-								setValidationState(ValidationState.ERROR, Translations.loginNotAvailable());
+								setValidationState(ValidationState.ERROR, translation.loginNotAvailable());
 								returnCode = 6;
 							}
 							addon.setIcon(IconType.USER);
@@ -679,21 +680,21 @@ public class PerunFormItem extends FormGroup {
 						} else if (returnCode == -1) {
 							setValidationState(ValidationState.NONE);
 						} else if (returnCode == 1) {
-							setValidationState(ValidationState.ERROR, Translations.cantBeEmpty());
+							setValidationState(ValidationState.ERROR, translation.cantBeEmpty());
 						} else if (returnCode == 3) {
-							setValidationState(ValidationState.ERROR, Translations.tooLong());
+							setValidationState(ValidationState.ERROR, translation.tooLong());
 						} else if (returnCode == 4) {
 							if (getErrorText().isEmpty()) {
-								setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+								setValidationState(ValidationState.ERROR, translation.incorrectFormat());
 							} else {
 								setValidationState(ValidationState.ERROR);
 							}
 						} else if (returnCode == 6) {
-							setValidationState(ValidationState.ERROR, Translations.loginNotAvailable());
+							setValidationState(ValidationState.ERROR, translation.loginNotAvailable());
 						} else if (returnCode == 7) {
-							setValidationState(ValidationState.ERROR, Translations.checkingLoginFailed());
+							setValidationState(ValidationState.ERROR, translation.checkingLoginFailed());
 						} else if (returnCode == 9) {
-							setValidationState(ValidationState.ERROR, Translations.checkingLogin());
+							setValidationState(ValidationState.ERROR, translation.checkingLogin());
 						}
 
 					}
@@ -744,7 +745,7 @@ public class PerunFormItem extends FormGroup {
 
 					valid = box.getValue().equals(box2.getValue());
 					if (!valid) {
-						setValidationState(ValidationState.ERROR, Translations.passMismatch());
+						setValidationState(ValidationState.ERROR, translation.passMismatch());
 						returnCode = 11;
 						// hard error
 						return valid;
@@ -754,7 +755,7 @@ public class PerunFormItem extends FormGroup {
 					if (isRequired()) {
 						valid = (!box.getValue().isEmpty() && !box2.getValue().isEmpty());
 						if (!valid) {
-							setValidationState(ValidationState.ERROR, Translations.passEmpty());
+							setValidationState(ValidationState.ERROR, translation.passEmpty());
 							returnCode = 10;
 							// hard error
 							return valid;
@@ -764,7 +765,7 @@ public class PerunFormItem extends FormGroup {
 					// check max-length
 					if (box.getValue().length() > TEXT_BOX_MAX_LENGTH || box2.getValue().length() > TEXT_BOX_MAX_LENGTH) {
 						valid = false;
-						setValidationState(ValidationState.ERROR, Translations.tooLong());
+						setValidationState(ValidationState.ERROR, translation.tooLong());
 						returnCode = 3;
 						// hard error
 						return valid;
@@ -779,7 +780,7 @@ public class PerunFormItem extends FormGroup {
 							if(!matchFound){
 								valid = false;
 								if (getErrorText().isEmpty()) {
-									setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+									setValidationState(ValidationState.ERROR, translation.incorrectFormat());
 								} else {
 									setValidationState(ValidationState.ERROR);
 								}
@@ -811,17 +812,17 @@ public class PerunFormItem extends FormGroup {
 					} else if (returnCode == -1) {
 						setValidationState(ValidationState.NONE);
 					} else if (returnCode == 10) {
-						setValidationState(ValidationState.ERROR, Translations.passEmpty());
+						setValidationState(ValidationState.ERROR, translation.passEmpty());
 					} else if (returnCode == 3) {
-						setValidationState(ValidationState.ERROR, Translations.tooLong());
+						setValidationState(ValidationState.ERROR, translation.tooLong());
 					} else if (returnCode == 4) {
 						if (getErrorText().isEmpty()) {
-							setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+							setValidationState(ValidationState.ERROR, translation.incorrectFormat());
 						} else {
 							setValidationState(ValidationState.ERROR);
 						}
 					} else if (returnCode == 11) {
-						setValidationState(ValidationState.ERROR, Translations.passMismatch());
+						setValidationState(ValidationState.ERROR, translation.passMismatch());
 					}
 
 				}
@@ -1004,7 +1005,7 @@ public class PerunFormItem extends FormGroup {
 			// fill not selected option
 			if (!isRequired()) {
 
-				final Radio radio = new Radio("radio"+item.getFormItem().getId(), Translations.notSelected());
+				final Radio radio = new Radio("radio"+item.getFormItem().getId(), translation.notSelected());
 				// pre-fill
 				if ("".equals(getValue().trim())) {
 					radio.setValue(true);
@@ -1080,7 +1081,7 @@ public class PerunFormItem extends FormGroup {
 			final PerunButton button = new PerunButton();
 			button.setIcon(IconType.CHEVRON_RIGHT);
 			button.setIconFixedWidth(true);
-			button.setTooltipText(Translations.checkAndSubmit());
+			button.setTooltipText(translation.checkAndSubmit());
 			button.getTooltip().setPlacement(Placement.TOP);
 			button.setType(ButtonType.SUCCESS);
 			button.setText(getLabelOrShortName());
@@ -1146,7 +1147,7 @@ public class PerunFormItem extends FormGroup {
 					if (isRequired()) {
 						// is required = CHECK
 						if (!(Utils.isValidEmail(getValue()) && !getValue().isEmpty())) {
-							setValidationState(ValidationState.ERROR, Translations.incorrectEmail());
+							setValidationState(ValidationState.ERROR, translation.incorrectEmail());
 							returnCode = 5;
 							valid = false;
 							// hard error
@@ -1156,7 +1157,7 @@ public class PerunFormItem extends FormGroup {
 						if (!getValue().isEmpty()) {
 							// not required but non empty = CHECK
 							if (!Utils.isValidEmail(getValue())) {
-								setValidationState(ValidationState.ERROR, Translations.incorrectEmail());
+								setValidationState(ValidationState.ERROR, translation.incorrectEmail());
 								returnCode = 5;
 								valid = false;
 								// hard error
@@ -1174,10 +1175,10 @@ public class PerunFormItem extends FormGroup {
 								item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.COMBOBOX) ||
 								item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.RADIO) ||
 								item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.CHECKBOX)) {
-							setValidationState(ValidationState.ERROR, Translations.cantBeEmptySelect());
+							setValidationState(ValidationState.ERROR, translation.cantBeEmptySelect());
 							returnCode = 2;
 						} else {
-							setValidationState(ValidationState.ERROR, Translations.cantBeEmpty());
+							setValidationState(ValidationState.ERROR, translation.cantBeEmpty());
 							returnCode = 1;
 						}
 						// hard error
@@ -1188,7 +1189,7 @@ public class PerunFormItem extends FormGroup {
 				// CHECK MAX-LENGTH
 				valid = checkMaxLength();
 				if (!valid) {
-					setValidationState(ValidationState.ERROR, Translations.tooLong());
+					setValidationState(ValidationState.ERROR, translation.tooLong());
 					returnCode = 3;
 					// hard error
 					return valid;
@@ -1198,7 +1199,7 @@ public class PerunFormItem extends FormGroup {
 				valid = checkRegex();
 				if (!valid) {
 					if (getErrorText().isEmpty()) {
-						setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+						setValidationState(ValidationState.ERROR, translation.incorrectFormat());
 					} else {
 						setValidationState(ValidationState.ERROR);
 					}
@@ -1237,7 +1238,7 @@ public class PerunFormItem extends FormGroup {
 						}
 
 						// must validate email
-						setValidationState(ValidationState.WARNING, Translations.mustValidateEmail());
+						setValidationState(ValidationState.WARNING, translation.mustValidateEmail());
 						returnCode = 12;
 						return valid;
 
@@ -1268,21 +1269,21 @@ public class PerunFormItem extends FormGroup {
 				} else if (returnCode == -1) {
 					setValidationState(ValidationState.NONE);
 				} else if (returnCode == 1) {
-					setValidationState(ValidationState.ERROR, Translations.cantBeEmpty());
+					setValidationState(ValidationState.ERROR, translation.cantBeEmpty());
 				} else if (returnCode == 2) {
-					setValidationState(ValidationState.ERROR, Translations.cantBeEmptySelect());
+					setValidationState(ValidationState.ERROR, translation.cantBeEmptySelect());
 				} else if (returnCode == 3) {
-					setValidationState(ValidationState.ERROR, Translations.tooLong());
+					setValidationState(ValidationState.ERROR, translation.tooLong());
 				} else if (returnCode == 4) {
 					if (getErrorText().isEmpty()) {
-						setValidationState(ValidationState.ERROR, Translations.incorrectFormat());
+						setValidationState(ValidationState.ERROR, translation.incorrectFormat());
 					} else {
 						setValidationState(ValidationState.ERROR);
 					}
 				} else if (returnCode == 5) {
-					setValidationState(ValidationState.ERROR, Translations.incorrectEmail());
+					setValidationState(ValidationState.ERROR, translation.incorrectEmail());
 				} else if (returnCode == 12) {
-					setValidationState(ValidationState.WARNING, Translations.mustValidateEmail());
+					setValidationState(ValidationState.WARNING, translation.mustValidateEmail());
 				}
 
 

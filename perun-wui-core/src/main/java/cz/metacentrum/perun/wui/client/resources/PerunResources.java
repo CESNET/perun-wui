@@ -6,9 +6,9 @@ import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 
 /**
+ * Common resources used in Perun WUI applications
  *
- *
- * @author Pavel Zlámal
+ * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
 public interface PerunResources extends ClientBundle {
 
