@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.*;
@@ -316,8 +315,7 @@ public class PerunFormItem extends FormGroup {
 			// fill not selected option
 			if (!isRequired()) {
 
-				final Radio radio = new Radio(Translations.notSelected());
-				radio.setName("radio"+item.getFormItem().getId());
+				final Radio radio = new Radio("radio"+item.getFormItem().getId(), Translations.notSelected());
 				// pre-fill
 				if ("".equals(getValue().trim())) {
 					radio.setValue(true);
@@ -336,8 +334,7 @@ public class PerunFormItem extends FormGroup {
 
 			for(final String key : keyList) {
 
-				final Radio radio = new Radio(boxContents.get(key));
-				radio.setName("radio"+item.getFormItem().getId());
+				final Radio radio = new Radio("radio"+item.getFormItem().getId(),boxContents.get(key));
 				// pre-fill
 				if (key.trim().equals(getValue().trim())) {
 					radio.setValue(true);
@@ -1007,8 +1004,7 @@ public class PerunFormItem extends FormGroup {
 			// fill not selected option
 			if (!isRequired()) {
 
-				final Radio radio = new Radio(Translations.notSelected());
-				radio.setName("radio"+item.getFormItem().getId());
+				final Radio radio = new Radio("radio"+item.getFormItem().getId(), Translations.notSelected());
 				// pre-fill
 				if ("".equals(getValue().trim())) {
 					radio.setValue(true);
