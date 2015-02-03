@@ -85,7 +85,7 @@ public class PerunPrincipal extends JavaScriptObject {
 	/**
 	 * Get any additional information provided by IDP in session.
 	 *
-	 * @param shibAttrName valid shibbolleth attribute name:
+	 * @param shibAttrName valid shibboleth attribute name:
 	 *                     mail - mail
 	 *                     o - organization
 	 *                     loa - level of assurance
@@ -94,6 +94,8 @@ public class PerunPrincipal extends JavaScriptObject {
 	 *                     displayName - display name
 	 *                     sn - sure name
 	 *                     eppn - edu person principal name
+	 *                     md_entityCategory - IDP Category
+	 *                     affiliation - Users affiliation in IDP
 	 *
 	 * @return attribute value or null if not present
 	 */

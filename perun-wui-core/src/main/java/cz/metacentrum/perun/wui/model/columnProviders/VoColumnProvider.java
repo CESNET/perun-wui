@@ -25,7 +25,7 @@ public class VoColumnProvider extends ColumnProvider<Vo> {
 		ArrayList<PerunColumnType> columns = new ArrayList<>();
 		columns.add(PerunColumnType.ID);
 		columns.add(PerunColumnType.NAME);
-		columns.add(PerunColumnType.SHORT_NAME);
+		columns.add(PerunColumnType.VO_SHORT_NAME);
 		return columns;
 
 	}
@@ -156,7 +156,7 @@ public class VoColumnProvider extends ColumnProvider<Vo> {
 				table.setColumnWidth(nameColumn, "100%");
 			}
 
-		} else if (PerunColumnType.SHORT_NAME.equals(column)) {
+		} else if (PerunColumnType.VO_SHORT_NAME.equals(column)) {
 
 			PerunColumn<Vo, String> shortNameColumn = createColumn(
 					column,

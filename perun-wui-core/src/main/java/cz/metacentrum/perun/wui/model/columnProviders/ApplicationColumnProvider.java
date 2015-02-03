@@ -23,10 +23,10 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 
 		ArrayList<PerunColumnType> columns = new ArrayList<>();
 		columns.add(PerunColumnType.CREATED_AT);
-		columns.add(PerunColumnType.STATE);
-		columns.add(PerunColumnType.TYPE);
-		columns.add(PerunColumnType.VO_NAME);
-		columns.add(PerunColumnType.GROUP_NAME);
+		columns.add(PerunColumnType.APPLICATION_STATE);
+		columns.add(PerunColumnType.APPLICATION_TYPE);
+		columns.add(PerunColumnType.APPLICATION_VO_NAME);
+		columns.add(PerunColumnType.APPLICATION_GROUP_NAME);
 		columns.add(PerunColumnType.MODIFIED_BY);
 
 		return columns;
@@ -119,7 +119,10 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 				table.setColumnWidth(submitted, "5%");
 			}
 
-		} else if (PerunColumnType.STATE.equals(column)) {
+			submitted.setSortable(true);
+
+
+		} else if (PerunColumnType.APPLICATION_STATE.equals(column)) {
 
 			PerunColumn<Application, String> state = createColumn(column,
 					new GetValue<Application, String>() {
@@ -138,7 +141,7 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 				table.setColumnWidth(state, "5%");
 			}
 
-		} else if (PerunColumnType.TYPE.equals(column)) {
+		} else if (PerunColumnType.APPLICATION_TYPE.equals(column)) {
 
 			PerunColumn<Application, String> type = createColumn(column,
 					new GetValue<Application, String>() {
@@ -157,7 +160,7 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 				table.setColumnWidth(type, "5%");
 			}
 
-		} else if (PerunColumnType.VO_NAME.equals(column)) {
+		} else if (PerunColumnType.APPLICATION_VO_NAME.equals(column)) {
 
 			PerunColumn<Application, String> voColumn = createColumn(column,
 					new GetValue<Application, String>() {
@@ -176,7 +179,7 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 				table.setColumnWidth(voColumn, "20%");
 			}
 
-		} else if (PerunColumnType.GROUP_NAME.equals(column)) {
+		} else if (PerunColumnType.APPLICATION_GROUP_NAME.equals(column)) {
 
 			PerunColumn<Application, String> groupColumn = createColumn(column,
 					new GetValue<Application, String>() {

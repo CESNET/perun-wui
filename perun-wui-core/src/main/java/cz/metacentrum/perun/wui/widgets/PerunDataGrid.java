@@ -94,7 +94,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 	Map<Column<T, ?>, Header<?>> columnHeaders = new HashMap<>();
 	Map<Column<T, ?>, Header<?>> columnFooters = new HashMap<>();
 
-	// loading widget used for table loading / filtering / error actionsignoreEmptyFilter
+	// loading widget used for table loading / filtering / error
 	PerunLoader loaderWidget;
 
 	/**
@@ -520,15 +520,24 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 		} else if (PerunColumnType.DESCRIPTION.equals(column)) {
 			backup = TableSorter.sortByDescription(backup, descending);
 			content = TableSorter.sortByDescription(content, descending);
-		} else if (PerunColumnType.SHORT_NAME.equals(column)) {
+		} else if (PerunColumnType.VO_SHORT_NAME.equals(column)) {
 			backup = TableSorter.sortByShortName(backup, descending);
 			content = TableSorter.sortByShortName(content, descending);
-		} else if (PerunColumnType.OWNERS.equals(column)) {
+		} else if (PerunColumnType.FACILITY_OWNERS.equals(column)) {
 			backup = TableSorter.sortByOwnersNames(backup, descending);
 			content = TableSorter.sortByOwnersNames(content, descending);
 		} else if (PerunColumnType.CREATED_AT.equals(column)) {
 			backup = TableSorter.sortByCreatedAt(backup, descending);
 			content = TableSorter.sortByCreatedAt(content, descending);
+		} else if (PerunColumnType.MODIFIED_AT.equals(column)) {
+			backup = TableSorter.sortByModifiedAt(backup, descending);
+			content = TableSorter.sortByModifiedAt(content, descending);
+		} else if (PerunColumnType.CREATED_BY.equals(column)) {
+			backup = TableSorter.sortByCreatedBy(backup, descending);
+			content = TableSorter.sortByCreatedBy(content, descending);
+		} else if (PerunColumnType.MODIFIED_BY.equals(column)) {
+			backup = TableSorter.sortByModifiedBy(backup, descending);
+			content = TableSorter.sortByModifiedBy(content, descending);
 		} else {
 			// if column for sorting not found, use columns provider's default, if possible
 			if (columnProvider != null) {

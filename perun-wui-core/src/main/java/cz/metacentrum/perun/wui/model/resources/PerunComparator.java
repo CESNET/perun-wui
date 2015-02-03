@@ -80,13 +80,17 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		if (PerunColumnType.NAME.equals(this.column)) return this.compareByName(o1, o2);
 		if (PerunColumnType.DESCRIPTION.equals(this.column)) return this.compareByDescription(o1, o2);
 
+		if (PerunColumnType.CREATED_AT.equals(this.column)) return this.compareByCreatedAt(o1, o2);
+		if (PerunColumnType.MODIFIED_AT.equals(this.column)) return this.compareByModifiedAt(o1, o2);
+		if (PerunColumnType.CREATED_BY.equals(this.column)) return this.compareByCreatedBy(o1, o2);
+		if (PerunColumnType.MODIFIED_BY.equals(this.column)) return this.compareByModifiedBy(o1, o2);
+
 		// VO columns
-		if (PerunColumnType.SHORT_NAME.equals(this.column)) return this.compareByShortName(o1, o2);
+		if (PerunColumnType.VO_SHORT_NAME.equals(this.column)) return this.compareByShortName(o1, o2);
 
 		// Facility columns
-		if (PerunColumnType.OWNERS.equals(this.column)) return this.compareByOwnersNames(o1, o2);
+		if (PerunColumnType.FACILITY_OWNERS.equals(this.column)) return this.compareByOwnersNames(o1, o2);
 
-		if (PerunColumnType.CREATED_AT.equals(this.column)) return this.compareByCreatedAt(o1, o2);
 
 		return 0;
 
@@ -187,6 +191,75 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		} else {
 
 			return nativeCompare(o1.getCreatedAt(), o2.getCreatedAt());
+
+		}
+
+	}
+
+	/**
+	 * Compares PerunBeans by modifiedAt
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByModifiedAt(GeneralObject o1, GeneralObject o2) {
+
+		if (o1.getObjectType().equals("Application") && o2.getObjectType().equals("Application")) {
+
+			Application app1 = o1.cast();
+			Application app2 = o2.cast();
+			return nativeCompare(app1.getCreatedAt(), app2.getCreatedAt());
+
+		} else {
+
+			return nativeCompare(o1.getCreatedAt(), o2.getCreatedAt());
+
+		}
+
+	}
+
+	/**
+	 * Compares PerunBeans by createdBy
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByCreatedBy(GeneralObject o1, GeneralObject o2) {
+
+		if (o1.getObjectType().equals("Application") && o2.getObjectType().equals("Application")) {
+
+			Application app1 = o1.cast();
+			Application app2 = o2.cast();
+			return nativeCompare(app1.getCreatedBy(), app2.getCreatedBy());
+
+		} else {
+
+			return nativeCompare(o1.getCreatedBy(), o2.getCreatedBy());
+
+		}
+
+	}
+
+	/**
+	 * Compares PerunBeans by modifiedBy
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByModifiedBy(GeneralObject o1, GeneralObject o2) {
+
+		if (o1.getObjectType().equals("Application") && o2.getObjectType().equals("Application")) {
+
+			Application app1 = o1.cast();
+			Application app2 = o2.cast();
+			return nativeCompare(app1.getModifiedBy(), app2.getModifiedBy());
+
+		} else {
+
+			return nativeCompare(o1.getModifiedBy(), o2.getModifiedBy());
 
 		}
 
