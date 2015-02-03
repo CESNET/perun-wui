@@ -4,6 +4,7 @@ import com.google.gwt.cell.client.FieldUpdater;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.cells.PerunLinkCell;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
@@ -97,6 +98,7 @@ public class VoColumnProvider extends ColumnProvider<Vo> {
 					}, this.<String>getFieldUpdater(table)
 			);
 			idColumn.setSortable(true);
+			table.getColumnSortHandler().setComparator(idColumn, new PerunComparator<Vo>(PerunColumnType.ID));
 			idColumn.setColumnType(column);
 			table.addColumn(idColumn, "Id");
 			if (widthInPixels > 0) {
@@ -147,6 +149,7 @@ public class VoColumnProvider extends ColumnProvider<Vo> {
 			);
 
 			nameColumn.setSortable(true);
+			table.getColumnSortHandler().setComparator(nameColumn, new PerunComparator<Vo>(PerunColumnType.NAME));
 			nameColumn.setColumnType(column);
 			table.addColumn(nameColumn, "Name");
 			if (widthInPixels > 0) {
@@ -170,6 +173,7 @@ public class VoColumnProvider extends ColumnProvider<Vo> {
 			);
 
 			shortNameColumn.setSortable(true);
+			table.getColumnSortHandler().setComparator(shortNameColumn, new PerunComparator<Vo>(PerunColumnType.VO_SHORT_NAME));
 			shortNameColumn.setColumnType(column);
 			table.addColumn(shortNameColumn, "Short name");
 			if (widthInPixels > 0) {

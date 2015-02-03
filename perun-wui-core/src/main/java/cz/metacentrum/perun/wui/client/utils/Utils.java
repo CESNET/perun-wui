@@ -1121,10 +1121,10 @@ public class Utils {
 	}
 
 	/**
-	 * Returns a set as a list
+	 * Returns a Set as a List
 	 *
-	 * @param set Input set
-	 * @return Output list
+	 * @param set Input Set
+	 * @return Output List
 	 */
 	static public <T> ArrayList<T> setToList(Set<T> set) {
 		ArrayList<T> list = new ArrayList<T>();
@@ -1138,8 +1138,8 @@ public class Utils {
 	 * If passed string is DN of certificate(recognized by "/CN=") then returns only CN part with unescaped chars.
 	 * If passed string is not DN of certificate, original string is returned.
 	 *
-	 * @param toConvert
-	 * @return
+	 * @param toConvert Convert DN of certificate to human readable string
+	 * @return CN part of certificate DN in human readable form or original value.
 	 */
 	static public String convertCertCN(String toConvert) {
 
@@ -1155,12 +1155,24 @@ public class Utils {
 
 	}
 
+	/**
+	 * Replace escaped UTF-8 characters with their actual value.
+	 *
+	 * @param string string to unescape UTF-8 chars
+	 * @return String with all UTF-8 chars in readable form.
+	 */
 	static public final native String unescapeDN(String string) /*-{
 
 		return decodeURIComponent(string.replace(/\\x/g, '%'))
 
 	}-*/;
 
+	/**
+	 * Translate IDP identification (ExtSource name property) into English name of institution.
+	 *
+	 * @param name ExtSource name from IDP to translate
+	 * @return Translated name of IDP or original value if unknown.
+	 */
 	public static String translateIdp(String name) {
 
 		HashMap<String, String> orgs = new HashMap<String, String>();

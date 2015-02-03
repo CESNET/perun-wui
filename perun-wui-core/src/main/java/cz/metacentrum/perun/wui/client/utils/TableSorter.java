@@ -12,6 +12,7 @@ import java.util.Collections;
  *
  * @author Pavel Zlamal <zlamal@cesnet.cz>
  */
+@Deprecated
 public class TableSorter {
 
 	/**

@@ -1,5 +1,9 @@
 /* PERUN TABLE */
 
+.pointer {
+	cursor: pointer !important;
+}
+
 /* Styles for PerunLoader */
 .GIM-RRTCH, .GIM-RRTCH table {
 	height: 100% !important;

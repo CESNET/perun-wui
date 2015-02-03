@@ -8,7 +8,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Widget;
-import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
@@ -26,7 +25,7 @@ import org.gwtbootstrap3.client.ui.html.Text;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class LogoutPage extends Page implements Translatable {
+public class LogoutPage extends Page {
 
 	interface LogoutPageUiBinder extends UiBinder<Widget, LogoutPage> {
 	}
@@ -35,11 +34,14 @@ public class LogoutPage extends Page implements Translatable {
 
 	private Widget rootElement;
 
+	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+
 	public LogoutPage() {
 		rootElement = ourUiBinder.createAndBindUi(this);
+		text.setText(translation.logoutPageTitle());
+		subText.setText(translation.logoutPageSubTitle());
+		button.setText(translation.logoutPageButton());
 	}
-
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
 	@UiField
 	Button button;
@@ -120,13 +122,6 @@ public class LogoutPage extends Page implements Translatable {
 	@Override
 	public void toggleHelp() {
 
-	}
-
-	@Override
-	public void changeLanguage() {
-		text.setText(translation.logoutPageTitle());
-		subText.setText(translation.logoutPageSubTitle());
-		button.setText(translation.logoutPageButton());
 	}
 
 }

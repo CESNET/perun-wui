@@ -22,7 +22,7 @@
 			</b:InputGroup>
 
 			<b:ButtonGroup>
-				<p:PerunButton icon="FILTER" type="PRIMARY">Filter</p:PerunButton>
+				<p:PerunButton icon="FILTER" type="PRIMARY" ui:field="filterButton">Filter</p:PerunButton>
 			</b:ButtonGroup>
 			<b:ButtonGroup>
 				<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="button">New...</p:PerunButton>

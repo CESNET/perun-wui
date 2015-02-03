@@ -55,6 +55,9 @@ public class VosManagementPage extends Page {
 	ButtonToolBar menu;
 
 	@UiField
+	PerunButton filterButton;
+
+	@UiField
 	PerunButton button;
 
 	@UiField (provided = true)
@@ -133,6 +136,11 @@ public class VosManagementPage extends Page {
 		GroupsManager.removeMember(7842, 3973, null);
 	}
 	*/
+
+	@UiHandler(value = "filterButton")
+	public void filter(ClickEvent event) {
+		grid.filterTable(textBox.getValue());
+	}
 
 	@UiHandler(value = "remove")
 	public void removeOnClick(ClickEvent event) {

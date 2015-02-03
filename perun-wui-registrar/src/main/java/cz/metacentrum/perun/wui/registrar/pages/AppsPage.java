@@ -12,7 +12,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
@@ -29,7 +28,7 @@ import org.gwtbootstrap3.client.ui.html.Text;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class AppsPage extends Page implements Translatable {
+public class AppsPage extends Page {
 
 	interface AppsPageUiBinder extends UiBinder<Widget, AppsPage> {
 	}
@@ -133,14 +132,6 @@ public class AppsPage extends Page implements Translatable {
 
 	@Override
 	public void toggleHelp() {
-
-	}
-
-	@Override
-	public void changeLanguage() {
-
-		text.setText(translation.submittedTitle());
-		grid.changeLanguage();
 
 	}
 

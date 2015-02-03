@@ -91,6 +91,12 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		// Facility columns
 		if (PerunColumnType.FACILITY_OWNERS.equals(this.column)) return this.compareByOwnersNames(o1, o2);
 
+		// Application columns
+		if (PerunColumnType.APPLICATION_USER.equals(this.column)) return this.compareByApplicationUser(o1, o2);
+		if (PerunColumnType.APPLICATION_STATE.equals(this.column)) return this.compareByApplicationState(o1, o2);
+		if (PerunColumnType.APPLICATION_TYPE.equals(this.column)) return this.compareByApplicationType(o1, o2);
+		if (PerunColumnType.APPLICATION_VO_NAME.equals(this.column)) return this.compareByApplicationVoName(o1, o2);
+		if (PerunColumnType.APPLICATION_GROUP_NAME.equals(this.column)) return this.compareByApplicationGroupName(o1, o2);
 
 		return 0;
 
@@ -209,11 +215,11 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 
 			Application app1 = o1.cast();
 			Application app2 = o2.cast();
-			return nativeCompare(app1.getCreatedAt(), app2.getCreatedAt());
+			return nativeCompare(app1.getModifiedAt(), app2.getModifiedAt());
 
 		} else {
 
-			return nativeCompare(o1.getCreatedAt(), o2.getCreatedAt());
+			return nativeCompare(o1.getModifiedAt(), o2.getModifiedAt());
 
 		}
 
@@ -255,13 +261,124 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 
 			Application app1 = o1.cast();
 			Application app2 = o2.cast();
-			return nativeCompare(app1.getModifiedBy(), app2.getModifiedBy());
+			return nativeCompare(Utils.convertCertCN(app1.getModifiedBy()), Utils.convertCertCN(app2.getModifiedBy()));
 
 		} else {
 
 			return nativeCompare(o1.getModifiedBy(), o2.getModifiedBy());
 
 		}
+
+	}
+
+	/**
+	 * Compares Application by user name or ext source login and ext source name.
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByApplicationUser(GeneralObject o1, GeneralObject o2) {
+
+		Application app1 = o1.cast();
+		Application app2 = o2.cast();
+
+		String compare1 = "";
+		String compare2 = "";
+		if (app1.getUser() != null) {
+			compare1 = app1.getUser().getFullName();
+		} else {
+			compare1 = Utils.convertCertCN(app1.getCreatedBy()) + " / " + Utils.translateIdp(Utils.convertCertCN(app1.getExtSourceName()));
+		}
+		if (app2.getUser() != null) {
+			compare2 = app2.getUser().getFullName();
+		} else {
+			compare2 = Utils.convertCertCN(app2.getCreatedBy()) + " / " + Utils.translateIdp(Utils.convertCertCN(app2.getExtSourceName()));
+		}
+
+		return nativeCompare(compare1, compare2);
+
+	}
+
+	/**
+	 * Compares Application by state
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByApplicationState(GeneralObject o1, GeneralObject o2) {
+
+		Application app1 = o1.cast();
+		Application app2 = o2.cast();
+
+		return app1.getState().compareTo(app2.getState());
+
+	}
+
+	/**
+	 * Compares Application by type
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByApplicationType(GeneralObject o1, GeneralObject o2) {
+
+		Application app1 = o1.cast();
+		Application app2 = o2.cast();
+
+		return app1.getType().compareTo(app2.getType());
+
+	}
+
+	/**
+	 * Compares Application by VO name
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByApplicationVoName(GeneralObject o1, GeneralObject o2) {
+
+		Application app1 = o1.cast();
+		Application app2 = o2.cast();
+
+		String compare1 = "";
+		String compare2 = "";
+		if (app1.getVo() != null) {
+			compare1 = app1.getVo().getName();
+		}
+		if (app2.getVo() != null) {
+			compare2 = app2.getVo().getName();
+		}
+
+		return nativeCompare(compare1, compare2);
+
+	}
+
+	/**
+	 * Compares Application by Group name
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByApplicationGroupName(GeneralObject o1, GeneralObject o2) {
+
+		Application app1 = o1.cast();
+		Application app2 = o2.cast();
+
+		String compare1 = "";
+		String compare2 = "";
+		if (app1.getGroup() != null) {
+			compare1 = app1.getGroup().getShortName();
+		}
+		if (app2.getGroup() != null) {
+			compare2 = app2.getGroup().getShortName();
+		}
+
+		return nativeCompare(compare1, compare2);
 
 	}
 

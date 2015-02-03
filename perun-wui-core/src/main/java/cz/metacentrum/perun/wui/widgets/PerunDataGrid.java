@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.widgets;
 
-import cz.metacentrum.perun.wui.client.resources.Translatable;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -14,7 +13,6 @@ import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.view.client.MultiSelectionModel;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
-import cz.metacentrum.perun.wui.client.utils.TableSorter;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.resources.PerunKeyProvider;
@@ -45,7 +43,9 @@ import java.util.Map;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> implements Translatable {
+public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
+
+	final PerunDataGrid<T> dataGrid = this;
 
 	// list of items displayed in table
 	ArrayList<T> content = new ArrayList<>();
@@ -73,19 +73,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 	ColumnProvider<T> columnProvider;
 
 	// support of sorting on columns
-	ColumnSortEvent.Handler columnSortHandler = new ColumnSortEvent.Handler() {
-		@Override
-		public void onColumnSort(ColumnSortEvent columnSortEvent) {
-			PerunColumnType type = ((PerunColumn) columnSortEvent.getColumn()).getColumnType();
-			if (type != null) {
-				if (columnSortEvent.isSortAscending()) {
-					sortTable(type, true, false);
-				} else {
-					sortTable(type, true, true);
-				}
-			}
-		}
-	};
+	PerunColumnSortHandler<T> columnSortHandler = new PerunColumnSortHandler<T>(dataGrid.getList());
 
 	// we must store all columns and their headers/footers by reference, since add/insert/remove methods with
 	// index doesn't work properly on table redraws (when keep existing columns is used).
@@ -132,6 +120,38 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 		 * @return TRUE if object can be selected on users try
 		 */
 		public boolean canSelectObject(T object);
+
+	}
+
+	/**
+	 * Class extending default list handler for sortable columns, which perform table redraw after sorting.
+	 * It's used by PerunDataGrid by default.
+	 *
+	 * @param <T>
+	 */
+	public class PerunColumnSortHandler<T extends JavaScriptObject> extends ColumnSortEvent.ListHandler {
+
+		private ColumnSortEvent lastSort;
+
+		public PerunColumnSortHandler(List<T> list) {
+			super(list);
+		}
+
+		@Override
+		public void onColumnSort(ColumnSortEvent event) {
+			super.onColumnSort(event);
+			lastSort = event;
+			dataGrid.refresh();
+		}
+
+		/**
+		 * Return last sort event (how is table sorted right now)
+		 *
+		 * @return last sort event
+		 */
+		public ColumnSortEvent getLastSort() {
+			return this.lastSort;
+		}
 
 	}
 
@@ -349,7 +369,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 	 *
 	 * @return ColumnSortHandler
 	 */
-	public ColumnSortEvent.Handler getColumnSortHandler() {
+	public PerunColumnSortHandler<T> getColumnSortHandler() {
 		return columnSortHandler;
 	}
 
@@ -414,9 +434,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 		if (object != null) {
 			backup.add(object);
 			content.add(object);
-			this.setRowData(content);
-			this.flush();
-			this.redraw();
+			refresh();
 			// TODO - update oracle
 		}
 	}
@@ -436,9 +454,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 					content.add(objects.get(i));
 				}
 			}
-			this.setRowData(content);
-			this.flush();
-			this.redraw();
+			refresh();
 			// TODO - update oracle
 		}
 	}
@@ -466,9 +482,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 			} else {
 				content.add(index, object);
 			}
-			this.setRowData(content);
-			this.flush();
-			this.redraw();
+			refresh();
 			// TODO - update oracle
 
 		}
@@ -476,7 +490,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 
 	/**
 	 * Sorts table by selected column (ascending order). If column is not supported for sorting,
-	 * then it tries to sort by default column (column provider must be set).
+	 * then it's not sorted.
 	 * <p/>
 	 * If no match found, then table is not sorted.
 	 *
@@ -488,7 +502,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 
 	/**
 	 * Sorts table by selected column. If column is not supported for sorting,
-	 * then it tries to sort by default column (column provider must be set).
+	 * then it's not sorted.
 	 * <p/>
 	 * If no match found, then table is not sorted.
 	 *
@@ -496,67 +510,34 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 	 * @param descending TRUE = descending order / FALSE = ascending (default)
 	 */
 	public void sortTable(PerunColumnType column, boolean descending) {
-		sortTable(column, true, descending);
+
+		for (Column<T, ?> c : columns) {
+			if (c instanceof PerunColumn) {
+				if (((PerunColumn)c).getColumnType().equals(column)) {
+					// Fire column sort event manually
+					ColumnSortList.ColumnSortInfo columnSortInfo = new ColumnSortList.ColumnSortInfo(c, !descending);
+					getColumnSortList().push(columnSortInfo);
+					ColumnSortEvent.fire(dataGrid, dataGrid.getColumnSortList());
+					break;
+				}
+			}
+		}
+
 	}
 
 	/**
-	 * Sorts table by selected column. If column is not supported for sorting,
-	 * then it tries to sort by default column (column provider must be set).
-	 * <p/>
-	 * If no match found, then table is not sorted.
-	 *
-	 * @param column     column to sort by
-	 * @param refresh    TRUE = refresh displayed items based on sort / FALSE = do not refresh displayed items
-	 * @param descending TRUE = descending order / FALSE = ascending (default)
+	 * Sort table using last sort event or table's default sort column (based on object type).
+	 * If not defined, nothing is sorted.
 	 */
-	public void sortTable(PerunColumnType column, boolean refresh, boolean descending) {
-
-		if (PerunColumnType.ID.equals(column)) {
-			backup = TableSorter.sortById(backup, descending);
-			content = TableSorter.sortById(content, descending);
-		} else if (PerunColumnType.NAME.equals(column)) {
-			backup = TableSorter.sortByName(backup, descending);
-			content = TableSorter.sortByName(content, descending);
-		} else if (PerunColumnType.DESCRIPTION.equals(column)) {
-			backup = TableSorter.sortByDescription(backup, descending);
-			content = TableSorter.sortByDescription(content, descending);
-		} else if (PerunColumnType.VO_SHORT_NAME.equals(column)) {
-			backup = TableSorter.sortByShortName(backup, descending);
-			content = TableSorter.sortByShortName(content, descending);
-		} else if (PerunColumnType.FACILITY_OWNERS.equals(column)) {
-			backup = TableSorter.sortByOwnersNames(backup, descending);
-			content = TableSorter.sortByOwnersNames(content, descending);
-		} else if (PerunColumnType.CREATED_AT.equals(column)) {
-			backup = TableSorter.sortByCreatedAt(backup, descending);
-			content = TableSorter.sortByCreatedAt(content, descending);
-		} else if (PerunColumnType.MODIFIED_AT.equals(column)) {
-			backup = TableSorter.sortByModifiedAt(backup, descending);
-			content = TableSorter.sortByModifiedAt(content, descending);
-		} else if (PerunColumnType.CREATED_BY.equals(column)) {
-			backup = TableSorter.sortByCreatedBy(backup, descending);
-			content = TableSorter.sortByCreatedBy(content, descending);
-		} else if (PerunColumnType.MODIFIED_BY.equals(column)) {
-			backup = TableSorter.sortByModifiedBy(backup, descending);
-			content = TableSorter.sortByModifiedBy(content, descending);
+	public void sortTable() {
+		ColumnSortEvent event = getColumnSortHandler().getLastSort();
+		if (event != null) {
+			sortTable(((PerunColumn)getColumnSortHandler().getLastSort().getColumn()).getColumnType(), !getColumnSortHandler().getLastSort().isSortAscending());
 		} else {
-			// if column for sorting not found, use columns provider's default, if possible
 			if (columnProvider != null) {
-				sortTable(columnProvider.getDefaultSortColumn(), refresh, descending);
-				return;
+				sortTable(columnProvider.getDefaultSortColumn(), columnProvider.isDefaultSortColumnDescending());
 			}
 		}
-
-		if (refresh) {
-			if (content.isEmpty()) {
-				// do not set if is empty
-				this.setRowCount(0, false);
-			} else {
-				this.setRowData(content);
-			}
-			this.flush();
-			this.redraw();
-		}
-
 	}
 
 	/**
@@ -572,13 +553,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 		content.remove(object);
 		// remove object from selection
 		getSelectionModel().setSelected(object, false);
-		if (content.isEmpty()) {
-			this.setRowCount(0, false);
-		} else {
-			this.setRowData(content);
-		}
-		this.flush();
-		this.redraw();
+		refresh();
 		// TODO - clear & rebuild oracle
 	}
 
@@ -597,13 +572,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 		for (T object : objects) {
 			getSelectionModel().setSelected(object, false);
 		}
-		if (content.isEmpty()) {
-			this.setRowCount(0, false);
-		} else {
-			this.setRowData(content);
-		}
-		this.flush();
-		this.redraw();
+		refresh();
 		// TODO - clear & rebuild oracle
 	}
 
@@ -615,7 +584,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 	 * - clear all backed-up items (used when filtering)
 	 * - clear all selection made to table
 	 * <p/>
-	 * All passed items are added to table and then sorted by
+	 * All passed items are added to table and then sorted by last sort event or
 	 * table's default sort column (based on object type).
 	 * <p/>
 	 * Loading widget is set to onFinished() state.
@@ -631,20 +600,9 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 			backup.addAll(list);
 			content.addAll(list);
 		}
-
-		if (columnProvider != null) {
-			sortTable(columnProvider.getDefaultSortColumn(), columnProvider.isDefaultSortColumnDescending());
-		}
-
+		sortTable();
 		loaderWidget.onFinished();
-
-		if (content.isEmpty()) {
-			this.setRowCount(0, false);
-		} else {
-			this.setRowData(content);
-		}
-		this.flush();
-		this.redraw();
+		refresh();
 
 	}
 
@@ -670,16 +628,15 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 		}
 
 		loaderWidget.onEmpty();
-		this.setRowCount(0, false);
-		this.flush();
-		this.redraw();
+
+		refresh();
 
 		// TODO - set to loading state ??
 
 	}
 
 	/**
-	 * Filter content of table based on user input. Default filtering rule (provided by ColumnProvider) is used.
+	 * Filter content of table based on user input. Last known or default filtering rule (provided by ColumnProvider) is used.
 	 * If ColumnProvider is not set to table, then no filtering is performed.
 	 * <p/>
 	 * All selection made to table is lost !!
@@ -728,14 +685,23 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 		loaderWidget.onFilter(text);
 
 		// fill table
+		sortTable();
+		refresh();
+
+	}
+
+	/**
+	 * Refresh / redraw table view based on current state of list.
+	 */
+	public void refresh() {
 		if (content.isEmpty()) {
+			// do not set if is empty
 			this.setRowCount(0, false);
 		} else {
 			this.setRowData(content);
 		}
 		this.flush();
 		this.redraw();
-
 	}
 
 	/**
@@ -1082,7 +1048,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 	}
 
 	/**
-	 * Prevent default click action on links in menu. Href is present but ignored, only
+	 * Prevent default click action on links in data grid. Href is present but ignored, only
 	 * GWT's click handler is activated.
 	 */
 	private final native void disableLinks() /*-{
@@ -1103,12 +1069,12 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 
 	@Override
 	public void addColumn(Column<T, ?> col, String headerString) {
-		addColumn(col, new TextHeader(headerString), null);
+		addColumn(col, createTextHeaderForColumn(col, headerString), null);
 	}
 
 	@Override
 	public void addColumn(Column<T, ?> col, String headerString, String footerString) {
-		addColumn(col, new TextHeader(headerString), new TextHeader(footerString));
+		addColumn(col, createTextHeaderForColumn(col, headerString), createTextHeaderForColumn(col, footerString));
 	}
 
 	@Override
@@ -1128,12 +1094,12 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 
 	@Override
 	public void insertColumn(int beforeIndex, Column<T, ?> col, String headerString) {
-		insertColumn(beforeIndex, col, new TextHeader(headerString));
+		insertColumn(beforeIndex, col, createTextHeaderForColumn(col, headerString));
 	}
 
 	@Override
 	public void insertColumn(int beforeIndex, Column<T, ?> col, String headerString, String footerString) {
-		insertColumn(beforeIndex, col, new TextHeader(headerString), new TextHeader(footerString));
+		insertColumn(beforeIndex, col, createTextHeaderForColumn(col, headerString), createTextHeaderForColumn(col, footerString));
 	}
 
 	@Override
@@ -1149,13 +1115,21 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> imple
 		super.insertColumn(beforeIndex, col, header, footer);
 	}
 
-	@Override
-	public void changeLanguage() {
-
-		// TODO - redraw headers which can't be simple string, must be also translatable
-		this.flush();
-		this.redraw();
-
+	/**
+	 * Helping method for creating generic TextHeader (or footer) which has
+	 * additional style when column is sortable.
+	 *
+	 * @param col Column to match header for
+	 * @param text Header text to set
+	 * @return TextHeader with additional styles
+	 */
+	private TextHeader createTextHeaderForColumn(final Column<T, ?> col, String text) {
+		return new TextHeader(text) {
+			@Override
+			public String getHeaderStyleNames() {
+				return super.getHeaderStyleNames() + ((col.isSortable()) ? " pointer" : "");
+			}
+		};
 	}
 
 }

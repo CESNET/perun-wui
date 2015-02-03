@@ -323,6 +323,24 @@ public class Application extends JavaScriptObject {
 	}-*/;
 
 	/**
+	 * Get timestamp of application last change as String.
+	 *
+	 * @return Timestamp of application last change.
+	 */
+	public final String getModifiedAt() {
+		return JsUtils.getNativePropertyString(this, "modifiedAt");
+	}
+
+	/**
+	 * Set timestamp of application last change as String.
+	 *
+	 * @param date Timestamp of application last change.
+	 */
+	public final native void setModifiedAt(String date) /*-{
+		this.modifiedAt = date;
+	}-*/;
+
+	/**
 	 * Get object's type, equals to Class.getSimpleName().
 	 * Value is stored to object on server side and only for PerunBeans object.
 	 * <p/>
