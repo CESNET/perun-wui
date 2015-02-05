@@ -11,7 +11,7 @@
 	<b.html:Div>
 
 		<b:Heading size="H2" ui:field="pageTitle">
-			<b:Icon ui:field="icon" type="COPY" fixedWidth="true" />
+			<b:Icon ui:field="icon" type="ARCHIVE" fixedWidth="true" />
 			<b.html:Text text="My registrations" ui:field="text"/>
 			<b.html:Small text=""/>
 		</b:Heading>

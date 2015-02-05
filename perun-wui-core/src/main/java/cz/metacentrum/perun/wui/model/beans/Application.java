@@ -1,7 +1,9 @@
 package cz.metacentrum.perun.wui.model.beans;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
+import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
 /**
@@ -339,6 +341,38 @@ public class Application extends JavaScriptObject {
 	public final native void setModifiedAt(String date) /*-{
 		this.modifiedAt = date;
 	}-*/;
+
+	public final String getTranslatedState() {
+
+		PerunTranslation translation = GWT.create(PerunTranslation.class);
+
+		if (ApplicationState.NEW.equals(getState())) {
+			return translation.applicationNew();
+		} else if (ApplicationState.VERIFIED.equals(getState())) {
+			return translation.applicationVerified();
+		} else if (ApplicationState.APPROVED.equals(getState())) {
+			return translation.applicationApproved();
+		} else if (ApplicationState.REJECTED.equals(getState())) {
+			return translation.applicationRejected();
+		}
+
+		return getState().toString();
+
+	}
+
+	public final String getTranslatedType() {
+
+		PerunTranslation translation = GWT.create(PerunTranslation.class);
+
+		if (ApplicationType.INITIAL.equals(getType())) {
+			return translation.applicationInitial();
+		} else if (ApplicationType.EXTENSION.equals(getType())) {
+			return translation.applicationExtension();
+		}
+
+		return getType().toString();
+
+	}
 
 	/**
 	 * Get object's type, equals to Class.getSimpleName().

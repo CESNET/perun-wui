@@ -16,8 +16,8 @@
 
 			<b:NavbarCollapse b:id="navbar-collapse">
 				<b:NavbarNav>
-					<b:AnchorListItem icon="FILE_O" ui:field="application" targetHistoryToken="form">Registration form</b:AnchorListItem>
-					<b:AnchorListItem icon="COPY" ui:field="myApplications" targetHistoryToken="submitted">My registrations</b:AnchorListItem>
+					<b:AnchorListItem icon="FILE_TEXT_O" ui:field="application" targetHistoryToken="form">Registration form</b:AnchorListItem>
+					<b:AnchorListItem icon="ARCHIVE" ui:field="myApplications" targetHistoryToken="submitted">My registrations</b:AnchorListItem>
 					<b:AnchorListItem icon="QUESTION_CIRCLE" ui:field="help" targetHistoryToken="help">Help</b:AnchorListItem>
 					<b:ListDropDown>
 						<b:AnchorButton icon="FLAG" dataToggle="DROPDOWN" ui:field="language">Language</b:AnchorButton>

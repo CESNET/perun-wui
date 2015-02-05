@@ -30,4 +30,27 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Log me back")
 	public String logoutPageButton();
 
+	@DefaultMessage("Form has no form items.")
+	public String formHasNoFormItems();
+
+	/* ========= OBJECT TRANSLATION ============ */
+
+	@DefaultMessage("Approved")
+	public String applicationApproved();
+
+	@DefaultMessage("New")
+	public String applicationNew();
+
+	@DefaultMessage("Verified")
+	public String applicationVerified();
+
+	@DefaultMessage("Rejected")
+	public String applicationRejected();
+
+	@DefaultMessage("Registration")
+	public String applicationInitial();
+
+	@DefaultMessage("Extension")
+	public String applicationExtension();
+
 }

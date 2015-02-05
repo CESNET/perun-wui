@@ -33,8 +33,8 @@ public class NotAuthorizedPage extends Page {
 	public NotAuthorizedPage() {
 
 		rootElement = ourUiBinder.createAndBindUi(this);
-		title.setText(translation.notFoundPageTitle());
-		message.setText(translation.notFoundPageText());
+		title.setText(translation.notAuthorizedPageTitle());
+		message.setText(translation.notAuthorizedPageText());
 
 	}
 

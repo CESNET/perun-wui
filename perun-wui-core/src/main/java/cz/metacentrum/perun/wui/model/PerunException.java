@@ -120,6 +120,14 @@ public class PerunException extends JavaScriptObject {
 		return JsUtils.getNativePropertyString(this, "reason");
 	}
 
+	/**
+	 * Return reason for "ExtendMembershipException"
+	 *
+	 * @return reason why user can't extend membership
+	 */
+	public final String getExpirationDate() {
+		return JsUtils.getNativePropertyString(this, "expirationDate");
+	}
 
 	public final ArrayList<ApplicationFormItemData> getFormItems() {
 		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "formItems"));

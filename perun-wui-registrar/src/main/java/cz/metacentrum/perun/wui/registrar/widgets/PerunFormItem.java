@@ -112,7 +112,8 @@ public class PerunFormItem extends FormGroup {
 
 	}
 
-	public PerunFormItem(ApplicationFormItemData item) {
+	public PerunFormItem(PerunForm form, ApplicationFormItemData item) {
+		this.form = form;
 		this.item = item;
 		this.formLabel.getElement().addClassName("formLabel");
 		if (item != null) {
@@ -120,7 +121,8 @@ public class PerunFormItem extends FormGroup {
 		}
 	}
 
-	public PerunFormItem(ApplicationFormItemData item, String lang) {
+	public PerunFormItem(PerunForm form, ApplicationFormItemData item, String lang) {
+		this.form = form;
 		this.item = item;
 		this.lang = lang;
 		this.formLabel.getElement().addClassName("formLabel");
@@ -160,11 +162,17 @@ public class PerunFormItem extends FormGroup {
 
 		if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON) &&
 				!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON)) {
-			if (!getLabelOrShortName().equals("")) {
+			if (!getLabelOrShortName().isEmpty()) {
+
+				String baseString = getLabelOrShortName();
+				if (form.isSeeHiddenItems() && !isVisible()) {
+					baseString = baseString + " " + translation.isHidden();
+				}
+
 				if (isRequired()) {
-					formLabel.setHTML(getLabelOrShortName().replaceAll(" ", "&nbsp;")+"&nbsp;<span style=\"color: red;\">*</span>");
+					formLabel.setHTML(baseString.replaceAll(" ", "&nbsp;")+"&nbsp;<span style=\"color: red;\">*</span>");
 				} else {
-					formLabel.setHTML(getLabelOrShortName().replaceAll(" ", "&nbsp;")+"&nbsp;&nbsp;");
+					formLabel.setHTML(baseString.replaceAll(" ", "&nbsp;")+"&nbsp;&nbsp;");
 				}
 			}
 		}
@@ -174,197 +182,201 @@ public class PerunFormItem extends FormGroup {
 
 		if (validator != null) validator.translate();
 
-		// TODO - regenerate other widgets !!
-		if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT)) {
-			((HTML)widget).setHTML(getLabelOrShortName());
-		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
-			((Legend)widget).setHTML(getLabelOrShortName());
-		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.SELECTIONBOX)) {
+		if (!form.isOnlyPreview()) {
 
-			final cz.metacentrum.perun.wui.registrar.widgets.Select select = ((cz.metacentrum.perun.wui.registrar.widgets.Select)getFormItemWidget());
+			// TODO - regenerate other widgets !!
+			if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT)) {
+				((HTML) widget).setHTML(getLabelOrShortName());
+			} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
+				((Legend) widget).setHTML(getLabelOrShortName());
+			} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.SELECTIONBOX)) {
 
-			select.clear();
+				final cz.metacentrum.perun.wui.registrar.widgets.Select select = ((cz.metacentrum.perun.wui.registrar.widgets.Select) getFormItemWidget());
 
-			Map<String,String> opts = parseSelectionBox(item.getFormItem().getItemTexts(lang).getOptions());
+				select.clear();
 
-			ArrayList<String> keyList = Utils.setToList(opts.keySet());
+				Map<String, String> opts = parseSelectionBox(item.getFormItem().getItemTexts(lang).getOptions());
 
-			int i = 0;
+				ArrayList<String> keyList = Utils.setToList(opts.keySet());
 
-			if (!isRequired()) {
-				select.addItem(translation.notSelected(), "");
-				i++;
-			}
+				int i = 0;
 
-			for(String key : keyList){
-				boolean selected = getValue().equals(key);
-				select.addItem(opts.get(key), key);
-				select.setItemSelected(i, selected);
-				i++;
-			}
+				if (!isRequired()) {
+					select.addItem(translation.notSelected(), "");
+					i++;
+				}
 
-			if (select.getItemCount() != 0) {
-				// set default value
-				currentValue.setValue(select.getAllSelectedValues().get(0));
-			}
+				for (String key : keyList) {
+					boolean selected = getValue().equals(key);
+					select.addItem(opts.get(key), key);
+					select.setItemSelected(i, selected);
+					i++;
+				}
 
-			select.refresh();
+				if (select.getItemCount() != 0) {
+					// set default value
+					currentValue.setValue(select.getAllSelectedValues().get(0));
+				}
 
-		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.COMBOBOX)) {
+				select.refresh();
 
-			final FlowPanel group = ((FlowPanel)getFormItemWidget());
-			final cz.metacentrum.perun.wui.registrar.widgets.Select select = (cz.metacentrum.perun.wui.registrar.widgets.Select)group.getWidget(0);
-			int selectedIndex = select.getSelectedIndex();
-			select.clear();
+			} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.COMBOBOX)) {
 
-			Map<String,String> opts = parseSelectionBox(item.getFormItem().getItemTexts(lang).getOptions());
-			ArrayList<String> keyList = Utils.setToList(opts.keySet());
+				final FlowPanel group = ((FlowPanel) getFormItemWidget());
+				final cz.metacentrum.perun.wui.registrar.widgets.Select select = (cz.metacentrum.perun.wui.registrar.widgets.Select) group.getWidget(0);
+				int selectedIndex = select.getSelectedIndex();
+				select.clear();
 
-			if (!isRequired()) {
-				select.addItem(translation.notSelected(), "");
-			}
+				Map<String, String> opts = parseSelectionBox(item.getFormItem().getItemTexts(lang).getOptions());
+				ArrayList<String> keyList = Utils.setToList(opts.keySet());
 
-			select.addItem(translation.customValue(), "custom");
-			int customIndex = select.getItemCount()-1;
+				if (!isRequired()) {
+					select.addItem(translation.notSelected(), "");
+				}
 
-			for(String key : keyList){
-				select.addItem(opts.get(key), key);
-				// set pre-filled value as selected
-				if (preFilledValue.equals(key) && selectedIndex == -1) selectedIndex = select.getItemCount()-1;
-			}
+				select.addItem(translation.customValue(), "custom");
+				int customIndex = select.getItemCount() - 1;
 
-			// when nothing selected
-			if (selectedIndex < 0)  {
+				for (String key : keyList) {
+					select.addItem(opts.get(key), key);
+					// set pre-filled value as selected
+					if (preFilledValue.equals(key) && selectedIndex == -1) selectedIndex = select.getItemCount() - 1;
+				}
 
-				if (preFilledValue.isEmpty()) {
-					selectedIndex = 0;
+				// when nothing selected
+				if (selectedIndex < 0) {
+
+					if (preFilledValue.isEmpty()) {
+						selectedIndex = 0;
+					} else {
+						selectedIndex = customIndex;
+					}
+
+				}
+
+				// select proper item
+				select.setItemSelected(selectedIndex, true);
+
+				if (select.getSelectedIndex() != customIndex) {
+					currentValue.setValue(select.getValue(select.getSelectedIndex()));
+					select.removeStyleName("comboboxFormItemFirst");
+					// FIXME - hack bug in BootstrapSelect
+					select.getElement().getNextSiblingElement().removeClassName("comboboxFormItemFirst");
 				} else {
-					selectedIndex = customIndex;
+					select.addStyleName("comboboxFormItemFirst");
 				}
 
-			}
+				// rework group
+				select.refresh();
 
-			// select proper item
-			select.setItemSelected(selectedIndex, true);
+			} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.CHECKBOX)) {
 
-			if (select.getSelectedIndex() != customIndex) {
-				currentValue.setValue(select.getValue(select.getSelectedIndex()));
-				select.removeStyleName("comboboxFormItemFirst");
-				// FIXME - hack bug in BootstrapSelect
-				select.getElement().getNextSiblingElement().removeClassName("comboboxFormItemFirst");
-			} else {
-				select.addStyleName("comboboxFormItemFirst");
-			}
+				((FlowPanel) widget).clear();
 
-			// rework group
-			select.refresh();
+				String options = item.getFormItem().getItemTexts(lang).getOptions();
+				Map<String, String> boxContents = parseSelectionBox(options);
+				final Map<CheckBox, String> boxValueMap = new HashMap<CheckBox, String>();
 
-		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.CHECKBOX)) {
+				ArrayList<String> keyList = Utils.setToList(boxContents.keySet());
 
-			((FlowPanel)widget).clear();
+				for (String key : keyList) {
 
-			String options = item.getFormItem().getItemTexts(lang).getOptions();
-			Map<String,String> boxContents = parseSelectionBox(options);
-			final Map<CheckBox, String> boxValueMap = new HashMap<CheckBox, String>();
-
-			ArrayList<String> keyList = Utils.setToList(boxContents.keySet());
-
-			for(String key : keyList) {
-
-				final CheckBox checkbox = new CheckBox(boxContents.get(key));
-				// pre-fill
-				for (String s : getValue().split("\\|")) {
-					if (key.trim().equals(s.trim())) {
-						checkbox.setValue(true);
+					final CheckBox checkbox = new CheckBox(boxContents.get(key));
+					// pre-fill
+					for (String s : getValue().split("\\|")) {
+						if (key.trim().equals(s.trim())) {
+							checkbox.setValue(true);
+						}
 					}
-				}
-				boxValueMap.put(checkbox, key);
+					boxValueMap.put(checkbox, key);
 
-				checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-					@Override
-					public void onValueChange(ValueChangeEvent<Boolean> event) {
+					checkbox.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+						@Override
+						public void onValueChange(ValueChangeEvent<Boolean> event) {
 
-						// rebuild value
-						String value = "";
-						for(Map.Entry<CheckBox, String> innerEntry : boxValueMap.entrySet()) {
-							if (innerEntry.getKey().getValue()) {
-								// put in selected values
-								value += innerEntry.getValue()+"|";
+							// rebuild value
+							String value = "";
+							for (Map.Entry<CheckBox, String> innerEntry : boxValueMap.entrySet()) {
+								if (innerEntry.getKey().getValue()) {
+									// put in selected values
+									value += innerEntry.getValue() + "|";
+								}
 							}
+							if (value.length() > 1) {
+								value = value.substring(0, value.length() - 1);
+							}
+
+							currentValue.setValue(value, true);
+
 						}
-						if (value.length() > 1) {
-							value = value.substring(0, value.length()-1);
+					});
+
+					((FlowPanel) widget).add(checkbox);
+
+				}
+
+			} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.RADIO)) {
+
+				((FlowPanel) widget).clear();
+
+				String options = item.getFormItem().getItemTexts(lang).getOptions();
+				Map<String, String> boxContents = parseSelectionBox(options);
+				ArrayList<String> keyList = Utils.setToList(boxContents.keySet());
+
+				// fill not selected option
+				if (!isRequired()) {
+
+					final Radio radio = new Radio("radio" + item.getFormItem().getId(), translation.notSelected());
+					// pre-fill
+					if ("".equals(getValue().trim())) {
+						radio.setValue(true);
+					}
+
+					radio.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+						@Override
+						public void onValueChange(ValueChangeEvent<Boolean> event) {
+							currentValue.setValue("", true);
 						}
+					});
 
-						currentValue.setValue(value, true);
+					((FlowPanel) widget).add(radio);
 
-					}
-				});
-
-				((FlowPanel)widget).add(checkbox);
-
-			}
-
-		} else if (item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.RADIO)) {
-
-			((FlowPanel)widget).clear();
-
-			String options = item.getFormItem().getItemTexts(lang).getOptions();
-			Map<String,String> boxContents = parseSelectionBox(options);
-			ArrayList<String> keyList = Utils.setToList(boxContents.keySet());
-
-			// fill not selected option
-			if (!isRequired()) {
-
-				final Radio radio = new Radio("radio"+item.getFormItem().getId(), translation.notSelected());
-				// pre-fill
-				if ("".equals(getValue().trim())) {
-					radio.setValue(true);
 				}
 
-				radio.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-					@Override
-					public void onValueChange(ValueChangeEvent<Boolean> event) {
-						currentValue.setValue("", true);
+				for (final String key : keyList) {
+
+					final Radio radio = new Radio("radio" + item.getFormItem().getId(), boxContents.get(key));
+					// pre-fill
+					if (key.trim().equals(getValue().trim())) {
+						radio.setValue(true);
 					}
-				});
+					radio.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
+						@Override
+						public void onValueChange(ValueChangeEvent<Boolean> event) {
+							currentValue.setValue(key, true);
+						}
+					});
 
-				((FlowPanel)widget).add(radio);
+					((FlowPanel) widget).add(radio);
 
-			}
-
-			for(final String key : keyList) {
-
-				final Radio radio = new Radio("radio"+item.getFormItem().getId(),boxContents.get(key));
-				// pre-fill
-				if (key.trim().equals(getValue().trim())) {
-					radio.setValue(true);
 				}
-				radio.addValueChangeHandler(new ValueChangeHandler<Boolean>() {
-					@Override
-					public void onValueChange(ValueChangeEvent<Boolean> event) {
-						currentValue.setValue(key, true);
+
+			} else if (ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON.equals(item.getFormItem().getType()) ||
+					ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON.equals(item.getFormItem().getType())) {
+
+				((PerunButton) widget).setText(getLabelOrShortName());
+				((PerunButton) widget).getTooltip().setTitle(translation.checkAndSubmit());
+				((PerunButton) widget).getTooltip().reconfigure();
+
+			} else if (ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL.equals(item.getFormItem().getType())) {
+
+				if (!preFilledValue.isEmpty()) {
+					if (emailSelect.getValue(emailSelect.getItemCount() - 1).equals("custom")) {
+						emailSelect.setItemText(emailSelect.getItemCount() - 1, translation.customValueEmail());
+						emailSelect.refresh();
 					}
-				});
-
-				((FlowPanel)widget).add(radio);
-
-			}
-
-		} else if (ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON.equals(item.getFormItem().getType()) ||
-				ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON.equals(item.getFormItem().getType())) {
-
-			((PerunButton)widget).setText(getLabelOrShortName());
-			((PerunButton)widget).getTooltip().setTitle(translation.checkAndSubmit());
-			((PerunButton)widget).getTooltip().reconfigure();
-
-		} else if (ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL.equals(item.getFormItem().getType())) {
-
-			if (!preFilledValue.isEmpty()) {
-				if (emailSelect.getValue(emailSelect.getItemCount()-1).equals("custom")) {
-					emailSelect.setItemText(emailSelect.getItemCount() - 1, translation.customValueEmail());
-					emailSelect.refresh();
 				}
+
 			}
 
 		}
@@ -397,9 +409,17 @@ public class PerunFormItem extends FormGroup {
 			helpText.setEmphasis(Emphasis.MUTED);
 
 			FlowPanel wrapper = new FlowPanel();
-			wrapper.add(generateWidget());
-			wrapper.add(statusText);
-			wrapper.add(helpText);
+
+			if (form.isOnlyPreview()) {
+				widget = new HTML((item.getValue() != null && !item.getValue().equalsIgnoreCase("null") && !item.getValue().isEmpty()) ? item.getValue() : "");
+				widget.addStyleName("perunFormItemValue");
+				wrapper.add(statusText);
+				wrapper.add(widget);
+			} else {
+				wrapper.add(generateWidget());
+				wrapper.add(statusText);
+				wrapper.add(helpText);
+			}
 			setTexts();
 
 			formLabel.addStyleName("col-lg-2");

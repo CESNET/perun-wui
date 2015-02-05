@@ -11,10 +11,10 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	// -------------- MAIN PAGE - MENU------------------------ //
 
-	@DefaultMessage("Registration form")
+	@DefaultMessage("Form")
 	public String application();
 
-	@DefaultMessage("My registrations")
+	@DefaultMessage("Submitted registrations")
 	public String myApplications();
 
 	@DefaultMessage("Help")
@@ -94,10 +94,43 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("--- Custom value ---")
 	public String customValue();
 
+	@DefaultMessage("<i>( HIDDEN )</i>")
+	public String isHidden();
+
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
-	@DefaultMessage("My registrations")
+	@DefaultMessage("Submitted registrations")
 	public String submittedTitle();
+
+	@DefaultMessage("Submitted on")
+	public String submittedOn();
+
+	@DefaultMessage("State")
+	public String state();
+
+	@DefaultMessage("Type")
+	public String type();
+
+	@DefaultMessage("Virtual organization")
+	public String virtualOrganization();
+
+	@DefaultMessage("Group")
+	public String group();
+
+	@DefaultMessage("Show")
+	public String showDetail();
+
+
+	// -------------- APP DETAIL PAGE ------------------------ //
+
+	@DefaultMessage("Registration to {0}")
+	public String initialDetail(String registerTo);
+
+	@DefaultMessage("Membership extension in {0}")
+	public String extensionDetail(String registerTo);
+
+	@DefaultMessage("Form content")
+	public String formDataTitle();
 
 	// --------------- EXCEPTIONS -------------------------------- //
 
@@ -116,8 +149,8 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You can`t extend membership right now")
 	public String cantExtendMembership();
 
-	@DefaultMessage("Membership can be extended only in a short time before membership expiration or after.")
-	public String cantExtendMembershipOutside();
+	@DefaultMessage("<b>Your membership is valid until {0}.</b> Membership can be extended only in a short time before membership expiration or after. ")
+	public String cantExtendMembershipOutside(String expirationDate);
 
 	@DefaultMessage("You don`t have required Level of Assurance (LoA) to extend membership. Contact your IDP ({0}) and prove your identity to him by official ID card (passport, driving license). If you have another identity with higher Level of Assurance, try to use it instead.")
 	public String cantExtendMembershipInsufficientLoa(String idpName);

@@ -101,6 +101,11 @@ th.gwtb3-d {
 	white-space: nowrap !important;
 	word-break: keep-all !important;
 }
+/* Fix align of form item values on preview form */
+.perunFormItemValue {
+	margin-bottom: 0;
+	padding-top: 7px;
+}
 
 /* Fix position of help under CHECKBOX form item */
 .checkboxFormItem {

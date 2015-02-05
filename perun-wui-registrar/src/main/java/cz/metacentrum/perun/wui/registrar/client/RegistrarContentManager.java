@@ -8,6 +8,7 @@ import cz.metacentrum.perun.wui.client.resources.Translatable;
 import cz.metacentrum.perun.wui.pages.NotAuthorizedPage;
 import cz.metacentrum.perun.wui.pages.NotFoundPage;
 import cz.metacentrum.perun.wui.pages.Page;
+import cz.metacentrum.perun.wui.registrar.pages.AppDetailPage;
 import cz.metacentrum.perun.wui.registrar.pages.AppsPage;
 import cz.metacentrum.perun.wui.registrar.pages.FormPage;
 import cz.metacentrum.perun.wui.registrar.pages.LogoutPage;
@@ -69,7 +70,15 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 
 				changePageActive = true;
 
-				if ("form".equals(finalContext)) {
+				if ("notfound".equals(finalContext)) {
+
+					openPage(notFoundPage, true);
+
+				} else if ("notauthorized".equals(finalContext)) {
+
+					openPage(notAuthorizedPage, true);
+
+				} else if ("form".equals(finalContext)) {
 
 					openPage(new FormPage(), true);
 
@@ -77,13 +86,16 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 
 					openPage(new AppsPage(), true);
 
-				} else if ("notfound".equals(finalContext)) {
+				} else if (finalContext.startsWith("detail")) {
 
-					openPage(notFoundPage, true);
-
-				} else if ("notauthorized".equals(finalContext)) {
-
-					openPage(notAuthorizedPage, true);
+					// FIXME - this is hack - we need more error proof URL parser
+					String[] params = finalContext.split("\\?");
+					if (params.length > 1) {
+						String[] vars = params[1].split("=");
+						if (vars.length > 0) {
+							openPage(new AppDetailPage(Integer.valueOf(vars[1])), true);
+						}
+					}
 
 				} else if ("logout".equals(finalContext)) {
 
@@ -165,27 +177,27 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 
 				} else {
 
-					if (pageToShow.isAuthorized()) {
+					// display page when all data all loaded (check every 200ms)
+					Scheduler.get().scheduleIncremental(new Scheduler.RepeatingCommand() {
 
-						// display page when all data all loaded (check every 200ms)
-						Scheduler.get().scheduleIncremental(new Scheduler.RepeatingCommand() {
+						boolean firstRun = true;
 
-							boolean firstRun = true;
+						@Override
+						public boolean execute() {
 
-							@Override
-							public boolean execute() {
-
-								// wait for loading data
-								if (!pageToShow.isPrepared()) {
-									if (firstRun) {
-										PerunLoader loader = new PerunLoader();
-										contentManager.clear();
-										contentManager.add(loader);
-										loader.onLoading();
-										firstRun = false;
-									}
-									return true;
+							// wait for loading data
+							if (!pageToShow.isPrepared()) {
+								if (firstRun) {
+									PerunLoader loader = new PerunLoader();
+									contentManager.clear();
+									contentManager.add(loader);
+									loader.onLoading();
+									firstRun = false;
 								}
+								return true;
+							}
+
+							if (pageToShow.isAuthorized()) {
 
 								// data loaded
 								displayedPage = pageToShow;
@@ -195,7 +207,7 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 								displayedPage.onResize();
 								// translate
 								if (displayedPage instanceof Translatable) {
-									((Translatable)displayedPage).changeLanguage();
+									((Translatable) displayedPage).changeLanguage();
 								}
 
 								// update context by page
@@ -208,24 +220,26 @@ public class RegistrarContentManager extends Div implements PerunContentManager 
 
 								return false;
 
+							} else {
+
+								// not authorized to view page
+								displayedPage = notAuthorizedPage;
+								contentManager.clear();
+								contentManager.add(displayedPage.draw());
+								displayedPage.open();
+								displayedPage.onResize();
+								// translate
+								if (displayedPage instanceof Translatable) {
+									((Translatable) displayedPage).changeLanguage();
+								}
+								changePageActive = false;
+
+								return false;
+
 							}
-						});
 
-					} else {
-
-						// not authorized to view page
-						displayedPage = notAuthorizedPage;
-						contentManager.clear();
-						contentManager.add(displayedPage.draw());
-						displayedPage.open();
-						displayedPage.onResize();
-						// translate
-						if (displayedPage instanceof Translatable) {
-							((Translatable)displayedPage).changeLanguage();
 						}
-						changePageActive = false;
-
-					}
+					});
 
 				}
 

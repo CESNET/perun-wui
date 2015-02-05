@@ -17,7 +17,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.*;
-import cz.metacentrum.perun.wui.model.columnProviders.ApplicationColumnProvider;
+import cz.metacentrum.perun.wui.registrar.model.ApplicationColumnProvider;
 import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
@@ -49,6 +49,7 @@ public class AppsPage extends Page {
 
 		grid = new PerunDataGrid<Application>(false, new ApplicationColumnProvider());
 		rootElement = ourUiBinder.createAndBindUi(this);
+		text.setText(translation.submittedTitle());
 
 	}
 

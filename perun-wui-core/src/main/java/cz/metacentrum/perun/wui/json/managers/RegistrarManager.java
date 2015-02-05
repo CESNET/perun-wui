@@ -1,8 +1,13 @@
 package cz.metacentrum.perun.wui.json.managers;
 
 import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
 import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.model.beans.Application;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+
+import java.util.List;
 
 /**
  * Manager with standard callbacks to Perun's API (RegistrarManager).
@@ -15,66 +20,6 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 public class RegistrarManager {
 
 	private static final String REGISTRAR_MANAGER = "registrarManager/";
-
-	/**
-	 * Retrieve application form items with values pre-filled from Perun or IdP/certificate.
-	 *
-	 * What form (initial/extension) is retrieved is based on current user requesting the form
-	 * and it's status in VO.
-	 *
-	 * @param voId ID of VO to get form for
-	 * @param locale Required localization of form texts
-	 * @param events Events done on callback
-	 *
-	 * @return Request unique request
-	 */
-	public static Request getFormItemsWithValue(int voId, String locale, JsonEvents events) {
-		return getFormItemsWithValue(voId, 0, locale, events);
-	}
-
-	/**
-	 * Retrieve application form items with values pre-filled from Perun or IdP/certificate.
-	 *
-	 * What form (initial/extension) is retrieved is based on current user requesting the form.
-	 *
-	 * @param voId ID of VO to get form for
-	 * @param locale Required localization of form texts
-	 * @param events Events done on callback
-	 *
-	 * @return Request unique request
-	 */
-	public static Request getFormItemsWithValue(int voId, int groupId, String locale, JsonEvents events) {
-
-		JsonClient client = new JsonClient(events);
-		client.put("vo", voId);
-		if (groupId != 0) client.put("group", groupId);
-		client.put("locale", locale);
-
-		// FIXME - switch to new implementation
-		client.put("type", "INITIAL");
-		return client.call(REGISTRAR_MANAGER + "getFormItemsWithPrefilledValues");
-		//return client.getData(REGISTRAR_MANAGER + "getFormItemsWithValue", events);
-
-	}
-
-	/**
-	 * Retrieve init data for Registrar GUI.
-	 *
-	 * @param voName Name of VO to get data for
-	 * @param groupName Optional name of Group to get data for
-	 * @param events Events done on callback
-	 *
-	 * @return Request unique request
-	 */
-	public static Request initialize(String voName, String groupName, JsonEvents events) {
-
-		JsonClient client = new JsonClient(events);
-		client.put("vo", voName);
-		if (groupName != null && !groupName.isEmpty()) client.put("group", groupName);
-
-		return client.call(REGISTRAR_MANAGER + "initialize");
-
-	}
 
 	/**
 	 * Retrieve init data for Registrar GUI in one big call.
@@ -112,6 +57,166 @@ public class RegistrarManager {
 			client.put("id", userId);
 		}
 		return client.call(REGISTRAR_MANAGER + "getApplicationsForUser");
+
+	}
+
+	/**
+	 * Retrieve applications for Member.
+	 *
+	 * @param memberId ID of user to get applications for
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getApplicationsForMember(int memberId, JsonEvents events) {
+		return getApplicationsForMember(memberId, 0, events);
+	}
+
+	/**
+	 * Retrieve applications for Member.
+	 *
+	 * @param memberId ID of Member to get applications for
+	 * @param groupId ID of Group to filter retrieved applications by
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getApplicationsForMember(int memberId, int groupId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (memberId > 0) {
+			client.put("member", memberId);
+		}
+		if (groupId > 0) {
+			client.put("group", memberId);
+		}
+		return client.call(REGISTRAR_MANAGER + "getApplicationsForUser");
+
+	}
+
+	/**
+	 * Retrieve applications for VO.
+	 *
+	 * @param voId ID of VO to get applications for
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getApplicationsForVo(int voId, JsonEvents events) {
+		return getApplicationsForVo(voId, null, events);
+	}
+
+	/**
+	 * Retrieve applications for VO.
+	 *
+	 * @param voId ID of VO to get applications for
+	 * @param states List of states we want applications to filter
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getApplicationsForVo(int voId, List<Application.ApplicationState> states, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (voId > 0) {
+			client.put("vo", voId);
+		}
+		if (states != null && !states.isEmpty()) {
+			client.put("state", states);
+		}
+		return client.call(REGISTRAR_MANAGER + "getApplicationsForVo");
+
+	}
+
+	/**
+	 * Retrieve applications for Group.
+	 *
+	 * @param groupId ID of Group to get applications for
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getApplicationsForGroup(int groupId, JsonEvents events) {
+		return getApplicationsForGroup(groupId, null, events);
+	}
+
+	/**
+	 * Retrieve applications for Group.
+	 *
+	 * @param groupId ID of Group to get applications for
+	 * @param states List of states we want applications to filter
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getApplicationsForGroup(int groupId, List<Application.ApplicationState> states, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (groupId > 0) {
+			client.put("group", groupId);
+		}
+		if (states != null && !states.isEmpty()) {
+			client.put("state", states);
+		}
+		return client.call(REGISTRAR_MANAGER + "getApplicationsForGroup");
+
+	}
+
+	/**
+	 * Get application by it's ID.
+	 *
+	 * @param applicationId ID of application to get
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getApplicationById(int applicationId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (applicationId > 0) {
+			client.put("id", applicationId);
+		}
+		return client.call(REGISTRAR_MANAGER + "getApplicationById");
+
+	}
+
+	/**
+	 * Get application data by application ID.
+	 *
+	 * @param applicationId ID of application to get data for
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getApplicationDataById(int applicationId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (applicationId > 0) {
+			client.put("id", applicationId);
+		}
+		return client.call(REGISTRAR_MANAGER + "getApplicationDataById");
+
+	}
+
+	/**
+	 * Get application data by application ID.
+	 *
+	 * @param application Application to create
+	 * @param data Data from application form items to save
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request createApplication(Application application, List<ApplicationFormItemData> data, JsonEvents events) {
+
+		JsonClient client = new JsonClient(RequestBuilder.POST, events);
+		if (application != null) {
+			client.put("app", application);
+		}
+		if (data != null) {
+			client.put("data", data);
+		}
+		return client.call(REGISTRAR_MANAGER + "createApplication");
 
 	}
 

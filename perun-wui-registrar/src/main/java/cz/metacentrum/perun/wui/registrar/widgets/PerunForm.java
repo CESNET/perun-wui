@@ -1,11 +1,15 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
+import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.FieldSet;
+import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlPosition;
@@ -22,19 +26,48 @@ public class PerunForm extends FieldSet {
 
 	private String lang = LocaleInfo.getCurrentLocale().getLocaleName().equals("default") ? "en" : LocaleInfo.getCurrentLocale().getLocaleName();
 
+	// TRUE if only text preview with (prefilled)value should be shown
+	private boolean onlyPreview = false;
+	private boolean seeHiddenItems = false;
+
+	private PerunTranslation perunTranslation = GWT.create(PerunTranslation.class);
+
 	ArrayList<PerunFormItem> items = new ArrayList<PerunFormItem>();
+
+	/**
+	 * Create form instance
+	 */
+	public PerunForm() {}
+
+	/**
+	 * Create form instance with possibility to set 'only preview' state.
+	 *
+	 * @param onlyPreview TRUE = form will display only preview / FALSE = form will allow editing
+	 */
+	public PerunForm(boolean onlyPreview) {
+		this.onlyPreview = onlyPreview;
+	}
+
+	/**
+	 * Create form instance with possibility to set 'only preview' state.
+	 *
+	 * @param onlyPreview TRUE = form will display only preview / FALSE = form will allow editing
+	 */
+	public PerunForm(boolean onlyPreview, boolean seeHidden) {
+		this.onlyPreview = onlyPreview;
+		this.seeHiddenItems = seeHidden;
+	}
 
 	public void addFormItem(ApplicationFormItemData itemData) {
 
 		if (itemData != null) {
 
-			PerunFormItem item = new PerunFormItem(itemData, lang);
-			item.setForm(this);
+			PerunFormItem item = new PerunFormItem(this, itemData, lang);
 
 			if (item != null) items.add(item);
 
 			// if visible append to form
-			if (item.isVisible()) {
+			if (item.isVisible() || seeHiddenItems) {
 				add(item);
 			}
 
@@ -60,6 +93,10 @@ public class PerunForm extends FieldSet {
 			}
 		}
 
+		if (items.isEmpty()) {
+			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
+		}
+
 	}
 
 	public void addPerunFormItem(PerunFormItem item) {
@@ -70,7 +107,7 @@ public class PerunForm extends FieldSet {
 			items.add(item);
 
 			// if visible append to form
-			if (item.isVisible()) {
+			if (item.isVisible() || seeHiddenItems) {
 				add(item);
 			}
 
@@ -94,6 +131,10 @@ public class PerunForm extends FieldSet {
 			for (PerunFormItem item : items) {
 				addPerunFormItem(item);
 			}
+		}
+
+		if (items.isEmpty()) {
+			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
 		}
 
 	}
@@ -160,6 +201,32 @@ public class PerunForm extends FieldSet {
 			}
 		}, 400);
 
+	}
+
+	/**
+	 * Is form meant only for preview
+	 *
+	 * @return TRUE = preview / FALSE = editing
+	 */
+	public boolean isOnlyPreview() {
+		return onlyPreview;
+	}
+
+	/**
+	 * Set form as meant only for preview
+	 *
+	 * @param onlyPreview TRUE = for preview / FALSE = for editing
+	 */
+	public void setOnlyPreview(boolean onlyPreview) {
+		this.onlyPreview = onlyPreview;
+	}
+
+	public boolean isSeeHiddenItems() {
+		return seeHiddenItems;
+	}
+
+	public void setSeeHiddenItems(boolean seeHiddenItems) {
+		this.seeHiddenItems = seeHiddenItems;
 	}
 
 }

@@ -304,7 +304,9 @@ public class FormPage extends Page {
 
 			if (ex.getReason().equals("OUTSIDEEXTENSIONPERIOD")) {
 
-				notice.getElement().setInnerHTML("<h4>"+translation.cantExtendMembership()+"</h4><p>"+translation.cantExtendMembershipOutside());
+				String exceptionText = "<i>unlimited</i>";
+				if (ex.getExpirationDate() != null) exceptionText = ex.getExpirationDate().split(" ")[0];
+				notice.getElement().setInnerHTML("<h4>"+translation.cantExtendMembership()+"</h4><p>"+translation.cantExtendMembershipOutside(exceptionText));
 
 				if (Window.Location.getParameter("targetexisting") != null) {
 

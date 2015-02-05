@@ -97,6 +97,7 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		if (PerunColumnType.APPLICATION_TYPE.equals(this.column)) return this.compareByApplicationType(o1, o2);
 		if (PerunColumnType.APPLICATION_VO_NAME.equals(this.column)) return this.compareByApplicationVoName(o1, o2);
 		if (PerunColumnType.APPLICATION_GROUP_NAME.equals(this.column)) return this.compareByApplicationGroupName(o1, o2);
+		if (PerunColumnType.APPLICATION_LOA.equals(this.column)) return this.compareByApplicationLoA(o1, o2);
 
 		return 0;
 
@@ -379,6 +380,22 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		}
 
 		return nativeCompare(compare1, compare2);
+
+	}
+
+	/**
+	 * Compares Application by Group name
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByApplicationLoA(GeneralObject o1, GeneralObject o2) {
+
+		Application app1 = o1.cast();
+		Application app2 = o2.cast();
+
+		return app1.getExtSourceLoa() - app2.getExtSourceLoa();
 
 	}
 

@@ -1,25 +1,29 @@
-package cz.metacentrum.perun.wui.model.columnProviders;
+package cz.metacentrum.perun.wui.registrar.model;
 
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
-import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
+import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 /**
  * Implementation of {@link cz.metacentrum.perun.wui.model.ColumnProvider ColumnProvider}
- * for {@link cz.metacentrum.perun.wui.model.beans.Application Application}.
+ * for {@link cz.metacentrum.perun.wui.model.beans.Application Application} which is specific to registrar.
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class ApplicationColumnProvider extends ColumnProvider<Application> {
+public class ApplicationColumnProvider extends cz.metacentrum.perun.wui.model.columnProviders.ApplicationColumnProvider {
+
+	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
 	@Override
 	public ArrayList<PerunColumnType> getDefaultColumns() {
@@ -28,10 +32,9 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 		columns.add(PerunColumnType.CREATED_AT);
 		columns.add(PerunColumnType.APPLICATION_STATE);
 		columns.add(PerunColumnType.APPLICATION_TYPE);
-		columns.add(PerunColumnType.APPLICATION_USER);
-		columns.add(PerunColumnType.APPLICATION_LOA);
+		columns.add(PerunColumnType.APPLICATION_DETAIL);
 		columns.add(PerunColumnType.APPLICATION_VO_NAME);
-		columns.add(PerunColumnType.MODIFIED_BY);
+		columns.add(PerunColumnType.APPLICATION_GROUP_NAME);
 
 		return columns;
 
@@ -100,27 +103,7 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 	@Override
 	public <C> void addColumnToTable(final PerunDataGrid<Application> table, PerunColumnType column, FieldUpdater<Application, C> updater, int widthInPixels) {
 
-		if (PerunColumnType.ID.equals(column)) {
-
-			PerunColumn<Application, String> idColumn = createColumn(column,
-					new GetValue<Application, String>() {
-						@Override
-						public String getValue(Application object) {
-							return String.valueOf(object.getId());
-						}
-					}, this.<String>getFieldUpdater(table)
-			);
-			idColumn.setSortable(true);
-			table.getColumnSortHandler().setComparator(idColumn, new PerunComparator<Application>(PerunColumnType.ID));
-			idColumn.setColumnType(column);
-			table.addColumn(idColumn, "Id");
-			if (widthInPixels > 0) {
-				table.setColumnWidth(idColumn, widthInPixels + "px");
-			} else {
-				table.setColumnWidth(idColumn, "10%");
-			}
-
-		} else if (PerunColumnType.CREATED_AT.equals(column)) {
+		if (PerunColumnType.CREATED_AT.equals(column)) {
 
 			PerunColumn<Application, String> createdAtColumn = createColumn(column,
 					new GetValue<Application, String>() {
@@ -137,7 +120,7 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 			createdAtColumn.setSortable(true);
 			table.getColumnSortHandler().setComparator(createdAtColumn, new PerunComparator<Application>(PerunColumnType.CREATED_AT));
 			createdAtColumn.setColumnType(column);
-			table.addColumn(createdAtColumn, "Submitted");
+			table.addColumn(createdAtColumn, translation.submittedOn());
 			if (widthInPixels > 0) {
 				table.setColumnWidth(createdAtColumn, widthInPixels + "px");
 			} else {
@@ -150,14 +133,21 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 					new GetValue<Application, String>() {
 						@Override
 						public String getValue(Application object) {
-							return String.valueOf(object.getState());
+							return String.valueOf(object.getTranslatedState());
 						}
 					}, this.<String>getFieldUpdater(table)
 			);
 			stateColumn.setSortable(true);
-			table.getColumnSortHandler().setComparator(stateColumn, new PerunComparator<Application>(PerunColumnType.APPLICATION_STATE));
+			table.getColumnSortHandler().setComparator(stateColumn, new Comparator<Application>() {
+				@Override
+				public int compare(Application o1, Application o2) {
+					if (o1 == null) return -1;
+					if (o2 == null) return 1;
+					return PerunComparator.getNativeComparator().compare(o1.getTranslatedState(), o2.getTranslatedState());
+				}
+			});
 			stateColumn.setColumnType(column);
-			table.addColumn(stateColumn, "State");
+			table.addColumn(stateColumn, translation.state());
 			if (widthInPixels > 0) {
 				table.setColumnWidth(stateColumn, widthInPixels + "px");
 			} else {
@@ -170,38 +160,49 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 					new GetValue<Application, String>() {
 						@Override
 						public String getValue(Application object) {
-							return String.valueOf(object.getType());
+							return String.valueOf(object.getTranslatedType());
 						}
 					}, this.<String>getFieldUpdater(table)
 			);
 			typeColumn.setSortable(true);
-			table.getColumnSortHandler().setComparator(typeColumn, new PerunComparator<Application>(PerunColumnType.APPLICATION_TYPE));
+			table.getColumnSortHandler().setComparator(typeColumn, new Comparator<Application>() {
+				@Override
+				public int compare(Application o1, Application o2) {
+					if (o1 == null) return -1;
+					if (o2 == null) return 1;
+					return PerunComparator.getNativeComparator().compare(o1.getTranslatedType(), o2.getTranslatedType());
+				}
+			});
 			typeColumn.setColumnType(column);
-			table.addColumn(typeColumn, "Type");
+			table.addColumn(typeColumn, translation.type());
 			if (widthInPixels > 0) {
 				table.setColumnWidth(typeColumn, widthInPixels + "px");
 			} else {
 				table.setColumnWidth(typeColumn, "5%");
 			}
 
-		} else if (PerunColumnType.APPLICATION_LOA.equals(column)) {
+		} if (PerunColumnType.APPLICATION_DETAIL.equals(column)) {
 
-			PerunColumn<Application, String> typeColumn = createColumn(column,
+			ButtonCell buttonCell = new ButtonCell(IconType.FILE_TEXT_O);
+			PerunColumn<Application, String> appDetailButtonColumn = createColumn(buttonCell, column,
 					new GetValue<Application, String>() {
 						@Override
 						public String getValue(Application object) {
-							return String.valueOf(object.getExtSourceLoa());
+							return translation.showDetail();
 						}
-					}, this.<String>getFieldUpdater(table)
+					}, new FieldUpdater<Application, String>() {
+						@Override
+						public void update(int index, Application object, String value) {
+							History.newItem("detail?id="+object.getId());
+						}
+					}
 			);
-			typeColumn.setSortable(true);
-			table.getColumnSortHandler().setComparator(typeColumn, new PerunComparator<Application>(PerunColumnType.APPLICATION_LOA));
-			typeColumn.setColumnType(column);
-			table.addColumn(typeColumn, "LoA");
+			appDetailButtonColumn.setColumnType(column);
+			table.addColumn(appDetailButtonColumn, "");
 			if (widthInPixels > 0) {
-				table.setColumnWidth(typeColumn, widthInPixels + "px");
+				table.setColumnWidth(appDetailButtonColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(typeColumn, "3%");
+				table.setColumnWidth(appDetailButtonColumn, "5%");
 			}
 
 		} else if (PerunColumnType.APPLICATION_VO_NAME.equals(column)) {
@@ -217,7 +218,7 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 			voColumn.setSortable(true);
 			table.getColumnSortHandler().setComparator(voColumn, new PerunComparator<Application>(PerunColumnType.APPLICATION_VO_NAME));
 			voColumn.setColumnType(column);
-			table.addColumn(voColumn, "Project");
+			table.addColumn(voColumn, translation.virtualOrganization());
 			if (widthInPixels > 0) {
 				table.setColumnWidth(voColumn, widthInPixels + "px");
 			} else {
@@ -241,54 +242,11 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 			groupColumn.setSortable(true);
 			table.getColumnSortHandler().setComparator(groupColumn, new PerunComparator<Application>(PerunColumnType.APPLICATION_GROUP_NAME));
 			groupColumn.setColumnType(column);
-			table.addColumn(groupColumn, "Group");
+			table.addColumn(groupColumn, translation.group());
 			if (widthInPixels > 0) {
 				table.setColumnWidth(groupColumn, widthInPixels + "px");
 			} else {
 				table.setColumnWidth(groupColumn, "20%");
-			}
-
-		} else if (PerunColumnType.MODIFIED_BY.equals(column)) {
-
-			PerunColumn<Application, String> modifiedByColumn = createColumn(column,
-					new GetValue<Application, String>() {
-						@Override
-						public String getValue(Application object) {
-							return String.valueOf(Utils.convertCertCN(object.getModifiedBy()));
-						}
-					}, this.<String>getFieldUpdater(table)
-			);
-			modifiedByColumn.setSortable(true);
-			table.getColumnSortHandler().setComparator(modifiedByColumn, new PerunComparator<Application>(PerunColumnType.MODIFIED_BY));
-			modifiedByColumn.setColumnType(column);
-			table.addColumn(modifiedByColumn, "Modified by");
-			if (widthInPixels > 0) {
-				table.setColumnWidth(modifiedByColumn, widthInPixels + "px");
-			} else {
-				table.setColumnWidth(modifiedByColumn, "10%");
-			}
-
-		} else if (PerunColumnType.APPLICATION_USER.equals(column)) {
-
-			PerunColumn<Application, String> idColumn = createColumn(column,
-					new GetValue<Application, String>() {
-						@Override
-						public String getValue(Application object) {
-							if (object.getUser() != null) {
-								return object.getUser().getFullName();
-							}
-							return Utils.convertCertCN(object.getCreatedBy()) + " / " + Utils.translateIdp(Utils.convertCertCN(object.getExtSourceName()));
-						}
-					}, this.<String>getFieldUpdater(table)
-			);
-			idColumn.setSortable(true);
-			table.getColumnSortHandler().setComparator(idColumn, new PerunComparator<Application>(PerunColumnType.APPLICATION_USER));
-			idColumn.setColumnType(column);
-			table.addColumn(idColumn, "Submitted by");
-			if (widthInPixels > 0) {
-				table.setColumnWidth(idColumn, widthInPixels + "px");
-			} else {
-				table.setColumnWidth(idColumn, "10%");
 			}
 
 		}
