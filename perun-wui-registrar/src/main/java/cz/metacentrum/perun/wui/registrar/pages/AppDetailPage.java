@@ -82,9 +82,9 @@ public class AppDetailPage extends Page {
 			public void onFinished(JavaScriptObject jso) {
 				app = jso.cast();
 				appId = app.getId();
-				loadingFinished = true;
 				form.setOnlyPreview(true);
 				form.setSeeHiddenItems(canSeeHiddenFields());
+				loadForm();
 			}
 
 			@Override
@@ -101,12 +101,12 @@ public class AppDetailPage extends Page {
 	}
 
 	public AppDetailPage(Application app) {
-		loadingFinished = true;
 		this.app = app;
 		appId = app.getId();
 		form.setOnlyPreview(true);
 		form.setSeeHiddenItems(canSeeHiddenFields());
 		rootElement = ourUiBinder.createAndBindUi(this);
+		loadForm();
 	}
 
 	@UiHandler(value = "backButton")
@@ -163,40 +163,6 @@ public class AppDetailPage extends Page {
 		stateTitle.setText(app.getTranslatedState());
 		stateText.setText(app.getModifiedAt().split("\\.")[0]);
 
-		RegistrarManager.getApplicationDataById(app.getId(), new JsonEvents() {
-
-			@Override
-			public void onFinished(JavaScriptObject jso) {
-				ArrayList<ApplicationFormItemData> list = JsUtils.<ApplicationFormItemData>jsoAsList(jso);
-				Collections.sort(list, new Comparator<ApplicationFormItemData>() {
-					public int compare(ApplicationFormItemData arg0, ApplicationFormItemData arg1) {
-						if (arg0.getFormItem() != null && arg1.getFormItem() != null) {
-							return arg0.getFormItem().getOrdnum() - arg1.getFormItem().getOrdnum();
-						} else {
-							// for old data with deleted form items
-							return arg0.getShortname().compareTo(arg1.getShortname());
-						}
-					}
-				});
-				form.setFormItems(list);
-			}
-
-			@Override
-			public void onError(PerunException error) {
-
-				if (error.getName().equalsIgnoreCase("PrivilegeException")) {
-					History.newItem("notauthorized");
-				}
-
-			}
-
-			@Override
-			public void onLoadingStart() {
-				//
-			}
-
-		});
-
 		return rootElement;
 
 	}
@@ -243,6 +209,48 @@ public class AppDetailPage extends Page {
 		// admins can see hidden fields - users not
 		PerunSession sess = PerunSession.getInstance();
 		return (sess.isVoAdmin(app.getVo().getId()) || sess.isVoObserver(app.getVo().getId()) || (app.getGroup() != null && sess.isGroupAdmin(app.getGroup().getId())));
+
+	}
+
+	/**
+	 * Load form items
+	 */
+	private void loadForm() {
+
+		RegistrarManager.getApplicationDataById(app.getId(), new JsonEvents() {
+
+			@Override
+			public void onFinished(JavaScriptObject jso) {
+				ArrayList<ApplicationFormItemData> list = JsUtils.<ApplicationFormItemData>jsoAsList(jso);
+				Collections.sort(list, new Comparator<ApplicationFormItemData>() {
+					public int compare(ApplicationFormItemData arg0, ApplicationFormItemData arg1) {
+						if (arg0.getFormItem() != null && arg1.getFormItem() != null) {
+							return arg0.getFormItem().getOrdnum() - arg1.getFormItem().getOrdnum();
+						} else {
+							// for old data with deleted form items
+							return arg0.getShortname().compareTo(arg1.getShortname());
+						}
+					}
+				});
+				form.setFormItems(list);
+				loadingFinished = true;
+			}
+
+			@Override
+			public void onError(PerunException error) {
+
+				if (error.getName().equalsIgnoreCase("PrivilegeException")) {
+					History.newItem("notauthorized");
+				}
+
+			}
+
+			@Override
+			public void onLoadingStart() {
+				//
+			}
+
+		});
 
 	}
 
