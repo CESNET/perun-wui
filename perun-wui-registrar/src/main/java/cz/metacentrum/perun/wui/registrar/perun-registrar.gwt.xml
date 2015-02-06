@@ -30,6 +30,4 @@
 	<source path='pages'/>
 	<source path='widgets'/>
 
-	<add-linker name="xsiframe"/>
-
 </module>
