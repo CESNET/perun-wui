@@ -4,13 +4,14 @@
 		>
 
 	<ui:style>
+		.header img { padding-left: 15px; padding-right: 15px; }
 
 	</ui:style>
 
 	<b:Container fluid="true">
 
 		<b:Navbar position="FIXED_TOP">
-			<b:NavbarHeader ui:field="navbarHeader">
+			<b:NavbarHeader ui:field="navbarHeader" addStyleNames="{style.header}">
 				<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
 			</b:NavbarHeader>
 
