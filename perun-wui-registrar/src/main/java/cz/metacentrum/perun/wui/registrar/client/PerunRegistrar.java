@@ -170,7 +170,7 @@ public class PerunRegistrar implements EntryPoint, ValueChangeHandler<String>, P
 		Utils.getDefaultGrowlOptions().makeDefault();
 
 		// ensure injecting custom CSS styles of PerunWui
-		PerunResources.INSTANCE.css().ensureInjected();
+		PerunResources.INSTANCE.gss().ensureInjected();
 
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
 			@Override

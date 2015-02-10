@@ -22,6 +22,10 @@
 	<!-- Mask compilation error messages for unsupported browsers -->
 	<set-configuration-property name="user.agent.runtimeWarning" value="false"/>
 
+	<!-- Support for Google Closure Stylesheets -->
+	<set-configuration-property name="CssResource.enableGss" value="true" />
+	<set-configuration-property name="CssResource.legacy" value="true" />
+
 	<!--  Support only these browsers for devel -->
 	<set-property name="user.agent" value="gecko1_8"/>
 	<!-- FF -->

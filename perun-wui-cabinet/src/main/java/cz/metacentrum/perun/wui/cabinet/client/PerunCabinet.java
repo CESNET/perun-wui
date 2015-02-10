@@ -45,7 +45,7 @@ public class PerunCabinet implements EntryPoint, ValueChangeHandler<String> {
 	public void onModuleLoad() {
 
 		// ensure injecting custom CSS styles of PerunWui
-		PerunResources.INSTANCE.css().ensureInjected();
+		PerunResources.INSTANCE.gss().ensureInjected();
 
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
 			@Override

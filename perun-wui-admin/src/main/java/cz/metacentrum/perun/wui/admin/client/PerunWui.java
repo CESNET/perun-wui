@@ -61,7 +61,7 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 	public void onModuleLoad() {
 
 		// ensure injecting custom CSS styles of PerunWui
-		PerunResources.INSTANCE.css().ensureInjected();
+		PerunResources.INSTANCE.gss().ensureInjected();
 
 		// set default for Growl plugin
 		Utils.getDefaultGrowlOptions().makeDefault();
