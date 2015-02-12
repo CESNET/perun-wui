@@ -144,3 +144,98 @@ th.gwtb3-d {
 	border-bottom-right-radius: 4px !important;
 	border-bottom-left-radius: 4px !important;
 }
+
+/* MENU FILTER WIDGET - SUGGEST BOX */
+.gwt-SuggestBoxPopup {
+	background: #ffffff;
+	margin-top: 2px;
+	border: 1px solid rgba(0, 0, 0, 0.15);
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+	border-radius: 4px;
+}
+
+.gwt-SuggestBoxPopup .item {
+	color: #000;
+	cursor: default;
+	font-size: 110%;
+	padding: 2px 6px;
+}
+.gwt-SuggestBoxPopup .item-selected {
+	background: none repeat scroll 0 0 #d5e2ff;
+}
+.gwt-SuggestBoxPopup .suggestPopupContent {
+	background: none repeat scroll 0 0 white;
+}
+.gwt-SuggestBoxPopup .suggestPopupTopCenterInner, .gwt-SuggestBoxPopup .suggestPopupBottomCenterInner {
+	height: 1px;
+	line-height: 1px;
+}
+.gwt-SuggestBoxPopup .suggestPopupMiddleRightInner {
+	line-height: 1px;
+	width: 0px;
+}
+.gwt-SuggestBoxPopup .suggestPopupTopLeftInner {
+	height: 0;
+	width: 0;
+}
+.gwt-SuggestBoxPopup .suggestPopupTopRightInner {
+	height: 0;
+	width: 0;
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomLeftInner {
+	height: 0;
+	width: 0;
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomRightInner {
+	height: 0;
+	width: 0;
+}
+.gwt-SuggestBoxPopup .suggestPopupTopLeft {
+	height: 5px;
+	width: 0px;
+}
+.gwt-SuggestBoxPopup .suggestPopupTopRight {
+	height: 5px;
+	width: 0px;
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomLeft {
+	height: 5px;
+	width: 0px;
+}
+.gwt-SuggestBoxPopup .suggestPopupBottomRight {
+	height: 5px;
+	width: 0px;
+}
+
+.suggestPopupScroll {
+	max-height: 295px !important;
+	overflow-y: auto !important;
+	overflow-x: hidden !important;
+	background-color: #ffffff !important;
+}
+
+.suggestPopupContent td.item-selected {
+}
+.gwt-SuggestBoxPopup .item {
+	cursor: pointer !important;
+	font-size: 110% !important;
+	padding: 3px 9px !important;
+	clear: both !important;
+	font-weight: normal !important;
+	line-height: 20px !important;
+	color: #333333 !important;
+	white-space: nowrap !important;
+}
+.gwt-SuggestBoxPopup .item {
+	padding-left: 20px !important;
+	padding-right: 20px !important;
+}
+
+.gwt-SuggestBoxPopup .item-selected {
+	color: #ffffff !important;
+	text-decoration: none !important;
+	background-color: #337ab7;
+	background-repeat: repeat-x;
+	outline: 0;
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+}

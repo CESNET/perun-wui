@@ -15,6 +15,7 @@
  */
 package com.google.gwt.user.client.ui;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.core.client.Scheduler.ScheduledCommand;
 import com.google.gwt.dom.client.Document;
@@ -311,7 +312,6 @@ public class SuggestBox extends Composite implements HasText, HasFocus,
 			// FIXME - THIS WILL MAKE SUGGEST LIST SCROLLABLE
 			scroll = new ScrollPanel(decorateSuggestionList(suggestionMenu));
 			scroll.setStyleName("suggestPopupScroll");
-
 			suggestionPopup.setWidget(scroll);
 		}
 
@@ -428,7 +428,7 @@ public class SuggestBox extends Composite implements HasText, HasFocus,
 				// If nothing is selected, getSelectedItemIndex will return -1 and we
 				// will select index 0 (the first item) by default.
 				suggestionMenu.selectItem(suggestionMenu.getSelectedItemIndex() + 1);
-				// FIXME - THIS WILL SCROLL TO SELETCET ITEM
+				// FIXME - THIS WILL SCROLL TO SELECED ITEM
 				scroll.ensureVisible(suggestionMenu.getSelectedItem());
 			}
 		}
@@ -448,7 +448,7 @@ public class SuggestBox extends Composite implements HasText, HasFocus,
 					suggestionMenu.selectItem(suggestionMenu.getNumItems() - 1);
 				} else {
 					suggestionMenu.selectItem(suggestionMenu.getSelectedItemIndex() - 1);
-					// FIXME - THIS WILL SCROLL TO SELETCET ITEM
+					// FIXME - THIS WILL SCROLL TO SELECED ITEM
 					scroll.ensureVisible(suggestionMenu.getSelectedItem());
 				}
 			}
@@ -522,6 +522,7 @@ public class SuggestBox extends Composite implements HasText, HasFocus,
 					? positionRelativeTo : suggestBox);
 
 			// set proper padding
+			/*
 			Scheduler.get().scheduleDeferred(new Command() {
 				@Override
 				public void execute() {
@@ -532,6 +533,7 @@ public class SuggestBox extends Composite implements HasText, HasFocus,
 					}
 				}
 			});
+			*/
 
 		}
 

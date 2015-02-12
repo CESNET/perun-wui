@@ -23,11 +23,8 @@ import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
-import org.gwtbootstrap3.client.ui.AnchorListItem;
-import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.ButtonToolBar;
-import org.gwtbootstrap3.client.ui.ButtonGroup;
-import org.gwtbootstrap3.client.ui.TextBox;
+import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
+import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
@@ -80,8 +77,10 @@ public class VosManagementPage extends Page {
 	PerunButton removeMember;
 	*/
 
-	@UiField
-	TextBox textBox;
+	private UnaccentMultiWordSuggestOracle oracle = new UnaccentMultiWordSuggestOracle();
+
+	@UiField(provided = true)
+	SuggestBox textBox = new SuggestBox(oracle);
 
 	public VosManagementPage() {
 
@@ -215,6 +214,10 @@ public class VosManagementPage extends Page {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 				grid.setList(JsUtils.<Vo>jsoAsList(jso));
+				for (Vo vo : grid.getList()) {
+					oracle.add(vo.getName());
+					oracle.add(vo.getShortName());
+				}
 			}
 
 			@Override
