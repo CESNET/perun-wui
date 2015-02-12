@@ -18,8 +18,8 @@
 
 		<p:PerunToolbar ui:field="menu">
 
-			<b:InputGroup>
-				<b:SuggestBox focus="true" ui:field="textBox"/>
+			<b:InputGroup addStyleNames="col-md-3">
+				<b:SuggestBox focus="true" ui:field="textBox" placeholder="Filter by VO name"/>
 			</b:InputGroup>
 
 			<b:ButtonGroup>
