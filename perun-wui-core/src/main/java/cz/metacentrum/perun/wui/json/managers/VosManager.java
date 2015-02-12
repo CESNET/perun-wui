@@ -67,8 +67,8 @@ public class VosManager {
 
 		if (vo == null) return null;
 
-		JsonClient client = new JsonClient(RequestBuilder.POST, events);
-		client.put("vo", new JSONObject(vo));
+		JsonClient client = new JsonClient(true, events);
+		client.put("vo", vo);
 		return client.call(VOS_MANAGER + "createVo");
 
 	}
@@ -86,9 +86,9 @@ public class VosManager {
 
 		if (vo == null) return null;
 
-		JsonClient client = new JsonClient(RequestBuilder.POST, events);
-		client.put("vo", new JSONNumber(vo.getId()));
-		if (force) client.put("force", null);
+		JsonClient client = new JsonClient(true, events);
+		client.put("vo", vo.getId());
+		client.put("force", force ? 1 : 0);
 		return client.call(VOS_MANAGER + "deleteVo");
 
 	}
@@ -105,8 +105,8 @@ public class VosManager {
 
 		if (vo == null) return null;
 
-		JsonClient client = new JsonClient(RequestBuilder.POST, events);
-		client.put("vo", JsonUtils.convertToJSON(vo));
+		JsonClient client = new JsonClient(true, events);
+		client.put("vo", vo);
 		return client.call(VOS_MANAGER + "updateVo");
 
 	}

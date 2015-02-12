@@ -24,8 +24,8 @@ public class JsonUtils {
 	 * @return array of objects contained in input JSON string
 	 */
 	public static final native <T extends JavaScriptObject> JsArray<T> jsonAsArray(String json) /*-{
-        return eval(json);
-    }-*/;
+		return eval(json);
+	}-*/;
 
 	/**
 	 * Parses a string in JSON format (with trusted content) and cast it into JavaScriptObject.
@@ -36,18 +36,18 @@ public class JsonUtils {
 	 * @return JavaScriptObject that you can cast to any Overlay Type
 	 */
 	public static final native JavaScriptObject parseJson(String json) /*-{
-        try {
-            var response = $wnd.jQuery.parseJSON(json);
-            if (typeof response === 'object') {
-                return response;
-            }
-            // if returned value is not json object
-            return {"value": response};
-        } catch (err) {
-            // if parsing fails, return raw data wrapped in BasicOverlayObject
-            return {"value": response};
-        }
-    }-*/;
+		try {
+			var response = $wnd.jQuery.parseJSON(json);
+			if (typeof response === 'object') {
+				return response;
+			}
+			// if returned value is not json object
+			return {"value": response};
+		} catch (err) {
+			// if parsing fails, return raw data wrapped in BasicOverlayObject
+			return {"value": response};
+		}
+	}-*/;
 
 	/**
 	 * Parses a JavaScript map into a Java map.

@@ -29,9 +29,9 @@ public class GroupsManager {
 	 */
 	public static Request addMember(int groupId, int memberId, JsonEvents events) {
 
-		JsonClient client = new JsonClient(RequestBuilder.POST, events);
-		client.put("group", new JSONNumber(groupId));
-		client.put("member", new JSONNumber(memberId));
+		JsonClient client = new JsonClient(true, events);
+		client.put("group", groupId);
+		client.put("member", memberId);
 		return client.call(GROUPS_MANAGER + "addMember");
 
 	}
@@ -48,9 +48,9 @@ public class GroupsManager {
 	 */
 	public static Request removeMember(int groupId, int memberId, JsonEvents events) {
 
-		JsonClient client = new JsonClient(RequestBuilder.POST, events);
-		client.put("group", new JSONNumber(groupId));
-		client.put("member", new JSONNumber(memberId));
+		JsonClient client = new JsonClient(true, events);
+		client.put("group", groupId);
+		client.put("member", memberId);
 		return client.call(GROUPS_MANAGER + "removeMember");
 
 	}

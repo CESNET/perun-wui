@@ -1,13 +1,12 @@
 package cz.metacentrum.perun.wui.json.managers;
 
 import com.google.gwt.http.client.Request;
-import com.google.gwt.http.client.RequestBuilder;
 import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Manager with standard callbacks to Perun's API (RegistrarManager).
@@ -115,7 +114,7 @@ public class RegistrarManager {
 	 *
 	 * @return Request unique request
 	 */
-	public static Request getApplicationsForVo(int voId, List<Application.ApplicationState> states, JsonEvents events) {
+	public static Request getApplicationsForVo(int voId, ArrayList<Application.ApplicationState> states, JsonEvents events) {
 
 		JsonClient client = new JsonClient(events);
 		if (voId > 0) {
@@ -149,7 +148,7 @@ public class RegistrarManager {
 	 *
 	 * @return Request unique request
 	 */
-	public static Request getApplicationsForGroup(int groupId, List<Application.ApplicationState> states, JsonEvents events) {
+	public static Request getApplicationsForGroup(int groupId, ArrayList<Application.ApplicationState> states, JsonEvents events) {
 
 		JsonClient client = new JsonClient(events);
 		if (groupId > 0) {
@@ -207,9 +206,9 @@ public class RegistrarManager {
 	 *
 	 * @return Request unique request
 	 */
-	public static Request createApplication(Application application, List<ApplicationFormItemData> data, JsonEvents events) {
+	public static Request createApplication(Application application, ArrayList<ApplicationFormItemData> data, JsonEvents events) {
 
-		JsonClient client = new JsonClient(RequestBuilder.POST, events);
+		JsonClient client = new JsonClient(true, events);
 		if (application != null) {
 			client.put("app", application);
 		}

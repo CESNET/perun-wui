@@ -6,8 +6,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.*;
-import com.google.gwt.json.client.JSONObject;
-import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.json.client.*;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
@@ -26,8 +25,8 @@ import org.gwtbootstrap3.client.ui.ModalFooter;
 import org.gwtbootstrap3.client.ui.ModalHeader;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -54,9 +53,8 @@ public class JsonClient {
 
 	private String urlPrefix = PerunSession.getInstance().getRpcUrl();
 	private String requestUrl;
-	private JSONObject json = null;
-	Map<String, Object> parameters = new HashMap<>();
-	private RequestBuilder.Method method = RequestBuilder.GET;
+	private JSONObject json = new JSONObject();
+	private boolean checkIfPending = false;
 
 	private Map<String, PerunRequest> runningRequests = new HashMap<>();
 	private static Paragraph layout = new Paragraph();
@@ -111,58 +109,108 @@ public class JsonClient {
 	}
 
 	/**
-	 * New JsonClient
+	 * Create new JsonClient
 	 *
-	 * @param method specify request method (GET or POST)
+	 * @param checkIfPending If {@code true} check for callback results even after server timeout.
 	 */
-	public JsonClient(RequestBuilder.Method method) {
+	public JsonClient(boolean checkIfPending) {
 		this();
-		if (method != null) this.method = method;
+		this.checkIfPending = checkIfPending;
 	}
 
 	/**
-	 * New JsonClient
+	 * Create new JsonClient
 	 *
-	 * @param method specify request method (GET or POST)
-	 * @param events events, which handles retrieved response
-	 */
-	public JsonClient(RequestBuilder.Method method, JsonEvents events) {
-		this();
-		if (method != null) this.method = method;
-		if (events != null) this.events = events;
-	}
-
-	/**
-	 * New JsonClient2 using GET method
 	 * @param events events, which handles retrieved response
 	 */
 	public JsonClient(JsonEvents events) {
+		this();
 		if (events != null) this.events = events;
 	}
 
 	/**
-	 * Puts custom parameters into payload or URL (based on call type) in a request.
+	 * Create new JsonClient
+	 *
+	 * @param checkIfPending If {@code true} check for callback results even after server timeout.
+	 * @param events events, which handles retrieved response
+	 */
+	public JsonClient(boolean checkIfPending, JsonEvents events) {
+		this(checkIfPending);
+		if (events != null) this.events = events;
+	}
+
+	/**
+	 * Put custom parameter into payload of a request.
 	 *
 	 * @param key key (parameter name)
-	 * @param data data to send (parameter value)
+	 * @param data int data to send (parameter value)
 	 */
-	public void put(String key, Object data) {
+	public void put(String key, int data) {
+		put(key, new JSONNumber(data));
+	}
 
-		if (method.equals(RequestBuilder.GET)) {
+	/**
+	 * Put custom parameter into payload of a request.
+	 *
+	 * @param key key (parameter name)
+	 * @param data String data to send (parameter value)
+	 */
+	public void put(String key, String data) {
+		put(key, new JSONString(data));
+	}
 
-			//GET request
-			parameters.put(key, data);
+	/**
+	 * Put custom parameter into payload of a request.
+	 *
+	 * @param key key (parameter name)
+	 * @param data boolean data to send (parameter value)
+	 */
+	public void put(String key, boolean data) {
+		put(key, JSONBoolean.getInstance(data));
+	}
 
-		} else {
+	/**
+	 * Put custom parameter into payload of a request.
+	 *
+	 * @param key key (parameter name)
+	 * @param data JavaScriptObject data to send (parameter value)
+	 */
+	public <T extends JavaScriptObject> void put(String key, T data) {
+		put(key, JsonUtils.convertToJSON(data));
+	}
 
-			// POST request
-			if (json == null) json = new JSONObject();
-			if (data instanceof JSONValue) {
-				json.put(key, (JSONValue)data);
+	/**
+	 * Put custom parameter into payload of a request.
+	 *
+	 * @param key key (parameter name)
+	 * @param data List data to send as one parameter (parameter values)
+	 */
+	public void put(String key, ArrayList<? extends Object> data) {
+		JSONArray array = new JSONArray();
+		for (int i=0; i<data.size(); i++) {
+			if (data.get(i).getClass().isEnum()) {
+				array.set(i, new JSONString(data.get(i).toString()));
+			} else if (data.get(i) instanceof JavaScriptObject) {
+				array.set(i, JsonUtils.convertToJSON((JavaScriptObject)data.get(i)));
+			} else if (data.get(i) instanceof Integer) {
+				array.set(i, new JSONNumber(((Integer) data.get(i)).intValue()));
+			} else if (data.get(i) instanceof String) {
+				array.set(i, new JSONString(((String) data.get(i))));
+			} else if (data.get(i) instanceof Boolean) {
+				array.set(i, JSONBoolean.getInstance(((Boolean) data.get(i)).booleanValue()));
 			}
-
 		}
+		put(key, array);
+	}
 
+	/**
+	 * Actually put parameter into payload of a request.
+	 *
+	 * @param key key (parameter name)
+	 * @param data data to send in a JSON valid format (parameter value)
+	 */
+	private void put(String key, JSONValue data) {
+		json.put(key, data);
 	}
 
 	/**
@@ -173,31 +221,17 @@ public class JsonClient {
 	 */
 	public Request call(String url) {
 
-		String parametersString = "";
-		if (parameters != null && !parameters.isEmpty()) {
-			for (String key : parameters.keySet()) {
-				// if value is list
-				if (parameters.get(key) instanceof List) {
-					for (Object value : (List<Object>)parameters.get(key)) {
-						// pass value as part of list
-						parametersString += "&"+key+"[]=" + value.toString();
-					}
-				} else {
-					parametersString += "&"+key+"=" + parameters.get(key).toString();
-				}
-			}
-		}
-
 		final PerunRequest perunRequest = new JSONObject().getJavaScriptObject().cast();
 		perunRequest.setStartTime();
 		final String callbackName = perunRequest.getStartTime()+"";
 
-		runningRequests.put(callbackName, perunRequest);
+		if (checkIfPending) runningRequests.put(callbackName, perunRequest);
 
 		// build request URL
-		this.requestUrl = URL.encode(urlPrefix + url + "?callback=" + callbackName + parametersString);
+		this.requestUrl = URL.encode(urlPrefix + url + ((checkIfPending) ? ("?callback=" + callbackName) : ""));
 
-		RequestBuilder builder = new RequestBuilder(method, requestUrl);
+		// we do use POST every time in order to use JSON deserializer on server side
+		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, requestUrl);
 
 		try {
 
@@ -223,7 +257,7 @@ public class JsonClient {
 							if (error.getErrorId() != null && error.getMessage() != null) {
 								error.setRequestURL(requestUrl);
 								error.setPostData((json != null) ? json.toString() : "");
-								runningRequests.remove(callbackName);
+								if (checkIfPending) runningRequests.remove(callbackName);
 								events.onError(error);
 								return;
 							}
@@ -231,7 +265,7 @@ public class JsonClient {
 						}
 
 						// Response is OK (object or null)
-						runningRequests.remove(callbackName);
+						if (checkIfPending) runningRequests.remove(callbackName);
 						events.onFinished(jso);
 
 					} else {
@@ -255,7 +289,7 @@ public class JsonClient {
 							if (runningRequests.get(callbackName) != null) {
 
 								// 5 minute timeout for POST callbacks
-								if ((runningRequests.get(callbackName).getDuration() / (1000)) >= 5 && method.equals(RequestBuilder.POST)) {
+								if ((runningRequests.get(callbackName).getDuration() / (1000)) >= 5 && checkIfPending) {
 
 									counter++;
 									layout.setHTML("Processing of your request(s) is taking longer than usual, but it's actively processed by the server.<p>Please do not close opened window/tab nor repeat your action. You will be notified once operation completes.<p>Remaining requests: " + counter);
@@ -294,7 +328,7 @@ public class JsonClient {
 																	if (error.getErrorId() != null && error.getMessage() != null) {
 																		error.setRequestURL(requestUrl);
 																		error.setPostData((json != null) ? json.toString() : "");
-																		runningRequests.remove(callbackName);
+																		if (checkIfPending) runningRequests.remove(callbackName);
 																		events.onError(error);
 																		return;
 																	}
@@ -302,7 +336,7 @@ public class JsonClient {
 																}
 
 																// Response is OK (object or null)
-																runningRequests.remove(callbackName);
+																if (checkIfPending) runningRequests.remove(callbackName);
 																events.onFinished(result);
 
 															}
@@ -352,7 +386,7 @@ public class JsonClient {
 
 						}
 
-						runningRequests.remove(requestUrl);
+						if (checkIfPending) runningRequests.remove(requestUrl);
 						handleErrors(error);
 
 					}
@@ -404,6 +438,9 @@ public class JsonClient {
 	 * @return returned data as JavaScriptObject
 	 */
 	private JavaScriptObject parseResponse(String callbackName, String resp) {
+
+		// we don't send callback name if checkIfPending == false
+		if (!checkIfPending) callbackName = "null";
 
 		if (resp == null || resp.isEmpty()) return null;
 
