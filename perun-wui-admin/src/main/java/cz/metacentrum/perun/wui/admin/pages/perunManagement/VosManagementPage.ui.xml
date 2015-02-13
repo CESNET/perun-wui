@@ -19,7 +19,7 @@
 		<p:PerunToolbar ui:field="menu">
 
 			<b:InputGroup addStyleNames="col-md-3">
-				<b:SuggestBox focus="true" ui:field="textBox" placeholder="Filter by VO name"/>
+				<p:SuggestBox focus="true" ui:field="textBox" placeholder="Filter by VO name"/>
 			</b:InputGroup>
 
 			<b:ButtonGroup>
@@ -49,7 +49,6 @@
 				<p:PerunButton type="DANGER" icon="MINUS_CIRCLE" ui:field="removeMember">Remove member</p:PerunButton>
 			</b:ButtonGroup>
 			-->
-
 
 		</p:PerunToolbar>
 

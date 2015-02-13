@@ -22,6 +22,7 @@ import cz.metacentrum.perun.wui.model.columnProviders.VoColumnProvider;
 import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
+import cz.metacentrum.perun.wui.widgets.SuggestBox;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
