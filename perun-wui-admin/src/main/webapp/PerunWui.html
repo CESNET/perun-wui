@@ -18,7 +18,7 @@
     <!--  RPC definition -->
     <script type="text/javascript" language="javascript" >
 
-	    RPC_SERVER = "default";
+	    RPC_SERVER = window.location.pathname.split("/")[1];
 
 	    // Skip on Chrome 1+, Firefox 3.5+, IE 8+, Opera 10+, Safari 3.2
 	    if (document.all && !document.querySelector) {

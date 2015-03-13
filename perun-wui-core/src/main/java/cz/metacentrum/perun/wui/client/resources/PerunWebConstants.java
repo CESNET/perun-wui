@@ -15,39 +15,11 @@ public interface PerunWebConstants extends Constants {
 	public static final PerunWebConstants INSTANCE = GWT.create(PerunWebConstants.class);
 
 	/**
-	 * Default RPC URL
+	 * Return RPC URL modified for per-developer devel instances
 	 *
-	 * @return RPC URL string
+	 * @return
 	 */
-	String perunRpcUrl();
-
-	/**
-	 * Federation RPC URL
-	 *
-	 * @return RPC URL string
-	 */
-	String perunRpcUrlFed();
-
-	/**
-	 * Certificate RPC URL
-	 *
-	 * @return RPC URL string
-	 */
-	String perunRpcUrlCert();
-
-	/**
-	 * Kerberos RPC URL
-	 *
-	 * @return RPC URL string
-	 */
-	String perunRpcUrlKrb();
-
-	/**
-	 * Kerberos authz with EINFRA namespace
-	 *
-	 * @return RPC URL string
-	 */
-	String perunRpcUrlKrbEinfra();
+	String perunRpcUrlModifier();
 
 	/**
 	 * Default interval for refreshing window with pending requests

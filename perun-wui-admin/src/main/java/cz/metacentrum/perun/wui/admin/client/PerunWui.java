@@ -203,25 +203,13 @@ public class PerunWui implements EntryPoint, ValueChangeHandler<String> {
 
 			int index = -1;
 
-			if (url.contains("?gwt.codesvr=127.0.0.1:9997")) {
-				// if local devel build
-
-				if (url.contains("?locale=")) {
-					// with locale
-					index = url.indexOf("?", url.indexOf("?", url.indexOf("?")) + 1);
-				} else {
-					// without locale
-					index = url.indexOf("?", url.indexOf("?") + 1);
-				}
+			// if production build
+			if (url.contains("?locale=")) {
+				// with locale
+				index = url.indexOf("?", url.indexOf("?") + 1);
 			} else {
-				// if production build
-				if (url.contains("?locale=")) {
-					// with locale
-					index = url.indexOf("?", url.indexOf("?") + 1);
-				} else {
-					// without locale
-					index = url.indexOf("?");
-				}
+				// without locale
+				index = url.indexOf("?");
 			}
 
 			if (index != -1) {

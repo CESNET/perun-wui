@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.client.resources;
 
 import com.google.gwt.core.client.JsArrayInteger;
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.beans.Facility;
 import cz.metacentrum.perun.wui.model.beans.Group;
@@ -77,33 +78,28 @@ public class PerunSession {
 
 	/**
 	 * Returns the URL of the RPC
-	 *
 	 * @return URL
 	 */
 	public String getRpcUrl() {
 
-		if (!rpcUrl.isEmpty()) {
+		if(!rpcUrl.isEmpty()){
 			return rpcUrl;
 		}
 
 		String rpcType = getRpcServer();
-		if (rpcType == null) {
-			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrl();
-			return rpcUrl;
+		if(rpcType == null){
+			Window.alert("Path to Perun server can't be determined, you probably used wrong URL.");
 		}
 
-		if (rpcType.equals("krb")) {
-			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrlKrb();
-		} else if (rpcType.equals("fed")) {
-			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrlFed();
-		} else if (rpcType.equals("cert")) {
-			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrlCert();
-		} else if (rpcType.equals("einfra")) {
-			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrlKrbEinfra();
+		String modifier = PerunWebConstants.INSTANCE.perunRpcUrlModifier();
+		if (modifier == null || modifier.equalsIgnoreCase("${gui.url.modifier}")) {
+			rpcUrl = "/"+rpcType+"/rpc/jsonp/";
 		} else {
-			rpcUrl = PerunWebConstants.INSTANCE.perunRpcUrl();
+			rpcUrl = "/"+rpcType+"/rpc"+modifier+"/jsonp/";
 		}
+
 		return rpcUrl;
+
 	}
 
 	/**
