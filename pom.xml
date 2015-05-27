@@ -15,6 +15,7 @@
 		<module>perun-wui-admin</module>
 		<module>perun-wui-cabinet</module>
 		<module>perun-wui-registrar</module>
+		<module>perun-wui-consolidator</module>
 	</modules>
 
 	<!-- common environmental and version properties-->
@@ -234,14 +235,14 @@
 			<dependency>
 				<groupId>org.gwtbootstrap3</groupId>
 				<artifactId>gwtbootstrap3</artifactId>
-				<version>0.9</version>
+				<version>0.9.1</version>
 				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.gwtbootstrap3</groupId>
 				<artifactId>gwtbootstrap3-extras</artifactId>
-				<version>0.9</version>
+				<version>0.9.1</version>
 				<scope>provided</scope>
 			</dependency>
 
