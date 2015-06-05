@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.model.beans;
 
 import com.google.gwt.json.client.JSONObject;
+import com.sun.javafx.beans.IDProperty;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 
@@ -12,6 +13,30 @@ import java.util.Map;
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
 public class ExtSource extends GeneralObject {
+
+	public enum ExtSourceType {
+
+		X509("cz.metacentrum.perun.core.impl.ExtSourceX509"),
+		IDP("cz.metacentrum.perun.core.impl.ExtSourceIdp"),
+		KERBEROS("cz.metacentrum.perun.core.impl.ExtSourceKerberos"),
+		SQL("cz.metacentrum.perun.core.impl.ExtSourceSql"),
+		ISMU("cz.metacentrum.perun.core.impl.ExtSourceISMU"),
+		LDAP("cz.metacentrum.perun.core.impl.ExtSourceLdap"),
+		PERUN("cz.metacentrum.perun.core.impl.ExtSourcePerun"),
+		INTERNAL("cz.metacentrum.perun.core.impl.ExtSourceInternal"),
+		XML("cz.metacentrum.perun.core.impl.ExtSourceXML");
+
+		private final String type;
+
+		ExtSourceType(String type) {
+			this.type= type;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+	}
 
 	protected ExtSource() {}
 

@@ -9,6 +9,7 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.json.client.*;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
@@ -383,6 +384,12 @@ public class JsonClient {
 
 							error.setName("Aborted");
 							error.setMessage("Can't contact remote server, connection was lost.");
+
+							// force reload page if it's first GUI call, otherwise keep it to alert box
+							if (runningRequests.get(requestUrl).getManager().equals("authzResolver") &&
+									runningRequests.get(requestUrl).getMethod().equals("getPerunPrincipal")) {
+								Window.Location.reload();
+							}
 
 						}
 

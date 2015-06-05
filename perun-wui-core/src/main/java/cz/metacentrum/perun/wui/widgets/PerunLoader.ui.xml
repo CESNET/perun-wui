@@ -4,37 +4,40 @@
              xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets' >
 
 	<ui:style>
-                .wrapper {
-                        width: 100%;
-                        max-width: 400px;
-                        margin: 0px auto;
-                }
+		.wrapper {
+			width: 100%;
+			max-width: 400px;
+			margin: 0px auto;
+		}
 		.marginTop {
 			margin-top: 180px;
 		}
-                .progress {
+		.progress {
 			margin-bottom: 10px;
+		}
+		.top {
+			margin-top: 10px;
 		}
 	</ui:style>
 
 	<b:Container fluid="true">
 		<b:Row addStyleNames="{style.marginTop}">
-                    <b.html:Div addStyleNames="{style.wrapper}">
+			<b.html:Div addStyleNames="{style.wrapper}">
 
-			<b:Progress active="true" type="STRIPED" addStyleNames="{style.progress}">
-				<b:ProgressBar ui:field="bar" />
-			</b:Progress>
+				<b:Progress active="true" type="STRIPED" addStyleNames="{style.progress}">
+					<b:ProgressBar ui:field="bar" />
+				</b:Progress>
 
-			<b:Alert dismissable="false" ui:field="alert" type="DANGER">
-				<b:ButtonToolBar visible="false" ui:field="tool">
-					<p:PerunButton ui:field="retry" icon="REFRESH" pull="LEFT">Try again</p:PerunButton>
-					<p:PerunButton ui:field="report" icon="BUG" pull="RIGHT" type="DANGER">Report error</p:PerunButton>
-				</b:ButtonToolBar>
-			</b:Alert>
+				<b:Alert dismissable="false" ui:field="alert" type="DANGER">
+					<b:ButtonToolBar visible="false" ui:field="tool" addStyleNames="{style.top}">
+						<p:PerunButton ui:field="retry" icon="REFRESH" pull="LEFT">Try again</p:PerunButton>
+						<p:PerunButton ui:field="report" icon="BUG" pull="RIGHT" type="DANGER">Report error</p:PerunButton>
+					</b:ButtonToolBar>
+				</b:Alert>
 
-			<b:Alert dismissable="false" ui:field="message" type="INFO" visible="false" />
-                        
-                    </b.html:Div>
+				<b:Alert dismissable="false" ui:field="message" type="INFO" visible="false" />
+
+			</b.html:Div>
 		</b:Row>
 	</b:Container>
 

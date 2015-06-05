@@ -24,10 +24,11 @@ public class Facility extends GeneralObject {
 	 * @param name name of Facility
 	 * @return Facility object
 	 */
-	public static final Facility createNew(int id, String name) {
+	public static final Facility createNew(int id, String name, String description) {
 		Facility fac = new JSONObject().getJavaScriptObject().cast();
 		fac.setId(id);
 		fac.setName(name);
+		fac.setDescription(description);
 		fac.setObjectType("Facility");
 		return fac;
 	}
@@ -49,6 +50,15 @@ public class Facility extends GeneralObject {
 	public final native void setName(String name) /*-{
         this.name = name;
     }-*/;
+
+	/**
+	 * Sets Facility's description.
+	 *
+	 * @param description description to set
+	 */
+	public final native void setDescription(String description) /*-{
+		this.description = description;
+	}-*/;
 
 	/**
 	 * Get Owners of Facility. This property is present only in RichFacility object.

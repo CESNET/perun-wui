@@ -235,18 +235,40 @@ public class JsUtils {
 	}
 
 	/**
-	 * Returns a Java List from JsArrayString.
+	 * Returns a Java List from JsArrayString or empty list for null or empty array.
 	 *
 	 * @param jsa javascript array of strings
 	 * @return ArrayList<String> list of strings
 	 */
 	public static final ArrayList<String> listFromJsArrayString(JsArrayString jsa) {
 		ArrayList<String> arrayList = new ArrayList<String>();
-		for (int i = 0; i < jsa.length(); i++) {
-			String str = jsa.get(i).toString();
-			arrayList.add(str);
+		if (jsa != null) {
+			for (int i = 0; i < jsa.length(); i++) {
+				String str = jsa.get(i).toString();
+				arrayList.add(str);
+			}
 		}
 		return arrayList;
 	}
+
+	/**
+	 * Decode any ASCII string encoded as base64
+	 *
+	 * @param encodedString String to decode
+	 * @return Decoded string
+	 */
+	public static final native String decodeBase64(String encodedString)/*-{
+		return atob(encodedString);
+	}-*/;
+
+	/**
+	 * Encode any ASCII string to base64
+	 *
+	 * @param decodedString String to encode
+	 * @return Encoded string
+	 */
+	public static final native String encodeBase64(String decodedString)/*-{
+		return btoa(decodedString);
+	}-*/;
 
 }
