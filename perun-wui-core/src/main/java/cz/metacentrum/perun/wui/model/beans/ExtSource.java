@@ -1,7 +1,6 @@
 package cz.metacentrum.perun.wui.model.beans;
 
 import com.google.gwt.json.client.JSONObject;
-import com.sun.javafx.beans.IDProperty;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 
