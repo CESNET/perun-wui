@@ -259,11 +259,16 @@ public class PerunFormItem extends FormGroup {
 
 				if (select.getSelectedIndex() != customIndex) {
 					currentValue.setValue(select.getValue(select.getSelectedIndex()));
+					if (!currentValue.getValue().equals("custom")) {
+						// if not custom, hide input box
+						currentValue.setVisible(false);
+					}
 					select.removeStyleName("comboboxFormItemFirst");
 					// FIXME - hack bug in BootstrapSelect
 					select.getElement().getNextSiblingElement().removeClassName("comboboxFormItemFirst");
 				} else {
 					select.addStyleName("comboboxFormItemFirst");
+					currentValue.setVisible(true);
 				}
 
 				// rework group
