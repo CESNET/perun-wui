@@ -20,6 +20,7 @@ import cz.metacentrum.perun.wui.consolidator.model.Feed;
 import cz.metacentrum.perun.wui.consolidator.model.FeedFilter;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.JsonUtils;
+import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.*;
@@ -318,7 +319,7 @@ public class Wayf extends Composite {
 				for (String feedId : fds) {
 
 					Feed feed = wayf.getFeeds().get(feedId);
-					for (String key : feed.getEntities().getKeys()) {
+					for (final String key : feed.getEntities().getKeys()) {
 
 						if (wayf.getFilter() == null || wayf.getFilter().isIdPAllowed(key)) {
 
@@ -347,15 +348,15 @@ public class Wayf extends Composite {
 								idpButtons.add(button);
 							}
 
-							// FIXME - Always uses same authz
 							button.addClickHandler(new ClickHandler() {
 								@Override
 								public void onClick(ClickEvent event) {
-									String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/fed/ic/?token=" + token;
+									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true)+"&token="+token;
 									if (redirect != null && !redirect.isEmpty()) {
-										url = url + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
+										consolidatorUrl = consolidatorUrl + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
 									}
-									Window.Location.replace(url);
+									String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + key+"&target="+consolidatorUrl);
+									Window.Location.replace(redirectUrl);
 								}
 							});
 
