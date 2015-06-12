@@ -3,9 +3,9 @@ package cz.metacentrum.perun.wui.registrar.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.core.client.js.JsType;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Command;
@@ -16,6 +16,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
+import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.*;
 import cz.metacentrum.perun.wui.pages.Page;
@@ -28,6 +29,8 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Page to display application form for VO or Group.
@@ -430,25 +433,43 @@ public class FormPage extends Page {
 
 			boolean certFound = false;
 			boolean idpFound = false;
-			for (ExtSource source : identity.getExternalIdentities()) {
+
+			ArrayList<ExtSource> sources = identity.getExternalIdentities();
+			Collections.sort(sources, new Comparator<ExtSource>() {
+				@Override
+				public int compare(ExtSource o1, ExtSource o2) {
+					return Utils.convertCertCN(Utils.translateIdp(o1.getName())).compareTo(Utils.convertCertCN(Utils.translateIdp(o2.getName())));
+				}
+			});
+
+			for (final ExtSource source : sources) {
 
 				if (source.getType().equals("cz.metacentrum.perun.core.impl.ExtSourceX509")) {
 
-					String name[] = source.getName().split("\\/");
-					for (String cn : name) {
-						if (cn.startsWith("CN=")) {
-							AnchorListItem link = new AnchorListItem(cn.substring(3));
-							menu.add(link);
-							link.addClickHandler(new ClickHandler() {
+					AnchorListItem link = new AnchorListItem(Utils.convertCertCN(source.getName()));
+					menu.add(link);
+					link.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							RegistrarManager.getConsolidatorToken(new JsonEvents() {
 								@Override
-								public void onClick(ClickEvent event) {
-									// TODO - get safe hash of own for non-authz
-									Window.Location.replace(Utils.getIdentityConsolidatorLink("cert", true));
+								public void onFinished(JavaScriptObject jso) {
+									String token = ((BasicOverlayObject) jso).getString();
+									Window.Location.replace(Utils.getIdentityConsolidatorLink("cert", true) + "&token=" + token);
+								}
+
+								@Override
+								public void onError(PerunException error) {
+
+								}
+
+								@Override
+								public void onLoadingStart() {
+
 								}
 							});
-							break;
 						}
-					}
+					});
 
 					if (!certFound) ft.setWidget(row, 1, certGroup);
 					certFound = true;
@@ -460,8 +481,27 @@ public class FormPage extends Page {
 					link.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
-							// TODO - get safe hash of own for non-authz
-							Window.Location.replace(Utils.getIdentityConsolidatorLink("fed", true));
+
+							RegistrarManager.getConsolidatorToken(new JsonEvents() {
+								@Override
+								public void onFinished(JavaScriptObject jso) {
+									// FINAL URL must logout from SP, login to SP using specified IdP, redirect to IC and after that return to application form
+									String token = ((BasicOverlayObject) jso).getString();
+									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true)+"&token="+token;
+									String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + source.getName()+"&target="+consolidatorUrl);
+									Window.Location.replace(redirectUrl);
+								}
+
+								@Override
+								public void onError(PerunException error) {
+
+								}
+
+								@Override
+								public void onLoadingStart() {
+
+								}
+							});
 						}
 					});
 					if (!idpFound) ft.setWidget(row, 2, idpGroup);

@@ -1,13 +1,11 @@
 package cz.metacentrum.perun.wui.consolidator.client;
 
-import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.core.client.*;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
@@ -20,8 +18,9 @@ import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import org.gwtbootstrap3.client.ui.Navbar;
-import org.gwtbootstrap3.client.ui.NavbarHeader;
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.Image;
+import org.gwtbootstrap3.client.ui.html.Div;
 
 /**
  * Entry point for Cabinet application
@@ -35,17 +34,25 @@ public class PerunConsolidator implements EntryPoint, ValueChangeHandler<String>
 	private static PerunConsolidatorUiBinder uiBinder = GWT.create(PerunConsolidatorUiBinder.class);
 
 	private static boolean perunLoaded = false;
+	public static boolean perunLoading = false;
 	private static PerunLoader guiLoader = new PerunLoader();
 	private PerunConsolidator gui = this;
 
-	@UiField Navbar navbar;
+	SelectPage page = new SelectPage();
+	JoinPage joinPage = new JoinPage();
+
 	@UiField NavbarHeader navbarHeader;
+
+	@UiField(provided = true)
+	Div content;
 
 	@Override
 	public void onModuleLoad() {
 
 		// ensure injecting custom CSS styles of PerunWui
 		PerunResources.INSTANCE.gss().ensureInjected();
+
+		//ScriptInjector.fromString(PerunResources.INSTANCE.getWayf().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
 
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
 			@Override
@@ -68,25 +75,33 @@ public class PerunConsolidator implements EntryPoint, ValueChangeHandler<String>
 						// store configuration
 						PerunSession.getInstance().setConfiguration((BasicOverlayObject) jso.cast());
 
-						RootLayoutPanel.get().clear();
-						RootLayoutPanel.get().add(uiBinder.createAndBindUi(gui));
+						String token = Window.Location.getParameter("token");
+						if (token == null || token.isEmpty()) {
+							content = (Div)page.draw();
+						} else {
+							content = (Div)joinPage.draw(token);
+						}
 
+						RootPanel.get().clear();
+						RootPanel.get().add(uiBinder.createAndBindUi(gui));
+
+						// put logo
 						Image logo = new Image(PerunResources.INSTANCE.getPerunLogo());
 						logo.setWidth("auto");
-						logo.setHeight("65px");
+						logo.setHeight("50px");
 						navbarHeader.insert(logo, 0);
 
 						// TRIGGER LOADING DEFAULT TABS
-						//PerunCabinet.getContent().openTab(History.getToken());
-
 						perunLoaded = true;
+						perunLoading = false;
 
 					}
 
 					@Override
 					public void onError(PerunException error) {
 						perunLoaded = false;
-						//guiLoader.onError(error);
+						perunLoading = false;
+						guiLoader.onError(error, null);
 					}
 
 					@Override
@@ -100,26 +115,27 @@ public class PerunConsolidator implements EntryPoint, ValueChangeHandler<String>
 			@Override
 			public void onError(PerunException error) {
 				perunLoaded = false;
-				//guiLoader.onError(error);
+				perunLoading = false;
+				guiLoader.onError(error, null);
 			}
 
 			@Override
 			public void onLoadingStart() {
-				RootLayoutPanel.get().clear();
-				RootLayoutPanel.get().add(guiLoader.getWidget());
 
-				Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+				RootPanel.get().clear();
+				RootPanel.get().add(guiLoader);
+				guiLoader.onLoading();
+
+				Scheduler.get().scheduleDeferred(new Command() {
 					@Override
-					public boolean execute() {
-						if (guiLoader.getProgressBar().getPercent() <= 100) {
-							guiLoader.getProgressBar().setPercent(guiLoader.getProgressBar().getPercent() + 1);
-							return true;
-						}
-						return false;
+					public void execute() {
+						guiLoader.getWidget().getElement().getFirstChildElement().setAttribute("style", "height: "+Window.getClientHeight()+"px;");
 					}
-				}, 200);
+				});
 
 				perunLoaded = false;
+				perunLoading = true;
+
 			}
 		});
 
@@ -130,7 +146,7 @@ public class PerunConsolidator implements EntryPoint, ValueChangeHandler<String>
 
 		// if GUI not loaded, change should force module loading
 		if (!perunLoaded) {
-			onModuleLoad();
+			if (!perunLoading) onModuleLoad();
 			return;
 		}
 

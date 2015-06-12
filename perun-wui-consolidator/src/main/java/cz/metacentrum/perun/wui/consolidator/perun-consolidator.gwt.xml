@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='PerunCabinet'>
+<module rename-to='PerunConsolidator'>
 
 	<!-- inherits base wui module  -->
 	<!-- support GWT Bootstrap 3 theme -->
 	<inherits name="cz.metacentrum.perun.wui.perun-wui-core"/>
+	<inherits name="com.google.gwt.dom.DOM"/>
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class="cz.metacentrum.perun.wui.consolidator.client.PerunConsolidator"/>

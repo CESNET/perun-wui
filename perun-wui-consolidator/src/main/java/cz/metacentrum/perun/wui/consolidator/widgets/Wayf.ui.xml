@@ -1,0 +1,22 @@
+<ui:UiBinder
+		xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+		xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
+		xmlns:b.gwt="urn:import:org.gwtbootstrap3.client.ui.gwt"
+		xmlns:p.consolidator="urn:import:cz.metacentrum.perun.wui.consolidator.client"
+		xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
+		xmlns:p.cons='urn:import:cz.metacentrum.perun.wui.consolidator.widgets'
+		xmlns:ui='urn:ui:com.google.gwt.uibinder'
+		xmlns:g="urn:import:com.google.gwt.user.client.ui"
+		xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui">
+
+	<ui:style>
+	</ui:style>
+
+	<b:VerticalButtonGroup visible="false" width="100%">
+			<p:PerunButton ui:field="idpButton" size="LARGE" text="Federated login" icon="UNIVERSITY" iconFixedWidth="true" visible="false" />
+			<p:PerunButton ui:field="certButton" size="LARGE" text="Personal Certificate" icon="CERTIFICATE" iconFixedWidth="true" visible="false" />
+			<p:PerunButton ui:field="krbButton" size="LARGE" text="Kerberos login" icon="KEY" iconFixedWidth="true" visible="false" />
+			<p:PerunButton ui:field="socialButton" size="LARGE" text="Social identity" icon="GOOGLE" iconFixedWidth="true" visible="false" />
+	</b:VerticalButtonGroup>
+
+</ui:UiBinder>

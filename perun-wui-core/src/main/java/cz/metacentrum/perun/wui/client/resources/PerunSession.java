@@ -104,7 +104,7 @@ public class PerunSession {
 
 	/**
 	 * Returns RPC type: default, krb, cert, fed
-	 * RPC type should be included in PerunWeb*.html
+	 * RPC type should be included in PerunWeb.html
 	 *
 	 * @return RPC type
 	 */

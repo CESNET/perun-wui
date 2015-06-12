@@ -219,4 +219,38 @@ public class RegistrarManager {
 
 	}
 
+	/**
+	 * Get token for identity consolidation. This token saves current session
+	 * and once user log-in with different credentials and calls opposite method,
+	 * it will try to join both identities.
+	 *
+	 * @param events Events done on callback
+	 * @see #consolidateIdentityUsingToken(String, JsonEvents)
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getConsolidatorToken(JsonEvents events) {
+
+		JsonClient client = new JsonClient(true, events);
+		return client.call(REGISTRAR_MANAGER + "getConsolidatorToken");
+
+	}
+
+	/**
+	 * Joins users current identity to the one represented by the token.
+	 *
+	 * @param token Token used to identify some identity
+	 * @param events Events done on callback
+	 * @see #getConsolidatorToken(JsonEvents)
+	 *
+	 * @return Request unique request
+	 */
+	public static Request consolidateIdentityUsingToken(String token, JsonEvents events) {
+
+		JsonClient client = new JsonClient(true, events);
+		client.put("token", token);
+		return client.call(REGISTRAR_MANAGER + "consolidateIdentityUsingToken");
+
+	}
+
 }

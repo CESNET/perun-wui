@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
+import com.google.gwt.resources.client.TextResource;
 
 /**
  * Common resources used in Perun WUI applications
@@ -19,9 +20,9 @@ public interface PerunResources extends ClientBundle {
 
 	@Source("PerunWui.gss")
 	@CssResource.NotStrict
-	public CssResource gss();
+	CssResource gss();
 
 	@Source("perun-ico.png")
-	public ImageResource getPerunIcon();
+	ImageResource getPerunIcon();
 
 }

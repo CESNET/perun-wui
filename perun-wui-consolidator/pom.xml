@@ -99,7 +99,7 @@
                 </executions>
                 <configuration>
                     <webappDirectory>${webappDirectory}</webappDirectory>
-                    <warName>perun-wui-cabinet-${perun.build.type}</warName>
+                    <warName>perun-wui-consolidator-${perun.build.type}</warName>
                 </configuration>
             </plugin>
 
