@@ -30,6 +30,8 @@
 		<p:PerunLoader ui:field="loader" visible="false"/>
 
 		<b.html:Div addStyleNames="{style.center2}" ui:field="place">
+			<p:PerunButton text="Back" ui:field="backButton" icon="CHEVRON_LEFT" iconPosition="LEFT" iconFixedWidth="true" type="DEFAULT" visible="false" marginTop="20" marginBottom="20"/>
+			<b.html:ClearFix />
 			<p:PerunButton text="Continue" ui:field="finishButton" icon="CHEVRON_RIGHT" iconPosition="RIGHT" iconFixedWidth="true" type="SUCCESS" visible="false" marginTop="20" marginBottom="20"/>
 			<b:Heading size="H3" visible="false" ui:field="myidents">
 				<b.html:Text text="Your have following registered identities:"/>

@@ -487,7 +487,7 @@ public class FormPage extends Page {
 								public void onFinished(JavaScriptObject jso) {
 									// FINAL URL must logout from SP, login to SP using specified IdP, redirect to IC and after that return to application form
 									String token = ((BasicOverlayObject) jso).getString();
-									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true)+"&token="+token;
+									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true)+URL.encodeQueryString("&token="+token);
 									String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + source.getName()+"&target="+consolidatorUrl);
 									Window.Location.replace(redirectUrl);
 								}

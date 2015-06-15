@@ -77,7 +77,7 @@ public class Utils {
 		if (value != null && !value.isEmpty()) {
 
 			if (target) {
-				value += "?target_url=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() +  URL.encodeQueryString(Window.Location.getQueryString());
+				value += "?target_url=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() +  URL.encodeQueryString(URL.encodeQueryString(Window.Location.getQueryString()));
 			}
 			return value;
 
@@ -121,7 +121,7 @@ public class Utils {
 			}
 
 			if (target) {
-				link += "?target_url=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() +  URL.encodeQueryString(Window.Location.getQueryString());
+				link += "?target_url=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() +  URL.encodeQueryString(URL.encodeQueryString(Window.Location.getQueryString()));
 			}
 
 			return link;

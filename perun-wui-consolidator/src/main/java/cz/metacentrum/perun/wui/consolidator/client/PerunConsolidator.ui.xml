@@ -3,7 +3,6 @@
              xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui"
 			 xmlns:p.client="urn:import:cz.metacentrum.perun.wui.consolidator.client">
 
-
 	<ui:style>
 		.header img { padding-left: 15px; padding-right: 15px; }
 	</ui:style>

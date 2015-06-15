@@ -7,7 +7,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
@@ -46,6 +45,7 @@ public class JoinPage {
 	//private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
 
 	@UiField PerunButton finishButton;
+	@UiField PerunButton backButton;
 	@UiField Div place;
 
 	@UiField PerunLoader loader;
@@ -59,8 +59,17 @@ public class JoinPage {
 
 		if (redirect != null && !redirect.isEmpty()) {
 			Window.Location.replace(redirect);
+		}
+
+	}
+
+	@UiHandler("backButton")
+	public void clickBack(ClickEvent event) {
+
+		if (redirect != null && !redirect.isEmpty()) {
+			Window.Location.replace(Utils.getIdentityConsolidatorLink(false)+"?target_url="+redirect);
 		} else {
-			History.back();
+			Window.Location.replace(Utils.getIdentityConsolidatorLink(false));
 		}
 
 	}
@@ -70,8 +79,6 @@ public class JoinPage {
 	}
 
 	public Widget draw(String passedToken) {
-
-		History.fireCurrentHistoryState();
 
 		this.token = passedToken;
 
@@ -111,18 +118,21 @@ public class JoinPage {
 					alert.setText("Your token for joining identities is no longer valid. Please retry from the start.");
 					alert.setVisible(true);
 					loader.setVisible(false);
+					backButton.setVisible(true);
 				} else if (error.getName().equals("IdentityUnknownException")) {
 					alert.setType(AlertType.DANGER);
 					// TODO translate message
 					alert.setText("Neither original or current identity is know to Perun. Please use at least one identity known to Perun.");
 					alert.setVisible(true);
 					loader.setVisible(false);
+					backButton.setVisible(true);
 				} else if (error.getName().equals("IdentityIsSameException")) {
 					alert.setType(AlertType.DANGER);
 					// TODO translate message
-					alert.setText("You tried to join identity with itself. Please go back and select different identity.");
+					alert.setText("You tried to join identity ("+Utils.convertCertCN(Utils.translateIdp(JsUtils.getNativePropertyString(error, "login")))+" / "+Utils.convertCertCN(Utils.translateIdp(JsUtils.getNativePropertyString(error, "source")))+") with itself. Please go back and select different identity to join with.");
 					alert.setVisible(true);
 					loader.setVisible(false);
+					backButton.setVisible(true);
 				} else if (error.getName().equals("IdentitiesAlreadyJoinedException")) {
 					alert.setType(AlertType.WARNING);
 					// TODO translate message
@@ -132,7 +142,7 @@ public class JoinPage {
 				} else if (error.getName().equals("IdentityAlreadyInUseException")) {
 					alert.setType(AlertType.WARNING);
 					// TODO translate message
-					alert.setText("Your identity is already associated with a different user. If you are really the same person, please contact support to help you.");
+					alert.setText("Your identity is already associated with a different user. If you are the same person, please contact support to help you.");
 					alert.setVisible(true);
 					loader.setVisible(false);
 				} else {
@@ -146,14 +156,10 @@ public class JoinPage {
 				}
 
 				if (redirect != null && !redirect.isEmpty()) {
-					finishButton.setText("Back");
-					finishButton.setIcon(IconType.CHEVRON_LEFT);
-					finishButton.setIconPosition(IconPosition.LEFT);
+					finishButton.setText("Leave");
+					finishButton.setIcon(IconType.CHEVRON_RIGHT);
+					finishButton.setIconPosition(IconPosition.RIGHT);
 					finishButton.setVisible(true);
-				} else {
-
-					// TODO close button
-
 				}
 
 			}
@@ -223,19 +229,25 @@ public class JoinPage {
 					translatedExtSourceName = Utils.convertCertCN(translatedExtSourceName);
 				}
 
-				place.insert(new Heading(HeadingSize.H4, translatedActor, translatedExtSourceName), 2);
+				place.insert(new Heading(HeadingSize.H4, translatedActor, translatedExtSourceName), 4);
 
-			} else {
-				continue;
 			}
 
 		}
 
 		myidents.setVisible(true);
 
-		//if (redirect != null && !redirect.isEmpty()) {
-		finishButton.setVisible(true);
-		//}
+		if (redirect != null && !redirect.isEmpty()) {
+			finishButton.setText("Continue");
+			finishButton.setIcon(IconType.CHEVRON_RIGHT);
+			finishButton.setIconPosition(IconPosition.RIGHT);
+			finishButton.setVisible(true);
+		}
+
+		backButton.setText("Join another identity");
+		backButton.setIcon(IconType.CHEVRON_LEFT);
+		backButton.setIconPosition(IconPosition.LEFT);
+		backButton.setVisible(true);
 
 	}
 

@@ -20,7 +20,6 @@ import cz.metacentrum.perun.wui.consolidator.model.Feed;
 import cz.metacentrum.perun.wui.consolidator.model.FeedFilter;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.JsonUtils;
-import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.*;
@@ -182,7 +181,7 @@ public class Wayf extends Composite {
 
 					String url = hostname + "/cert/ic/?token=" + token;
 					if (redirect != null && !redirect.isEmpty()) {
-						url = url + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
+						url = url + "&target_url=" + URL.encodeQueryString(redirect);
 					}
 					Window.Location.replace(url);
 					return;
@@ -191,10 +190,9 @@ public class Wayf extends Composite {
 		}
 
 		// We use the same hostname
-
 		String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/cert/ic/?token=" + token;
 		if (redirect != null && !redirect.isEmpty()) {
-			url = url + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
+			url = url + "&target_url=" + URL.encodeQueryString(redirect);
 		}
 		Window.Location.replace(url);
 
@@ -205,7 +203,7 @@ public class Wayf extends Composite {
 
 		String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/krb/ic/?token=" + token;
 		if (redirect != null && !redirect.isEmpty()) {
-			url = url + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
+			url = url + "&target_url=" + URL.encodeQueryString(redirect);
 		}
 		Window.Location.replace(url);
 
@@ -351,7 +349,7 @@ public class Wayf extends Composite {
 							button.addClickHandler(new ClickHandler() {
 								@Override
 								public void onClick(ClickEvent event) {
-									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true)+"&token="+token;
+									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false)+URL.encodeQueryString("?token="+token);
 									if (redirect != null && !redirect.isEmpty()) {
 										consolidatorUrl = consolidatorUrl + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
 									}
