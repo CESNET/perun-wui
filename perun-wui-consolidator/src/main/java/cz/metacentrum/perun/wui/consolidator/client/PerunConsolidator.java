@@ -23,7 +23,7 @@ import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.html.Div;
 
 /**
- * Entry point for Cabinet application
+ * Entry point for Identity Consolidator application
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
@@ -38,6 +38,8 @@ public class PerunConsolidator implements EntryPoint, ValueChangeHandler<String>
 	private static PerunLoader guiLoader = new PerunLoader();
 	private PerunConsolidator gui = this;
 
+	private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
+
 	SelectPage page = new SelectPage();
 	JoinPage joinPage = new JoinPage();
 
@@ -46,13 +48,13 @@ public class PerunConsolidator implements EntryPoint, ValueChangeHandler<String>
 	@UiField(provided = true)
 	Div content;
 
+	@UiField AnchorListItem consolidateButton;
+
 	@Override
 	public void onModuleLoad() {
 
 		// ensure injecting custom CSS styles of PerunWui
 		PerunResources.INSTANCE.gss().ensureInjected();
-
-		//ScriptInjector.fromString(PerunResources.INSTANCE.getWayf().getText()).setWindow(ScriptInjector.TOP_WINDOW).inject();
 
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
 			@Override
@@ -90,6 +92,8 @@ public class PerunConsolidator implements EntryPoint, ValueChangeHandler<String>
 						logo.setWidth("auto");
 						logo.setHeight("50px");
 						navbarHeader.insert(logo, 0);
+
+						consolidateButton.setText(translation.topConsolidateButton());
 
 						// TRIGGER LOADING DEFAULT TABS
 						perunLoaded = true;

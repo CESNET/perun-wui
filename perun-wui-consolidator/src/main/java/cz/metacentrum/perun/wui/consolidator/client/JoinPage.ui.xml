@@ -19,13 +19,9 @@
 			<b:Alert ui:field="alert" visible="false" type="SUCCESS"/>
 		</b.html:Div>
 
-		<b:Heading size="H2" ui:field="heading" alignment="CENTER" visible="false">
-			<b.html:Text text="Your current identity is:"/>
-		</b:Heading>
+		<b:Heading size="H2" ui:field="heading" alignment="CENTER" visible="false" />
 
-		<b:Heading size="H3" ui:field="identity" alignment="CENTER" visible="false">
-			<b.html:Text text=""/>
-		</b:Heading>
+		<b:Heading size="H3" ui:field="identity" alignment="CENTER" visible="false" />
 
 		<p:PerunLoader ui:field="loader" visible="false"/>
 
@@ -33,9 +29,7 @@
 			<p:PerunButton text="Back" ui:field="backButton" icon="CHEVRON_LEFT" iconPosition="LEFT" iconFixedWidth="true" type="DEFAULT" visible="false" marginTop="20" marginBottom="20"/>
 			<b.html:ClearFix />
 			<p:PerunButton text="Continue" ui:field="finishButton" icon="CHEVRON_RIGHT" iconPosition="RIGHT" iconFixedWidth="true" type="SUCCESS" visible="false" marginTop="20" marginBottom="20"/>
-			<b:Heading size="H3" visible="false" ui:field="myidents">
-				<b.html:Text text="Your have following registered identities:"/>
-			</b:Heading>
+			<b:Heading size="H3" visible="false" ui:field="myidents" />
 		</b.html:Div>
 
 	</b.html:Div>

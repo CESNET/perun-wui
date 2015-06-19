@@ -95,11 +95,6 @@ public class Wayf extends Composite {
 		this.filter = ((FeedFilter) JsonUtils.parseJson(JsUtils.decodeBase64(filter)));
 	}
 
-	private final native JavaScriptObject setFilterInternal(String filter) /*-{
-		var object = $wnd.jQuery.parseJSON(atob(filter));
-		return object;
-	}-*/;
-
 	/**
 	 * Get FeedFiler object for this wayf
 	 *
@@ -109,60 +104,24 @@ public class Wayf extends Composite {
 		return filter;
 	}
 
+	/**
+	 * Get all Feed data loaded to WAYF
+	 *
+	 * @return all Feed data
+	 */
 	public HashMap<String, Feed> getFeeds() {
 		return feeds;
 	}
 
-	public void getFeeds(final JsonEvents events) {
-
-		ArrayList<String> fds = new ArrayList<String>();
-
-		if (filter == null || filter.getAllowedFeeds().isEmpty()) {
-			fds.addAll(Utils.getWayfFeeds());
-		} else {
-			fds.addAll(filter.getAllowedFeeds());
-		}
-
-		for (final String feed : fds) {
-
-			RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, Utils.getWayfFeedUrl() + feed + ".js");
-			callCounter++;
-			try {
-				builder.sendRequest(null, new RequestCallback() {
-							@Override
-							public void onResponseReceived(Request request, Response response) {
-								feeds.put(feed, (Feed)convertFeed(response.getText()));
-								callCounter--;
-								if (callCounter == 0) {
-									events.onFinished(null);
-								}
-							}
-
-							@Override
-							public void onError(Request request, Throwable exception) {
-								callCounter--;
-								if (callCounter == 0) {
-									events.onError(null);
-								}
-							}
-						}
-				);
-			} catch (RequestException e) {
-				e.printStackTrace();
-			}
-		}
-
-		// load wayf without FED feeds
-		if (fds.isEmpty()) {
-			events.onFinished(null);
-		}
-
+	/**
+	 * Set token for joining identities which will be used as a part
+	 * of redirect URL when button clicked.
+	 *
+	 * @param token
+	 */
+	public void setToken(String token) {
+		this.token = token;
 	}
-
-	private final native JavaScriptObject convertFeed(String feed) /*-{
-		var object = $wnd.jQuery.parseJSON(feed);
-		return object;
-	}-*/;
 
 	@UiHandler("idpButton")
 	public void clickIdp(ClickEvent event) {
@@ -216,73 +175,11 @@ public class Wayf extends Composite {
 
 	}
 
-	public void initModals() {
-
-		idpFilterBox.setWidth("450px");
-		idpFilterBox.getElement().setAttribute("style", "margin: 5px 0px;");
-		idpFilterBox.setPlaceholder("Type to search");
-
-		idpGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
-		idpGroup.setWidth("460px");
-
-		idpModal.setTitle(translation.selectIdP());
-		idpModal.setWidth("492px");
-		idpModal.setDataBackdrop(ModalBackdrop.STATIC);
-
-		ModalBody body = new ModalBody();
-		body.add(idpFilterBox);
-		body.add(idpGroup);
-
-		idpModal.add(body);
-
-		socialFilterBox.setWidth("450px");
-		socialFilterBox.getElement().setAttribute("style", "margin: 5px 0px;");
-		socialFilterBox.setPlaceholder(translation.typeToSearch());
-
-		socialGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
-		socialGroup.setWidth("460px");
-
-		socialModal.setTitle(translation.selectIdP());
-		socialModal.setWidth("492px");
-		socialModal.setDataBackdrop(ModalBackdrop.STATIC);
-
-		ModalBody body2 = new ModalBody();
-		body2.add(socialFilterBox);
-		body2.add(socialGroup);
-
-		socialModal.add(body2);
-
-	}
-
-	private void buildFilterBox(final TextBox textBox, final ArrayList<Button> buttons) {
-
-		textBox.setPlaceholder("Type to search");
-		textBox.addKeyUpHandler(new KeyUpHandler() {
-			@Override
-			public void onKeyUp(KeyUpEvent event) {
-				for (Button butt : buttons) {
-
-					if (textBox.getValue() == null || textBox.getValue().isEmpty()) {
-						butt.setVisible(true);
-						continue;
-					}
-
-					if (Utils.unAccent(butt.getText().replaceAll(" ", "").toLowerCase()).contains(Utils.unAccent(textBox.getValue().toLowerCase()))) {
-						butt.setVisible(true);
-					} else {
-						butt.setVisible(false);
-					}
-
-				}
-			}
-		});
-
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
-
+	/**
+	 * Load all WAYF data and display identity provider selection.
+	 *
+	 * @param extEvents Events done on callback
+	 */
 	public void loadWayf(final JsonEvents extEvents) {
 
 		wayf.getFeeds(new JsonEvents() {
@@ -399,5 +296,137 @@ public class Wayf extends Composite {
 		});
 
 	}
+
+	/**
+	 * Init modal dialogs for IdP selection.
+	 */
+	private void initModals() {
+
+		idpFilterBox.setWidth("450px");
+		idpFilterBox.getElement().setAttribute("style", "margin: 5px 0px;");
+		idpFilterBox.setPlaceholder(translation.typeToSearch());
+
+		idpGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
+		idpGroup.setWidth("460px");
+
+		idpModal.setTitle(translation.selectIdP());
+		idpModal.setWidth("492px");
+		idpModal.setDataBackdrop(ModalBackdrop.STATIC);
+
+		ModalBody body = new ModalBody();
+		body.add(idpFilterBox);
+		body.add(idpGroup);
+
+		idpModal.add(body);
+
+		socialFilterBox.setWidth("450px");
+		socialFilterBox.getElement().setAttribute("style", "margin: 5px 0px;");
+		socialFilterBox.setPlaceholder(translation.typeToSearch());
+
+		socialGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
+		socialGroup.setWidth("460px");
+
+		socialModal.setTitle(translation.selectIdP());
+		socialModal.setWidth("492px");
+		socialModal.setDataBackdrop(ModalBackdrop.STATIC);
+
+		ModalBody body2 = new ModalBody();
+		body2.add(socialFilterBox);
+		body2.add(socialGroup);
+
+		socialModal.add(body2);
+
+	}
+
+	/**
+	 * Assign search action above buttons to text box.
+	 *
+	 * @param textBox TexBox to assign action
+	 * @param buttons Buttons to filter through
+	 */
+	private void buildFilterBox(final TextBox textBox, final ArrayList<Button> buttons) {
+
+		textBox.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				for (Button butt : buttons) {
+
+					if (textBox.getValue() == null || textBox.getValue().isEmpty()) {
+						butt.setVisible(true);
+						continue;
+					}
+
+					if (Utils.unAccent(butt.getText().replaceAll(" ", "").toLowerCase()).contains(Utils.unAccent(textBox.getValue().toLowerCase()))) {
+						butt.setVisible(true);
+					} else {
+						butt.setVisible(false);
+					}
+
+				}
+			}
+		});
+
+	}
+
+	/**
+	 * Load all pre-configured IdP feeds from it's source
+	 *
+	 * @param events Events done on callback results
+	 */
+	private void getFeeds(final JsonEvents events) {
+
+		ArrayList<String> fds = new ArrayList<String>();
+
+		if (filter == null || filter.getAllowedFeeds().isEmpty()) {
+			fds.addAll(Utils.getWayfFeeds());
+		} else {
+			fds.addAll(filter.getAllowedFeeds());
+		}
+
+		for (final String feed : fds) {
+
+			RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, Utils.getWayfFeedUrl() + feed + ".js");
+			callCounter++;
+			try {
+				builder.sendRequest(null, new RequestCallback() {
+							@Override
+							public void onResponseReceived(Request request, Response response) {
+								feeds.put(feed, (Feed)convertFeed(response.getText()));
+								callCounter--;
+								if (callCounter == 0) {
+									events.onFinished(null);
+								}
+							}
+
+							@Override
+							public void onError(Request request, Throwable exception) {
+								callCounter--;
+								if (callCounter == 0) {
+									events.onError(null);
+								}
+							}
+						}
+				);
+			} catch (RequestException e) {
+				e.printStackTrace();
+			}
+		}
+
+		// load wayf without FED feeds
+		if (fds.isEmpty()) {
+			events.onFinished(null);
+		}
+
+	}
+
+	/**
+	 * Convert native IdP feed data from JSON to GWTs OverlayObject
+	 * @param feed feed sources
+	 * @return Feed overlay type
+	 */
+	private final native JavaScriptObject convertFeed(String feed) /*-{
+		var object = $wnd.jQuery.parseJSON(feed);
+		return object;
+	}-*/;
 
 }

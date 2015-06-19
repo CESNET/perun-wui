@@ -42,7 +42,7 @@ public class JoinPage {
 
 	private static ConsolidatorPageUiBinder ourUiBinder = GWT.create(ConsolidatorPageUiBinder.class);
 
-	//private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
+	private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
 
 	@UiField PerunButton finishButton;
 	@UiField PerunButton backButton;
@@ -96,6 +96,10 @@ public class JoinPage {
 
 		}
 
+		backButton.setText(translation.backButton());
+		heading.setText(translation.currentIdentityIs());
+		myidents.setText(translation.myIdents());
+
 		// try to perform joining
 		RegistrarManager.consolidateIdentityUsingToken(token, new JsonEvents() {
 
@@ -115,34 +119,35 @@ public class JoinPage {
 				if (error.getName().equals("InvalidTokenException")) {
 					alert.setType(AlertType.DANGER);
 					// TODO translate message
-					alert.setText("Your token for joining identities is no longer valid. Please retry from the start.");
+					alert.setText(translation.invalidTokenException());
 					alert.setVisible(true);
 					loader.setVisible(false);
 					backButton.setVisible(true);
 				} else if (error.getName().equals("IdentityUnknownException")) {
 					alert.setType(AlertType.DANGER);
 					// TODO translate message
-					alert.setText("Neither original or current identity is know to Perun. Please use at least one identity known to Perun.");
+					alert.setText(translation.identityUnknownException());
 					alert.setVisible(true);
 					loader.setVisible(false);
 					backButton.setVisible(true);
 				} else if (error.getName().equals("IdentityIsSameException")) {
 					alert.setType(AlertType.DANGER);
 					// TODO translate message
-					alert.setText("You tried to join identity ("+Utils.convertCertCN(Utils.translateIdp(JsUtils.getNativePropertyString(error, "login")))+" / "+Utils.convertCertCN(Utils.translateIdp(JsUtils.getNativePropertyString(error, "source")))+") with itself. Please go back and select different identity to join with.");
+					alert.setText(translation.identityIsSameException(Utils.convertCertCN(Utils.translateIdp(JsUtils.getNativePropertyString(error, "login")))+" / "+Utils.convertCertCN(Utils.translateIdp(JsUtils.getNativePropertyString(error, "source")))));
 					alert.setVisible(true);
 					loader.setVisible(false);
 					backButton.setVisible(true);
 				} else if (error.getName().equals("IdentitiesAlreadyJoinedException")) {
 					alert.setType(AlertType.WARNING);
 					// TODO translate message
-					alert.setText("You already have both identities joined.");
+					alert.setText(translation.identitiesAlreadyJoinedException());
 					alert.setVisible(true);
 					loader.setVisible(false);
+					backButton.setVisible(true);
 				} else if (error.getName().equals("IdentityAlreadyInUseException")) {
 					alert.setType(AlertType.WARNING);
 					// TODO translate message
-					alert.setText("Your identity is already associated with a different user. If you are the same person, please contact support to help you.");
+					alert.setText(translation.identityAlreadyInUseException());
 					alert.setVisible(true);
 					loader.setVisible(false);
 				} else {
@@ -156,7 +161,7 @@ public class JoinPage {
 				}
 
 				if (redirect != null && !redirect.isEmpty()) {
-					finishButton.setText("Leave");
+					finishButton.setText(translation.finishButtonLeave());
 					finishButton.setIcon(IconType.CHEVRON_RIGHT);
 					finishButton.setIconPosition(IconPosition.RIGHT);
 					finishButton.setVisible(true);
@@ -203,7 +208,7 @@ public class JoinPage {
 		loader.setVisible(false);
 
 		alert.setType(AlertType.SUCCESS);
-		alert.setText("Your identities were successfully joined.");
+		alert.setText(translation.joinedMessage());
 		alert.setVisible(true);
 
 		for (UserExtSource ues : list) {
@@ -238,13 +243,13 @@ public class JoinPage {
 		myidents.setVisible(true);
 
 		if (redirect != null && !redirect.isEmpty()) {
-			finishButton.setText("Continue");
+			finishButton.setText(translation.finishButtonContinue());
 			finishButton.setIcon(IconType.CHEVRON_RIGHT);
 			finishButton.setIconPosition(IconPosition.RIGHT);
 			finishButton.setVisible(true);
 		}
 
-		backButton.setText("Join another identity");
+		backButton.setText(translation.backButton());
 		backButton.setIcon(IconType.CHEVRON_LEFT);
 		backButton.setIconPosition(IconPosition.LEFT);
 		backButton.setVisible(true);
