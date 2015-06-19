@@ -32,7 +32,7 @@ public class SelectPage {
 
 	private static ConsolidatorPageUiBinder ourUiBinder = GWT.create(ConsolidatorPageUiBinder.class);
 
-	//private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
+	private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
 
 	@UiField(provided = true) Wayf wayf;
 
@@ -52,6 +52,9 @@ public class SelectPage {
 		if (rootElement == null) {
 			rootElement = ourUiBinder.createAndBindUi(this);
 		}
+
+		heading.setText(translation.currentIdentityIs());
+		joinHeading.setText(translation.joinWith());
 
 		final JsonEvents loadWayfEvent = new JsonEvents() {
 			@Override
@@ -105,7 +108,7 @@ public class SelectPage {
 
 					if (PerunSession.getInstance().getUser() == null) {
 						alert.setVisible(true);
-						alert.setText("Your current identity is not registered yet. As a next step please select identity, which is already registered.");
+						alert.setText(translation.notRegistered());
 					}
 
 					wayf.setToken(token);

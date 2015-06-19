@@ -16,6 +16,7 @@ import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.consolidator.client.ConsolidatorTranslation;
 import cz.metacentrum.perun.wui.consolidator.model.Feed;
 import cz.metacentrum.perun.wui.consolidator.model.FeedFilter;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -35,6 +36,8 @@ import java.util.HashMap;
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
 public class Wayf extends Composite {
+
+	private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
 
 	private int callCounter = 0;
 	private HashMap<String, Feed> feeds = new HashMap<>();
@@ -75,6 +78,10 @@ public class Wayf extends Composite {
 		if (filter != null && !filter.isEmpty()) {
 			setFilter(filter);
 		}
+		idpButton.setText(translation.idpButton());
+		certButton.setText(translation.certButton());
+		krbButton.setText(translation.krbButton());
+		socialButton.setText(translation.socialButton());
 		this.redirect = redirect;
 		initModals();
 	}
@@ -218,7 +225,7 @@ public class Wayf extends Composite {
 		idpGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
 		idpGroup.setWidth("460px");
 
-		idpModal.setTitle("Please select your identity provider");
+		idpModal.setTitle(translation.selectIdP());
 		idpModal.setWidth("492px");
 		idpModal.setDataBackdrop(ModalBackdrop.STATIC);
 
@@ -230,12 +237,12 @@ public class Wayf extends Composite {
 
 		socialFilterBox.setWidth("450px");
 		socialFilterBox.getElement().setAttribute("style", "margin: 5px 0px;");
-		socialFilterBox.setPlaceholder("Type to search");
+		socialFilterBox.setPlaceholder(translation.typeToSearch());
 
 		socialGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
 		socialGroup.setWidth("460px");
 
-		socialModal.setTitle("Please select your identity provider");
+		socialModal.setTitle(translation.selectIdP());
 		socialModal.setWidth("492px");
 		socialModal.setDataBackdrop(ModalBackdrop.STATIC);
 

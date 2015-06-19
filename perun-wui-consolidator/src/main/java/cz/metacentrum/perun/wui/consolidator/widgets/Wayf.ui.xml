@@ -13,7 +13,7 @@
 	</ui:style>
 
 	<b:VerticalButtonGroup visible="false" width="100%">
-			<p:PerunButton ui:field="idpButton" size="LARGE" text="Federated login" icon="UNIVERSITY" iconFixedWidth="true" visible="false" />
+			<p:PerunButton ui:field="idpButton" size="LARGE" text="Institutional login" icon="UNIVERSITY" iconFixedWidth="true" visible="false" />
 			<p:PerunButton ui:field="certButton" size="LARGE" text="Personal Certificate" icon="CERTIFICATE" iconFixedWidth="true" visible="false" />
 			<p:PerunButton ui:field="krbButton" size="LARGE" text="Kerberos login" icon="KEY" iconFixedWidth="true" visible="false" />
 			<p:PerunButton ui:field="socialButton" size="LARGE" text="Social identity" icon="GOOGLE" iconFixedWidth="true" visible="false" />

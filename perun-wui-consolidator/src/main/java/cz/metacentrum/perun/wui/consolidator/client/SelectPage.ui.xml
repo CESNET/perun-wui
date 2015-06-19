@@ -21,17 +21,11 @@
 			<b:Alert ui:field="alert" visible="false" type="INFO"/>
 		</b.html:Div>
 
-		<b:Heading size="H2" ui:field="heading" alignment="CENTER" visible="false">
-			<b.html:Text text="Your current identity is:"/>
-		</b:Heading>
+		<b:Heading size="H2" ui:field="heading" alignment="CENTER" visible="false" />
 
-		<b:Heading size="H3" ui:field="identity" alignment="CENTER" visible="false">
-			<b.html:Text text=""/>
-		</b:Heading>
+		<b:Heading size="H3" ui:field="identity" alignment="CENTER" visible="false" />
 
-		<b:Heading size="H2" ui:field="joinHeading" alignment="CENTER" visible="false">
-			<b.html:Text text="Join with:"/>
-		</b:Heading>
+		<b:Heading size="H2" ui:field="joinHeading" alignment="CENTER" visible="false" />
 
 		<p:PerunLoader ui:field="loader" visible="false"/>
 

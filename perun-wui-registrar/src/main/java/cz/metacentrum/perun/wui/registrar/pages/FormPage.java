@@ -444,7 +444,7 @@ public class FormPage extends Page {
 
 			for (final ExtSource source : sources) {
 
-				if (source.getType().equals("cz.metacentrum.perun.core.impl.ExtSourceX509")) {
+				if (source.getType().equals(ExtSource.ExtSourceType.X509.getType())) {
 
 					AnchorListItem link = new AnchorListItem(Utils.convertCertCN(source.getName()));
 					menu.add(link);
@@ -474,7 +474,7 @@ public class FormPage extends Page {
 					if (!certFound) ft.setWidget(row, 1, certGroup);
 					certFound = true;
 
-				} else if (source.getType().equals("cz.metacentrum.perun.core.impl.ExtSourceIdp")) {
+				} else if (source.getType().equals(ExtSource.ExtSourceType.IDP.getType())) {
 
 					AnchorListItem link = new AnchorListItem(Utils.translateIdp(source.getName()));
 					menu2.add(link);
