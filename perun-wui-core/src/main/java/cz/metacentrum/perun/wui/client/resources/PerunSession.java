@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.client.resources;
 
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.user.client.Window;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.beans.Facility;
 import cz.metacentrum.perun.wui.model.beans.Group;
@@ -23,6 +24,9 @@ public class PerunSession {
 
 	// Only instance
 	static private PerunSession INSTANCE;
+
+	private static boolean perunLoaded = false;
+	private static boolean perunLoading = false;
 
 	// User roles constants
 	static public final String PERUN_ADMIN_PRINCIPAL_ROLE = "PERUNADMIN";
@@ -59,7 +63,8 @@ public class PerunSession {
 	private User activeUser;
 	private BasicOverlayObject configuration;
 
-	private PerunContentManager contentManager;
+	// page switching and history manager for webapp
+	private PlaceManager placeManager;
 
 	// RPC URL
 	private String rpcUrl = "";
@@ -103,10 +108,10 @@ public class PerunSession {
 	}
 
 	/**
-	 * Returns RPC type: default, krb, cert, fed
-	 * RPC type should be included in PerunWeb.html
+	 * Returns type of authz for RPC url: krb, cert, fed, non.
+	 * RPC type is included in PerunWeb.html derived from current url.
 	 *
-	 * @return RPC type
+	 * @return type of RPC authz
 	 */
 	public native String getRpcServer() /*-{
         return $wnd.RPC_SERVER;
@@ -576,12 +581,28 @@ public class PerunSession {
 		this.configuration = configuration;
 	}
 
-	public PerunContentManager getContentManager() {
-		return contentManager;
+	public static PlaceManager getPlaceManager() {
+		return getInstance().placeManager;
 	}
 
-	public void setContentManager(PerunContentManager contentManager) {
-		this.contentManager = contentManager;
+	public static void setPlaceManager(PlaceManager placeManager) {
+		getInstance().placeManager = placeManager;
+	}
+
+	public static boolean isPerunLoaded() {
+		return perunLoaded;
+	}
+
+	public static void setPerunLoaded(boolean perunLoaded) {
+		PerunSession.perunLoaded = perunLoaded;
+	}
+
+	public static boolean isPerunLoading() {
+		return perunLoading;
+	}
+
+	public static void setPerunLoading(boolean perunLoading) {
+		PerunSession.perunLoading = perunLoading;
 	}
 
 }

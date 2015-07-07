@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.model.columnProviders;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
@@ -123,13 +124,11 @@ public class VoColumnProvider extends ColumnProvider<Vo> {
 
 								@Override
 								public String getUrl() {
-									return ""; //VoDetailTabItem.getStaticUrl(object);
+									return PlaceTokens.VOS_DETAIL+";id="+object.getId();
 								}
 
 								@Override
 								public void onClick() {
-									// FIXME - PerunSession.getInstance().getContentManager().setState(new State(getUrl(),vo));
-									//PerunWui.getContent().setTab(new VoDetailTabItem(object));
 								}
 
 								@Override

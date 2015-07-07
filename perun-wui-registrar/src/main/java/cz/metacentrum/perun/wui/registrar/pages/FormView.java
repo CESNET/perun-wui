@@ -12,6 +12,8 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -19,7 +21,7 @@ import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.*;
-import cz.metacentrum.perun.wui.pages.Page;
+import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
@@ -33,16 +35,14 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- * Page to display application form for VO or Group.
+ * View for displaying registration form of VO / Group
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class FormPage extends Page {
+public class FormView extends ViewImpl implements FormPresenter.MyView {
 
-	interface FormPageUiBinder extends UiBinder<Widget, FormPage> {
+	interface FormViewUiBinder extends UiBinder<Widget, FormView> {
 	}
-
-	private static FormPageUiBinder ourUiBinder = GWT.create(FormPageUiBinder.class);
 
 	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
@@ -58,32 +58,15 @@ public class FormPage extends Page {
 	@UiField
 	Alert notice;
 
-	private Widget rootElement;
 	private PerunException displayedException;
 
-	public FormPage() {
-
-		rootElement = ourUiBinder.createAndBindUi(this);
-
+	@Inject
+	public FormView(FormViewUiBinder binder) {
+		initWidget(binder.createAndBindUi(this));
+		draw();
 	}
 
-	@Override
-	public boolean isPrepared() {
-		return true;
-	}
-
-	@Override
-	public boolean isAuthorized() {
-		return true;
-	}
-
-	@Override
-	public void onResize() {
-
-	}
-
-	@Override
-	public Widget draw() {
+	public void draw() {
 
 		final PerunLoader loader = new PerunLoader();
 		form.add(loader);
@@ -101,8 +84,16 @@ public class FormPage extends Page {
 		if (voName == null || voName.isEmpty()) {
 			this.displayedException = PerunException.createNew("0", "WrongURL", "Missing parameters in URL.");
 			displayException(loader, displayedException);
-			return rootElement;
+			return;
 		}
+
+		final PerunPrincipal pp = PerunSession.getInstance().getPerunPrincipal();
+
+		// fed info
+		final String fedInfo = "{" + " displayName=\"" + pp.getAdditionInformation("displayName")+"\"" + " commonName=\"" + pp.getAdditionInformation("cn")+"\""
+		+ " givenName=\"" + pp.getAdditionInformation("givenName")+"\"" + " sureName=\"" + pp.getAdditionInformation("sn")+"\""
+		+ " loa=\"" + pp.getAdditionInformation("loa")+"\"" + " mail=\"" + pp.getAdditionInformation("mail")+"\""
+		+ " organization=\"" + pp.getAdditionInformation("o")+"\"" + " }";
 
 		RegistrarManager.initializeRegistrar(voName, groupName, new JsonEvents() {
 
@@ -111,7 +102,7 @@ public class FormPage extends Page {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 
-				RegistrarObject object = jso.cast();
+				final RegistrarObject object = jso.cast();
 
 				// recreate VO and group
 				vo = object.getVo();
@@ -155,7 +146,53 @@ public class FormPage extends Page {
 						loader.onFinished();
 						loader.removeFromParent();
 						form.setFormItems(object.getVoFormInitial());
-						// TODO - if group and groupForm != null then after submission redirect to group form
+						form.setApp(Application.createNew(vo, null, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+
+						form.setOnSubmitEvent(new JsonEvents() {
+							@Override
+							public void onFinished(JavaScriptObject jso) {
+
+								// TODO - if group and groupForm != null then after submission redirect to group form
+								if (!object.getGroupFormInitial().isEmpty()) {
+
+									form.clear();
+									form.setFormItems(object.getGroupFormInitial());
+									form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+									form.setOnSubmitEvent(new JsonEvents() {
+										@Override
+										public void onFinished(JavaScriptObject jso) {
+
+											// TODO - success of VO + Group + redirect new
+
+										}
+
+										@Override
+										public void onError(PerunException error) {
+											// TODO - display error for group
+										}
+
+										@Override
+										public void onLoadingStart() {
+
+										}
+									});
+
+
+								} else {
+									// TODO- done success of VO + redirect new
+								}
+							}
+
+							@Override
+							public void onError(PerunException error) {
+								// TODO - display error for VO
+							}
+
+							@Override
+							public void onLoadingStart() {
+
+							}
+						});
 
 					} else if (!object.getVoFormExtension().isEmpty()) {
 
@@ -165,6 +202,9 @@ public class FormPage extends Page {
 							loader.onFinished();
 							loader.removeFromParent();
 							form.setFormItems(object.getVoFormExtension());
+							form.setApp(Application.createNew(vo, null, Application.ApplicationType.EXTENSION, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+
+							// TODO - events for success of VO extension + target extended
 
 						} else {
 
@@ -176,6 +216,7 @@ public class FormPage extends Page {
 								loader.onFinished();
 								loader.removeFromParent();
 								form.setFormItems(object.getGroupFormInitial());
+								form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
 
 							} else {
 
@@ -185,6 +226,8 @@ public class FormPage extends Page {
 								loader.onFinished();
 								loader.removeFromParent();
 								form.setFormItems(object.getVoFormExtension());
+								form.setApp(Application.createNew(vo, null, Application.ApplicationType.EXTENSION, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+								// TODO - events for success of VO extension + target extended
 
 							}
 
@@ -200,6 +243,9 @@ public class FormPage extends Page {
 								loader.onFinished();
 								loader.removeFromParent();
 								form.setFormItems(object.getGroupFormInitial());
+								form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+
+								// TODO - events for success of group initial + target new
 
 							} else {
 
@@ -211,7 +257,6 @@ public class FormPage extends Page {
 							}
 
 						} else {
-
 
 							// FIXME - can't become member of VO / extend membership -> display better notice
 
@@ -258,45 +303,16 @@ public class FormPage extends Page {
 			}
 		});
 
-		return rootElement;
-
 	}
 
-	@Override
-	public Widget getWidget() {
-		return rootElement;
-	}
-
-	@Override
-	public void open() {
-
-	}
-
-	@Override
-	public String getUrl() {
-		return "form";
-	}
-
-	@Override
-	public void toggleHelp() {
-
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return 31;
+	private void displaySuccess() {
+		// TODO - generic display success page
 	}
 
 	private void displayException(PerunLoader loader, PerunException ex) {
 
 		this.displayedException = ex;
+		notice.setType(AlertType.WARNING);
 
 		Button continueButton = new Button(translation.continueButton());
 		continueButton.setIcon(IconType.CHEVRON_RIGHT);

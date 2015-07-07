@@ -5,6 +5,14 @@
 	<!-- support GWT Bootstrap 3 theme -->
 	<inherits name="cz.metacentrum.perun.wui.perun-wui-core"/>
 
+	<!-- GWTP support -->
+	<inherits name="com.google.gwt.inject.Inject"/>
+	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
+	<!-- define gin module injector -->
+	<set-configuration-property name="gin.ginjector.modules" value="cz.metacentrum.perun.wui.registrar.client.PerunRegistrar"/>
+	<!-- bootstrap app before loading page -->
+	<set-configuration-property name="gwtp.bootstrapper" value="cz.metacentrum.perun.wui.client.PerunBootstrapper"/>
+
 	<!-- Specify the app entry point class. -->
 	<entry-point class="cz.metacentrum.perun.wui.registrar.client.PerunRegistrar"/>
 

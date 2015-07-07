@@ -1,10 +1,17 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
+import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
+import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.Application;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.FieldSet;
@@ -29,6 +36,8 @@ public class PerunForm extends FieldSet {
 	// TRUE if only text preview with (prefilled)value should be shown
 	private boolean onlyPreview = false;
 	private boolean seeHiddenItems = false;
+	private Application app;
+	private JsonEvents onSubmitEvent;
 
 	private PerunTranslation perunTranslation = GWT.create(PerunTranslation.class);
 
@@ -190,11 +199,38 @@ public class PerunForm extends FieldSet {
 
 				} else {
 
-					// TODO - SUBMIT THE FORM
-					GrowlOptions go = new GrowlOptions();
-					go.setPosition(GrowlPosition.TOP_CENTER);
-					go.setType(GrowlType.SUCCESS);
-					Growl.growl("Form submitted !!", go);
+					// create form
+					RegistrarManager.createApplication(app, getFormItemData(), new JsonEvents() {
+						@Override
+						public void onFinished(JavaScriptObject jso) {
+
+							button.setProcessing(false);
+							button.setEnabled(true);
+
+							GrowlOptions go = new GrowlOptions();
+							go.setPosition(GrowlPosition.TOP_CENTER);
+							go.setType(GrowlType.SUCCESS);
+							Growl.growl("Form submitted !!", go);
+
+							if (onSubmitEvent != null) onSubmitEvent.onFinished(jso);
+
+						}
+
+						@Override
+						public void onError(PerunException error) {
+							button.setProcessing(false);
+							button.setEnabled(true);
+							if (onSubmitEvent != null) onSubmitEvent.onError(error);
+						}
+
+						@Override
+						public void onLoadingStart() {
+							button.setProcessing(true);
+							button.setEnabled(false);
+							if (onSubmitEvent != null) onSubmitEvent.onLoadingStart();
+						}
+					});
+
 					return false;
 
 				}
@@ -227,6 +263,49 @@ public class PerunForm extends FieldSet {
 
 	public void setSeeHiddenItems(boolean seeHiddenItems) {
 		this.seeHiddenItems = seeHiddenItems;
+	}
+
+	public Application getApp() {
+		return app;
+	}
+
+	public void setApp(Application app) {
+		this.app = app;
+	}
+
+	public JsonEvents getOnSubmitEvent() {
+		return onSubmitEvent;
+	}
+
+	public void setOnSubmitEvent(JsonEvents onSubmitEvent) {
+		this.onSubmitEvent = onSubmitEvent;
+	}
+
+	private ArrayList<ApplicationFormItemData> getFormItemData() {
+
+		// convert data
+		ArrayList<ApplicationFormItemData> data = new ArrayList<ApplicationFormItemData>();
+		for (PerunFormItem item : items) {
+
+			String value = item.getValue();
+			String prefilled = item.getItem().getPrefilledValue();
+			JSONObject formItemJSON = new JSONObject(item.getItem().getFormItem());
+
+			// remove text (locale), saves data transfer & removes problem with parsing locale
+			formItemJSON.put("i18n", new JSONObject());
+
+			// cast form item back
+			ApplicationFormItem formItem = formItemJSON.getJavaScriptObject().cast();
+
+			// prepare package with data
+			ApplicationFormItemData itemData = ApplicationFormItemData.construct(formItem, formItem.getShortName(), value, prefilled, item.getItem().getAssuranceLevel() != null ? item.getItem().getAssuranceLevel() : "");
+
+			data.add(itemData);
+
+		}
+
+		return data;
+
 	}
 
 }

@@ -1,13 +1,11 @@
 package cz.metacentrum.perun.wui.admin.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Image;
-import cz.metacentrum.perun.wui.client.resources.PerunContextListener;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import org.gwtbootstrap3.client.ui.*;
@@ -17,7 +15,7 @@ import org.gwtbootstrap3.client.ui.*;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class TopMenu implements PerunContextListener {
+public class TopMenu {
 
 	interface TopMenuUiBinder extends UiBinder<Navbar, TopMenu> {
 	}
@@ -41,6 +39,9 @@ public class TopMenu implements PerunContextListener {
 	@UiField
 	AnchorListItem signout;
 
+	@UiField
+	AnchorListItem user;
+
 	public TopMenu() {
 
 		rootElement = ourUiBinder.createAndBindUi(this);
@@ -49,6 +50,8 @@ public class TopMenu implements PerunContextListener {
 		logo.setWidth("auto");
 		logo.setHeight("50px");
 		navbarHeader.insert(logo, 0);
+
+		user.setText(PerunSession.getInstance().getUser().getFullName());
 
 		settings.setTargetHistoryToken("settings");
 		signout.setTargetHistoryToken("logout");
@@ -59,29 +62,12 @@ public class TopMenu implements PerunContextListener {
 		return rootElement;
 	}
 
-	@Override
-	public void setContext(String context) {
-
-		settings.setActive(false);
-		signout.setActive(false);
-		help.setActive(false);
-		refresh.setActive(false);
-
-		if ("settings".equals(context)) {
-			settings.setActive(true);
-		} else if ("logout".equals(context)) {
-			signout.setActive(true);
-		}
-
-	}
-
 	@UiHandler(value="help")
 	public void clickHelp(ClickEvent event) {
 		settings.setActive(false);
 		signout.setActive(false);
 		refresh.setActive(false);
 		help.setActive(true);
-		//PerunWui.getContentManager().getDisplayedPage().switchHelp();
 	}
 
 	@UiHandler(value="refresh")
@@ -90,19 +76,6 @@ public class TopMenu implements PerunContextListener {
 		signout.setActive(false);
 		help.setActive(false);
 		refresh.setActive(true);
-		if (PerunSession.getInstance().getContentManager().getDisplayedPage() != null) {
-			PerunSession.getInstance().getContentManager().getDisplayedPage().draw();
-			refresh.setIconSpin(true);
-			Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
-				@Override
-				public boolean execute() {
-					refresh.setIconSpin(false);
-					refresh.setActive(false);
-					refresh.setFocus(false);
-					return false;
-				}
-			}, 2000);
-		}
 	}
 
 }

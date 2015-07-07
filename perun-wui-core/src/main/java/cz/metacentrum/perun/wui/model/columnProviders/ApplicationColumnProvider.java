@@ -1,7 +1,6 @@
 package cz.metacentrum.perun.wui.model.columnProviders;
 
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.user.client.History;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.beans.Application;
@@ -9,7 +8,6 @@ import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
-import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 
 import java.util.ArrayList;
 
@@ -72,7 +70,7 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 							object.getVo().getShortName().toLowerCase().startsWith(text.toLowerCase()))
 						return true;
 
-					// compate by group
+					// compare by group
 					if (object.getGroup() != null && object.getGroup().getShortName().toLowerCase().startsWith(text.toLowerCase()))
 						return true;
 

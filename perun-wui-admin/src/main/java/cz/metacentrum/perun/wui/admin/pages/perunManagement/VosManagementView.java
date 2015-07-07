@@ -1,10 +1,11 @@
 package cz.metacentrum.perun.wui.admin.pages.perunManagement;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.ResizeEvent;
+import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -12,14 +13,16 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import com.google.inject.Inject;
+import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.VosManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.columnProviders.VoColumnProvider;
-import cz.metacentrum.perun.wui.pages.Page;
+import cz.metacentrum.perun.wui.pages.FocusableView;
+import cz.metacentrum.perun.wui.pages.ResizableView;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.SuggestBox;
@@ -33,109 +36,46 @@ import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 /**
- * PERUN ADMIN - VOS MANAGEMENT
+ * PERUN ADMIN - VOS MANAGEMENT VIEW
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class VosManagementPage extends Page {
-
-	interface VosManagementPageUiBinder extends UiBinder<Widget, VosManagementPage> {
-	}
-
-	private static VosManagementPageUiBinder ourUiBinder = GWT.create(VosManagementPageUiBinder.class);
-
-	private Widget rootElement;
-
-	@UiField(provided = true)
-	PerunDataGrid<Vo> grid;
-
-	@UiField
-	ButtonToolBar menu;
-
-	@UiField
-	PerunButton filterButton;
-
-	@UiField
-	PerunButton button;
-
-	@UiField (provided = true)
-	PerunButton remove;
-
-	@UiField
-	AnchorListItem growl1;
-	@UiField
-	AnchorListItem growl2;
-	@UiField
-	AnchorListItem growl3;
-	@UiField
-	AnchorListItem growl4;
-
-	/*
-	@UiField
-	PerunButton addMember;
-
-	@UiField
-	PerunButton removeMember;
-	*/
+public class VosManagementView extends ViewImpl implements VosManagementPresenter.MyView, ResizableView, FocusableView {
 
 	private UnaccentMultiWordSuggestOracle oracle = new UnaccentMultiWordSuggestOracle();
 
 	@UiField(provided = true)
+	PerunDataGrid<Vo> grid;
+
+	@UiField (provided = true)
+	PerunButton remove;
+
+	@UiField(provided = true)
 	SuggestBox textBox = new SuggestBox(oracle);
 
-	public VosManagementPage() {
+	@UiField ButtonToolBar menu;
+	@UiField PerunButton filterButton;
+	@UiField PerunButton button;
+	@UiField AnchorListItem growl1;
+	@UiField AnchorListItem growl2;
+	@UiField AnchorListItem growl3;
+	@UiField AnchorListItem growl4;
+
+	VosManagementView view = this;
+
+	interface VosManagementViewUiBinder extends UiBinder<Widget, VosManagementView> {
+	}
+
+	@Inject
+	VosManagementView(final VosManagementViewUiBinder uiBinder) {
 
 		grid = new PerunDataGrid<Vo>(new VoColumnProvider());
-
 		remove = PerunButton.getButton(PerunButtonType.REMOVE, ButtonType.DANGER, "Remove selected VO(s)");
 
-		rootElement = ourUiBinder.createAndBindUi(this);
-
+		initWidget(uiBinder.createAndBindUi(this));
+		// FIXME - is this right place to draw ?
+		draw();
 	}
-
-	@Override
-	public boolean isPrepared() {
-		return true;
-	}
-
-	@Override
-	public boolean isAuthorized() {
-		return PerunSession.getInstance().isPerunAdmin();
-	}
-
-	@Override
-	public void onResize() {
-
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				int height = DOM.getElementById("web-content").getAbsoluteBottom();
-				if (DOM.getElementById("web-content").getAbsoluteBottom() < Window.getClientHeight()) {
-					height = Window.getClientHeight();
-					if (Window.getClientHeight() < 700) {
-						height = 700;
-					}
-				}
-				grid.setHeight(height - grid.getAbsoluteTop() -10 + "px");
-				grid.onResize();
-			}
-		});
-
-	}
-
-	/*
-	@UiHandler(value = "addMember")
-	public void addMember(ClickEvent event) {
-		GroupsManager.addMember(7842, 5723, null);
-		GroupsManager.addMember(7842, 3973, null);
-	}
-
-	@UiHandler(value = "removeMember")
-	public void removeMember(ClickEvent event) {
-		GroupsManager.removeMember(7842, 5723, null);
-		GroupsManager.removeMember(7842, 3973, null);
-	}
-	*/
 
 	@UiHandler(value = "filterButton")
 	public void filter(ClickEvent event) {
@@ -166,7 +106,7 @@ public class VosManagementPage extends Page {
 		button.addStyleName("GIM-RRTCAJ");
 		group.add(button);
 		menu.add(group);
-		onResize();
+		//onResize();
 	}
 
 	@UiHandler(value = "growl1")
@@ -202,8 +142,14 @@ public class VosManagementPage extends Page {
 		Growl.growl("", "Message", IconType.AMBULANCE, "http://perun.cesnet.cz/web/");
 	}
 
-	@Override
-	public Widget draw() {
+	public void draw() {
+
+		Window.addResizeHandler(new ResizeHandler() {
+			@Override
+			public void onResize(ResizeEvent event) {
+				view.onResize();
+			}
+		});
 
 		remove.setTableManaged(grid);
 		grid.addTableLoadingManagedWidget(remove, false);
@@ -238,49 +184,33 @@ public class VosManagementPage extends Page {
 			}
 		});
 
-		return rootElement;
+	}
+
+	@Override
+	public void onResize() {
+
+		Scheduler.get().scheduleDeferred(new Command() {
+			@Override
+			public void execute() {
+				int height = DOM.getElementById("web-content").getAbsoluteBottom();
+				if (DOM.getElementById("web-content").getAbsoluteBottom() < Window.getClientHeight()) {
+					height = Window.getClientHeight();
+					if (Window.getClientHeight() < 700) {
+						height = 700;
+					}
+				}
+				grid.setHeight(height - grid.getAbsoluteTop() - 10 + "px");
+				grid.onResize();
+			}
+		});
 
 	}
 
 	@Override
-	public Widget getWidget() {
-		return rootElement;
-	}
-
-	@Override
-	public void open() {
-
+	public void focus() {
 		textBox.setFocus(true);
-
 	}
 
-	@Override
-	public String getUrl() {
-		return "perun/vos";
-	}
 
-	@Override
-	public void toggleHelp() {
-
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 37;
-		int result = 1;
-		result = prime * result;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		return true;
-	}
 
 }

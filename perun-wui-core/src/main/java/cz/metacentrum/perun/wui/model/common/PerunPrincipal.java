@@ -100,6 +100,9 @@ public class PerunPrincipal extends JavaScriptObject {
 	 * @return attribute value or null if not present
 	 */
 	public final native String getAdditionInformation(String shibAttrName) /*-{
+		if (!this.additionalInformations) return null;
+		if (typeof this.additionalInformations === 'undefined') return null;
+		if (this.additionalInformations === null) return null;
         if (!this.additionalInformations[shibAttrName]) return null;
         if (typeof this.additionalInformations[shibAttrName] === 'undefined') return null;
         if (this.additionalInformations[shibAttrName] === null) return null;
