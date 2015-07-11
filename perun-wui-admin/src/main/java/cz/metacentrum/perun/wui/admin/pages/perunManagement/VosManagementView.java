@@ -70,6 +70,7 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 	VosManagementView(final VosManagementViewUiBinder uiBinder) {
 
 		grid = new PerunDataGrid<Vo>(new VoColumnProvider());
+		grid.setHeight("100%");
 		remove = PerunButton.getButton(PerunButtonType.REMOVE, ButtonType.DANGER, "Remove selected VO(s)");
 
 		initWidget(uiBinder.createAndBindUi(this));
@@ -188,7 +189,7 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 
 	@Override
 	public void onResize() {
-
+/*
 		Scheduler.get().scheduleDeferred(new Command() {
 			@Override
 			public void execute() {
@@ -203,6 +204,7 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 				grid.onResize();
 			}
 		});
+*/
 
 	}
 

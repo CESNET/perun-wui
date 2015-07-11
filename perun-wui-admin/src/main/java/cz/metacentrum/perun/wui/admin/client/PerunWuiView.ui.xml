@@ -7,18 +7,24 @@
 
 	<ui:style>
 		.minSize { min-width: 1200px; min-height: 700px; width: 100%; height: 100%; padding: 0px; margin: 0px; }
-		.minWidthMenu { min-width: 250px; min-height: 700px; height: 100%; }
+		.minWidthMenu { min-width: 250px; min-height: 700px; }
 		.minWidthTop { min-width: 1200px; margin-bottom: 10px; }
-		.content { height: 100%; }
+		.content { position: absolute; height: 100%; left:250px;}
 	</ui:style>
 
 	<b.html:Div addStyleNames="{style.minSize}" b:id="web-content">
 
 		<b:Navbar ui:field="navbar" addStyleNames="{style.minWidthTop}"/>
 
-		<b.html:Div ui:field="menu" width="250px" marginBottom="10" addStyleNames="{style.minWidthMenu}" pull="LEFT" />
+		<b.html:Div b:id="menuAndPageWrapper">
 
-		<b.html:Div ui:field="pageContent" marginRight="10" addStyleNames="{style.content}" pull="RIGHT" />
+			<b.html:Div ui:field="menu" width="250px" marginBottom="10" addStyleNames="{style.minWidthMenu}" pull="LEFT" />
+
+			<b.html:Div ui:field="pageContent" marginRight="10" b:id="pageWrapper" pull="RIGHT" />
+
+		</b.html:Div>
+
+
 		<!--
 		<p.client:ContentManager ui:field="content" marginRight="10" addStyleNames="{style.content}" pull="RIGHT" />
 		-->

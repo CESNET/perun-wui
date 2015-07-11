@@ -8,51 +8,62 @@
 	<ui:style>
 	</ui:style>
 
-	<b.html:Div>
+	<b.html:Div b:id="page">
 
-		<b:Heading size="H2" ui:field="pageTitle">
-			<b:Icon ui:field="icon" type="BUILDING" fixedWidth="true" pull="LEFT" />
-			<b.html:Text text="Virtual organizations"/>
-			<b.html:Small text=""/>
-		</b:Heading>
+		<b.html:Div addStyleNames="pageHeader">
 
-		<p:PerunToolbar ui:field="menu">
+			<b:Heading size="H2" ui:field="pageTitle">
+				<b:Icon ui:field="icon" type="BUILDING" fixedWidth="true" pull="LEFT" />
+				<b.html:Text text="Virtual organizations"/>
+				<b.html:Small text=""/>
+			</b:Heading>
 
-			<b:InputGroup addStyleNames="col-md-3">
-				<p:SuggestBox focus="true" ui:field="textBox" placeholder="Filter by VO name"/>
-			</b:InputGroup>
+			<p:PerunToolbar ui:field="menu">
 
-			<b:ButtonGroup>
-				<p:PerunButton icon="FILTER" type="PRIMARY" ui:field="filterButton">Filter</p:PerunButton>
-			</b:ButtonGroup>
-			<b:ButtonGroup>
-				<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="button">New...</p:PerunButton>
-			</b:ButtonGroup>
-			<b:ButtonGroup>
-				<p:PerunButton type="DANGER" icon="TRASH_O" ui:field="remove">Remove</p:PerunButton>
-			</b:ButtonGroup>
-			<b:ButtonGroup>
-				<p:PerunButton dataToggle="DROPDOWN" text="Growl" icon="ASTERISK"/>
-				<b:DropDownMenu>
-					<b:AnchorListItem ui:field="growl1">Growl - info</b:AnchorListItem>
-					<b:AnchorListItem ui:field="growl2">Growl - warning</b:AnchorListItem>
-					<b:AnchorListItem ui:field="growl3">Growl - danger</b:AnchorListItem>
-					<b:AnchorListItem ui:field="growl4">Growl - success</b:AnchorListItem>
-				</b:DropDownMenu>
-			</b:ButtonGroup>
+				<b:InputGroup addStyleNames="col-md-3">
+					<p:SuggestBox focus="true" ui:field="textBox" placeholder="Filter by VO name"/>
+				</b:InputGroup>
 
-			<!--
-			<b:ButtonGroup>
-				<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="addMember">Add member</p:PerunButton>
-			</b:ButtonGroup>
-			<b:ButtonGroup>
-				<p:PerunButton type="DANGER" icon="MINUS_CIRCLE" ui:field="removeMember">Remove member</p:PerunButton>
-			</b:ButtonGroup>
-			-->
+				<b:ButtonGroup>
+					<p:PerunButton icon="FILTER" type="PRIMARY" ui:field="filterButton">Filter</p:PerunButton>
+				</b:ButtonGroup>
+				<b:ButtonGroup>
+					<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="button">New...</p:PerunButton>
+				</b:ButtonGroup>
+				<b:ButtonGroup>
+					<p:PerunButton type="DANGER" icon="TRASH_O" ui:field="remove">Remove</p:PerunButton>
+				</b:ButtonGroup>
+				<b:ButtonGroup>
+					<p:PerunButton dataToggle="DROPDOWN" text="Growl" icon="ASTERISK"/>
+					<b:DropDownMenu>
+						<b:AnchorListItem ui:field="growl1">Growl - info</b:AnchorListItem>
+						<b:AnchorListItem ui:field="growl2">Growl - warning</b:AnchorListItem>
+						<b:AnchorListItem ui:field="growl3">Growl - danger</b:AnchorListItem>
+						<b:AnchorListItem ui:field="growl4">Growl - success</b:AnchorListItem>
+					</b:DropDownMenu>
+				</b:ButtonGroup>
 
-		</p:PerunToolbar>
+				<!--
+				<b:ButtonGroup>
+					<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="addMember">Add member</p:PerunButton>
+				</b:ButtonGroup>
+				<b:ButtonGroup>
+					<p:PerunButton type="DANGER" icon="MINUS_CIRCLE" ui:field="removeMember">Remove member</p:PerunButton>
+				</b:ButtonGroup>
+				-->
 
-		<p:PerunDataGrid condensed="true" striped="true" hover="true" ui:field="grid"/>
+			</p:PerunToolbar>
+
+		</b.html:Div>
+
+		<g:ResizeLayoutPanel addStyleNames="grid">
+
+			<p:PerunDataGrid condensed="true" striped="true" hover="true" ui:field="grid" />
+
+		</g:ResizeLayoutPanel>
+
+
+
 
 	</b.html:Div>
 

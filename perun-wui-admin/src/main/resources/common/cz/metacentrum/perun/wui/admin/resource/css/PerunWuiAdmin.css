@@ -7,3 +7,64 @@ body {
 	width: 100%;
 	height: 100%;
 }
+
+#web-content {
+	position: absolute;
+	height: 100%;
+
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+#header {
+
+}
+#menuAndPageWrapper {
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+
+	flex-grow: 1;
+}
+
+#menu {
+
+}
+
+#pageWrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+
+	flex-grow: 1;
+}
+#page {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+
+	flex-grow: 1;
+}
+
+.pageHeader {
+
+}
+
+.grid {
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+
+	flex-grow: 1;
+}
+
+.gridHeader {
+	flex-grow: 0;
+}
+.gridContent {
+	flex-grow: 1;
+}
+.gridFooter {
+
+}
