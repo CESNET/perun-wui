@@ -101,8 +101,8 @@ public class PerunPrincipal extends JavaScriptObject {
 	 */
 	public final native String getAdditionInformation(String shibAttrName) /*-{
         if (!this.additionalInformations[shibAttrName]) return null;
-        if (typeof additionalInformations[shibAttrName] === 'undefined') return null;
-        if (additionalInformations[shibAttrName] === null) return null;
+        if (typeof this.additionalInformations[shibAttrName] === 'undefined') return null;
+        if (this.additionalInformations[shibAttrName] === null) return null;
         return this.additionalInformations[shibAttrName];
     }-*/;
 

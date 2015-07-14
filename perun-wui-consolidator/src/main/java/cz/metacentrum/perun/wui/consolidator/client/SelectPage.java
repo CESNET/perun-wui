@@ -94,17 +94,33 @@ public class SelectPage {
 							translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
 							translatedActor = translatedActor.split("@")[0];
 						}
+
+						// get actor from attributes if present
+						String displayName = PerunSession.getInstance().getPerunPrincipal().getAdditionInformation("displayName");
+						String commonName = PerunSession.getInstance().getPerunPrincipal().getAdditionInformation("cn");
+
+						if (displayName != null && !displayName.isEmpty()) {
+							translatedActor = displayName;
+						} else {
+							if (commonName != null && !commonName.isEmpty()) {
+								translatedActor = commonName;
+							}
+						}
+
 					} else if (extSourceType.equals(ExtSource.ExtSourceType.X509.getType())) {
 						translatedActor = Utils.convertCertCN(translatedActor);
 						translatedExtSourceName = Utils.convertCertCN(translatedExtSourceName);
 					}
 
 					heading.setVisible(true);
-					identity.setText(translatedActor);
+					if (PerunSession.getInstance().getUser() != null) {
+						identity.setText(PerunSession.getInstance().getUser().getFullName());
+					} else {
+						identity.setText(translatedActor);
+					}
+					identity.setSubText(translatedExtSourceName);
 					identity.setVisible(true);
 					joinHeading.setVisible(true);
-
-					identity.setSubText(translatedExtSourceName);
 
 					if (PerunSession.getInstance().getUser() == null) {
 						alert.setVisible(true);

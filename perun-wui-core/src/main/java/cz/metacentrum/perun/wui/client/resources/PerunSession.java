@@ -113,6 +113,15 @@ public class PerunSession {
     }-*/;
 
 	/**
+	 * Returns local config object if present.
+	 *
+	 * @return local configuration object
+	 */
+	public native BasicOverlayObject getLocalConfig() /*-{
+		return $wnd.perun_config;
+	}-*/;
+
+	/**
 	 * Returns current PerunPrincipal of user logged to RPC
 	 *
 	 * @return PerunPrincipal

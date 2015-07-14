@@ -4,26 +4,11 @@
 			 xmlns:p.client="urn:import:cz.metacentrum.perun.wui.consolidator.client">
 
 	<ui:style>
-		.header img { padding-left: 15px; padding-right: 15px; }
 	</ui:style>
 
 	<b:Container fluid="true">
 
-		<b:Navbar position="FIXED_TOP">
-			<b:NavbarHeader ui:field="navbarHeader" addStyleNames="{style.header}">
-				<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
-			</b:NavbarHeader>
-
-			<b:NavbarCollapse b:id="navbar-collapse">
-				<b:NavbarNav>
-					<b:AnchorListItem icon="ADJUST" ui:field="consolidateButton" active="true">Identity consolidation</b:AnchorListItem>
-				</b:NavbarNav>
-			</b:NavbarCollapse>
-		</b:Navbar>
-
-		<b:Column size="MD_12" marginTop="60">
-			<b.html:Div ui:field="content"/>
-		</b:Column>
+		<b.html:Div ui:field="content"/>
 
 	</b:Container>
 
