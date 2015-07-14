@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.client.utils;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -72,7 +73,18 @@ public class Utils {
 			}
 		}
 
-		String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "getIdentityConsolidatorUrl");
+		String value = null;
+
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
+			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "getIdentityConsolidatorUrl")) {
+				value = JsUtils.getNativePropertyString(wayfConfig, "getIdentityConsolidatorUrl");
+			}
+		}
+
+		if (PerunSession.getInstance().getConfiguration() != null && (value == null || value.isEmpty())) {
+			value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "getIdentityConsolidatorUrl");
+		}
 
 		if (value != null && !value.isEmpty()) {
 
@@ -201,17 +213,12 @@ public class Utils {
 	 */
 	public static ArrayList<String> getSupportedPasswordNamespaces() {
 
-		ArrayList<String> attributes = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<String>();
 		if (PerunSession.getInstance().getConfiguration() != null) {
 			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "getSupportedPasswordNamespaces");
-			if (value != null && !value.isEmpty()) {
-				String[] urns = value.split(",");
-				for (int i = 0; i < urns.length; i++) {
-					attributes.add(urns[i]);
-				}
-			}
+			list.addAll(Utils.stringToList(value, ","));
 		}
-		return attributes;
+		return list;
 
 	}
 
@@ -223,17 +230,12 @@ public class Utils {
 	 */
 	public static ArrayList<String> getAllWayfFeeds() {
 
-		ArrayList<String> feedNames = new ArrayList<String>();
+		ArrayList<String> list = new ArrayList<String>();
 		if (PerunSession.getInstance().getConfiguration() != null) {
 			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.allFeeds");
-			if (value != null && !value.isEmpty()) {
-				String[] names = value.split(",");
-				for (int i = 0; i < names.length; i++) {
-					feedNames.add(names[i]);
-				}
-			}
+			list.addAll(Utils.stringToList(value, ","));
 		}
-		return feedNames;
+		return list;
 
 	}
 
@@ -243,6 +245,13 @@ public class Utils {
 	 * @return TRUE if WAYF should support Kerberos authz
 	 */
 	public static boolean isKrbWayfSupported() {
+
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
+			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "krb")) {
+				return JsUtils.getNativePropertyBoolean(wayfConfig, "krb");
+			}
+		}
 
 		if (PerunSession.getInstance().getConfiguration() != null) {
 			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.krb");
@@ -263,6 +272,13 @@ public class Utils {
 	 */
 	public static boolean isCertWayfSupported() {
 
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
+			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "cert")) {
+				return JsUtils.getNativePropertyBoolean(wayfConfig, "cert");
+			}
+		}
+
 		if (PerunSession.getInstance().getConfiguration() != null) {
 			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.cert");
 			if (value != null && !value.isEmpty()) {
@@ -282,16 +298,45 @@ public class Utils {
 	public static ArrayList<String> getCertWayfHostnames() {
 
 		ArrayList<String> result = new ArrayList<String>();
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.cert.hosts");
-			if (value != null && !value.isEmpty()) {
-				String[] names = value.split(",");
-				for (int i = 0; i < names.length; i++) {
-					result.add(names[i]);
-				}
+
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
+			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "certHosts")) {
+				String value = JsUtils.getNativePropertyString(wayfConfig, "certHosts");
+				result.addAll(Utils.stringToList(value, ","));
+				return result;
 			}
 		}
+
+		if (PerunSession.getInstance().getConfiguration() != null) {
+			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.cert.hosts");
+			result.addAll(Utils.stringToList(value, ","));
+		}
 		return result;
+
+	}
+
+	/**
+	 * TRUE if display WAYF as all in one (useful for only fed-authz).
+	 *
+	 * @return TRUE if WAYF should be displayed all in one
+	 */
+	public static boolean wayfShowAllInOne() {
+
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
+			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "showAllInOne")) {
+				return JsUtils.getNativePropertyBoolean(wayfConfig, "showAllInOne");
+			}
+		}
+
+		if (PerunSession.getInstance().getConfiguration() != null) {
+			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.showAllInOne");
+			if (value != null && !value.isEmpty()) {
+				return Boolean.parseBoolean(value);
+			}
+		}
+		return false;
 
 	}
 
@@ -303,15 +348,20 @@ public class Utils {
 	public static ArrayList<String> getWayfFeeds() {
 
 		ArrayList<String> feedNames = new ArrayList<String>();
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.feeds");
-			if (value != null && !value.isEmpty()) {
-				String[] names = value.split(",");
-				for (int i = 0; i < names.length; i++) {
-					feedNames.add(names[i]);
-				}
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
+			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "feeds")) {
+				String value = JsUtils.getNativePropertyString(wayfConfig, "feeds");
+				feedNames.addAll(Utils.stringToList(value, ","));
+				return feedNames;
 			}
 		}
+
+		if (PerunSession.getInstance().getConfiguration() != null) {
+			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.feeds");
+			feedNames.addAll(Utils.stringToList(value, ","));
+		}
+
 		return feedNames;
 
 	}
@@ -322,7 +372,10 @@ public class Utils {
 	 * @return URL to feeds
 	 */
 	public static String getWayfFeedUrl() {
-		return JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.feedUrl");
+		if (PerunSession.getInstance().getConfiguration() != null) {
+			return JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.feedUrl");
+		}
+		return null;
 	}
 
 	/**
@@ -332,7 +385,20 @@ public class Utils {
 	 * @return SP logout URL
 	 */
 	public static String getWayfSpLogoutUrl() {
-		String SPlogout = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.spLogoutUrl");
+
+		String SPlogout = null;
+
+		if (PerunSession.getInstance().getConfiguration() != null) {
+			SPlogout = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.spLogoutUrl");
+		}
+
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
+			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "spLogoutUrl")) {
+				SPlogout = JsUtils.getNativePropertyString(wayfConfig, "spLogoutUrl");
+			}
+		}
+
 		if (SPlogout == null || SPlogout.isEmpty()) {
 			// backup to current hostname
 			SPlogout = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/Logout";
@@ -347,7 +413,19 @@ public class Utils {
 	 * @return SP login URL
 	 */
 	public static String getWayfSpDsUrl() {
-		String SPlogin = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.spDsUrl");
+		String SPlogin = null;
+
+		if (PerunSession.getInstance().getConfiguration() != null) {
+			SPlogin = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.spDsUrl");
+		}
+
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
+			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "spDsUrl")) {
+				SPlogin = JsUtils.getNativePropertyString(wayfConfig, "spDsUrl");
+			}
+		}
+
 		if (SPlogin == null || SPlogin.isEmpty()) {
 			// backup to current hostname
 			SPlogin = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/DS";
@@ -377,17 +455,11 @@ public class Utils {
 	 * @return list of VO` short names
 	 */
 	public static ArrayList<String> getVosToSkipCaptchaFor() {
-
-		ArrayList<String> result = new ArrayList<String>();
-		String skip = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "vosToSkipCaptchaFor");
-		if (skip != null) {
-			for (int i = 0; i < skip.split(",").length; i++) {
-				result.add(skip.split(",")[i]);
-			}
+		if (PerunSession.getInstance().getConfiguration() != null) {
+			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "vosToSkipCaptchaFor");
+			return new ArrayList<String>(Utils.stringToList(value, ","));
 		}
-
-		return result;
-
+		return new ArrayList<String>();
 	}
 
 	/**
@@ -398,16 +470,11 @@ public class Utils {
 	 * @return list of supported namespaces
 	 */
 	public static ArrayList<String> getNamespacesForPreferredGroupNames() {
-
-		ArrayList<String> result = new ArrayList<String>();
-		String skip = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "namespacesForPreferredGroupNames");
-		if (skip != null) {
-			for (int i = 0; i < skip.split(",").length; i++) {
-				result.add(skip.split(",")[i]);
-			}
+		if (PerunSession.getInstance().getConfiguration() != null) {
+			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "namespacesForPreferredGroupNames");
+			return new ArrayList<String>(Utils.stringToList(value, ","));
 		}
-		return result;
-
+		return new ArrayList<String>();
 	}
 
 	/**
@@ -754,20 +821,20 @@ public class Utils {
 			];
 		}
 
-        var diacriticsMap = {};
-        for (var i = 0; i < $wnd.defaultDiacriticsRemovalMap.length; i++) {
-            var letters = $wnd.defaultDiacriticsRemovalMap[i].letters.split("");
-            for (var j = 0; j < letters.length; j++) {
-                diacriticsMap[letters[j]] = $wnd.defaultDiacriticsRemovalMap[i].base;
-            }
-        }
-        var letters = str.split("");
-        var newStr = "";
-        for (var i = 0; i < letters.length; i++) {
-            newStr += letters[i] in diacriticsMap ? diacriticsMap[letters[i]] : letters[i];
-        }
-        return newStr;
-    }-*/;
+		var diacriticsMap = {};
+		for (var i = 0; i < $wnd.defaultDiacriticsRemovalMap.length; i++) {
+			var letters = $wnd.defaultDiacriticsRemovalMap[i].letters.split("");
+			for (var j = 0; j < letters.length; j++) {
+				diacriticsMap[letters[j]] = $wnd.defaultDiacriticsRemovalMap[i].base;
+			}
+		}
+		var letters = str.split("");
+		var newStr = "";
+		for (var i = 0; i < letters.length; i++) {
+			newStr += letters[i] in diacriticsMap ? diacriticsMap[letters[i]] : letters[i];
+		}
+		return newStr;
+	}-*/;
 
 	public static ArrayList<String> getTimezones() {
 
@@ -1353,12 +1420,12 @@ public class Utils {
 	 * @return
 	 */
 	public native static boolean isValidEmail(String email) /*-{
-        //var reg1 = /(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/; // not valid
-        //var reg2 = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/; // valid
-        //return !reg1.test(email) && reg2.test(email);
-        var reg4 = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-        return reg4.test(email);
-    }-*/;
+		//var reg1 = /(@.*@)|(\.\.)|(@\.)|(\.@)|(^\.)/; // not valid
+		//var reg2 = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/; // valid
+		//return !reg1.test(email) && reg2.test(email);
+		var reg4 = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+		return reg4.test(email);
+	}-*/;
 
 	/**
 	 * Joins content of any Iterable<String> object into string with specified delimiter.
@@ -1405,6 +1472,24 @@ public class Utils {
 		ArrayList<T> list = new ArrayList<T>();
 		for (T attr : set) {
 			list.add(attr);
+		}
+		return list;
+	}
+
+	/**
+	 * Convert string to list
+	 *
+	 * @param toList string to convert to list
+	 * @param delimiter
+	 * @return Output List
+	 */
+	static public ArrayList<String> stringToList(String toList, String delimiter) {
+		ArrayList<String> list = new ArrayList<String>();
+		if (toList != null && !toList.isEmpty()) {
+			String[] names = toList.split(delimiter);
+			for (int i = 0; i < names.length; i++) {
+				list.add(names[i]);
+			}
 		}
 		return list;
 	}

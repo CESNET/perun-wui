@@ -157,6 +157,10 @@ public class JsUtils {
 		return jso[propertyName];
 	}-*/;
 
+	public static final native boolean hasOwnProperty(JavaScriptObject jso, String propertyName) /*-{
+		return (jso.hasOwnProperty(propertyName));
+	}-*/;
+
 	/**
 	 * Check if String input can be parsed as Integer
 	 *

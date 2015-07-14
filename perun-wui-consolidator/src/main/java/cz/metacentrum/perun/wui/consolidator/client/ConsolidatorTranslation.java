@@ -38,9 +38,6 @@ public interface ConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Join with")
 	public String joinWith();
 
-	@DefaultMessage("Identity consolidation")
-	public String topConsolidateButton();
-
 	/* --  JOIN PAGE -- */
 
 	@DefaultMessage("Continue")

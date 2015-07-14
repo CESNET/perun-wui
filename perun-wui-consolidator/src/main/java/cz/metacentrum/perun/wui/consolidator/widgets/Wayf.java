@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.consolidator.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
@@ -10,6 +11,7 @@ import com.google.gwt.http.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -26,6 +28,7 @@ import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Pull;
+import org.gwtbootstrap3.client.ui.html.Span;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +66,8 @@ public class Wayf extends Composite {
 	@UiField PerunButton certButton;
 	@UiField PerunButton krbButton;
 	@UiField PerunButton socialButton;
+
+	@UiField Span mainContent;
 
 	interface WayfUiBinder extends UiBinder<Widget, Wayf> {
 	}
@@ -188,6 +193,11 @@ public class Wayf extends Composite {
 
 				extEvents.onFinished(jso);
 
+				if (Utils.wayfShowAllInOne()) {
+					buildAllInOne();
+					return;
+				}
+
 				if (Utils.isCertWayfSupported()) {
 					certButton.setVisible(true);
 				}
@@ -206,7 +216,6 @@ public class Wayf extends Composite {
 				socialGroup.add(btngrp2);
 
 				// build filter
-
 				buildFilterBox(idpFilterBox, idpButtons);
 				buildFilterBox(socialFilterBox, socialButtons);
 
@@ -253,11 +262,11 @@ public class Wayf extends Composite {
 							button.addClickHandler(new ClickHandler() {
 								@Override
 								public void onClick(ClickEvent event) {
-									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false)+URL.encodeQueryString("?token="+token);
+									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token);
 									if (redirect != null && !redirect.isEmpty()) {
 										consolidatorUrl = consolidatorUrl + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
 									}
-									String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + key+"&target="+consolidatorUrl);
+									String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + key + "&target=" + consolidatorUrl);
 									Window.Location.replace(redirectUrl);
 								}
 							});
@@ -365,6 +374,98 @@ public class Wayf extends Composite {
 				}
 			}
 		});
+
+	}
+
+	/**
+	 * Build WAYF as all in one (usefull for only-fed authz)
+	 */
+	private void buildAllInOne() {
+
+		mainContent.clear();
+
+		idpFilterBox.setWidth("450px");
+		idpFilterBox.getElement().setAttribute("style", "margin: 5px 0px;");
+		idpFilterBox.setPlaceholder(translation.typeToSearch());
+
+		idpGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
+		idpGroup.setWidth("460px");
+
+		VerticalButtonGroup btngrp = new VerticalButtonGroup();
+		btngrp.setWidth("100%");
+		idpGroup.add(btngrp);
+
+		buildFilterBox(idpFilterBox, idpButtons);
+
+		// fill buttons
+		ArrayList<String> fds = new ArrayList<String>();
+		if (wayf.getFilter() == null || wayf.getFilter().getAllowedFeeds().isEmpty()) {
+			fds = Utils.getWayfFeeds();
+		} else {
+			fds = wayf.getFilter().getAllowedFeeds();
+		}
+
+		for (String feedId : fds) {
+
+			Feed feed = wayf.getFeeds().get(feedId);
+			for (final String key : feed.getEntities().getKeys()) {
+
+				if (wayf.getFilter() == null || wayf.getFilter().isIdPAllowed(key)) {
+
+					Button button = new Button();
+					button.setBlock(true);
+					button.getElement().setAttribute("style", "text-align: left; vertical-align: middle; overflow-x: auto; word-wrap: break-word; white-space:normal !important; border-radius: 0px;");
+
+					Image img = new Image(feed.getEntities().get(key).getLogoUrl());
+					img.setPull(Pull.RIGHT);
+					button.getElement().insertFirst(img.getElement());
+
+					String label = feed.getEntities().get(key).getLabel("cs");
+					if (label != null && !label.isEmpty()) {
+						//oracle.add(label);
+						button.setText(label);
+					}
+					button.getElement().insertFirst(img.getElement());
+
+					idpButton.setVisible(true);
+					btngrp.add(button);
+					idpButtons.add(button);
+
+					button.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token);
+							if (redirect != null && !redirect.isEmpty()) {
+								consolidatorUrl = consolidatorUrl + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
+							}
+							String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + key + "&target=" + consolidatorUrl);
+							Window.Location.replace(redirectUrl);
+						}
+					});
+
+				}
+
+			}
+
+		}
+
+		if (idpButtons.size() > 7) {
+			idpFilterBox.setVisible(true);
+		} else {
+			idpFilterBox.setVisible(false);
+		}
+
+		mainContent.add(idpFilterBox);
+		mainContent.add(idpGroup);
+
+		Scheduler.get().scheduleDeferred(new Command() {
+			@Override
+			public void execute() {
+				idpFilterBox.setFocus(true);
+			}
+		});
+
+		wayf.setVisible(true);
 
 	}
 
