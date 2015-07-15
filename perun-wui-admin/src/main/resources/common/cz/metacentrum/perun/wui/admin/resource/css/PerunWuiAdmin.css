@@ -57,6 +57,8 @@ body {
 	align-items: stretch;
 
 	flex-grow: 1;
+
+	margin-bottom: 10px;
 }
 
 .gridHeader {
