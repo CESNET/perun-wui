@@ -9,8 +9,6 @@ import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -22,7 +20,6 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.columnProviders.VoColumnProvider;
 import cz.metacentrum.perun.wui.pages.FocusableView;
-import cz.metacentrum.perun.wui.pages.ResizableView;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.SuggestBox;
@@ -40,7 +37,7 @@ import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class VosManagementView extends ViewImpl implements VosManagementPresenter.MyView, ResizableView, FocusableView {
+public class VosManagementView extends ViewImpl implements VosManagementPresenter.MyView, FocusableView {
 
 	private UnaccentMultiWordSuggestOracle oracle = new UnaccentMultiWordSuggestOracle();
 
@@ -145,13 +142,6 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 
 	public void draw() {
 
-		Window.addResizeHandler(new ResizeHandler() {
-			@Override
-			public void onResize(ResizeEvent event) {
-				view.onResize();
-			}
-		});
-
 		remove.setTableManaged(grid);
 		grid.addTableLoadingManagedWidget(remove, false);
 
@@ -184,27 +174,6 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 				grid.getLoaderWidget().onLoading();
 			}
 		});
-
-	}
-
-	@Override
-	public void onResize() {
-/*
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				int height = DOM.getElementById("web-content").getAbsoluteBottom();
-				if (DOM.getElementById("web-content").getAbsoluteBottom() < Window.getClientHeight()) {
-					height = Window.getClientHeight();
-					if (Window.getClientHeight() < 700) {
-						height = 700;
-					}
-				}
-				grid.setHeight(height - grid.getAbsoluteTop() - 10 + "px");
-				grid.onResize();
-			}
-		});
-*/
 
 	}
 

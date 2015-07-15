@@ -6,7 +6,6 @@ import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.pages.FocusableView;
-import cz.metacentrum.perun.wui.pages.ResizableView;
 
 import java.util.ArrayList;
 
@@ -27,12 +26,7 @@ public class VoSelectPresenter extends PresenterWidget<VoSelectPresenter.MyView>
 
 	@Override
 	protected void onReset() {
-
 		super.onReset();
-		// resize when any of presenters is attached/detached
-		if (getView() instanceof ResizableView) {
-			((ResizableView)getView()).onResize();
-		}
 		// focus on display
 		if (getView() instanceof FocusableView) {
 			((FocusableView)getView()).focus();

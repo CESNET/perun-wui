@@ -1,16 +1,12 @@
 package cz.metacentrum.perun.wui.admin.client;
 
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
-import cz.metacentrum.perun.wui.pages.ResizableView;
 import org.gwtbootstrap3.client.ui.Navbar;
 import org.gwtbootstrap3.client.ui.html.Div;
 
@@ -20,7 +16,7 @@ import org.gwtbootstrap3.client.ui.html.Div;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunWuiView extends ViewImpl implements PerunPresenter.MyView, ResizableView {
+public class PerunWuiView extends ViewImpl implements PerunPresenter.MyView {
 
 	interface PerunWuiViewUiBinder extends UiBinder<Widget, PerunWuiView> {}
 
@@ -59,25 +55,6 @@ public class PerunWuiView extends ViewImpl implements PerunPresenter.MyView, Res
 		} else {
 			super.setInSlot(slot, content);
 		}
-	}
-
-	@Override
-	public void onResize() {
-
-		// resize main page content
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				if (Window.getClientWidth() <= 1200) {
-					if (Window.getClientWidth() - 260 < 930) {
-						pageContent.setWidth("940px");
-					}
-				} else {
-					pageContent.setWidth(Window.getClientWidth() - 260 + "px");
-				}
-			}
-		});
-
 	}
 
 }

@@ -5,12 +5,11 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
 		>
 
-	<ui:style>
-	</ui:style>
+	<ui:with field="res" type="cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources"/>
 
-	<b.html:Div b:id="page">
+	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b.html:Div addStyleNames="pageHeader">
+		<b.html:Div addStyleNames="{res.gss.pageHeader}">
 
 			<b:Heading size="H2" ui:field="pageTitle">
 				<b:Icon ui:field="icon" type="BUILDING" fixedWidth="true" pull="LEFT" />
@@ -56,7 +55,7 @@
 
 		</b.html:Div>
 
-		<g:ResizeLayoutPanel addStyleNames="grid">
+		<g:ResizeLayoutPanel addStyleNames="{res.gss.grid}">
 
 			<p:PerunDataGrid condensed="true" striped="true" hover="true" ui:field="grid" />
 

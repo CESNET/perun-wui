@@ -5,22 +5,23 @@
              xmlns:p.client='urn:import:cz.metacentrum.perun.wui.admin.client'
              xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui">
 
+	<ui:with field="res" type="cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources"/>
+
 	<ui:style>
-		.minSize { min-width: 1200px; min-height: 700px; width: 100%; height: 100%; padding: 0px; margin: 0px; }
-		.minWidthMenu { min-width: 250px; min-height: 700px; }
-		.minWidthTop { min-width: 1200px; margin-bottom: 10px; }
-		.content { position: absolute; height: 100%; left:250px;}
+		.minSize { /*min-width: 1200px; min-height: 700px; width: 100%; height: 100%; padding: 0px; margin: 0px;*/ }
+		.minWidthMenu { /*min-width: 250px; min-height: 700px;*/ }
+		.minWidthTop { /*min-width: 1200px; margin-bottom: 10px;*/ }
 	</ui:style>
 
-	<b.html:Div addStyleNames="{style.minSize}" b:id="web-content">
+	<b.html:Div addStyleNames="{style.minSize} {res.gss.webContent}">
 
-		<b:Navbar ui:field="navbar" addStyleNames="{style.minWidthTop}"/>
+		<b:Navbar ui:field="navbar" addStyleNames=""/>
 
-		<b.html:Div b:id="menuAndPageWrapper">
+		<b.html:Div addStyleNames="{res.gss.menuAndPageWrapper}">
 
-			<b.html:Div ui:field="menu" width="250px" marginBottom="10" addStyleNames="{style.minWidthMenu}" pull="LEFT" />
+			<b.html:Div ui:field="menu" width="250px" marginBottom="10" addStyleNames="" pull="LEFT" />
 
-			<b.html:Div ui:field="pageContent" marginRight="10" b:id="pageWrapper" pull="RIGHT" />
+			<b.html:Div ui:field="pageContent" marginRight="10"  addStyleNames="{res.gss.pageWrapper}" pull="RIGHT" />
 
 		</b.html:Div>
 
