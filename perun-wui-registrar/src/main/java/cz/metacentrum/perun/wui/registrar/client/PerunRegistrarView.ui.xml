@@ -3,16 +3,17 @@
              xmlns:p.client='urn:import:cz.metacentrum.perun.wui.registrar.client'
 		>
 
+	<ui:with field="res" type="cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources"/>
+
 	<ui:style>
-		.header img { padding-left: 15px; padding-right: 15px; }
 	</ui:style>
 
 	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens"/>
 
-	<b:Container fluid="true" b:id="web-content">
+	<b.html:Div addStyleNames="{res.gss.webContent}">
 
 		<b:Navbar position="FIXED_TOP">
-			<b:NavbarHeader ui:field="navbarHeader" addStyleNames="{style.header}">
+			<b:NavbarHeader ui:field="navbarHeader" addStyleNames="{res.gss.header}">
 				<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
 			</b:NavbarHeader>
 
@@ -33,10 +34,8 @@
 			</b:NavbarCollapse>
 		</b:Navbar>
 
-		<b:Column size="MD_12" marginTop="60">
-			<b.html:Div ui:field="pageContent" />
-		</b:Column>
+		<b.html:Div ui:field="pageContent" addStyleNames="{res.gss.pageWrapper}" />
 
-	</b:Container>
+	</b.html:Div>
 
 </ui:UiBinder>

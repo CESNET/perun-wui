@@ -5,20 +5,30 @@
              xmlns:p='urn:import:cz.metacentrum.perun.wui.registrar.widgets'
 		>
 
+	<ui:with field="res" type="cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources"/>
+
 	<ui:style>
 	</ui:style>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b:Image visible="false" ui:field="logo"/>
+		<b:Container fluid="true">
+			<b:Row>
+				<b:Column size="MD_12">
 
-		<b:Alert visible="false" type="WARNING" ui:field="notice" dismissable="false" marginTop="20"/>
+					<b:Image visible="false" ui:field="logo"/>
 
-		<b:Form type="HORIZONTAL">
-			<p:PerunForm ui:field="form">
+					<b:Alert visible="false" type="WARNING" ui:field="notice" dismissable="false" marginTop="20"/>
 
-			</p:PerunForm>
-		</b:Form>
+					<b:Form type="HORIZONTAL">
+						<p:PerunForm ui:field="form">
+
+						</p:PerunForm>
+					</b:Form>
+
+				</b:Column>
+			</b:Row>
+		</b:Container>
 
 	</b.html:Div>
 

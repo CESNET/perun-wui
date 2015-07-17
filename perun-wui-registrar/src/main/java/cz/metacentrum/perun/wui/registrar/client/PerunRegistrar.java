@@ -11,6 +11,7 @@ import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.pages.*;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources;
 import cz.metacentrum.perun.wui.registrar.pages.*;
 
 /**
@@ -54,6 +55,7 @@ public class PerunRegistrar extends AbstractPresenterModule implements EntryPoin
 		// ensure injecting custom CSS styles of PerunWui
 		PerunResources.INSTANCE.gss().ensureInjected();
 
+		PerunWuiRegistrarResources.INSTANCE.gss().ensureInjected();
 	}
 
 }

@@ -5,18 +5,20 @@
              xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
 		>
 
+	<ui:with field="res" type="cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources"/>
+
 	<ui:style>
 	</ui:style>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b:Heading size="H2" ui:field="pageTitle">
+		<b:Heading size="H2" ui:field="pageTitle" addStyleNames="{res.gss.pageHeader}">
 			<b:Icon ui:field="icon" type="ARCHIVE" fixedWidth="true" />
 			<b.html:Text text="My registrations" ui:field="text"/>
 			<b.html:Small text=""/>
 		</b:Heading>
 
-		<p:PerunDataGrid condensed="true" striped="true" hover="true" width="100%" ui:field="grid"/>
+		<p:PerunDataGrid condensed="true" striped="true" hover="true" width="100%" ui:field="grid"  addStyleNames="{res.gss.grid}"/>
 
 	</b.html:Div>
 

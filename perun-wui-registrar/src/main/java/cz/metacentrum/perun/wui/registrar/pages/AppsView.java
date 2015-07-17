@@ -43,6 +43,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 
 		initWidget(binder.createAndBindUi(this));
 		text.setText(translation.submittedTitle());
+		grid.setHeight("100%");
 		draw();
 
 	}
