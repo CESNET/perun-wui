@@ -18,7 +18,11 @@
 			<b.html:Small text=""/>
 		</b:Heading>
 
-		<p:PerunDataGrid condensed="true" striped="true" hover="true" width="100%" ui:field="grid"  addStyleNames="{res.gss.grid}"/>
+		<g:ResizeLayoutPanel addStyleNames="{res.gss.grid}">
+
+			<p:PerunDataGrid condensed="true" striped="true" hover="true" width="100%" ui:field="grid" />
+
+		</g:ResizeLayoutPanel>
 
 	</b.html:Div>
 

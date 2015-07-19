@@ -8,18 +8,16 @@
 	<ui:with field="res" type="cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources"/>
 
 	<ui:style>
-		.minSize { /*min-width: 1200px; min-height: 700px; width: 100%; height: 100%; padding: 0px; margin: 0px;*/ }
-		.minWidthMenu { /*min-width: 250px; min-height: 700px;*/ }
-		.minWidthTop { /*min-width: 1200px; margin-bottom: 10px;*/ }
+
 	</ui:style>
 
-	<b.html:Div addStyleNames="{style.minSize} {res.gss.webContent}">
+	<b.html:Div addStyleNames="{res.gss.webContent}">
 
-		<b:Navbar ui:field="navbar" addStyleNames=""/>
+		<b:Navbar ui:field="navbar"/>
 
 		<b.html:Div addStyleNames="{res.gss.menuAndPageWrapper}">
 
-			<b.html:Div ui:field="menu" width="250px" marginBottom="10" addStyleNames="" pull="LEFT" />
+			<b.html:Div ui:field="menu" width="250px" marginBottom="10" pull="LEFT" />
 
 			<b.html:Div ui:field="pageContent" marginRight="10"  addStyleNames="{res.gss.pageWrapper}" pull="RIGHT" />
 
