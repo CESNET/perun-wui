@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.widgets;
 
+import com.google.gwt.core.client.GWT;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
@@ -1039,23 +1040,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	@Override
 	public void setRowData(int start, List<? extends T> values) {
 		super.setRowData(start, values);
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				disableLinks();
-			}
-		});
 	}
-
-	/**
-	 * Prevent default click action on links in data grid. Href is present but ignored, only
-	 * GWT's click handler is activated.
-	 */
-	private final native void disableLinks() /*-{
-		$wnd.jQuery('a.linkCell').click(function (e) {
-			e.preventDefault();
-		});
-	}-*/;
 
 	/* ======== FIX STANDARD ADD/INSERT/REMOVE COLUMN BEHAVIOR
 				IN ORDER TO SUPPORT REDRAWS ON COLUMN CHANGE ============== */

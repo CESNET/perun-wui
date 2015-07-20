@@ -5,10 +5,11 @@
 
 	<ui:style>
 		.header img { padding-left: 15px; padding-right: 15px; }
-
 	</ui:style>
 
-	<b:Container fluid="true">
+	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens"/>
+
+	<b:Container fluid="true" b:id="web-content">
 
 		<b:Navbar position="FIXED_TOP">
 			<b:NavbarHeader ui:field="navbarHeader" addStyleNames="{style.header}">
@@ -17,9 +18,9 @@
 
 			<b:NavbarCollapse b:id="navbar-collapse">
 				<b:NavbarNav>
-					<b:AnchorListItem icon="FILE_TEXT_O" ui:field="application" targetHistoryToken="form">Registration form</b:AnchorListItem>
-					<b:AnchorListItem icon="ARCHIVE" ui:field="myApplications" targetHistoryToken="submitted">My registrations</b:AnchorListItem>
-					<b:AnchorListItem icon="QUESTION_CIRCLE" ui:field="help" targetHistoryToken="help">Help</b:AnchorListItem>
+					<b:AnchorListItem icon="FILE_TEXT_O" ui:field="application" targetHistoryToken="{placeTokens.getForm}">Registration form</b:AnchorListItem>
+					<b:AnchorListItem icon="ARCHIVE" ui:field="myApplications" targetHistoryToken="{placeTokens.getMyApps}">My registrations</b:AnchorListItem>
+					<b:AnchorListItem icon="QUESTION_CIRCLE" ui:field="help" targetHistoryToken="{placeTokens.getHelp}">Help</b:AnchorListItem>
 					<b:ListDropDown>
 						<b:AnchorButton icon="FLAG" dataToggle="DROPDOWN" ui:field="language">Language</b:AnchorButton>
 						<b:DropDownMenu>
@@ -27,13 +28,13 @@
 							<b:AnchorListItem ui:field="czech" iconPosition="RIGHT">Czech</b:AnchorListItem>
 						</b:DropDownMenu>
 					</b:ListDropDown>
-					<b:AnchorListItem icon="SIGN_OUT" ui:field="logout" targetHistoryToken="logout">Logout</b:AnchorListItem>
+					<b:AnchorListItem icon="SIGN_OUT" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>
 				</b:NavbarNav>
 			</b:NavbarCollapse>
 		</b:Navbar>
 
 		<b:Column size="MD_12" marginTop="60">
-			<p.client:RegistrarContentManager ui:field="content"/>
+			<b.html:Div ui:field="pageContent" />
 		</b:Column>
 
 	</b:Container>

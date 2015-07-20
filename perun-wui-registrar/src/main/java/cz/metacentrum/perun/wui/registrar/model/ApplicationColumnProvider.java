@@ -5,6 +5,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.History;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
+import cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
@@ -193,7 +194,7 @@ public class ApplicationColumnProvider extends cz.metacentrum.perun.wui.model.co
 					}, new FieldUpdater<Application, String>() {
 						@Override
 						public void update(int index, Application object, String value) {
-							History.newItem("detail?id="+object.getId());
+							History.newItem(RegistrarPlaceTokens.APP_DETAIL+";id="+object.getId());
 						}
 					}
 			);

@@ -49,7 +49,7 @@ public class VosManager {
 
 		if (id <= 0) return null;
 
-		JsonClient client = new JsonClient();
+		JsonClient client = new JsonClient(events);
 		client.put("id", id);
 		return client.call(VOS_MANAGER + "getVoById");
 

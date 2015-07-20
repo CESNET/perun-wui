@@ -131,6 +131,15 @@ public class PerunFormItem extends FormGroup {
 		}
 	}
 
+
+	public ApplicationFormItemData getItem() {
+		return item;
+	}
+
+	public void setItem(ApplicationFormItemData item) {
+		this.item = item;
+	}
+
 	public FormLabel getFormLabel() {
 		return formLabel;
 	}

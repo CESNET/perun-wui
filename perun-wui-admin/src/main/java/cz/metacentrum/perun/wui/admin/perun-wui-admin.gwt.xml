@@ -5,10 +5,18 @@
 	<inherits name="cz.metacentrum.perun.wui.perun-wui-core"/>
 
 	<!-- support GWT Bootstrap 3 with Bootstrap2 look-alike theme -->
-	<inherits name="org.gwtbootstrap3.GwtBootstrap3Theme"/>
+	<!--<inherits name="org.gwtbootstrap3.GwtBootstrap3Theme"/>-->
 
 	<!-- inherit custom styles -->
 	<inherits name="cz.metacentrum.perun.wui.admin.perun-wui-admin-resources"/>
+
+	<!-- GWTP support -->
+	<inherits name="com.google.gwt.inject.Inject"/>
+	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
+	<!-- define gin module injector -->
+	<set-configuration-property name="gin.ginjector.modules" value="cz.metacentrum.perun.wui.admin.client.PerunWui"/>
+	<!-- bootstrap app before loading page -->
+	<set-configuration-property name="gwtp.bootstrapper" value="cz.metacentrum.perun.wui.client.PerunBootstrapper"/>
 
 	<!-- Specify the app entry point class. -->
 	<entry-point class='cz.metacentrum.perun.wui.admin.client.PerunWui'/>

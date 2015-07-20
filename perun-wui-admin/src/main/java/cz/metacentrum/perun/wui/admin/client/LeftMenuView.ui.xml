@@ -2,6 +2,8 @@
              xmlns:b='urn:import:org.gwtbootstrap3.client.ui' xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
              xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui">
 
+	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.client.resources.PlaceTokens"/>
+
 	<ui:style>
 		.top { padding: 5px !important; }
 	</ui:style>
@@ -22,24 +24,24 @@
 				<b:PanelCollapse b:id="collapseOne" ui:field="perunManagerMenu">
 					<b:PanelBody addStyleNames="{style.top}">
 
-						<b:NavPills stacked="true" ui:field="menu">
-							<b:AnchorListItem ui:field="perunVos" icon="BUILDING" iconFixedWidth="true">Virtual organizations
+						<b:NavPills stacked="true" ui:field="menu" addStyleNames="leftMenu">
+							<b:AnchorListItem ui:field="perunVos" icon="BUILDING" iconFixedWidth="true" targetHistoryToken="{placeTokens.getVos}">Virtual organizations
 							</b:AnchorListItem>
-							<b:AnchorListItem ui:field="perunFacs" icon="DATABASE" iconFixedWidth="true">Facilities
+							<b:AnchorListItem ui:field="perunFacs" icon="DATABASE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getFacilities}">Facilities
 							</b:AnchorListItem>
-							<b:AnchorListItem ui:field="perunUsr" icon="USER" iconFixedWidth="true">Users
+							<b:AnchorListItem ui:field="perunUsr" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getUsers}">Users
 							</b:AnchorListItem>
-							<b:AnchorListItem ui:field="perunAttrs" icon="LIGHTBULB_O" iconFixedWidth="true">Attributes
+							<b:AnchorListItem ui:field="perunAttrs" icon="LIGHTBULB_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getAttributes}">Attributes
 							</b:AnchorListItem>
-							<b:AnchorListItem ui:field="perunServ" icon="BOLT" iconFixedWidth="true">Services
+							<b:AnchorListItem ui:field="perunServ" icon="BOLT" iconFixedWidth="true" targetHistoryToken="{placeTokens.getServices}">Services
 							</b:AnchorListItem>
-							<b:AnchorListItem ui:field="perunOwn" icon="BANK" iconFixedWidth="true">Owners
+							<b:AnchorListItem ui:field="perunOwn" icon="BANK" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOwners}">Owners
 							</b:AnchorListItem>
-							<b:AnchorListItem ui:field="perunExtsrc" icon="GLOBE" iconFixedWidth="true">External sources
+							<b:AnchorListItem ui:field="perunExtsrc" icon="GLOBE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getExtSources}">External sources
 							</b:AnchorListItem>
-							<b:AnchorListItem ui:field="perunName" icon="CREDIT_CARD" iconFixedWidth="true">Namespaces
+							<b:AnchorListItem ui:field="perunName" icon="CREDIT_CARD" iconFixedWidth="true" targetHistoryToken="{placeTokens.getNamespaces}">Namespaces
 							</b:AnchorListItem>
-							<b:AnchorListItem ui:field="perunSearch" icon="SEARCH" iconFixedWidth="true">Searcher
+							<b:AnchorListItem ui:field="perunSearch" icon="SEARCH" iconFixedWidth="true" targetHistoryToken="{placeTokens.getSearcher}">Searcher
 							</b:AnchorListItem>
 
 						</b:NavPills>
@@ -62,8 +64,11 @@
 
 						<b:NavPills stacked="true" addStyleNames="{style.top}">
 
+							<b:AnchorListItem icon="BUILDING" ui:field="selectVo">Select VO
+							</b:AnchorListItem>
+							<!--
 							<b:ListDropDown>
-								<b:AnchorButton dataToggle="DROPDOWN" icon="BUILDING">Select VO
+								<b:AnchorButton dataToggle="DROPDOWN"  icon="BUILDING" ui:field="selectVo">Select VO
 								</b:AnchorButton>
 								<b:DropDownMenu>
 									<b:AnchorListItem>MetaCentrum</b:AnchorListItem>
@@ -72,7 +77,7 @@
 									<b:AnchorListItem>DU</b:AnchorListItem>
 								</b:DropDownMenu>
 							</b:ListDropDown>
-
+							-->
 							<b:AnchorListItem icon="DASHBOARD">Overview
 							</b:AnchorListItem>
 							<b:AnchorListItem icon="USER">Members

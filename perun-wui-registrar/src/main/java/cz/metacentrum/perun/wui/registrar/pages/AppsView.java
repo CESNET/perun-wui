@@ -11,14 +11,16 @@ import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.*;
+import cz.metacentrum.perun.wui.pages.ResizableView;
 import cz.metacentrum.perun.wui.registrar.model.ApplicationColumnProvider;
-import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import org.gwtbootstrap3.client.ui.html.Text;
@@ -28,39 +30,26 @@ import org.gwtbootstrap3.client.ui.html.Text;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class AppsPage extends Page {
+public class AppsView extends ViewImpl implements AppsPresenter.MyView, ResizableView {
 
-	interface AppsPageUiBinder extends UiBinder<Widget, AppsPage> {
+	interface AppsViewUiBinder extends UiBinder<Widget, AppsView> {
 	}
 
-	private static AppsPageUiBinder ourUiBinder = GWT.create(AppsPageUiBinder.class);
-
 	@UiField(provided = true)
-	PerunDataGrid<Application> grid;
+	PerunDataGrid<Application> grid = new PerunDataGrid<Application>(false, new ApplicationColumnProvider());
 
 	@UiField
 	Text text;
 
-	private Widget rootElement;
-
 	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
-	public AppsPage() {
+	@Inject
+	public AppsView(AppsViewUiBinder binder) {
 
-		grid = new PerunDataGrid<Application>(false, new ApplicationColumnProvider());
-		rootElement = ourUiBinder.createAndBindUi(this);
+		initWidget(binder.createAndBindUi(this));
 		text.setText(translation.submittedTitle());
+		draw();
 
-	}
-
-	@Override
-	public boolean isPrepared() {
-		return true;
-	}
-
-	@Override
-	public boolean isAuthorized() {
-		return true;
 	}
 
 	@Override
@@ -83,8 +72,7 @@ public class AppsPage extends Page {
 
 	}
 
-	@Override
-	public Widget draw() {
+	public void draw() {
 
 		RegistrarManager.getApplicationsForUser(PerunSession.getInstance().getUserId(), new JsonEvents() {
 
@@ -112,40 +100,6 @@ public class AppsPage extends Page {
 			}
 		});
 
-		return rootElement;
-
-	}
-
-	@Override
-	public Widget getWidget() {
-		return rootElement;
-	}
-
-	@Override
-	public void open() {
-
-	}
-
-	@Override
-	public String getUrl() {
-		return "submitted";
-	}
-
-	@Override
-	public void toggleHelp() {
-
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return 11;
 	}
 
 }

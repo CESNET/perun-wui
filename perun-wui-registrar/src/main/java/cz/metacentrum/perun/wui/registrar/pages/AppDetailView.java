@@ -6,8 +6,10 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.Widget;
+import com.google.inject.Inject;
+import com.gwtplatform.mvp.client.ViewImpl;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -15,7 +17,6 @@ import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.pages.Page;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
@@ -28,16 +29,23 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- * Page to display application form for VO or Group.
+ * View for displaying VO/Group registration detail.
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class AppDetailPage extends Page {
+public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView {
 
-	interface AppDetailPageUiBinder extends UiBinder<Widget, AppDetailPage> {
+	@Override
+	public void setApplication(Application application) {
+		this.app = application;
+		draw();
+		loadForm();
 	}
 
-	private static AppDetailPageUiBinder ourUiBinder = GWT.create(AppDetailPageUiBinder.class);
+	PlaceManager placeManager = PerunSession.getPlaceManager();
+
+	interface AppDetailViewUiBinder extends UiBinder<Widget, AppDetailView> {
+	}
 
 	@UiField
 	Text text;
@@ -66,70 +74,24 @@ public class AppDetailPage extends Page {
 	@UiField
 	Alert state;
 
-	private Widget rootElement;
 	private Application app;
-	private int appId = 0;
-	private boolean loadingFinished = false;
 
 	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
-	public AppDetailPage(int applicationId) {
-
-		rootElement = ourUiBinder.createAndBindUi(this);
-
-		RegistrarManager.getApplicationById(applicationId, new JsonEvents() {
-			@Override
-			public void onFinished(JavaScriptObject jso) {
-				app = jso.cast();
-				appId = app.getId();
-				form.setOnlyPreview(true);
-				form.setSeeHiddenItems(canSeeHiddenFields());
-				loadForm();
-			}
-
-			@Override
-			public void onError(PerunException error) {
-				loadingFinished = true;
-			}
-
-			@Override
-			public void onLoadingStart() {
-
-			}
-		});
-
-	}
-
-	public AppDetailPage(Application app) {
-		this.app = app;
-		appId = app.getId();
+	@Inject
+	public AppDetailView(AppDetailViewUiBinder binder) {
+		initWidget(binder.createAndBindUi(this));
 		form.setOnlyPreview(true);
-		form.setSeeHiddenItems(canSeeHiddenFields());
-		rootElement = ourUiBinder.createAndBindUi(this);
-		loadForm();
 	}
 
 	@UiHandler(value = "backButton")
 	public void back(ClickEvent event) {
-		History.newItem("submitted");
+		placeManager.navigateBack();
 	}
 
-	@Override
-	public boolean isPrepared() {
-		return loadingFinished;
-	}
+	public void draw() {
 
-	@Override
-	public boolean isAuthorized() {
-		return (app != null && loadingFinished);
-	}
-
-	@Override
-	public void onResize() {
-	}
-
-	@Override
-	public Widget draw() {
+		form.setSeeHiddenItems(canSeeHiddenFields());
 
 		formTitle.setText(translation.formDataTitle());
 
@@ -163,45 +125,6 @@ public class AppDetailPage extends Page {
 		stateTitle.setText(app.getTranslatedState());
 		stateText.setText(app.getModifiedAt().split("\\.")[0]);
 
-		return rootElement;
-
-	}
-
-	@Override
-	public Widget getWidget() {
-		return rootElement;
-	}
-
-	@Override
-	public void open() {
-
-	}
-
-	@Override
-	public String getUrl() {
-		return "detail";
-	}
-
-	@Override
-	public void toggleHelp() {
-
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
-		if (o == null || getClass() != o.getClass()) return false;
-
-		AppDetailPage that = (AppDetailPage) o;
-
-		if (appId != that.appId) return false;
-
-		return true;
-	}
-
-	@Override
-	public int hashCode() {
-		return appId;
 	}
 
 	private boolean canSeeHiddenFields() {
@@ -233,14 +156,13 @@ public class AppDetailPage extends Page {
 					}
 				});
 				form.setFormItems(list);
-				loadingFinished = true;
 			}
 
 			@Override
 			public void onError(PerunException error) {
 
 				if (error.getName().equalsIgnoreCase("PrivilegeException")) {
-					History.newItem("notauthorized");
+					placeManager.revealUnauthorizedPlace("");
 				}
 
 			}

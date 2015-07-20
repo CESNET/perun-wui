@@ -181,6 +181,17 @@
 		    <artifactId>gwtbootstrap3-extras</artifactId>
 	    </dependency>
 
+        <dependency>
+            <groupId>com.google.gwt.inject</groupId>
+            <artifactId>gin</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.gwtplatform</groupId>
+            <artifactId>gwtp-mvp-client</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
     </dependencies>
 
     <profiles>
