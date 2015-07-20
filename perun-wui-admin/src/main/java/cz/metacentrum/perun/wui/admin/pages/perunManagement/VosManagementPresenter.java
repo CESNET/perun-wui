@@ -10,7 +10,6 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
 import cz.metacentrum.perun.wui.pages.FocusableView;
-import cz.metacentrum.perun.wui.pages.ResizableView;
 
 /**
  * Presenter for PERUN ADMIN - VOS MANAGEMENT
@@ -36,9 +35,9 @@ public class VosManagementPresenter extends Presenter<VosManagementPresenter.MyV
 	protected void onReset() {
 		super.onReset();
 		// resize when any of presenters is attached/detached
-		if (getView() instanceof ResizableView) {
+/*		if (getView() instanceof ResizableView) {
 			((ResizableView)getView()).onResize();
-		}
+		}*/
 		// focus on display
 		if (getView() instanceof FocusableView) {
 			((FocusableView)getView()).focus();

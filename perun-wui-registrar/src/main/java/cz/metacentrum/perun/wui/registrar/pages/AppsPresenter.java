@@ -8,7 +8,6 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
-import cz.metacentrum.perun.wui.pages.ResizableView;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens;
 
 /**
@@ -31,7 +30,7 @@ public class AppsPresenter extends Presenter<AppsPresenter.MyView, AppsPresenter
 		super(eventBus, view, proxy, PerunPresenter.SET_MAIN_CONTENT);
 	}
 
-	@Override
+/*	@Override
 	protected void onReset() {
 		super.onReset();
 		// resize when any of presenters is attached/detached
@@ -39,5 +38,5 @@ public class AppsPresenter extends Presenter<AppsPresenter.MyView, AppsPresenter
 			((ResizableView)getView()).onResize();
 		}
 
-	}
+	}*/
 }

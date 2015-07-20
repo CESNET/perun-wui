@@ -13,6 +13,7 @@ import org.gwtbootstrap3.client.ui.ButtonToolBar;
 import org.gwtbootstrap3.client.ui.ProgressBar;
 import org.gwtbootstrap3.client.ui.constants.ProgressBarType;
 
+//TODO fix width of widget
 /**
  * Loading widget with progress bar and custom states (loading, finished, error, filter).
  * It can be used as part of PerunDataGrid or simple page. When loader is set to error

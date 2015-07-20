@@ -6,6 +6,7 @@ import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
+import cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources;
 import cz.metacentrum.perun.wui.admin.pages.perunManagement.VosManagementPresenter;
 import cz.metacentrum.perun.wui.admin.pages.perunManagement.VosManagementView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailPresenter;
@@ -62,6 +63,8 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 
 		// ensure injecting custom CSS styles of PerunWui
 		PerunResources.INSTANCE.gss().ensureInjected();
+
+		PerunWuiAdminResources.INSTANCE.gss().ensureInjected();
 
 		// set default for Growl plugin
 		Utils.getDefaultGrowlOptions().makeDefault();

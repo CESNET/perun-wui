@@ -17,7 +17,6 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.VosManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Vo;
-import cz.metacentrum.perun.wui.pages.ResizableView;
 
 /**
  * Presenter for PERUN ADMIN - VOS MANAGEMENT - VO DETAIL
@@ -79,15 +78,6 @@ public class VoDetailPresenter extends Presenter<VoDetailPresenter.MyView, VoDet
 			placeManager.revealErrorPlace(request.getNameToken());
 		}
 
-	}
-
-	@Override
-	protected void onReset() {
-		super.onReset();
-		// resize when presenter is attached/detached
-		if (getView() instanceof ResizableView) {
-			((ResizableView)getView()).onResize();
-		}
 	}
 
 	@Override

@@ -24,7 +24,7 @@
 				<b:PanelCollapse b:id="collapseOne" ui:field="perunManagerMenu">
 					<b:PanelBody addStyleNames="{style.top}">
 
-						<b:NavPills stacked="true" ui:field="menu" addStyleNames="leftMenu">
+						<b:NavPills stacked="true" ui:field="menu">
 							<b:AnchorListItem ui:field="perunVos" icon="BUILDING" iconFixedWidth="true" targetHistoryToken="{placeTokens.getVos}">Virtual organizations
 							</b:AnchorListItem>
 							<b:AnchorListItem ui:field="perunFacs" icon="DATABASE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getFacilities}">Facilities

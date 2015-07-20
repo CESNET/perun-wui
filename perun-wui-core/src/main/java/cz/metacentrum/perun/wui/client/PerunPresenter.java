@@ -1,9 +1,7 @@
 package cz.metacentrum.perun.wui.client;
 
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.event.shared.GwtEvent;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -13,7 +11,6 @@ import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import cz.metacentrum.perun.wui.pages.FocusableView;
-import cz.metacentrum.perun.wui.pages.ResizableView;
 
 /**
  * Generic Presenter for main app window can be used by any app.
@@ -44,26 +41,11 @@ public class PerunPresenter extends Presenter<PerunPresenter.MyView, PerunPresen
 	@Inject
 	PerunPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
 		super(eventBus, view, proxy, RevealType.Root);
-
-		// Resize view on every page refresh
-		Window.addResizeHandler(new ResizeHandler() {
-			@Override
-			public void onResize(ResizeEvent event) {
-				if (getView() instanceof ResizableView) {
-					((ResizableView)getView()).onResize();
-				}
-			}
-		});
-
 	}
 
 	@Override
 	protected void onReset() {
 		super.onReset();
-		// resize when any of presenters is attached/detached
-		if (getView() instanceof ResizableView) {
-			((ResizableView)getView()).onResize();
-		}
 		// focus when any of presenters is attached/detached
 		if (getView() instanceof FocusableView) {
 			((FocusableView)getView()).focus();

@@ -1,0 +1,58 @@
+
+@def MIN_WIDTH 480px;
+@def MIN_HEIGHT 320px;
+
+/* MAIN LAYOUT */
+
+body {
+    position: absolute;
+    min-width: MIN_WIDTH;
+    min-height: MIN_HEIGHT;
+    width: 100%;
+    height: 100%;
+}
+
+.webContent {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.header {
+
+}
+.header img {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    flex-grow: 1;
+
+    margin: 60px 15px 0px 15px;
+}
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+
+    flex-grow: 1;
+}
+
+.pageHeader {
+
+}
+
+.grid {
+    flex-grow: 1;
+
+    margin-bottom: 10px;
+}
