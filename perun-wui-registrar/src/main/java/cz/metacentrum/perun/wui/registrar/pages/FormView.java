@@ -141,15 +141,30 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 							if (voInitialFormExists(registrar)) {
 
-								(new VoInit(new GroupInit(new TargetNew()))).call(loader, pp, registrar);
+								(new VoInit(new GroupInit(new TargetNew(new Step() {
+									@Override
+									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
+										// TODO - success instead of redirect
+									}
+								})))).call(loader, pp, registrar);
 
 							} else if (voExtensionFormExists(registrar)) {
 
-								(new VoExt(new GroupInit(new TargetExt()))).call(loader, pp, registrar);
+								(new VoExt(new GroupInit(new TargetExt(new Step() {
+									@Override
+									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
+										// TODO - success instead of redirect
+									}
+								})))).call(loader, pp, registrar);
 
 							} else {
 
-								(new GroupInit(new TargetNew())).call(loader, pp, registrar);
+								(new GroupInit(new TargetNew(new Step() {
+									@Override
+									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
+										// TODO - success instead of redirect
+									}
+								}))).call(loader, pp, registrar);
 
 							}
 
@@ -157,11 +172,21 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 							if (voInitialFormExists(registrar)) {
 
-								(new VoInitOffer(new VoInit(new TargetNew()))).call(loader, pp, registrar);
+								(new VoInitOffer(new VoInit(new TargetNew(new Step() {
+									@Override
+									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
+										// TODO - success instead of redirect
+									}
+								})))).call(loader, pp, registrar);
 
 							} else if (voExtensionFormExists(registrar)) {
 
-								(new VoExtOffer(new VoExt(new TargetExt()))).call(loader, pp, registrar);
+								(new VoExtOffer(new VoExt(new TargetExt(new Step() {
+									@Override
+									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
+										// TODO - success instead of redirect
+									}
+								})))).call(loader, pp, registrar);
 
 							} else {
 
@@ -175,11 +200,21 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 						if (voInitialFormExists(registrar)) {
 
-							(new VoInit(new TargetNew())).call(loader, pp, registrar);
+							(new VoInit(new TargetNew(new Step() {
+								@Override
+								public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
+									// TODO - success instead of redirect
+								}
+							}))).call(loader, pp, registrar);
 
 						} else if (voExtensionFormExists(registrar)) {
 
-							(new VoExt(new TargetExt())).call(loader, pp, registrar);
+							(new VoExt(new TargetExt(new Step() {
+								@Override
+								public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
+									// TODO - success instead of redirect
+								}
+							}))).call(loader, pp, registrar);
 
 						} else {
 
@@ -332,26 +367,42 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 
 
-	private class TargetNew implements Step {
+	private class TargetNew extends StepImpl {
+
+		public TargetNew(Step next) {
+			super(next);
+		}
 
 		@Override
 		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
 
-			//TODO - redirect
-			GWT.log("redirect new");
+			String newUrl = Window.Location.getParameter("targetNew");
+			if (newUrl == null || newUrl.isEmpty()) {
+				next.call(loader, pp, registrar);
+				return;
+			}
+			Window.Location.assign(newUrl);
 
 		}
 	}
 
 
 
-	private class TargetExt implements Step {
+	private class TargetExt extends StepImpl {
+
+		public TargetExt(Step next) {
+			super(next);
+		}
 
 		@Override
 		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
 
-			//TODO - redirect
-			GWT.log("redirect Ext");
+			String newUrl = Window.Location.getParameter("targetExt");
+			if (newUrl == null || newUrl.isEmpty()) {
+				next.call(loader, pp, registrar);
+				return;
+			}
+			Window.Location.assign(newUrl);
 
 		}
 	}
