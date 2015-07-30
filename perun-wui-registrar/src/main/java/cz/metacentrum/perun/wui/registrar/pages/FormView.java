@@ -89,12 +89,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		final PerunPrincipal pp = PerunSession.getInstance().getPerunPrincipal();
 
-		// fed info
-		final String fedInfo = "{" + " displayName=\"" + pp.getAdditionInformation("displayName")+"\"" + " commonName=\"" + pp.getAdditionInformation("cn")+"\""
-		+ " givenName=\"" + pp.getAdditionInformation("givenName")+"\"" + " sureName=\"" + pp.getAdditionInformation("sn")+"\""
-		+ " loa=\"" + pp.getAdditionInformation("loa")+"\"" + " mail=\"" + pp.getAdditionInformation("mail")+"\""
-		+ " organization=\"" + pp.getAdditionInformation("o")+"\"" + " }";
-
 		RegistrarManager.initializeRegistrar(voName, groupName, new JsonEvents() {
 
 			JsonEvents retry = this;
@@ -102,35 +96,37 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 
-				final RegistrarObject object = jso.cast();
+				final RegistrarObject registrar = jso.cast();
 
 				// recreate VO and group
-				vo = object.getVo();
+				vo = registrar.getVo();
 
 				if (groupName != null && !groupName.isEmpty()) {
-					group = object.getGroup();
+					group = registrar.getGroup();
 				}
 
-				ArrayList<Attribute> attrList = object.getVoAttributes();
+				ArrayList<Attribute> attrList = registrar.getVoAttributes();
 				for (Attribute a : attrList) {
 					if (a.getFriendlyName().equals("voLogoURL")) {
 						//PerunRegistrar.setLogo(a.getValue().replace("https://", "http://"));
 						// FIXME - for testing remove https
-						logo.setUrl(a.getValue().replace("https://", "http://"));
+						if (!Utils.isDevel()) {
+							logo.setUrl(a.getValue().replace("https://", "http://"));
+						}
 						logo.setVisible(true);
 					}
 				}
 
-				if (object.getException() != null) {
-
-					if (object.getException().getName().equals("VoNotExistsException") ||
-							object.getException().getName().equals("GroupNotExistsException")) {
-						displayException(loader, object.getException());
+				if (registrar.getException() != null) {
+					GWT.log("Exception" + registrar.getException());
+					if (registrar.getException().getName().equals("VoNotExistsException") ||
+							registrar.getException().getName().equals("GroupNotExistsException")) {
+						displayException(loader, registrar.getException());
 						return;
 					}
 
 					// SEVERE EXCEPTION - DO NOT LOAD FORM
-					loader.onError(object.getException(), new ClickHandler() {
+					loader.onError(registrar.getException(), new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 							RegistrarManager.initializeRegistrar(voName, groupName, retry);
@@ -139,95 +135,37 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				} else {
 
-					// TODO - properly handle all cases and exceptions in object
-					if (!object.getVoFormInitial().isEmpty()) {
+					if (isApplyingToGroup(registrar)) {
 
-						// VO initial
-						loader.onFinished();
-						loader.removeFromParent();
-						form.setFormItems(object.getVoFormInitial());
-						form.setApp(Application.createNew(vo, null, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+						if (groupInitialFormExists(registrar)) {
 
-						form.setOnSubmitEvent(new JsonEvents() {
-							@Override
-							public void onFinished(JavaScriptObject jso) {
+							if (voInitialFormExists(registrar)) {
 
-								// TODO - if group and groupForm != null then after submission redirect to group form
-								if (!object.getGroupFormInitial().isEmpty()) {
+								(new VoInit(new GroupInit(new TargetNew()))).call(loader, pp, registrar);
 
-									form.clear();
-									form.setFormItems(object.getGroupFormInitial());
-									form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
-									form.setOnSubmitEvent(new JsonEvents() {
-										@Override
-										public void onFinished(JavaScriptObject jso) {
+							} else if (voExtensionFormExists(registrar)) {
 
-											// TODO - success of VO + Group + redirect new
-
-										}
-
-										@Override
-										public void onError(PerunException error) {
-											// TODO - display error for group
-										}
-
-										@Override
-										public void onLoadingStart() {
-
-										}
-									});
-
-
-								} else {
-									// TODO- done success of VO + redirect new
-								}
-							}
-
-							@Override
-							public void onError(PerunException error) {
-								// TODO - display error for VO
-							}
-
-							@Override
-							public void onLoadingStart() {
-
-							}
-						});
-
-					} else if (!object.getVoFormExtension().isEmpty()) {
-
-						if (group == null) {
-
-							// offer VO membership extension
-							loader.onFinished();
-							loader.removeFromParent();
-							form.setFormItems(object.getVoFormExtension());
-							form.setApp(Application.createNew(vo, null, Application.ApplicationType.EXTENSION, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
-
-							// TODO - events for success of VO extension + target extended
-
-						} else {
-
-							if (!object.getGroupFormInitial().isEmpty()) {
-
-								// TODO - ask for optional membership extension
-								// YES - display VO extension then redirect to Group init after
-								// NO - display Group init
-								loader.onFinished();
-								loader.removeFromParent();
-								form.setFormItems(object.getGroupFormInitial());
-								form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+								(new VoExt(new GroupInit(new TargetExt()))).call(loader, pp, registrar);
 
 							} else {
 
-								// TODO - can't be member of group, offer VO extension
-								// YES - display VO extension
-								// NO - display Group error
-								loader.onFinished();
-								loader.removeFromParent();
-								form.setFormItems(object.getVoFormExtension());
-								form.setApp(Application.createNew(vo, null, Application.ApplicationType.EXTENSION, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
-								// TODO - events for success of VO extension + target extended
+								(new GroupInit(new TargetNew())).call(loader, pp, registrar);
+
+							}
+
+						} else {
+
+							if (voInitialFormExists(registrar)) {
+
+								(new VoInitOffer(new VoInit(new TargetNew()))).call(loader, pp, registrar);
+
+							} else if (voExtensionFormExists(registrar)) {
+
+								(new VoExtOffer(new VoExt(new TargetExt()))).call(loader, pp, registrar);
+
+							} else {
+
+								//TODO - Cannot accept to Group neither VO, Show his status (Already in VO or Group or error message)
 
 							}
 
@@ -235,54 +173,26 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 					} else {
 
-						// not init / not extension / check group
-						if (group != null) {
+						if (voInitialFormExists(registrar)) {
 
-							if (!object.getGroupFormInitial().isEmpty()) {
+							(new VoInit(new TargetNew())).call(loader, pp, registrar);
 
-								loader.onFinished();
-								loader.removeFromParent();
-								form.setFormItems(object.getGroupFormInitial());
-								form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+						} else if (voExtensionFormExists(registrar)) {
 
-								// TODO - events for success of group initial + target new
-
-							} else {
-
-								// FIXME - can't be member of group -> display notice
-								// check extension exceptions
-								displayException(loader, object.getGroupFormInitialException());
-								return;
-
-							}
+							(new VoExt(new TargetExt())).call(loader, pp, registrar);
 
 						} else {
 
-							// FIXME - can't become member of VO / extend membership -> display better notice
-
-							if (object.getVoFormInitialException().getName().equals("AlreadyRegisteredException")) {
-
-								// check extension exceptions
-								displayException(loader, object.getVoFormExtensionException());
-								return;
-
-							} else {
-
-								// not registered in VO, show initial exceptions
-								displayException(loader, object.getVoFormInitialException());
-								return;
-
-							}
+							//TODO - Cannot accept to VO, Show his status (Already in VO or error message)
 
 						}
 
 					}
 
 					// CHECK SIMILAR USERS
-					if (!object.getSimilarUsers().isEmpty()) {
-						showSimilarUsersDialog(object);
+					if (!registrar.getSimilarUsers().isEmpty()) {
+						showSimilarUsersDialog(registrar);
 					}
-
 				}
 
 			}
@@ -304,6 +214,280 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		});
 
 	}
+
+
+
+	private interface Step {
+		void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar);
+	}
+	private abstract class StepImpl implements Step {
+
+		protected Step next;
+
+		public StepImpl(Step next) {
+			this.next = next;
+		}
+	}
+
+
+	private class VoInit extends StepImpl {
+
+		public VoInit(Step next) {
+			super(next);
+		}
+
+		@Override
+		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+			loader.onFinished();
+			loader.removeFromParent();
+			form.setFormItems(registrar.getVoFormInitial());
+			form.setApp(Application.createNew(vo, null, Application.ApplicationType.INITIAL, getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+			form.setOnSubmitEvent(new JsonEvents() {
+
+				@Override
+				public void onFinished(JavaScriptObject jso) {
+					next.call(loader, pp, registrar);
+				}
+
+				@Override
+				public void onError(PerunException error) {
+
+				}
+
+				@Override
+				public void onLoadingStart() {
+
+				}
+			});
+		}
+
+	}
+
+
+
+	private class VoExt extends StepImpl {
+
+		public VoExt(Step next) {
+			super(next);
+		}
+
+		@Override
+		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+			loader.onFinished();
+			loader.removeFromParent();
+			form.setFormItems(registrar.getVoFormExtension());
+			form.setApp(Application.createNew(vo, null, Application.ApplicationType.EXTENSION, getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+			form.setOnSubmitEvent(new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject jso) {
+					next.call(loader, pp, registrar);
+				}
+
+				@Override
+				public void onError(PerunException error) {
+
+				}
+
+				@Override
+				public void onLoadingStart() {
+
+				}
+			});
+		}
+	}
+
+
+
+	private class GroupInit extends StepImpl {
+
+		public GroupInit(Step next) {
+			super(next);
+		}
+
+		@Override
+		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+
+			form.clear();
+			form.setFormItems(registrar.getGroupFormInitial());
+			form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+			form.setOnSubmitEvent(new JsonEvents() {
+
+				@Override
+				public void onFinished(JavaScriptObject jso) {
+					next.call(loader, pp, registrar);
+				}
+
+				@Override
+				public void onError(PerunException error) {
+
+				}
+
+				@Override
+				public void onLoadingStart() {
+
+				}
+			});
+		}
+	}
+
+
+
+	private class TargetNew implements Step {
+
+		@Override
+		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+
+			//TODO - redirect
+			GWT.log("redirect new");
+
+		}
+	}
+
+
+
+	private class TargetExt implements Step {
+
+		@Override
+		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+
+			//TODO - redirect
+			GWT.log("redirect Ext");
+
+		}
+	}
+
+
+
+	private class VoExtOffer extends StepImpl {
+
+		public VoExtOffer(Step next) {
+			super(next);
+		}
+
+		@Override
+		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+
+			final Modal modal = new Modal();
+			modal.setTitle("title");
+			modal.setFade(true);
+			modal.setDataKeyboard(false);
+			modal.setDataBackdrop(ModalBackdrop.STATIC);
+			modal.setClosable(false);
+			modal.setWidth("700px");
+
+			ModalBody body = new ModalBody();
+			body.add(new Paragraph("BODY text"));
+
+
+			ModalFooter footer = new ModalFooter();
+
+			final Button noThanks = new Button("...5...", new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					modal.hide();
+				}
+			});
+			noThanks.setType(ButtonType.DEFAULT);
+			noThanks.setEnabled(false);
+
+			final Button extend = new Button("...5...", new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					modal.hide();
+					next.call(loader, pp, registrar);
+				}
+			});
+			extend.setType(ButtonType.SUCCESS);
+			extend.setEnabled(false);
+			footer.add(extend);
+			footer.add(noThanks);
+
+			modal.add(body);
+			modal.add(footer);
+			modal.show();
+
+
+		}
+	}
+
+
+
+	private class VoInitOffer extends StepImpl {
+
+		public VoInitOffer(Step next) {
+			super(next);
+		}
+
+		@Override
+		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+
+			final Modal modal = new Modal();
+			modal.setTitle("title");
+			modal.setFade(true);
+			modal.setDataKeyboard(false);
+			modal.setDataBackdrop(ModalBackdrop.STATIC);
+			modal.setClosable(false);
+			modal.setWidth("700px");
+
+			ModalBody body = new ModalBody();
+			body.add(new Paragraph("BODY text"));
+
+
+			ModalFooter footer = new ModalFooter();
+
+			final Button noThanks = new Button("...5...", new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					modal.hide();
+				}
+			});
+			noThanks.setType(ButtonType.DEFAULT);
+			noThanks.setEnabled(false);
+
+			final Button init = new Button("...5...", new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					modal.hide();
+					next.call(loader, pp, registrar);
+				}
+			});
+			init.setType(ButtonType.SUCCESS);
+			init.setEnabled(false);
+			footer.add(init);
+			footer.add(noThanks);
+
+			modal.add(body);
+			modal.add(footer);
+			modal.show();
+
+
+		}
+	}
+
+
+
+
+	protected String getFedInfo(PerunPrincipal pp) {
+		return "{" + " displayName=\"" + pp.getAdditionInformation("displayName")+"\"" + " commonName=\"" + pp.getAdditionInformation("cn")+"\""
+				+ " givenName=\"" + pp.getAdditionInformation("givenName")+"\"" + " sureName=\"" + pp.getAdditionInformation("sn")+"\""
+				+ " loa=\"" + pp.getAdditionInformation("loa")+"\"" + " mail=\"" + pp.getAdditionInformation("mail")+"\""
+				+ " organization=\"" + pp.getAdditionInformation("o")+"\"" + " }";
+	}
+
+	private boolean voInitialFormExists(RegistrarObject ro) {
+		return !ro.getVoFormInitial().isEmpty();
+	}
+	private boolean voExtensionFormExists(RegistrarObject ro) {
+		return !ro.getVoFormExtension().isEmpty();
+	}
+	private boolean groupInitialFormExists(RegistrarObject ro) {
+		return !ro.getGroupFormInitial().isEmpty();
+	}
+	private boolean isApplyingToGroup(RegistrarObject ro) {
+		return (group != null);
+	}
+
+
 
 	private void displaySuccess() {
 		// TODO - generic display success page
