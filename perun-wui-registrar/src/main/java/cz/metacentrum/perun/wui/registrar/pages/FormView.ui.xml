@@ -10,7 +10,7 @@
 	<ui:style>
 	</ui:style>
 
-	<b.html:Div addStyleNames="{res.gss.page}">
+	<b.html:Div>
 
 		<b:Container fluid="true">
 			<b:Row>

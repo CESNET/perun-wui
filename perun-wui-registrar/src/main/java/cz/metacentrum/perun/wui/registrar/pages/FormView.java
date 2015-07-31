@@ -25,7 +25,9 @@ import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
+import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
@@ -146,15 +148,17 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 							if (voInitialFormExists(registrar)) {
 
-								(new VoInit(new GroupInit(new TargetNew()))).call(pp, registrar);
+								(new VoInit(new GroupInit(new Summary(Application.ApplicationType.INITIAL)))).call(pp, registrar);
 
 							} else if (voExtensionFormExists(registrar)) {
 
-								(new VoExtOffer(new VoExt(new GroupInit(new TargetExt())), new GroupInit(new TargetNew()))).call(pp, registrar);
+								// TODO - VoExt vs GroupInit / targetext vs targetnew ?
+								(new VoExtOffer(new VoExt(new GroupInit(new Summary(Application.ApplicationType.INITIAL))),
+										new GroupInit(new Summary(Application.ApplicationType.INITIAL)))).call(pp, registrar);
 
 							} else {
 
-								(new GroupInit(new TargetNew())).call(pp, registrar);
+								(new GroupInit(new Summary(Application.ApplicationType.INITIAL))).call(pp, registrar);
 
 							}
 
@@ -162,15 +166,16 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 							if (voInitialFormExists(registrar)) {
 
-								(new VoInit(new TargetNew())).call(pp, registrar);
+								(new VoInit(new Summary(Application.ApplicationType.INITIAL))).call(pp, registrar);
 
 							} else if (voExtensionFormExists(registrar)) {
 
-								(new VoExtOffer(new VoExt(new TargetExt()), new NoTarget())).call(pp, registrar);
+								(new VoExtOffer(new VoExt(new Summary(Application.ApplicationType.EXTENSION)),
+										new Summary(null))).call(pp, registrar);
 
 							} else {
-								GWT.log("Cannot accept to Group neither VO, Show his status (Already in VO or Group or error message)");
-								//TODO - Cannot accept to Group neither VO, Show his status (Already in VO or Group or error message)
+
+								(new Summary(null)).call(pp, registrar);
 
 							}
 
@@ -180,15 +185,15 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 						if (voInitialFormExists(registrar)) {
 
-							(new VoInit(new TargetNew())).call(pp, registrar);
+							(new VoInit(new Summary(Application.ApplicationType.INITIAL))).call(pp, registrar);
 
 						} else if (voExtensionFormExists(registrar)) {
 
-							(new VoExt(new TargetExt())).call(pp, registrar);
+							(new VoExt(new Summary(Application.ApplicationType.EXTENSION))).call(pp, registrar);
 
 						} else {
-							GWT.log("Cannot accept to VO, Show his status (Already in VO or error message)");
-							//TODO - Cannot accept to VO, Show his status (Already in VO or error message)
+
+							(new Summary(null)).call(pp, registrar);
 
 						}
 
@@ -253,7 +258,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		@Override
 		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-			GWT.log("VoInit");
 
 			form.clear();
 			form.setFormItems(registrar.getVoFormInitial());
@@ -267,7 +271,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				@Override
 				public void onError(PerunException error) {
-
+					displayException(error);
 				}
 
 				@Override
@@ -289,7 +293,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		@Override
 		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-			GWT.log("VoExt");
 
 			form.clear();
 			form.setFormItems(registrar.getVoFormExtension());
@@ -302,7 +305,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				@Override
 				public void onError(PerunException error) {
-
+					displayException(error);
 				}
 
 				@Override
@@ -323,7 +326,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		@Override
 		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-			GWT.log("GroupInit");
 
 			form.clear();
 			form.setFormItems(registrar.getGroupFormInitial());
@@ -337,7 +339,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				@Override
 				public void onError(PerunException error) {
-
+					displayException(error);
 				}
 
 				@Override
@@ -403,107 +405,25 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 
 
-	private class VoInitOffer extends StepAsk {
+	private class Summary implements Step {
 
-		public VoInitOffer(Step yes, Step no) {
-			super(yes, no);
+		private final Application.ApplicationType redirect;
+
+		public Summary(Application.ApplicationType redirect) {
+			this.redirect = redirect;
 		}
 
 		@Override
 		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-
-			final Modal modal = new Modal();
-			modal.setTitle("Vo Initial offer");
-			modal.setFade(true);
-			modal.setDataKeyboard(false);
-			modal.setDataBackdrop(ModalBackdrop.STATIC);
-			modal.setClosable(false);
-			modal.setWidth("700px");
-
-			ModalBody body = new ModalBody();
-			body.add(new Paragraph("BODY text"));
-
-
-			ModalFooter footer = new ModalFooter();
-
-			final Button noThanks = new Button("No thanks", new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					modal.hide();
-					no.call(pp, registrar);
-				}
-			});
-			noThanks.setType(ButtonType.DEFAULT);
-
-			final Button init = new Button("Apply", new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					modal.hide();
-					yes.call(pp, registrar);
-				}
-			});
-			init.setType(ButtonType.SUCCESS);
-			footer.add(init);
-			footer.add(noThanks);
-
-			modal.add(body);
-			modal.add(footer);
-			modal.show();
-
-
+			form.clear();
+			displaySuccess(redirect);
+			displaySoftExceptions(registrar);
+			displayContinueButton(registrar, redirect);
 		}
+
+
 	}
 
-
-
-	private class TargetNew implements Step {
-
-		@Override
-		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-			GWT.log("Target new check");
-
-			String newUrl = Window.Location.getParameter("targetNew");
-			if (newUrl == null || newUrl.isEmpty()) {
-				return;
-			}
-			Window.Location.assign(newUrl);
-
-		}
-	}
-
-
-
-	private class TargetExt implements Step {
-
-		@Override
-		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-			GWT.log("Target ext check");
-
-			String newUrl = Window.Location.getParameter("targetExt");
-			if (newUrl == null || newUrl.isEmpty()) {
-				return;
-			}
-			Window.Location.assign(newUrl);
-
-		}
-	}
-
-
-
-	private class NoTarget implements Step {
-
-		@Override
-		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-			GWT.log("Target ext check");
-
-			String newUrl = Window.Location.getParameter("targetExt");
-			if (newUrl == null || newUrl.isEmpty()) {
-				return;
-			}
-			Window.Location.assign(newUrl);
-
-		}
-	}
 
 
 
@@ -528,11 +448,149 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	}
 
 
+	private void displaySuccess(Application.ApplicationType redirect) {
+		Heading title = new Heading(HeadingSize.H2);
+		if (redirect == null) {
+			title.setText("We are sorry but we can do nothing for you now.");
+		} else {
+			switch (redirect) {
+				case INITIAL:
+					title.setText("You have successfully applied for membership in VO " + vo.getName());
+					break;
+				case EXTENSION:
+					title.setText("You have successfully applied for extension of membership in VO " + vo.getName());
+					break;
+			}
+		}
+		form.add(title);
+	}
+	private void displaySoftExceptions(RegistrarObject registrar) {
 
-	private void displaySuccess() {
-		// TODO - generic display success page
+		if (registrar.getVoFormInitialException() != null) {
+			Alert voInitEx = new Alert();
+			voInitEx.setType(AlertType.INFO);
+			switch (registrar.getVoFormInitialException().getName()) {
+				case "DuplicateRegistrationAttemptException":
+					voInitEx.setText("You have already applied for membership in VO " + vo.getName() + ". Please check your email or contact VO admin." );
+					break;
+				case "AlreadyRegisteredException":
+					voInitEx.setText("You are already registered in VO " + vo.getName() + ".");
+					break;
+				default:
+					voInitEx.setText(registrar.getVoFormInitialException().getMessage());
+			}
+			form.add(voInitEx);
+		}
+
+
+		if (registrar.getVoFormExtensionException() != null) {
+			Alert voExtEx = new Alert();
+			voExtEx.setType(AlertType.INFO);
+			switch (registrar.getVoFormExtensionException().getName()) {
+				case "DuplicateRegistrationAttemptException":
+					voExtEx.setText("You have already applied for extension of membership in VO " + vo.getName() + ". Please check your email or contact VO admin." );
+					form.add(voExtEx);
+					break;
+				case "MemberNotExistsException":
+					break;
+				default:
+					voExtEx.setText(registrar.getVoFormExtensionException().getMessage());
+					form.add(voExtEx);
+			}
+		}
+
+
+		if (registrar.getGroupFormInitialException() != null) {
+			Alert groupInitEx = new Alert();
+			groupInitEx.setType(AlertType.INFO);
+			switch (registrar.getGroupFormInitialException().getName()) {
+				case "DuplicateRegistrationAttemptException":
+					groupInitEx.setText("You have already applied for membership in group " + group.getName() + ". Please check your email or contact Group admin." );
+					break;
+				case "AlreadyRegisteredException":
+					groupInitEx.setText("You are already member of group " + group.getName() + ".");
+					break;
+				default:
+					groupInitEx.setText(registrar.getGroupFormInitialException().getMessage());
+			}
+			form.add(groupInitEx);
+		}
+
+
+	}
+	private void displayContinueButton(RegistrarObject registrar, Application.ApplicationType redirect) {
+
+		PerunButton cont;
+		if (redirect == null) {
+
+			if (Window.Location.getParameter("targetexisting") != null) {
+				if (isApplyingToGroup(registrar)) {
+					PerunException pEx = registrar.getGroupFormInitialException();
+					if (pEx != null) {
+						if (pEx.getName().equals("DuplicateRegistrationAttemptsException")
+								|| pEx.getName().equals("AlreadyRegisteredException")) {
+							cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
+								@Override
+								public void onClick(ClickEvent event) {
+									Window.Location.assign(Window.Location.getParameter("targetexisting"));
+								}
+							});
+							form.add(cont);
+						}
+					}
+				} else {
+					PerunException pEx = registrar.getVoFormInitialException();
+					if (pEx != null) {
+						if (pEx.getName().equals("DuplicateRegistrationAttemptsException")
+								|| pEx.getName().equals("AlreadyRegisteredException")) {
+							cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
+								@Override
+								public void onClick(ClickEvent event) {
+									Window.Location.assign(Window.Location.getParameter("targetexisting"));
+								}
+							});
+							form.add(cont);
+						}
+					}
+				}
+			}
+
+		} else {
+			switch (redirect) {
+				case INITIAL:
+
+					if (Window.Location.getParameter("targetnew") != null) {
+						cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								Window.Location.assign(Window.Location.getParameter("targetnew"));
+							}
+						});
+						form.add(cont);
+					}
+
+					break;
+				case EXTENSION:
+
+					if (Window.Location.getParameter("targetextended") != null) {
+						cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								Window.Location.assign(Window.Location.getParameter("targetextended"));
+							}
+						});
+						form.add(cont);
+					}
+
+					break;
+			}
+		}
+
 	}
 
+	private void displayException(PerunException ex) {
+		displayException(null, ex);
+	}
 	private void displayException(PerunLoader loader, PerunException ex) {
 
 		this.displayedException = ex;
@@ -634,9 +692,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			notice.getElement().setInnerHTML("<h4>"+translation.missingVoInURL()+"</h4>");
 
-		} else if (ex.getName().equalsIgnoreCase("FormNotExistException")) {
+		} else {
 
-			notice.getElement().setInnerHTML("<h4>"+translation.missingVoInURL()+"</h4>");
+			notice.getElement().setInnerHTML("<h4>Internal error</h4>");
 
 		}
 		// TODO - FormNotExistException

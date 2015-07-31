@@ -192,6 +192,10 @@ public class PerunButton extends Button {
 		} else if (PerunButtonType.VERIFY.equals(type)) {
 			button.setText("Verify");
 			button.setIcon(IconType.CERTIFICATE);
+		} else if (PerunButtonType.CONTINUE.equals(type)) {
+			button.setText("Continue");
+			button.setIcon(IconType.ARROW_RIGHT);
+			button.setIconPosition(IconPosition.RIGHT);
 		}
 
 		return button;
