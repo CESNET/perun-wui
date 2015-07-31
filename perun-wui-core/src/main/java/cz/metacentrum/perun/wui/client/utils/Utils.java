@@ -31,7 +31,7 @@ public class Utils {
 		options.setDelay(5000);
 		options.setAllowDismiss(false);
 		options.setOffset(20, 65);
-		options.setAnimation(Animation.LIGHTSPEED_IN, Animation.LIGHTSPEED_OUT);
+		options.setAnimation(Animation.FADE_IN_RIGHT, Animation.FADE_OUT_RIGHT);
 		options.setTemplate("<div data-growl=\"container\" class=\"alert\" role=\"alert\">" +
 				"<button type=\"button\" class=\"close\" data-growl=\"dismiss\">" +
 				"<span aria-hidden=\"true\">×</span>" +

@@ -117,8 +117,10 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					}
 				}
 
+
+
 				if (registrar.getException() != null) {
-					GWT.log("Exception" + registrar.getException());
+					GWT.log("Exception " + registrar.getException().getMessage());
 					if (registrar.getException().getName().equals("VoNotExistsException") ||
 							registrar.getException().getName().equals("GroupNotExistsException")) {
 						displayException(loader, registrar.getException());
@@ -135,36 +137,24 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				} else {
 
+					loader.onFinished();
+					loader.removeFromParent();
+
 					if (isApplyingToGroup(registrar)) {
 
 						if (groupInitialFormExists(registrar)) {
 
 							if (voInitialFormExists(registrar)) {
 
-								(new VoInit(new GroupInit(new TargetNew(new Step() {
-									@Override
-									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
-										// TODO - success instead of redirect
-									}
-								})))).call(loader, pp, registrar);
+								(new VoInit(new GroupInit(new TargetNew()))).call(pp, registrar);
 
 							} else if (voExtensionFormExists(registrar)) {
 
-								(new VoExt(new GroupInit(new TargetExt(new Step() {
-									@Override
-									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
-										// TODO - success instead of redirect
-									}
-								})))).call(loader, pp, registrar);
+								(new VoExtOffer(new VoExt(new GroupInit(new TargetExt())), new GroupInit(new TargetNew()))).call(pp, registrar);
 
 							} else {
 
-								(new GroupInit(new TargetNew(new Step() {
-									@Override
-									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
-										// TODO - success instead of redirect
-									}
-								}))).call(loader, pp, registrar);
+								(new GroupInit(new TargetNew())).call(pp, registrar);
 
 							}
 
@@ -172,24 +162,14 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 							if (voInitialFormExists(registrar)) {
 
-								(new VoInitOffer(new VoInit(new TargetNew(new Step() {
-									@Override
-									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
-										// TODO - success instead of redirect
-									}
-								})))).call(loader, pp, registrar);
+								(new VoInit(new TargetNew())).call(pp, registrar);
 
 							} else if (voExtensionFormExists(registrar)) {
 
-								(new VoExtOffer(new VoExt(new TargetExt(new Step() {
-									@Override
-									public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
-										// TODO - success instead of redirect
-									}
-								})))).call(loader, pp, registrar);
+								(new VoExtOffer(new VoExt(new TargetExt()), new NoTarget())).call(pp, registrar);
 
 							} else {
-
+								GWT.log("Cannot accept to Group neither VO, Show his status (Already in VO or Group or error message)");
 								//TODO - Cannot accept to Group neither VO, Show his status (Already in VO or Group or error message)
 
 							}
@@ -200,24 +180,14 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 						if (voInitialFormExists(registrar)) {
 
-							(new VoInit(new TargetNew(new Step() {
-								@Override
-								public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
-									// TODO - success instead of redirect
-								}
-							}))).call(loader, pp, registrar);
+							(new VoInit(new TargetNew())).call(pp, registrar);
 
 						} else if (voExtensionFormExists(registrar)) {
 
-							(new VoExt(new TargetExt(new Step() {
-								@Override
-								public void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar) {
-									// TODO - success instead of redirect
-								}
-							}))).call(loader, pp, registrar);
+							(new VoExt(new TargetExt())).call(pp, registrar);
 
 						} else {
-
+							GWT.log("Cannot accept to VO, Show his status (Already in VO or error message)");
 							//TODO - Cannot accept to VO, Show his status (Already in VO or error message)
 
 						}
@@ -253,7 +223,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 
 	private interface Step {
-		void call(PerunLoader loader, PerunPrincipal pp, RegistrarObject registrar);
+		void call(PerunPrincipal pp, RegistrarObject registrar);
 	}
 	private abstract class StepImpl implements Step {
 
@@ -261,6 +231,16 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		public StepImpl(Step next) {
 			this.next = next;
+		}
+	}
+	private abstract class StepAsk implements Step {
+
+		protected Step yes;
+		protected Step no;
+
+		public StepAsk(Step yes, Step no) {
+			this.yes = yes;
+			this.no = no;
 		}
 	}
 
@@ -272,16 +252,17 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		}
 
 		@Override
-		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
-			loader.onFinished();
-			loader.removeFromParent();
+		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
+			GWT.log("VoInit");
+
+			form.clear();
 			form.setFormItems(registrar.getVoFormInitial());
 			form.setApp(Application.createNew(vo, null, Application.ApplicationType.INITIAL, getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
 			form.setOnSubmitEvent(new JsonEvents() {
 
 				@Override
 				public void onFinished(JavaScriptObject jso) {
-					next.call(loader, pp, registrar);
+					next.call(pp, registrar);
 				}
 
 				@Override
@@ -307,15 +288,16 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		}
 
 		@Override
-		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
-			loader.onFinished();
-			loader.removeFromParent();
+		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
+			GWT.log("VoExt");
+
+			form.clear();
 			form.setFormItems(registrar.getVoFormExtension());
 			form.setApp(Application.createNew(vo, null, Application.ApplicationType.EXTENSION, getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
 			form.setOnSubmitEvent(new JsonEvents() {
 				@Override
 				public void onFinished(JavaScriptObject jso) {
-					next.call(loader, pp, registrar);
+					next.call(pp, registrar);
 				}
 
 				@Override
@@ -340,7 +322,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		}
 
 		@Override
-		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
+			GWT.log("GroupInit");
 
 			form.clear();
 			form.setFormItems(registrar.getGroupFormInitial());
@@ -349,7 +332,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				@Override
 				public void onFinished(JavaScriptObject jso) {
-					next.call(loader, pp, registrar);
+					next.call(pp, registrar);
 				}
 
 				@Override
@@ -367,59 +350,17 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 
 
-	private class TargetNew extends StepImpl {
+	private class VoExtOffer extends StepAsk {
 
-		public TargetNew(Step next) {
-			super(next);
+		public VoExtOffer(Step yes, Step no) {
+			super(yes, no);
 		}
 
 		@Override
-		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
-
-			String newUrl = Window.Location.getParameter("targetNew");
-			if (newUrl == null || newUrl.isEmpty()) {
-				next.call(loader, pp, registrar);
-				return;
-			}
-			Window.Location.assign(newUrl);
-
-		}
-	}
-
-
-
-	private class TargetExt extends StepImpl {
-
-		public TargetExt(Step next) {
-			super(next);
-		}
-
-		@Override
-		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
-
-			String newUrl = Window.Location.getParameter("targetExt");
-			if (newUrl == null || newUrl.isEmpty()) {
-				next.call(loader, pp, registrar);
-				return;
-			}
-			Window.Location.assign(newUrl);
-
-		}
-	}
-
-
-
-	private class VoExtOffer extends StepImpl {
-
-		public VoExtOffer(Step next) {
-			super(next);
-		}
-
-		@Override
-		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 
 			final Modal modal = new Modal();
-			modal.setTitle("title");
+			modal.setTitle("Vo Extention offer");
 			modal.setFade(true);
 			modal.setDataKeyboard(false);
 			modal.setDataBackdrop(ModalBackdrop.STATIC);
@@ -432,24 +373,23 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			ModalFooter footer = new ModalFooter();
 
-			final Button noThanks = new Button("...5...", new ClickHandler() {
+			final Button noThanks = new Button("No thanks", new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					modal.hide();
+					no.call(pp, registrar);
 				}
 			});
 			noThanks.setType(ButtonType.DEFAULT);
-			noThanks.setEnabled(false);
 
-			final Button extend = new Button("...5...", new ClickHandler() {
+			final Button extend = new Button("Extend", new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					modal.hide();
-					next.call(loader, pp, registrar);
+					yes.call(pp, registrar);
 				}
 			});
 			extend.setType(ButtonType.SUCCESS);
-			extend.setEnabled(false);
 			footer.add(extend);
 			footer.add(noThanks);
 
@@ -463,17 +403,17 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 
 
-	private class VoInitOffer extends StepImpl {
+	private class VoInitOffer extends StepAsk {
 
-		public VoInitOffer(Step next) {
-			super(next);
+		public VoInitOffer(Step yes, Step no) {
+			super(yes, no);
 		}
 
 		@Override
-		public void call(final PerunLoader loader, final PerunPrincipal pp, final RegistrarObject registrar) {
+		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 
 			final Modal modal = new Modal();
-			modal.setTitle("title");
+			modal.setTitle("Vo Initial offer");
 			modal.setFade(true);
 			modal.setDataKeyboard(false);
 			modal.setDataBackdrop(ModalBackdrop.STATIC);
@@ -486,24 +426,23 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			ModalFooter footer = new ModalFooter();
 
-			final Button noThanks = new Button("...5...", new ClickHandler() {
+			final Button noThanks = new Button("No thanks", new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					modal.hide();
+					no.call(pp, registrar);
 				}
 			});
 			noThanks.setType(ButtonType.DEFAULT);
-			noThanks.setEnabled(false);
 
-			final Button init = new Button("...5...", new ClickHandler() {
+			final Button init = new Button("Apply", new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					modal.hide();
-					next.call(loader, pp, registrar);
+					yes.call(pp, registrar);
 				}
 			});
 			init.setType(ButtonType.SUCCESS);
-			init.setEnabled(false);
 			footer.add(init);
 			footer.add(noThanks);
 
@@ -515,6 +454,56 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		}
 	}
 
+
+
+	private class TargetNew implements Step {
+
+		@Override
+		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
+			GWT.log("Target new check");
+
+			String newUrl = Window.Location.getParameter("targetNew");
+			if (newUrl == null || newUrl.isEmpty()) {
+				return;
+			}
+			Window.Location.assign(newUrl);
+
+		}
+	}
+
+
+
+	private class TargetExt implements Step {
+
+		@Override
+		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
+			GWT.log("Target ext check");
+
+			String newUrl = Window.Location.getParameter("targetExt");
+			if (newUrl == null || newUrl.isEmpty()) {
+				return;
+			}
+			Window.Location.assign(newUrl);
+
+		}
+	}
+
+
+
+	private class NoTarget implements Step {
+
+		@Override
+		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
+			GWT.log("Target ext check");
+
+			String newUrl = Window.Location.getParameter("targetExt");
+			if (newUrl == null || newUrl.isEmpty()) {
+				return;
+			}
+			Window.Location.assign(newUrl);
+
+		}
+	}
 
 
 
@@ -645,7 +634,12 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			notice.getElement().setInnerHTML("<h4>"+translation.missingVoInURL()+"</h4>");
 
+		} else if (ex.getName().equalsIgnoreCase("FormNotExistException")) {
+
+			notice.getElement().setInnerHTML("<h4>"+translation.missingVoInURL()+"</h4>");
+
 		}
+		// TODO - FormNotExistException
 
 		notice.setVisible(true);
 		if (loader != null) {
