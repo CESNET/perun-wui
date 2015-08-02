@@ -29,6 +29,26 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("English")
 	public String english();
 
+	// -------------- REGISTRATION FORM ------------------------ //
+
+	@DefaultMessage("We are sorry but we can do nothing for you now.")
+	public String canDoNothing();
+
+	@DefaultMessage("You have successfully applied for membership in VO {0}")
+	public String successVoInit(String vo);
+
+	@DefaultMessage("You have successfully applied for extension of membership in VO {0}")
+	public String successVoExt(String vo);
+
+	@DefaultMessage("You have successfully applied for membership in group {0}")
+	public String successGroupInit(String group);
+
+	@DefaultMessage("Do you want to extend a membership in VO {0}")
+	public String offerMembershipExtensionTitle(String vo);
+
+	@DefaultMessage("After a while your membership in VO <b>{0}</b> will expire. We recommend you to extend the membership right now.")
+	public String offerMembershipExtensionMessage(String vo);
+
 	// -------------- REGISTRATION FORM WIDGETS ------------------------ //
 
 	@DefaultMessage("Text is too long!")
@@ -142,6 +162,9 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("You already have submitted registration to {0}")
 	public String alreadySubmitted(String voOrGroupName);
+
+	@DefaultMessage("You have already submitted extension to {0}")
+	public String alreadySubmittedExtension(String voName);
 
 	@DefaultMessage("You can check state of your application in <a href=\"{0}#submitted\">{1}</a>.")
 	public String visitSubmitted(String url, String title);
