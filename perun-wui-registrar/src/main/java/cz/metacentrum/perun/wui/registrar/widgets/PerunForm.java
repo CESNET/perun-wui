@@ -19,7 +19,6 @@ import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlPosition;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 import java.util.ArrayList;
@@ -208,7 +207,6 @@ public class PerunForm extends FieldSet {
 							button.setEnabled(true);
 
 							GrowlOptions go = new GrowlOptions();
-							go.setPosition(GrowlPosition.TOP_CENTER);
 							go.setType(GrowlType.SUCCESS);
 							Growl.growl("Form submitted !!", go);
 

@@ -31,23 +31,59 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	// -------------- REGISTRATION FORM ------------------------ //
 
+	// TITLES
+
 	@DefaultMessage("We are sorry but we can do nothing for you now.")
 	public String canDoNothing();
 
-	@DefaultMessage("You have successfully applied for membership in VO {0}")
-	public String successVoInit(String vo);
+	@DefaultMessage("You have successfully applied for membership")
+	public String initTitle();
 
-	@DefaultMessage("You have successfully applied for extension of membership in VO {0}")
-	public String successVoExt(String vo);
+	@DefaultMessage("You have successfully applied for extension")
+	public String extendTitle();
 
-	@DefaultMessage("You have successfully applied for membership in group {0}")
-	public String successGroupInit(String group);
+	@DefaultMessage("You have been successfully registered")
+	public String initTitleAutoApproval();
 
-	@DefaultMessage("Do you want to extend a membership in VO {0}")
-	public String offerMembershipExtensionTitle(String vo);
+	@DefaultMessage("You have successfully extend your membership")
+	public String extendTitleAutoApproval();
 
-	@DefaultMessage("After a while your membership in VO <b>{0}</b> will expire. We recommend you to extend the membership right now.")
+	// MESSAGES
+
+	@DefaultMessage("If your e-mail is not verified yet please check your mailbox and verify it.")
+	public String verifyMail();
+
+	@DefaultMessage("Please wait till administrator of {0} will accept your application.")
+	public String waitForAcceptation(String voOrGroupName);
+
+	@DefaultMessage("Please wait till administrator of {0} will accept your extension.")
+	public String waitForExtAcceptation(String voOrGroupName);
+
+	@DefaultMessage("From now you are member of {0}.")
+	public String registered(String voOrGroupName);
+
+	@DefaultMessage("Your membership in {0} is valid now.")
+	public String extended(String voOrGroupName);
+
+  	@DefaultMessage("It seems you want to submit application for membership in group {0}. However you have already applied.")
+  	public String groupFailedAlreadyApplied(String groupName);
+
+	@DefaultMessage("It seems you want to submit application for membership in group {0}. However you are already registered.")
+	public String groupFailedAlreadyRegistered(String groupName);
+
+	// OTHERS
+
+	@DefaultMessage("Do you want to extend a membership?")
+	public String offerMembershipExtensionTitle();
+
+	@DefaultMessage("After a while your membership in <b>{0}</b> will expire. We recommend you to extend the membership right now.")
 	public String offerMembershipExtensionMessage(String vo);
+
+	@DefaultMessage("No thanks")
+	public String offerMembershipExtensionNoThanks();
+
+	@DefaultMessage("Extend")
+	public String offerMembershipExtensionExtend();
 
 	// -------------- REGISTRATION FORM WIDGETS ------------------------ //
 

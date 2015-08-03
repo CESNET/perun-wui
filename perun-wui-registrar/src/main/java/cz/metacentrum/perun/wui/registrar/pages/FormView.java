@@ -31,6 +31,7 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
+import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -112,11 +113,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				ArrayList<Attribute> attrList = registrar.getVoAttributes();
 				for (Attribute a : attrList) {
 					if (a.getFriendlyName().equals("voLogoURL")) {
-						//PerunRegistrar.setLogo(a.getValue().replace("https://", "http://"));
-						// FIXME - for testing remove https
-						if (!Utils.isDevel()) {
-							logo.setUrl(a.getValue().replace("https://", "http://"));
-						}
+						logo.setUrl(a.getValue());
 						logo.setVisible(true);
 					}
 				}
@@ -146,7 +143,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 					if (isApplyingToGroup(registrar)) {
 
-						if (groupInitialFormExists(registrar)) {
+						if (groupFormExists(registrar)) {
 
 							if (voInitialFormExists(registrar)) {
 
@@ -237,16 +234,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		public StepImpl(Step next) {
 			this.next = next;
-		}
-	}
-	private abstract class StepAsk implements Step {
-
-		protected Step yes;
-		protected Step no;
-
-		public StepAsk(Step yes, Step no) {
-			this.yes = yes;
-			this.no = no;
 		}
 	}
 
@@ -353,17 +340,20 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 
 
-	private class VoExtOffer extends StepAsk {
+	private class VoExtOffer implements Step {
+		protected Step yes;
+		protected Step no;
 
 		public VoExtOffer(Step yes, Step no) {
-			super(yes, no);
+			this.yes = yes;
+			this.no = no;
 		}
 
 		@Override
 		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 
 			final Modal modal = new Modal();
-			modal.setTitle(translation.offerMembershipExtensionTitle(vo.getName()));
+			modal.setTitle(translation.offerMembershipExtensionTitle());
 			modal.setFade(true);
 			modal.setDataKeyboard(false);
 			modal.setDataBackdrop(ModalBackdrop.STATIC);
@@ -375,7 +365,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			ModalFooter footer = new ModalFooter();
 
-			final Button noThanks = new Button("No thanks", new ClickHandler() {
+			final Button noThanks = new Button(translation.offerMembershipExtensionNoThanks(), new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					modal.hide();
@@ -384,7 +374,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			});
 			noThanks.setType(ButtonType.DEFAULT);
 
-			final Button extend = new Button("Extend", new ClickHandler() {
+			final Button extend = new Button(translation.offerMembershipExtensionExtend(), new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					modal.hide();
@@ -407,20 +397,20 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	private class Summary implements Step {
 
-		private final ApplicationType vo;
-		private final ApplicationType group;
+		private final ApplicationType voApplication;
+		private final ApplicationType groupApplication;
 
-		public Summary(ApplicationType vo, ApplicationType group) {
-			this.vo = vo;
-			this.group = group;
+		public Summary(ApplicationType voApplication, ApplicationType groupApplication) {
+			this.voApplication = voApplication;
+			this.groupApplication = groupApplication;
 		}
 
 		@Override
 		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 			form.clear();
-			displaySuccess(vo, group);
-			displaySoftExceptions(registrar);
-			displayContinueButton(registrar, (group != null) ? group : vo);
+			displaySummaryTitle(registrar, voApplication, groupApplication);
+			displaySummaryMessage(registrar, voApplication, groupApplication);
+			displayContinueButton(registrar, (groupApplication != null) ? groupApplication : voApplication);
 		}
 
 
@@ -442,82 +432,163 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	private boolean voExtensionFormExists(RegistrarObject ro) {
 		return !ro.getVoFormExtension().isEmpty();
 	}
-	private boolean groupInitialFormExists(RegistrarObject ro) {
+	private boolean groupFormExists(RegistrarObject ro) {
 		return !ro.getGroupFormInitial().isEmpty();
 	}
 	private boolean isApplyingToGroup(RegistrarObject ro) {
 		return (group != null);
 	}
 
-
-	private void displaySuccess(ApplicationType voApplication, ApplicationType groupApplication) {
+	private void displaySummaryTitle(RegistrarObject registrar, ApplicationType voApp, ApplicationType groupApp) {
 		Heading title = new Heading(HeadingSize.H2);
-		if (voApplication == null && groupApplication == null) {
-			title.setText(translation.canDoNothing());
-			form.add(title);
+		Text text = new Text();
+
+		if (voApp == null && groupApp == null) {
+
+			text.setText(translation.canDoNothing());
+
 		} else {
-			if (voApplication == ApplicationType.INITIAL) {
-				title.setText(translation.successVoInit(vo.getName()));
-			} else if (voApplication == ApplicationType.EXTENSION) {
-				title.setText(translation.successVoExt(vo.getName()));
-			}
-			form.add(title);
-			if (groupApplication == ApplicationType.INITIAL) {
-				form.add(new Heading(HeadingSize.H2, translation.successGroupInit(group.getName())));
+			Icon success = new Icon(IconType.CHECK_CIRCLE);
+			success.setColor("#5cb85c");
+			title.add(success);
+			if (groupApp == ApplicationType.INITIAL) {
+
+				if (registrar.hasGroupFormAutoApproval()) {
+					text.setText(" "+translation.initTitleAutoApproval());
+				} else {
+					text.setText(" "+translation.initTitle());
+				}
+
+			} else if (voApp == ApplicationType.EXTENSION) {
+
+				if (registrar.hasVoFormAutoApprovalExtension()) {
+					text.setText(" "+translation.extendTitleAutoApproval());
+				} else {
+					text.setText(" "+translation.extendTitle());
+				}
+
+			} else if (voApp == ApplicationType.INITIAL) {
+
+				if (registrar.hasVoFormAutoApproval()) {
+					text.setText(" "+translation.initTitleAutoApproval());
+				} else {
+					text.setText(" "+translation.initTitle());
+				}
+
 			}
 		}
+		title.add(text);
+		form.add(title);
 	}
-	private void displaySoftExceptions(RegistrarObject registrar) {
+	private void displaySummaryMessage(RegistrarObject registrar, ApplicationType voApp, ApplicationType groupApp) {
+		ListGroup message = new ListGroup();
 
-		if (registrar.getVoFormInitialException() != null) {
-			Alert voInitEx = new Alert();
-			voInitEx.setType(AlertType.INFO);
-			switch (registrar.getVoFormInitialException().getName()) {
-				case "DuplicateRegistrationAttemptException":
-					voInitEx.setText(translation.alreadySubmitted(vo.getName()));
-					break;
-				case "AlreadyRegisteredException":
-					voInitEx.setText(translation.alreadyRegistered(vo.getName()));
-					break;
-				default:
-					voInitEx.setText(registrar.getVoFormInitialException().getMessage());
+		if (voApp == null && groupApp == null) {
+
+			if (registrar.getVoFormInitialException() != null) {
+				ListGroupItem voStat = new ListGroupItem();
+				switch (registrar.getVoFormInitialException().getName()) {
+					case "DuplicateRegistrationAttemptException":
+						voStat.setText(translation.alreadySubmitted(vo.getName()));
+						break;
+					case "AlreadyRegisteredException":
+						voStat.setText(translation.alreadyRegistered(vo.getName()));
+						break;
+					default:
+						voStat.setText(registrar.getVoFormInitialException().getMessage());
+				}
+				message.add(voStat);
 			}
-			form.add(voInitEx);
-		}
-
-
-		if (registrar.getVoFormExtensionException() != null) {
-			Alert voExtEx = new Alert();
-			voExtEx.setType(AlertType.INFO);
-			switch (registrar.getVoFormExtensionException().getName()) {
-				case "DuplicateRegistrationAttemptException":
-					voExtEx.setText(translation.alreadySubmittedExtension(vo.getName()));
-					form.add(voExtEx);
-					break;
-				case "MemberNotExistsException":
-					break;
-				default:
-					voExtEx.setText(registrar.getVoFormExtensionException().getMessage());
-					form.add(voExtEx);
+			if (registrar.getVoFormExtensionException() != null) {
+				ListGroupItem voStatExt = new ListGroupItem();
+				switch (registrar.getVoFormExtensionException().getName()) {
+					case "DuplicateRegistrationAttemptException":
+						voStatExt.setText(translation.alreadySubmittedExtension(vo.getName()));
+						message.add(voStatExt);
+						break;
+					case "MemberNotExistsException":
+						break;
+					default:
+						voStatExt.setText(registrar.getVoFormExtensionException().getMessage());
+						message.add(voStatExt);
+				}
 			}
-		}
-
-
-		if (registrar.getGroupFormInitialException() != null) {
-			Alert groupInitEx = new Alert();
-			groupInitEx.setType(AlertType.INFO);
-			switch (registrar.getGroupFormInitialException().getName()) {
-				case "DuplicateRegistrationAttemptException":
-					groupInitEx.setText(translation.alreadySubmitted(group.getName()));
-					break;
-				case "AlreadyRegisteredException":
-					groupInitEx.setText(translation.alreadyRegistered(group.getName()));
-					break;
-				default:
-					groupInitEx.setText(registrar.getGroupFormInitialException().getMessage());
+			if (registrar.getGroupFormInitialException() != null) {
+				ListGroupItem groupStat = new ListGroupItem();
+				switch (registrar.getGroupFormInitialException().getName()) {
+					case "DuplicateRegistrationAttemptException":
+						groupStat.setText(translation.alreadySubmitted(group.getName()));
+						break;
+					case "AlreadyRegisteredException":
+						groupStat.setText(translation.alreadyRegistered(group.getName()));
+						break;
+					default:
+						groupStat.setText(registrar.getGroupFormInitialException().getMessage());
+				}
+				message.add(groupStat);
 			}
-			form.add(groupInitEx);
+
+		} else {
+			ListGroupItem groupStat = new ListGroupItem();
+			if (groupApp == ApplicationType.INITIAL) {
+
+				if (registrar.hasGroupFormAutoApproval()) {
+					groupStat.setText(translation.registered(group.getName()));
+				} else {
+					groupStat.setText(translation.waitForAcceptation(group.getName()));
+				}
+				message.add(groupStat);
+			}
+			ListGroupItem voStat = new ListGroupItem();
+			if (voApp == ApplicationType.EXTENSION) {
+
+				if (registrar.hasVoFormAutoApprovalExtension()) {
+					voStat.setText(translation.extended(vo.getName()));
+				} else {
+					voStat.setText(translation.waitForExtAcceptation(vo.getName()));
+				}
+				message.add(voStat);
+
+			} else if (voApp == ApplicationType.INITIAL) {
+
+				if (registrar.hasVoFormAutoApproval()) {
+					voStat.setText(translation.registered(vo.getName()));
+				} else {
+					voStat.setText(translation.waitForAcceptation(vo.getName()));
+				}
+				message.add(voStat);
+
+			}
+			if (groupApp == null) {
+
+				if (registrar.getGroupFormInitialException() != null) {
+					switch (registrar.getGroupFormInitialException().getName()) {
+						case "DuplicateRegistrationAttemptException":
+							groupStat.setText(translation.groupFailedAlreadyApplied(group.getName()));
+							break;
+						case "AlreadyRegisteredException":
+							groupStat.setText(translation.groupFailedAlreadyRegistered(group.getName()));
+							break;
+						default:
+							groupStat.setText(registrar.getGroupFormInitialException().getMessage());
+					}
+					message.add(groupStat);
+				}
+			}
+			ListGroupItem verifyMail = new ListGroupItem();
+			verifyMail.add(new Icon(IconType.WARNING));
+			verifyMail.add(new Text(" " + translation.verifyMail()));
+			message.add(verifyMail);
 		}
+		form.add(message);
+
+
+
+
+
+
+
+
 
 
 	}
@@ -701,6 +772,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		}
 		// TODO - FormNotExistException
+		// TODO - ApplicationNotCreatedException (probably cant reserved login)
+		// TODO - RegistrarException or else (prihlaska byla odeslana ale doslo k chybe. Admin se tim bude zabyvat)
 
 		notice.setVisible(true);
 		if (loader != null) {
