@@ -238,4 +238,12 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Organization / project you wish to register into is missing in a browser`s address bar. Please specify it by: <i>?vo=[name]</i>.")
 	public String missingVoInURL();
 
+	@DefaultMessage("Registration form is not created. Please contact administrator.")
+	public String formNotExist();
+
+	@DefaultMessage("Application couldn`t been created. Probably your login can`t be reserved.")
+	public String applicationNotCreated();
+
+	@DefaultMessage("Your application has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
+	public String registrarException();
 }

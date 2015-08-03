@@ -123,7 +123,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				if (registrar.getException() != null) {
 					GWT.log("Exception " + registrar.getException().getMessage());
 					if (registrar.getException().getName().equals("VoNotExistsException") ||
-							registrar.getException().getName().equals("GroupNotExistsException")) {
+							registrar.getException().getName().equals("GroupNotExistsException") ||
+							registrar.getException().getName().equals("FormNotExistsException")) {
 						displayException(loader, registrar.getException());
 						return;
 					}
@@ -766,14 +767,23 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			notice.getElement().setInnerHTML("<h4>"+translation.missingVoInURL()+"</h4>");
 
+		} else if (ex.getName().equalsIgnoreCase("FormNotExistsException")) {
+
+			notice.getElement().setInnerHTML("<h4>"+translation.formNotExist()+"</h4>");
+
+		} else if (ex.getName().equalsIgnoreCase("ApplicationNotCreatedException")) {
+
+			notice.getElement().setInnerHTML("<h4>"+translation.applicationNotCreated()+"</h4>");
+
+		} else  if (ex.getName().equalsIgnoreCase("RegistrarException")) {
+
+			notice.getElement().setInnerHTML("<h4>"+translation.registrarException()+"</h4>");
+
 		} else {
 
-			notice.getElement().setInnerHTML("<h4>Internal error</h4>");
+			notice.getElement().setInnerHTML("<h4>"+translation.registrarException()+"</h4>");
 
 		}
-		// TODO - FormNotExistException
-		// TODO - ApplicationNotCreatedException (probably cant reserved login)
-		// TODO - RegistrarException or else (prihlaska byla odeslana ale doslo k chybe. Admin se tim bude zabyvat)
 
 		notice.setVisible(true);
 		if (loader != null) {
