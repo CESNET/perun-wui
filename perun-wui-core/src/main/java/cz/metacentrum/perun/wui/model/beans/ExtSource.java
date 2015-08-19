@@ -4,8 +4,6 @@ import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 
-import java.util.Map;
-
 /**
  * Overlay type for ExtSource object from Perun
  *
@@ -23,7 +21,9 @@ public class ExtSource extends GeneralObject {
 		LDAP("cz.metacentrum.perun.core.impl.ExtSourceLdap"),
 		PERUN("cz.metacentrum.perun.core.impl.ExtSourcePerun"),
 		INTERNAL("cz.metacentrum.perun.core.impl.ExtSourceInternal"),
-		XML("cz.metacentrum.perun.core.impl.ExtSourceXML");
+		XML("cz.metacentrum.perun.core.impl.ExtSourceXML"),
+		CSV("cz.metacentrum.perun.core.impl.ExtSourceCSV"),
+		GOOGLE("cz.metacentrum.perun.core.impl.ExtSourceGoogle");
 
 		private final String type;
 
@@ -92,18 +92,6 @@ public class ExtSource extends GeneralObject {
 	 */
 	public final native void setType(String type) /*-{
         this.type = type;
-    }-*/;
-
-	/**
-	 * Get map of attributes associated with ExtSource definition.
-	 * They provide mapping from ExtSource attributes to Perun attributes.
-	 *
-	 * IMPORTANT: value is present only when ExtSource is retrieved inside Candidate (UserExtSource) object.
-	 *
-	 * @return attributes map
-	 */
-	public final native Map<String, String> getAttributes() /*-{
-        return this.attributes;
     }-*/;
 
 	/**
