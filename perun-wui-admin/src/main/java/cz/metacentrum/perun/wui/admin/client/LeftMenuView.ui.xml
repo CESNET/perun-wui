@@ -25,9 +25,9 @@
 					<b:PanelBody addStyleNames="{style.top}">
 
 						<b:NavPills stacked="true" ui:field="menu">
-							<b:AnchorListItem ui:field="perunVos" icon="BUILDING" iconFixedWidth="true" targetHistoryToken="{placeTokens.getVos}">Virtual organizations
+							<b:AnchorListItem ui:field="perunVos" icon="BUILDING" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPerunVos}">Virtual organizations
 							</b:AnchorListItem>
-							<b:AnchorListItem ui:field="perunFacs" icon="DATABASE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getFacilities}">Facilities
+							<b:AnchorListItem ui:field="perunFacs" icon="DATABASE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPerunFacilities}">Facilities
 							</b:AnchorListItem>
 							<b:AnchorListItem ui:field="perunUsr" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getUsers}">Users
 							</b:AnchorListItem>

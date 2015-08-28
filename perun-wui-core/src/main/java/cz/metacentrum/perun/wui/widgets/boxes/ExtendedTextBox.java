@@ -149,7 +149,7 @@ public class ExtendedTextBox extends TextBox {
 
 	@Override
 	public String getValue() {
-		return super.getValue().trim();
+		return (super.getValue() != null) ? super.getValue().trim() : "";
 	}
 
 	/**
