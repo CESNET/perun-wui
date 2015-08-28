@@ -13,15 +13,15 @@
 		<b.html:Div addStyleNames="{res.gss.pageHeader}">
 
 			<b:Heading size="H2" ui:field="pageTitle">
-				<b:Icon ui:field="icon" type="BUILDING" fixedWidth="true" pull="LEFT" />
-				<b.html:Text text="Virtual organizations"/>
+				<b:Icon ui:field="icon" type="DATABASE" fixedWidth="true" pull="LEFT" />
+				<b.html:Text text="Facilities"/>
 				<b.html:Small text=""/>
 			</b:Heading>
 
 			<p:PerunToolbar ui:field="menu">
 
 				<b:InputGroup addStyleNames="col-md-3">
-					<p.boxes:ExtendedSuggestBox focus="true" ui:field="textBox" placeholder="Filter by VO name"/>
+					<p.boxes:ExtendedSuggestBox focus="true" ui:field="textBox" placeholder="Filter by facility name"/>
 				</b:InputGroup>
 
 				<b:ButtonGroup>
@@ -32,15 +32,6 @@
 				</b:ButtonGroup>
 				<b:ButtonGroup>
 					<p:PerunButton type="DANGER" icon="TRASH_O" ui:field="remove">Remove</p:PerunButton>
-				</b:ButtonGroup>
-				<b:ButtonGroup>
-					<p:PerunButton dataToggle="DROPDOWN" text="Growl" icon="ASTERISK"/>
-					<b:DropDownMenu>
-						<b:AnchorListItem ui:field="growl1">Growl - info</b:AnchorListItem>
-						<b:AnchorListItem ui:field="growl2">Growl - warning</b:AnchorListItem>
-						<b:AnchorListItem ui:field="growl3">Growl - danger</b:AnchorListItem>
-						<b:AnchorListItem ui:field="growl4">Growl - success</b:AnchorListItem>
-					</b:DropDownMenu>
 				</b:ButtonGroup>
 
 				<!--

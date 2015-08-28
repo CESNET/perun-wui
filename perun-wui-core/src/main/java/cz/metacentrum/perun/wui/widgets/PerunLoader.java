@@ -13,7 +13,6 @@ import org.gwtbootstrap3.client.ui.ButtonToolBar;
 import org.gwtbootstrap3.client.ui.ProgressBar;
 import org.gwtbootstrap3.client.ui.constants.ProgressBarType;
 
-//TODO fix width of widget
 /**
  * Loading widget with progress bar and custom states (loading, finished, error, filter).
  * It can be used as part of PerunDataGrid or simple page. When loader is set to error
@@ -68,7 +67,12 @@ public class PerunLoader extends Composite {
 
 	public void onFilter(String text) {
 
-		state = PerunLoaderState.finished;
+		state = PerunLoaderState.filter;
+		bar.getParent().setVisible(false);
+
+		// TODO ALERT
+		message.setText("No results match the filter '"+text+"'.");
+		message.setVisible(true);
 		// TODO
 
 	}
@@ -76,9 +80,12 @@ public class PerunLoader extends Composite {
 	public void onLoading() {
 
 		state = PerunLoaderState.loading;
+		bar.getParent().setVisible(true);
+		bar.setVisible(true);
 		bar.setPercent(0);
 		bar.setType(ProgressBarType.DEFAULT);
 		alert.setVisible(false);
+		message.setVisible(false);
 
 		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
 			@Override
@@ -100,9 +107,11 @@ public class PerunLoader extends Composite {
 	public void onEmpty(){
 
 		state = PerunLoaderState.finished;
+		bar.getParent().setVisible(false);
+		message.setText("No items found.");
+		message.setVisible(true);
 
 		/*
-		bar.setVisible(false);
 		alert.setVisible(false);
 
 		// TODO ALERT
@@ -115,7 +124,7 @@ public class PerunLoader extends Composite {
 	public void onFinished(){
 
 		state = PerunLoaderState.finished;
-		bar.setVisible(false);
+		bar.getParent().setVisible(false);
 
 		// TODO ALERT
 		message.setText("Loading finished.");
@@ -126,7 +135,7 @@ public class PerunLoader extends Composite {
 	public void onError(PerunException error, final ClickHandler handler) {
 
 		state = PerunLoaderState.error;
-		bar.setVisible(true);
+		bar.getParent().setVisible(true);
 		bar.setType(ProgressBarType.DANGER);
 		alert.setText(error.getName()+": "+error.getMessage());
 		alert.setVisible(true);

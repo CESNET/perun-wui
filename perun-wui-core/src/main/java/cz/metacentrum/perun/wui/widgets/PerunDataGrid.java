@@ -1,14 +1,17 @@
 package cz.metacentrum.perun.wui.widgets;
 
-import com.google.gwt.core.client.GWT;
+import com.google.gwt.event.dom.client.KeyCodes;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.ui.SuggestOracle;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.user.cellview.client.*;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.view.client.MultiSelectionModel;
@@ -290,6 +293,8 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 			this.loaderWidget = loaderWidget;
 			setEmptyTableWidget(loaderWidget);
 			setLoadingIndicator(loaderWidget);
+			// FIXME - Maybe find better solution but wrapping table element has no class from GWT.
+			loaderWidget.getElement().getParentElement().getParentElement().getParentElement().getParentElement().setAttribute("style", "width: 100%;");
 		}
 	}
 
@@ -916,6 +921,49 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 		});
 
 	}
+
+	/**
+	 * Bind SuggestBox and PerunButton to table filter event and set default settings to SuggestBox.
+	 *
+	 * - Both disabled at start.
+	 * - When loading table data, both are disabled.
+	 * - On empty table they are active.
+	 * - On loading finished, they are active and search box is focused.
+	 *
+	 * @param box SuggestBox to enter filter text
+	 * @param filterButton Button to trigger filtering
+	 * @param <C> Implementation class for SuggestBox extending the base one.
+	 */
+	public <C extends SuggestBox> void addTableManagedFilterBox(final C box, PerunButton filterButton) {
+
+		addTableLoadingManagedWidget(box, true, true);
+		addTableLoadingManagedWidget(filterButton, true);
+
+		box.setAutoSelectEnabled(false);
+		// search box on enter
+		box.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
+					filterTable(box.getText().trim());
+				} else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
+					box.hideSuggestionList();
+				} else if (!box.isSuggestionListShowing()) {
+					// of not already displayed, show suggestion list
+					box.showSuggestionList();
+				}
+			}
+		});
+
+		// search box on selected
+		box.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
+			public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
+				filterTable(event.getSelectedItem().getReplacementString());
+			}
+		});
+
+	}
+
 
 	/**
 	 * Removes all current columns from table and draw new columns based on current table settings

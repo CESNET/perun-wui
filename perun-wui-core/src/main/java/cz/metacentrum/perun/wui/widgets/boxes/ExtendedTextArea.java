@@ -149,7 +149,7 @@ public class ExtendedTextArea extends TextArea {
 
 	@Override
 	public String getValue() {
-		return super.getValue().trim();
+		return (super.getValue() != null) ? super.getValue().trim() : "";
 	}
 
 	/**

@@ -7,7 +7,6 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.PanelCollapse;

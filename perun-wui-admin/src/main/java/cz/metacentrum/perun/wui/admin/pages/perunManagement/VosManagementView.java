@@ -4,8 +4,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -22,7 +20,7 @@ import cz.metacentrum.perun.wui.model.columnProviders.VoColumnProvider;
 import cz.metacentrum.perun.wui.pages.FocusableView;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
-import cz.metacentrum.perun.wui.widgets.SuggestBox;
+import cz.metacentrum.perun.wui.widgets.boxes.ExtendedSuggestBox;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
@@ -48,7 +46,7 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 	PerunButton remove;
 
 	@UiField(provided = true)
-	SuggestBox textBox = new SuggestBox(oracle);
+	ExtendedSuggestBox textBox = new ExtendedSuggestBox(oracle);
 
 	@UiField ButtonToolBar menu;
 	@UiField PerunButton filterButton;
@@ -71,6 +69,7 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 		remove = PerunButton.getButton(PerunButtonType.REMOVE, ButtonType.DANGER, "Remove selected VO(s)");
 
 		initWidget(uiBinder.createAndBindUi(this));
+		grid.addTableManagedFilterBox(textBox, filterButton);
 		// FIXME - is this right place to draw ?
 		draw();
 	}
@@ -142,8 +141,9 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 
 	public void draw() {
 
-		remove.setTableManaged(grid);
-		grid.addTableLoadingManagedWidget(remove, false);
+		//remove.setTableManaged(grid);
+		grid.addTableManagedWidget(remove);
+		//grid.addTableLoadingManagedWidget(remove, false);
 
 		VosManager.getVos(false, new JsonEvents() {
 

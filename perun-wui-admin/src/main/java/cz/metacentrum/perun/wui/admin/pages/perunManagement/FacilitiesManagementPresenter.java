@@ -12,22 +12,22 @@ import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
 import cz.metacentrum.perun.wui.pages.FocusableView;
 
 /**
- * Presenter for PERUN ADMIN - VOS MANAGEMENT
+ * Presenter for PERUN ADMIN - FACILITIES MANAGEMENT
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class VosManagementPresenter extends Presenter<VosManagementPresenter.MyView, VosManagementPresenter.MyProxy> {
+public class FacilitiesManagementPresenter extends Presenter<FacilitiesManagementPresenter.MyView, FacilitiesManagementPresenter.MyProxy> {
 
 	public interface MyView extends View {
 	}
 
-	@NameToken({PlaceTokens.VOS, PlaceTokens.PERUN_VOS})
+	@NameToken({PlaceTokens.FACILITIES, PlaceTokens.PERUN_FACILITIES})
 	@ProxyCodeSplit
-	public interface MyProxy extends ProxyPlace<VosManagementPresenter> {
+	public interface MyProxy extends ProxyPlace<FacilitiesManagementPresenter> {
 	}
 
 	@Inject
-	public VosManagementPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
+	public FacilitiesManagementPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
 		super(eventBus, view, proxy, PerunPresenter.SET_MAIN_CONTENT);
 	}
 
