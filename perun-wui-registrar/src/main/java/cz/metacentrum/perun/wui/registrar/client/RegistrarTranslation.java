@@ -199,7 +199,7 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You already have submitted registration to {0}")
 	public String alreadySubmitted(String voOrGroupName);
 
-	@DefaultMessage("You have already submitted extension to {0}")
+	@DefaultMessage("You have already submitted extension application to {0}")
 	public String alreadySubmittedExtension(String voName);
 
 	@DefaultMessage("You can check state of your application in <a href=\"{0}#submitted\">{1}</a>.")

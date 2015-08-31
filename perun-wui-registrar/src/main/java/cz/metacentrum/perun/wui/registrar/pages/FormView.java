@@ -446,7 +446,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		if (voApp == null && groupApp == null) {
 
-			text.setText(translation.canDoNothing());
+			//text.setText(translation.canDoNothing());
 
 		} else {
 			Icon success = new Icon(IconType.CHECK_CIRCLE);
@@ -482,54 +482,49 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		form.add(title);
 	}
 	private void displaySummaryMessage(RegistrarObject registrar, ApplicationType voApp, ApplicationType groupApp) {
-		ListGroup message = new ListGroup();
 
 		if (voApp == null && groupApp == null) {
 
-			if (registrar.getVoFormInitialException() != null) {
-				ListGroupItem voStat = new ListGroupItem();
-				switch (registrar.getVoFormInitialException().getName()) {
+			if (registrar.getGroupFormInitialException() != null) {
+				switch (registrar.getGroupFormInitialException().getName()) {
 					case "DuplicateRegistrationAttemptException":
-						voStat.setText(translation.alreadySubmitted(vo.getName()));
+						displayException(registrar.getGroupFormInitialException());
 						break;
 					case "AlreadyRegisteredException":
-						voStat.setText(translation.alreadyRegistered(vo.getName()));
+						displayException(registrar.getGroupFormInitialException());
 						break;
 					default:
-						voStat.setText(registrar.getVoFormInitialException().getMessage());
+						displayException(registrar.getGroupFormInitialException());
 				}
-				message.add(voStat);
-			}
-			if (registrar.getVoFormExtensionException() != null) {
-				ListGroupItem voStatExt = new ListGroupItem();
+			} else if (registrar.getVoFormExtensionException() != null) {
 				switch (registrar.getVoFormExtensionException().getName()) {
+					case "ExtendMembershipException":
+						displayException(registrar.getVoFormExtensionException());
+						break;
 					case "DuplicateRegistrationAttemptException":
-						voStatExt.setText(translation.alreadySubmittedExtension(vo.getName()));
-						message.add(voStatExt);
+						registrar.getVoFormExtensionException().setName("DuplicateExtensionAttemptException");
+						displayException(registrar.getVoFormExtensionException());
 						break;
 					case "MemberNotExistsException":
 						break;
 					default:
-						voStatExt.setText(registrar.getVoFormExtensionException().getMessage());
-						message.add(voStatExt);
+						displayException(registrar.getVoFormExtensionException());
 				}
-			}
-			if (registrar.getGroupFormInitialException() != null) {
-				ListGroupItem groupStat = new ListGroupItem();
-				switch (registrar.getGroupFormInitialException().getName()) {
+			} else if (registrar.getVoFormInitialException() != null) {
+				switch (registrar.getVoFormInitialException().getName()) {
 					case "DuplicateRegistrationAttemptException":
-						groupStat.setText(translation.alreadySubmitted(group.getName()));
+						displayException(registrar.getVoFormInitialException());
 						break;
 					case "AlreadyRegisteredException":
-						groupStat.setText(translation.alreadyRegistered(group.getName()));
+						displayException(registrar.getVoFormInitialException());
 						break;
 					default:
-						groupStat.setText(registrar.getGroupFormInitialException().getMessage());
+						displayException(registrar.getVoFormInitialException());
 				}
-				message.add(groupStat);
 			}
 
 		} else {
+			ListGroup message = new ListGroup();
 			ListGroupItem groupStat = new ListGroupItem();
 			if (groupApp == ApplicationType.INITIAL) {
 
@@ -580,17 +575,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			verifyMail.add(new Icon(IconType.WARNING));
 			verifyMail.add(new Text(" " + translation.verifyMail()));
 			message.add(verifyMail);
+			form.add(message);
 		}
-		form.add(message);
-
-
-
-
-
-
-
-
-
 
 	}
 	private void displayContinueButton(RegistrarObject registrar, ApplicationType redirect) {
@@ -743,6 +729,22 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			}
 
+		} else if (ex.getName().equals("DuplicateExtensionAttemptException")) {
+
+			notice.getElement().setInnerHTML("<h4>"+ translation.alreadySubmittedExtension((vo.getName())) + "</h4><p>"+translation.visitSubmitted(Window.Location.getHref().split("#")[0], translation.submittedTitle()));
+
+			if (Window.Location.getParameter("targetextended") != null) {
+
+				continueButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						Window.Location.replace(Window.Location.getParameter("targetextended"));
+					}
+				});
+				notice.add(continueButton);
+
+			}
+
 		} else if (ex.getName().equalsIgnoreCase("MissingRequiredDataException")) {
 
 			String missingItems = "<p><ul>";
@@ -775,6 +777,10 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			notice.getElement().setInnerHTML("<h4>"+translation.applicationNotCreated()+"</h4>");
 
+		} else  if (ex.getName().equalsIgnoreCase("RpcException")) {
+
+			notice.getElement().setInnerHTML("<h4>"+translation.applicationNotCreated()+"</h4>");
+
 		} else  if (ex.getName().equalsIgnoreCase("RegistrarException")) {
 
 			notice.getElement().setInnerHTML("<h4>"+translation.registrarException()+"</h4>");
@@ -784,6 +790,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			notice.getElement().setInnerHTML("<h4>"+translation.registrarException()+"</h4>");
 
 		}
+
+		Window.scrollTo(0, 0);
 
 		notice.setVisible(true);
 		if (loader != null) {
