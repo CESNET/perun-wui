@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -44,12 +45,25 @@ public class PerunLoader extends Composite {
 	@UiField PerunButton retry;
 	@UiField PerunButton report;
 
+	private PerunException catchedException;
+
 	public PerunLoader() {
 
 		rootElement = ourUiBinder.createAndBindUi(this);
 		initWidget(rootElement);
 		bar.setPercent(0);
 		alert.setVisible(false);
+
+		// common error reporting
+		report.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (catchedException != null) {
+					ErrorReporter reportBox = new ErrorReporter(catchedException);
+					reportBox.getWidget().show();
+				}
+			}
+		});
 
 	}
 
@@ -137,11 +151,16 @@ public class PerunLoader extends Composite {
 		state = PerunLoaderState.error;
 		bar.getParent().setVisible(true);
 		bar.setType(ProgressBarType.DANGER);
-		alert.setText(error.getName()+": "+error.getMessage());
+		alert.setText(error.getName() + ": " + error.getMessage());
 		alert.setVisible(true);
 
 		tool.setVisible(true);
-		retry.addClickHandler(handler);
+		if (handler != null) {
+			retry.setVisible(true);
+			retry.addClickHandler(handler);
+		}
+
+		catchedException = error;
 
 	}
 
