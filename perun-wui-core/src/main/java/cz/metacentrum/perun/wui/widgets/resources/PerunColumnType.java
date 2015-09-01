@@ -17,6 +17,15 @@ public enum PerunColumnType {
 	MODIFIED_AT,
 	MODIFIED_BY,
 
+	//attributes
+	ATTR_NAME,
+	ATTR_TYPE,
+	ATTR_DEF,
+	ATTR_ENTITY,
+	ATTR_URN,
+	ATTR_FRIENDLY_NAME,
+	ATTR_VALUE,
+
 	// vo columns
 	VO_SHORT_NAME,
 

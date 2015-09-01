@@ -7,10 +7,7 @@ import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources;
-import cz.metacentrum.perun.wui.admin.pages.perunManagement.FacilitiesManagementPresenter;
-import cz.metacentrum.perun.wui.admin.pages.perunManagement.FacilitiesManagementView;
-import cz.metacentrum.perun.wui.admin.pages.perunManagement.VosManagementPresenter;
-import cz.metacentrum.perun.wui.admin.pages.perunManagement.VosManagementView;
+import cz.metacentrum.perun.wui.admin.pages.perunManagement.*;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectPresenter;
@@ -55,6 +52,7 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 		bindPresenter(VoDetailPresenter.class, VoDetailPresenter.MyView.class, VoDetailView.class, VoDetailPresenter.MyProxy.class);
 
 		bindPresenter(FacilitiesManagementPresenter.class, FacilitiesManagementPresenter.MyView.class, FacilitiesManagementView.class, FacilitiesManagementPresenter.MyProxy.class);
+		bindPresenter(AttributesManagementPresenter.class, AttributesManagementPresenter.MyView.class, AttributesManagementView.class, AttributesManagementPresenter.MyProxy.class);
 
 		// Bind Presenter-Widgets
 		bindSingletonPresenterWidget(LeftMenuPresenter.class, LeftMenuPresenter.MyView.class, LeftMenuView.class);

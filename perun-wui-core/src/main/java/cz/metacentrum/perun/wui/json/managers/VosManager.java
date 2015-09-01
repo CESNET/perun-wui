@@ -112,7 +112,7 @@ public class VosManager {
 	}
 
 	/**
-	 * Search all VO's external sources of new members by searchString (which can't be empty).
+	 * Search all VOs external sources of new members by searchString (which can't be empty).
 	 * Candidates, who are already members of VO are not returned by server.
 	 *
 	 * @param vo VO to search external sources for

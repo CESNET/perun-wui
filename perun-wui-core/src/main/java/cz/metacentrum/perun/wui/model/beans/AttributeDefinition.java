@@ -125,7 +125,7 @@ public class AttributeDefinition extends GeneralObject {
     }-*/;
 
 	/**
-	 * Gets type of an attribute. Type is expected to be java's class of attribute's value.
+	 * Gets type of an attribute. Type is expected to be java's class of attributes value.
 	 * <p/>
 	 * Possible values are: 'java.lang.String', 'java.lang.Integer', 'java.util.ArrayList', 'java.util.LinkedHashMap'.
 	 *

@@ -32,6 +32,8 @@ public class PlaceTokens {
 	public static final String SEARCHER = "srch";
 	public static final String NAMESPACES = "nmspc";
 
+	public static final String ATTRIBUTE_DETAIL = "attrs_detail";
+
 	// Getters for usage in UiBinder xml definitions
 
 	public static String getFacilityDetail() {
@@ -110,4 +112,7 @@ public class PlaceTokens {
 		return VOS_SELECT;
 	}
 
+	public static String getAttributeDetail() {
+		return ATTRIBUTE_DETAIL;
+	}
 }

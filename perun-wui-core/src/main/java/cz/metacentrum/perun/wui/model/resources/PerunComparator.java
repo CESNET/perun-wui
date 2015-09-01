@@ -3,10 +3,7 @@ package cz.metacentrum.perun.wui.model.resources;
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
-import cz.metacentrum.perun.wui.model.beans.Application;
-import cz.metacentrum.perun.wui.model.beans.Facility;
-import cz.metacentrum.perun.wui.model.beans.Owner;
-import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.model.beans.*;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
@@ -84,6 +81,16 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		if (PerunColumnType.MODIFIED_AT.equals(this.column)) return this.compareByModifiedAt(o1, o2);
 		if (PerunColumnType.CREATED_BY.equals(this.column)) return this.compareByCreatedBy(o1, o2);
 		if (PerunColumnType.MODIFIED_BY.equals(this.column)) return this.compareByModifiedBy(o1, o2);
+
+		// ATTR columns
+		if (PerunColumnType.ATTR_DEF.equals(this.column))
+			return getNativeComparator().compare(((AttributeDefinition) o1).getDefinition(), ((AttributeDefinition) o2).getDefinition());
+		if (PerunColumnType.ATTR_ENTITY.equals(this.column))
+			return getNativeComparator().compare(((AttributeDefinition) o1).getEntity(), ((AttributeDefinition) o2).getEntity());
+		if (PerunColumnType.ATTR_TYPE.equals(this.column))
+			return getNativeComparator().compare(((AttributeDefinition)o1).getType(), ((AttributeDefinition)o2).getType());
+		if (PerunColumnType.ATTR_FRIENDLY_NAME.equals(this.column))
+			return getNativeComparator().compare(((AttributeDefinition) o1).getFriendlyName(), ((AttributeDefinition) o2).getFriendlyName());
 
 		// VO columns
 		if (PerunColumnType.VO_SHORT_NAME.equals(this.column)) return this.compareByShortName(o1, o2);
