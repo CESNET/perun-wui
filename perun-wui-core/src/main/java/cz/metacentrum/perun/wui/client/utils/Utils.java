@@ -1571,7 +1571,7 @@ public class Utils {
 
 		orgs.put("@google.extidp.cesnet.cz", "Google");
 		orgs.put("@facebook.extidp.cesnet.cz", "Facebook");
-		orgs.put("@mojeid.extidp.cesnet.cz", "mojeID");
+		orgs.put("@mojeid.extidp.cesnet.cz", "MojeID");
 		orgs.put("@linkedin.extidp.cesnet.cz", "LinkedIn");
 		orgs.put("@twitter.extidp.cesnet.cz", "Twitter");
 		orgs.put("@seznam.extidp.cesnet.cz", "Seznam");

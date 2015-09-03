@@ -38,6 +38,9 @@ public interface ConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Join with")
 	public String joinWith();
 
+	@DefaultMessage("at")
+	public String at();
+
 	/* --  JOIN PAGE -- */
 
 	@DefaultMessage("Continue")

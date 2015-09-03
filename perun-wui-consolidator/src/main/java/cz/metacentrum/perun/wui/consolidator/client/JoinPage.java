@@ -208,7 +208,7 @@ public class JoinPage {
 				} else {
 					identity.setText(translatedActor);
 				}
-				identity.setSubText(translatedExtSourceName);
+				identity.setSubText(" " + translation.at() + " " + translatedExtSourceName);
 				heading.setVisible(true);
 				identity.setVisible(true);
 
