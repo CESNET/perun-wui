@@ -204,7 +204,7 @@ public class AttributeDefinitionColumnProvider extends ColumnProvider<AttributeD
 			if (widthInPixels > 0) {
 				table.setColumnWidth(definitionColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(definitionColumn, "10%");
+				table.setColumnWidth(definitionColumn, "8%");
 			}
 
 		} else if (PerunColumnType.ATTR_ENTITY.equals(column)) {
@@ -323,7 +323,7 @@ public class AttributeDefinitionColumnProvider extends ColumnProvider<AttributeD
 			if (widthInPixels > 0) {
 				table.setColumnWidth(typeColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(typeColumn, "10%");
+				table.setColumnWidth(typeColumn, "11%");
 			}
 
 		}
