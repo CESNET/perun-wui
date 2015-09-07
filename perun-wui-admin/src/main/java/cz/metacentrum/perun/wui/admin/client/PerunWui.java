@@ -51,6 +51,7 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 		bindPresenter(VosManagementPresenter.class, VosManagementPresenter.MyView.class, VosManagementView.class, VosManagementPresenter.MyProxy.class);
 		bindPresenter(VoDetailPresenter.class, VoDetailPresenter.MyView.class, VoDetailView.class, VoDetailPresenter.MyProxy.class);
 
+		bindPresenter(UsersManagementPresenter.class, UsersManagementPresenter.MyView.class, UsersManagementView.class, UsersManagementPresenter.MyProxy.class);
 		bindPresenter(FacilitiesManagementPresenter.class, FacilitiesManagementPresenter.MyView.class, FacilitiesManagementView.class, FacilitiesManagementPresenter.MyProxy.class);
 		bindPresenter(AttributesManagementPresenter.class, AttributesManagementPresenter.MyView.class, AttributesManagementView.class, AttributesManagementPresenter.MyProxy.class);
 

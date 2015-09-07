@@ -17,6 +17,12 @@ public enum PerunColumnType {
 	MODIFIED_AT,
 	MODIFIED_BY,
 
+	//user columns
+	USER_ORGANIZATION,
+	USER_EMAIL,
+	USER_LOGIN,
+	USER_TYPE,
+
 	//attributes
 	ATTR_NAME,
 	ATTR_TYPE,

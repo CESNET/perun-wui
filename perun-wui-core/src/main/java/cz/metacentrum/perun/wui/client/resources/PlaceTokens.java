@@ -18,6 +18,7 @@ public class PlaceTokens {
 	// PerunWui pages
 	public static final String PERUN_VOS = "perun-vos";
 	public static final String PERUN_FACILITIES = "perun-facs";
+	public static final String PERUN_USERS = "perun-usrs";
 	public static final String VOS = "vos";
 	public static final String VOS_DETAIL = "vos-detail";
 	public static final String VOS_SELECT = "vos-select";

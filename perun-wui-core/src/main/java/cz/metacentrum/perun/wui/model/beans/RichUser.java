@@ -146,6 +146,34 @@ public class RichUser extends User {
 	}
 
 	/**
+	 * Get preferredMail stored in User attributes of RichUser.
+	 *
+	 * @return users mail
+	 */
+	public final String getPreferredEmail() {
+		for (Attribute a : JsUtils.<Attribute>jsoAsList(JsUtils.getNativePropertyArray(this, "userAttributes"))) {
+			if (a.getFriendlyName().equals("preferredMail")) {
+				return a.getValue();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get organization stored in User attributes of RichUser.
+	 *
+	 * @return users organization
+	 */
+	public final String getOrganization() {
+		for (Attribute a : JsUtils.<Attribute>jsoAsList(JsUtils.getNativePropertyArray(this, "userAttributes"))) {
+			if (a.getFriendlyName().equals("organization")) {
+				return a.getValue();
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Compares to another object
 	 *
 	 * @param o Object to compare
