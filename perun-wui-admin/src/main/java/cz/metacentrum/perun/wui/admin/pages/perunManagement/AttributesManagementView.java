@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -56,15 +57,14 @@ public class AttributesManagementView extends ViewImpl implements AttributesMana
 
 		AttributeDefinitionColumnProvider provider = new AttributeDefinitionColumnProvider();
 		grid = new PerunDataGrid<AttributeDefinition>(provider);
-
-		grid.setHeight("100%");
 		remove = PerunButton.getButton(PerunButtonType.REMOVE, ButtonType.DANGER, "Remove selected Attributes");
 		initWidget(uiBinder.createAndBindUi(this));
-		grid.addTableManagedFilterBox(textBox, filterButton);
-		grid.addTableManagedWidget(remove);
-		//remove.setTableManaged(grid);
-		//grid.addTableLoadingManagedWidget(remove, false);
-		// FIXME - is this right place to draw ?
+
+		UiUtils.bindFilterBox(grid, textBox, filterButton);
+		UiUtils.bindTableLoading(grid, filterButton, true);
+		UiUtils.bindTableLoading(grid, textBox, true);
+		UiUtils.bindTableSelection(grid, remove);
+
 		draw();
 	}
 

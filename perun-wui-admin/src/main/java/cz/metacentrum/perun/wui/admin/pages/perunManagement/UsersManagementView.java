@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.admin.pages.perunManagement;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -11,6 +12,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -22,7 +24,6 @@ import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedSuggestBox;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
-
 
 /**
  * PERUN ADMIN - USERS MANAGEMENT VIEW
@@ -52,9 +53,18 @@ public class UsersManagementView extends ViewImpl implements UsersManagementPres
 	UsersManagementView(final UsersManagementViewUiBinder uiBinder) {
 
 		grid = new PerunDataGrid<RichUser>(new RichUserColumnProvider());
-		grid.setHeight("100%");
-
 		initWidget(uiBinder.createAndBindUi(this));
+
+		UiUtils.bindSearchBox(textBox, searchButton);
+		UiUtils.bindTableLoading(grid, textBox, true);
+		UiUtils.bindTableLoading(grid, searchButton, true);
+		UiUtils.bindTableLoading(grid, listButton, true);
+		searchButton.setEnabled(false);
+
+		grid.getLoaderWidget().setEmptyMessage("Type name, mail or login to search by...");
+		grid.getLoaderWidget().onEmpty();
+
+
 	}
 
 	@UiHandler(value = "searchButton")
@@ -66,13 +76,8 @@ public class UsersManagementView extends ViewImpl implements UsersManagementPres
 
 				@Override
 				public void onFinished(JavaScriptObject jso) {
+					searchButton.setProcessing(false);
 					grid.setList(JsUtils.<RichUser>jsoAsList(jso));
-					for (RichUser richUser : grid.getList()) {
-						if(richUser.getFullName() != null) {
-							oracle.add(richUser.getFullName());
-						}
-					}
-
 				}
 
 				@Override
@@ -83,12 +88,14 @@ public class UsersManagementView extends ViewImpl implements UsersManagementPres
 							UsersManager.findRichUsersWithAttributes(textBox.getText(), PerunSession.getInstance().getConfiguration().getListOfStrings("getAttributesListForUserTables"), loadAgain);
 						}
 					});
+					searchButton.setProcessing(false);
 				}
 
 				@Override
 				public void onLoadingStart() {
 					grid.clearTable();
 					grid.getLoaderWidget().onLoading();
+					searchButton.setProcessing(true);
 				}
 			});
 	}
@@ -102,16 +109,13 @@ public class UsersManagementView extends ViewImpl implements UsersManagementPres
 
 			@Override
 			public void onFinished(JavaScriptObject jso) {
+				listButton.setProcessing(false);
 				grid.setList(JsUtils.<RichUser>jsoAsList(jso));
-				for (RichUser richUser : grid.getList()) {
-					if(richUser.getFullName() != null) {
-						oracle.add(richUser.getFullName());
-					}
-				}
 			}
 
 			@Override
 			public void onError(PerunException error) {
+				listButton.setProcessing(false);
 				grid.getLoaderWidget().onError(error, new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
@@ -122,6 +126,7 @@ public class UsersManagementView extends ViewImpl implements UsersManagementPres
 
 			@Override
 			public void onLoadingStart() {
+				listButton.setProcessing(true);
 				grid.clearTable();
 				grid.getLoaderWidget().onLoading();
 			}
@@ -130,6 +135,7 @@ public class UsersManagementView extends ViewImpl implements UsersManagementPres
 
 	@Override
 	public void focus() {
+		GWT.log("called");
 		textBox.setFocus(true);
 	}
 

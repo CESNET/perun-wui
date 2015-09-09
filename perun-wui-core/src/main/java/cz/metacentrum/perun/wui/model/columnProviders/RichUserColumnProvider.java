@@ -12,9 +12,9 @@ import java.util.ArrayList;
 
 /**
  * Implementation of {@link cz.metacentrum.perun.wui.model.ColumnProvider ColumnProvider}
- * for {@link cz.metacentrum.perun.wui.model.beans.Vo RichUser}.
+ * for {@link cz.metacentrum.perun.wui.model.beans.RichUser RichUser}.
  *
- * Created by Kristyna Kysela
+ * @author Kristyna Kysela
  */
 public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 
@@ -103,7 +103,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 			if (widthInPixels > 0) {
 				table.setColumnWidth(idColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(idColumn, "15%");
+				table.setColumnWidth(idColumn, "10%");
 			}
 
 		} else if (PerunColumnType.NAME.equals(column)) {
@@ -129,7 +129,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 				table.setColumnWidth(nameColumn, widthInPixels + "px");
 			} else {
 				// by default not with fixed width
-				table.setColumnWidth(nameColumn, "70%");
+				table.setColumnWidth(nameColumn, "30%");
 			}
 
 		} else if (PerunColumnType.USER_ORGANIZATION.equals(column)) {
@@ -156,7 +156,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 			if (widthInPixels > 0) {
 				table.setColumnWidth(organizationColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(organizationColumn, "40%");
+				table.setColumnWidth(organizationColumn, "20%");
 			}
 
 
@@ -184,7 +184,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 			if (widthInPixels > 0) {
 				table.setColumnWidth(emailColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(emailColumn, "30%");
+				table.setColumnWidth(emailColumn, "20%");
 			}
 
 		} else if (PerunColumnType.USER_LOGIN.equals(column)) {
@@ -207,7 +207,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 			if (widthInPixels > 0) {
 				table.setColumnWidth(loginColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(loginColumn, "30%");
+				table.setColumnWidth(loginColumn, "40%");
 			}
 		} else if (PerunColumnType.USER_TYPE.equals(column)) {
 
@@ -238,7 +238,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 			if (widthInPixels > 0) {
 				table.setColumnWidth(typeColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(typeColumn, "20%");
+				table.setColumnWidth(typeColumn, "10%");
 			}
 		}
 

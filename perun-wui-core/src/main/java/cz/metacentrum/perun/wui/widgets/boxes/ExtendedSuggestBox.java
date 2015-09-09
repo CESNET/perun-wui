@@ -1,10 +1,8 @@
 package cz.metacentrum.perun.wui.widgets.boxes;
 
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.core.client.Scheduler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Event;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestOracle;
@@ -65,9 +63,24 @@ public class ExtendedSuggestBox extends SuggestBox {
 
 		sinkEvents(Event.ONPASTE);
 		// bind custom events
-		this.getElement().addClassName("textarea" + counter++);
-		setCutCopyPasteHandler("textarea" + counter);
+		this.getElement().addClassName("suggest" + counter++);
+		setCutCopyPasteHandler("suggest" + counter);
 
+	}
+
+	@Override
+	public void onBrowserEvent(Event event) {
+		super.onBrowserEvent(event);
+		switch (DOM.eventGetType(event)) {
+			case Event.ONPASTE:
+				Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
+					@Override
+					public void execute() {
+						ValueChangeEvent.fire(ExtendedSuggestBox.this, getValue());
+					}
+				});
+				break;
+		}
 	}
 
 	/**

@@ -13,7 +13,7 @@
 		<b.html:Div addStyleNames="{res.gss.pageHeader}">
 
 			<b:Heading size="H2" ui:field="pageTitle">
-				<b:Icon ui:field="icon" type="BUILDING" fixedWidth="true" pull="LEFT" />
+				<b:Icon ui:field="icon" type="USER" fixedWidth="true" pull="LEFT" />
 				<b.html:Text text="Users"/>
 				<b.html:Small text=""/>
 			</b:Heading>
@@ -21,14 +21,14 @@
 			<p:PerunToolbar ui:field="menu">
 
 				<b:InputGroup addStyleNames="col-md-3">
-					<p.boxes:ExtendedSuggestBox focus="true" ui:field="textBox" placeholder="Search by..."/>
+					<p.boxes:ExtendedSuggestBox focus="true" ui:field="textBox" placeholder="Search by name, mail or login"/>
 				</b:InputGroup>
 
 				<b:ButtonGroup>
-					<p:PerunButton icon="SEARCH" type="PRIMARY" ui:field="searchButton">Search</p:PerunButton>
+					<p:PerunButton icon="SEARCH" type="PRIMARY" ui:field="searchButton" focus="true">Search</p:PerunButton>
 				</b:ButtonGroup>
 				<b:ButtonGroup>
-					<p:PerunButton type="PRIMARY" icon="LIST" ui:field="listButton">List users without VO</p:PerunButton>
+					<p:PerunButton icon="LIST" type="DEFAULT" ui:field="listButton">List users without VO</p:PerunButton>
 				</b:ButtonGroup>
 			</p:PerunToolbar>
 
