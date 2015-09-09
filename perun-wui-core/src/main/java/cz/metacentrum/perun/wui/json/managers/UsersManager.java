@@ -37,7 +37,10 @@ public class UsersManager {
 	}
 
 	/**
-	 * Search RichUsers with attributes who matches the searchString.
+	 * Search for RichUsers with attributes who matches the searchString by name, login or email.
+	 *
+	 * When list of attributes names is specified, only such attributes are returned. If null or empty,
+	 * all user attributes with non-NULL value are returned.
 	 *
 	 * @param searchString searched string
 	 * @param attrNames list of attributes name

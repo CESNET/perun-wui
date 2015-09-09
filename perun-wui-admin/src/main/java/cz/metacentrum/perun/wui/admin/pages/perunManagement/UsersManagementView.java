@@ -70,34 +70,34 @@ public class UsersManagementView extends ViewImpl implements UsersManagementPres
 	@UiHandler(value = "searchButton")
 	public void search(ClickEvent event) {
 
-			UsersManager.findRichUsersWithAttributes(textBox.getText(), PerunSession.getInstance().getConfiguration().getListOfStrings("getAttributesListForUserTables"), new JsonEvents() {
+		UsersManager.findRichUsersWithAttributes(textBox.getText(), PerunSession.getInstance().getConfiguration().getListOfStrings("getAttributesListForUserTables"), new JsonEvents() {
 
-				JsonEvents loadAgain = this;
+			JsonEvents loadAgain = this;
 
-				@Override
-				public void onFinished(JavaScriptObject jso) {
-					searchButton.setProcessing(false);
-					grid.setList(JsUtils.<RichUser>jsoAsList(jso));
-				}
+			@Override
+			public void onFinished(JavaScriptObject jso) {
+				searchButton.setProcessing(false);
+				grid.setList(JsUtils.<RichUser>jsoAsList(jso));
+			}
 
-				@Override
-				public void onError(PerunException error) {
-					grid.getLoaderWidget().onError(error, new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							UsersManager.findRichUsersWithAttributes(textBox.getText(), PerunSession.getInstance().getConfiguration().getListOfStrings("getAttributesListForUserTables"), loadAgain);
-						}
-					});
-					searchButton.setProcessing(false);
-				}
+			@Override
+			public void onError(PerunException error) {
+				grid.getLoaderWidget().onError(error, new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						UsersManager.findRichUsersWithAttributes(textBox.getText(), PerunSession.getInstance().getConfiguration().getListOfStrings("getAttributesListForUserTables"), loadAgain);
+					}
+				});
+				searchButton.setProcessing(false);
+			}
 
-				@Override
-				public void onLoadingStart() {
-					grid.clearTable();
-					grid.getLoaderWidget().onLoading();
-					searchButton.setProcessing(true);
-				}
-			});
+			@Override
+			public void onLoadingStart() {
+				grid.clearTable();
+				grid.getLoaderWidget().onLoading();
+				searchButton.setProcessing(true);
+			}
+		});
 	}
 
 	@UiHandler(value = "listButton")
