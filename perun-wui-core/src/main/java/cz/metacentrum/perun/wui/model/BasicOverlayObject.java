@@ -7,6 +7,7 @@ import com.google.gwt.core.client.JsArrayString;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Object definition for primitive types and lists of them
@@ -78,6 +79,29 @@ public class BasicOverlayObject extends JavaScriptObject {
 	}
 
 	/**
+	 * Return String value representation of name as URN list.
+	 *
+	 * @param name
+	 *
+	 * @return list of string values
+	 */
+	public final ArrayList<String> getListOfStrings(String name){
+
+		ArrayList<String> list;
+		ArrayList<String> resultList = new ArrayList<String>();
+		String URN = getCustomProperty(name);
+		if(URN != null || !(URN.trim().isEmpty())){
+			list = new ArrayList<String>(Arrays.asList(URN.split(",")));
+			for(int i = 0; i < list.size(); i++){
+				resultList.add(list.get(i).trim());
+			}
+			return resultList;
+		}else{
+			return null;
+		}
+	}
+
+	/**
 	 * Return int value representation of itself as list.
 	 *
 	 * @return list of int values
@@ -114,5 +138,10 @@ public class BasicOverlayObject extends JavaScriptObject {
 			return null;
 		}
 	}
+
+	public final native String getCustomProperty(String property) /*-{
+        if(typeof this[property] == "undefined") return "";
+        return this[property];
+    }-*/;
 
 }

@@ -1,21 +1,12 @@
 package cz.metacentrum.perun.wui.widgets;
 
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
-import com.google.gwt.user.client.ui.SuggestOracle;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import com.google.gwt.cell.client.CheckboxCell;
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.cell.client.ValueUpdater;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.cellview.client.*;
-import com.google.gwt.user.client.ui.Focusable;
-import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.view.client.MultiSelectionModel;
-import com.google.gwt.view.client.SelectionChangeEvent;
 import com.google.gwt.view.client.SingleSelectionModel;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.GeneralObject;
@@ -271,6 +262,8 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 
 		// draw default columns
 		drawTableColumns();
+
+		this.fireEvent(new LoadingStateChangeEvent(LoadingStateChangeEvent.LoadingState.LOADED));
 
 	}
 
@@ -605,9 +598,11 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 		if (list != null && !list.isEmpty()) {
 			backup.addAll(list);
 			content.addAll(list);
+			loaderWidget.onFinished();
+		} else {
+			loaderWidget.onFinishedEmpty();
 		}
 		sortTable();
-		loaderWidget.onFinished();
 		refresh();
 
 	}
@@ -745,225 +740,6 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	public ArrayList<T> getList() {
 		return this.content;
 	}
-
-	/**
-	 * Register any widget for table selection to manage enable/disable state.
-	 * Widget is also disabled, when table is in LOADING state and can be enabled only by selection change.
-	 * If widget is instance of PerunButton and is in processing state, than it's not enabled on selection.
-	 * <p/>
-	 * If no item in table is selected, widget is disabled.
-	 * If any item in table is selected, widget is enabled.
-	 * <p/>
-	 * Original widget state is set to disabled.
-	 *
-	 * @param widget widget to be handled by table
-	 */
-	public void addTableManagedWidget(final HasEnabled widget) {
-
-		widget.setEnabled(false);
-
-		if (widget instanceof PerunButton) {
-			((PerunButton)widget).setTableManaged(this);
-		}
-
-		if (singleSelection) {
-			singleSelectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-				@Override
-				public void onSelectionChange(SelectionChangeEvent selectionChangeEvent) {
-					if (singleSelectionModel.getSelectedObject() != null) {
-						if (widget instanceof PerunButton) {
-							if (!((PerunButton)widget).isProcessing()) widget.setEnabled(true);
-						} else {
-							widget.setEnabled(true);
-						}
-					} else {
-						widget.setEnabled(false);
-					}
-				}
-			});
-		} else {
-			multiSelectionModel.addSelectionChangeHandler(new SelectionChangeEvent.Handler() {
-				@Override
-				public void onSelectionChange(SelectionChangeEvent selectionChangeEvent) {
-					if (multiSelectionModel.getSelectedSet() != null && !multiSelectionModel.getSelectedSet().isEmpty()) {
-						if (widget instanceof PerunButton) {
-							if (!((PerunButton)widget).isProcessing()) widget.setEnabled(true);
-						} else {
-							widget.setEnabled(true);
-						}
-					} else {
-						widget.setEnabled(false);
-					}
-				}
-			});
-		}
-
-		addLoadingStateChangeHandler(new LoadingStateChangeEvent.Handler() {
-			@Override
-			public void onLoadingStateChanged(LoadingStateChangeEvent event) {
-
-				if (event.getLoadingState().equals(LoadingStateChangeEvent.LoadingState.LOADING)) {
-					widget.setEnabled(false);
-				}
-
-			}
-		});
-
-	}
-
-	/**
-	 * Register any widget for table loading state change to manage widget enabled/disabled state.
-	 * If ignoreEmptyFilter == TRUE, then widget is kept enabled when table filtering results in
-	 * an empty table (which is LOADING state too).
-	 * If widget is instance of PerunButton and is in processing state, than it's not enabled on selection.
-	 * <p/>
-	 * If table is loading, widget is disabled.
-	 * If table is presenting data, widget is enabled.
-	 * <p/>
-	 * Original widget state is set to disabled when registering.
-	 *
-	 * @param widget widget to be handled by table
-	 * @param ignoreEmptyFilter TRUE = don't disable widget on empty filtering / FALSE = disable widget normally
-	 */
-	public void addTableLoadingManagedWidget(final HasEnabled widget, final boolean ignoreEmptyFilter) {
-
-		widget.setEnabled(false);
-
-		addLoadingStateChangeHandler(new LoadingStateChangeEvent.Handler() {
-			@Override
-			public void onLoadingStateChanged(LoadingStateChangeEvent event) {
-
-				if (event.getLoadingState().equals(LoadingStateChangeEvent.LoadingState.LOADING)) {
-					if (loaderWidget.getLoaderState().equals(PerunLoader.PerunLoaderState.filter) &&
-							ignoreEmptyFilter) {
-						if (widget instanceof PerunButton) {
-							if (!((PerunButton)widget).isProcessing()) widget.setEnabled(true);
-						} else {
-							widget.setEnabled(true);
-						}
-					} else {
-						widget.setEnabled(false);
-					}
-				} else {
-					if (widget instanceof PerunButton) {
-						if (!((PerunButton)widget).isProcessing()) widget.setEnabled(true);
-					} else {
-						widget.setEnabled(true);
-					}
-				}
-
-			}
-		});
-
-	}
-
-	/**
-	 * Register any widget for table loading state change to manage widget enabled/disabled state.
-	 * If ignoreEmptyFilter == TRUE, then widget is kept enabled when table filtering results in
-	 * an empty table (which is LOADING state too).
-	 * If widget is instance of PerunButton and is in processing state, than it's not enabled on selection.
-	 * <p/>
-	 * If table is loading, widget is disabled.
-	 * If table is presenting data, widget is enabled.
-	 * <p/>
-	 * Original widget state is set to disabled when registering.
-	 *
-	 * @param widget widget to be handled by table
-	 * @param ignoreEmptyFilter TRUE = don't disable widget on empty filtering / FALSE = disable widget normally
-	 * @param focus TRUE = focus widget when enabled / FALSE = blur widget when disabled
-	 */
-	public void addTableLoadingManagedWidget(final HasEnabled widget, final boolean ignoreEmptyFilter, boolean focus) {
-
-		widget.setEnabled(false);
-
-		addLoadingStateChangeHandler(new LoadingStateChangeEvent.Handler() {
-			@Override
-			public void onLoadingStateChanged(LoadingStateChangeEvent event) {
-
-				if (event.getLoadingState().equals(LoadingStateChangeEvent.LoadingState.LOADING)) {
-					if (loaderWidget.getLoaderState().equals(PerunLoader.PerunLoaderState.filter) &&
-							ignoreEmptyFilter) {
-
-						if (widget instanceof PerunButton) {
-							if (!((PerunButton)widget).isProcessing()) widget.setEnabled(true);
-						} else {
-							widget.setEnabled(true);
-						}
-
-						if (widget instanceof Focusable && widget.isEnabled()) {
-							((Focusable) widget).setFocus(true);
-						}
-
-					} else {
-
-						widget.setEnabled(false);
-
-						if (widget instanceof Focusable) {
-							((Focusable) widget).setFocus(false);
-						}
-
-					}
-				} else {
-
-					if (widget instanceof PerunButton) {
-						if (!((PerunButton)widget).isProcessing()) widget.setEnabled(true);
-					} else {
-						widget.setEnabled(true);
-					}
-
-					if (widget instanceof Focusable && widget.isEnabled()) {
-						((Focusable) widget).setFocus(true);
-					}
-
-				}
-
-			}
-		});
-
-	}
-
-	/**
-	 * Bind SuggestBox and PerunButton to table filter event and set default settings to SuggestBox.
-	 *
-	 * - Both disabled at start.
-	 * - When loading table data, both are disabled.
-	 * - On empty table they are active.
-	 * - On loading finished, they are active and search box is focused.
-	 *
-	 * @param box SuggestBox to enter filter text
-	 * @param filterButton Button to trigger filtering
-	 * @param <C> Implementation class for SuggestBox extending the base one.
-	 */
-	public <C extends SuggestBox> void addTableManagedFilterBox(final C box, PerunButton filterButton) {
-
-		addTableLoadingManagedWidget(box, true, true);
-		addTableLoadingManagedWidget(filterButton, true);
-
-		box.setAutoSelectEnabled(false);
-		// search box on enter
-		box.addKeyUpHandler(new KeyUpHandler() {
-			@Override
-			public void onKeyUp(KeyUpEvent event) {
-				if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ENTER) {
-					filterTable(box.getText().trim());
-				} else if (event.getNativeEvent().getKeyCode() == KeyCodes.KEY_ESCAPE) {
-					box.hideSuggestionList();
-				} else if (!box.isSuggestionListShowing()) {
-					// of not already displayed, show suggestion list
-					box.showSuggestionList();
-				}
-			}
-		});
-
-		// search box on selected
-		box.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
-			public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
-				filterTable(event.getSelectedItem().getReplacementString());
-			}
-		});
-
-	}
-
 
 	/**
 	 * Removes all current columns from table and draw new columns based on current table settings
@@ -1163,6 +939,28 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 				return super.getHeaderStyleNames() + ((col.isSortable()) ? " pointer" : "");
 			}
 		};
+	}
+
+	/**
+	 * Get single selection model of table. Make sure it's "in use" by calling isSingleSelection().
+	 * Otherwise changes wont take effect on table content.
+	 *
+	 * @see #isSingleSelection()
+	 * @return selection model of table
+	 */
+	public SingleSelectionModel<T> getSingleSelectionModel() {
+		return singleSelectionModel;
+	}
+
+	/**
+	 * Get multi selection model of table. Make sure it's "in use" by calling isSingleSelection().
+	 * Otherwise changes wont take effect on table content.
+	 *
+	 * @see #isSingleSelection()
+	 * @return selection model of table
+	 */
+	public MultiSelectionModel<T> getMultiSelectionModel() {
+		return multiSelectionModel;
 	}
 
 }

@@ -24,7 +24,7 @@
 		<b:Row addStyleNames="{style.marginTop}">
 			<b.html:Div addStyleNames="{style.wrapper}">
 
-				<b:Progress active="true" type="STRIPED" addStyleNames="{style.progress}">
+				<b:Progress active="true" type="STRIPED" addStyleNames="{style.progress}" visible="false">
 					<b:ProgressBar ui:field="bar" />
 				</b:Progress>
 

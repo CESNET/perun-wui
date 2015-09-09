@@ -23,14 +23,18 @@ import org.gwtbootstrap3.client.ui.constants.ProgressBarType;
  */
 public class PerunLoader extends Composite {
 
+	/**
+	 * Possible states of PerunLoader
+	 */
 	public enum PerunLoaderState {
 		loading,
 		finished,
 		error,
-		filter
+		filter,
+		empty
 	}
 
-	private PerunLoaderState state = PerunLoaderState.loading;
+	private PerunLoaderState state = PerunLoaderState.empty;
 
 	interface PerunLoaderUiBinder extends UiBinder<Widget, PerunLoader> {
 	}
@@ -45,8 +49,13 @@ public class PerunLoader extends Composite {
 	@UiField PerunButton retry;
 	@UiField PerunButton report;
 
+	String emptyMessage = "No items found.";
+
 	private PerunException catchedException;
 
+	/**
+	 * Create new default PerunLoader instance
+	 */
 	public PerunLoader() {
 
 		rootElement = ourUiBinder.createAndBindUi(this);
@@ -67,30 +76,61 @@ public class PerunLoader extends Composite {
 
 	}
 
+	/**
+	 * Get PerunLoader widget itself
+	 *
+	 * @return loader widget
+	 */
 	public Widget getWidget() {
 		return rootElement;
 	}
 
+	/**
+	 * Get progress bar
+	 *
+	 * @return progress bar
+	 */
 	public ProgressBar getProgressBar() {
 		return bar;
 	}
 
+	/**
+	 * Get current state of PerunLoader e.g. loading, finished,...
+	 *
+	 * @return loader state
+	 */
 	public PerunLoaderState getLoaderState() {
 		return this.state;
 	}
 
+	/**
+	 * Set custom message to display when table is empty.
+	 *
+	 * @param message Message to display
+	 */
+	public void setEmptyMessage(String message) {
+		this.emptyMessage = message;
+	}
+
+	/**
+	 * Called by table when filtering is done.
+	 *
+	 * @param text filtering string
+	 */
 	public void onFilter(String text) {
 
 		state = PerunLoaderState.filter;
 		bar.getParent().setVisible(false);
 
 		// TODO ALERT
-		message.setText("No results match the filter '"+text+"'.");
+		message.setText("No results match the filter '" + text + "'.");
 		message.setVisible(true);
-		// TODO
 
 	}
 
+	/**
+	 * Called by table when it's loading data
+	 */
 	public void onLoading() {
 
 		state = PerunLoaderState.loading;
@@ -106,7 +146,7 @@ public class PerunLoader extends Composite {
 			public boolean execute() {
 				if (state.equals(PerunLoaderState.loading)) {
 					if (bar.getPercent() < 100) {
-						bar.setPercent(bar.getPercent()+1);
+						bar.setPercent(bar.getPercent() + 1);
 						return true;
 					}
 					return false;
@@ -118,34 +158,47 @@ public class PerunLoader extends Composite {
 
 	}
 
+	/**
+	 * Called by table when content is cleared.
+	 */
 	public void onEmpty(){
 
-		state = PerunLoaderState.finished;
+		state = PerunLoaderState.empty;
 		bar.getParent().setVisible(false);
-		message.setText("No items found.");
+		message.setText(emptyMessage);
 		message.setVisible(true);
-
-		/*
-		alert.setVisible(false);
-
-		// TODO ALERT
-		message.setText("No items found.");
-		message.setVisible(true);
-		*/
 
 	}
 
+	/**
+	 * Called by table when loading is finished and result is not empty.
+	 */
 	public void onFinished(){
 
 		state = PerunLoaderState.finished;
 		bar.getParent().setVisible(false);
 
-		// TODO ALERT
 		message.setText("Loading finished.");
 		message.setVisible(true);
 
 	}
 
+	/**
+	 * Called by table when loading is finished, but resulting list is empty.
+	 */
+	public void onFinishedEmpty(){
+
+		state = PerunLoaderState.empty;
+		bar.getParent().setVisible(false);
+
+		message.setText("Loading finished. No results found.");
+		message.setVisible(true);
+
+	}
+
+	/**
+	 * Called by table when loading ends with error.
+	 */
 	public void onError(PerunException error, final ClickHandler handler) {
 
 		state = PerunLoaderState.error;
