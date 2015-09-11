@@ -8,6 +8,8 @@ import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources;
 import cz.metacentrum.perun.wui.admin.pages.perunManagement.*;
+import cz.metacentrum.perun.wui.admin.pages.servicesManagement.ServiceDetailPresenter;
+import cz.metacentrum.perun.wui.admin.pages.servicesManagement.ServiceDetailView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectPresenter;
@@ -50,6 +52,9 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 		// Perun Admin WUI specific pages
 		bindPresenter(VosManagementPresenter.class, VosManagementPresenter.MyView.class, VosManagementView.class, VosManagementPresenter.MyProxy.class);
 		bindPresenter(VoDetailPresenter.class, VoDetailPresenter.MyView.class, VoDetailView.class, VoDetailPresenter.MyProxy.class);
+
+		bindPresenter(ServicesManagementPresenter.class, ServicesManagementPresenter.MyView.class, ServicesManagementView.class, ServicesManagementPresenter.MyProxy.class);
+		bindPresenter(ServiceDetailPresenter.class, ServiceDetailPresenter.MyView.class, ServiceDetailView.class, ServiceDetailPresenter.MyProxy.class);
 
 		bindPresenter(UsersManagementPresenter.class, UsersManagementPresenter.MyView.class, UsersManagementView.class, UsersManagementPresenter.MyProxy.class);
 		bindPresenter(FacilitiesManagementPresenter.class, FacilitiesManagementPresenter.MyView.class, FacilitiesManagementView.class, FacilitiesManagementPresenter.MyProxy.class);
