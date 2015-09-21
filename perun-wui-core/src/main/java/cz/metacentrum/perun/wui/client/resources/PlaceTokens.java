@@ -19,6 +19,8 @@ public class PlaceTokens {
 	public static final String PERUN_VOS = "perun-vos";
 	public static final String PERUN_FACILITIES = "perun-facs";
 	public static final String PERUN_USERS = "perun-usrs";
+	public static final String PERUN_EXT_SOURCES = "perun-extsrc";
+	public static final String PERUN_OWNERS = "perun-own";
 	public static final String VOS = "vos";
 	public static final String VOS_DETAIL = "vos-detail";
 	public static final String VOS_SELECT = "vos-select";
@@ -36,7 +38,6 @@ public class PlaceTokens {
 	public static final String ATTRIBUTE_DETAIL = "attrs_detail";
 
 	// Getters for usage in UiBinder xml definitions
-
 	public static String getFacilityDetail() {
 		return FACILITY_DETAIL;
 	}
