@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 /**
- * Comparator for any Perun's object - it makes a GeneralObject from them.
+ * Comparator for any Peruns object - it makes a GeneralObject from them.
  *
  * @author Vaclav Mach <374430@mail.muni.cz>
  * @author Pavel Zlámal <zlamal@cesnet.cz>
@@ -37,8 +37,9 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 	 * @return comparison result used in comparators
 	 */
 	public static final native int nativeCompare(String o1, String o2) /*-{
-        if (o1 == null) return -1;
-        if (o2 == null) return 1;
+        if (o1 == null && o2 != null) return -1;
+        if (o2 == null && o1 != null) return 1;
+		if (o1 == null && o2 == null) return 0;
         return o1.localeCompare(o2);
     }-*/;
 
@@ -51,8 +52,9 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		return new Comparator<String>() {
 			@Override
 			public int compare(String o1, String o2) {
-				if (o1 == null) return -1;
-				if (o2 == null) return 1;
+				if (o1 == null && o2 != null) return -1;
+				if (o2 == null && o1 != null) return 1;
+				if (o1 == null && o2 == null) return 0;
 				return nativeCompare(o1, o2);
 			}
 		};
@@ -67,8 +69,9 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 	@Override
 	public int compare(T obj1, T obj2) {
 
-		if (obj1 == null) return -1;
-		if (obj2 == null) return 1;
+		if (obj1 == null && obj2 != null) return -1;
+		if (obj2 == null && obj1 != null) return 1;
+		if (obj1 == null && obj2 == null) return 0;
 
 		GeneralObject o1 = obj1.cast();
 		GeneralObject o2 = obj2.cast();

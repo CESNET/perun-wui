@@ -19,10 +19,12 @@ public class PlaceTokens {
 	public static final String PERUN_VOS = "perun-vos";
 	public static final String PERUN_FACILITIES = "perun-facs";
 	public static final String PERUN_USERS = "perun-usrs";
+	public static final String PERUN_SERVICES = "perun-srv";
 	public static final String VOS = "vos";
 	public static final String VOS_DETAIL = "vos-detail";
 	public static final String VOS_SELECT = "vos-select";
 	public static final String FACILITY_DETAIL = "facs-detail";
+	public static final String SERVICE_DETAIL = "srv-detail";
 
 	public static final String FACILITIES = "facs";
 	public static final String USERS = "usrs";
