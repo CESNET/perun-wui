@@ -1,0 +1,67 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+			 xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
+			 xmlns:p="urn:import:cz.metacentrum.perun.wui.widgets"
+			 xmlns:p.boxes="urn:import:cz.metacentrum.perun.wui.widgets.boxes"
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
+		>
+
+	<ui:style>
+	</ui:style>
+
+	<b:Modal ui:field="itself" closable="true" dataBackdrop="STATIC">
+		<b:ModalHeader>
+			<b:Heading size="H4">
+				<b:Icon ui:field="icon" type="BANK" fixedWidth="true" pull="LEFT" />
+				<b.html:Text>Create Owner</b.html:Text>
+			</b:Heading>
+		</b:ModalHeader>
+		<b:ModalBody ui:field="body">
+
+			<b:Form type="HORIZONTAL">
+				<b:FieldSet>
+
+					<b:FormGroup>
+						<b:FormLabel for="nameTextBox" addStyleNames="col-lg-2">Name</b:FormLabel>
+						<g:FlowPanel addStyleNames="col-md-6">
+							<p.boxes:ExtendedTextBox focus="true" ui:field="nameTextBox" placeholder="Name"/>
+						</g:FlowPanel>
+					</b:FormGroup>
+
+					<b:FormGroup>
+						<b:FormLabel for="contactTextBox" addStyleNames="col-lg-2">Contact</b:FormLabel>
+						<g:FlowPanel addStyleNames="col-md-6">
+							<p.boxes:ExtendedTextBox focus="true" ui:field="contactTextBox" placeholder="Contact"/>
+						</g:FlowPanel>
+					</b:FormGroup>
+
+
+					<b:FormGroup>
+						<b:FormLabel for="typeListBox" addStyleNames="col-lg-2">Type</b:FormLabel>
+						<g:FlowPanel addStyleNames="col-md-6">
+							<b:ListBox ui:field="typeListBox">
+								<g:item>technical</g:item>
+								<g:item>administrative</g:item>
+							</b:ListBox>
+						</g:FlowPanel>
+					</b:FormGroup>
+
+					<b:FormGroup>
+						<g:FlowPanel addStyleNames="col-lg-offset-2 col-md-6">
+							<b:ButtonToolBar>
+								<b:ButtonGroup>
+									<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="createButton" >Create</p:PerunButton>
+								</b:ButtonGroup>
+								<b:ButtonGroup>
+									<p:PerunButton type="DANGER" icon="CLOSE" ui:field="cancelButton" >Cancel</p:PerunButton>
+								</b:ButtonGroup>
+							</b:ButtonToolBar>
+						</g:FlowPanel>
+					</b:FormGroup>
+				</b:FieldSet>
+			</b:Form>
+
+		</b:ModalBody>
+	</b:Modal>
+
+</ui:UiBinder>

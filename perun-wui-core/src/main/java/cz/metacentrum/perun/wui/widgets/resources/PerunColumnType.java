@@ -38,6 +38,13 @@ public enum PerunColumnType {
 	// facility columns
 	FACILITY_OWNERS,
 
+	//ext source columns
+	EXT_SOURCE_TYPE,
+
+	//owner columns
+	OWNER_CONTACT,
+	OWNER_TYPE,
+
 	// application columns
 	APPLICATION_TYPE,
 	APPLICATION_STATE,
