@@ -28,7 +28,7 @@ public class ServiceDetailView extends ViewImpl implements ServiceDetailPresente
 
 	@Override
 	public void setService(Service service) {
-		pageTitle.setText(service.getName());
+		pageTitle.setText("Service " + service.getName());
 	}
 
 }

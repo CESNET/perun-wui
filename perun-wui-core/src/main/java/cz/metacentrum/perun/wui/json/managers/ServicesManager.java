@@ -12,7 +12,6 @@ import cz.metacentrum.perun.wui.model.beans.Service;
  * while processing to prevent any further actions based on it's {@link cz.metacentrum.perun.wui.json.JsonEvents JsonEvents}.
  *
  * @author Kristyna Kysela
- *
  */
 public class ServicesManager {
 

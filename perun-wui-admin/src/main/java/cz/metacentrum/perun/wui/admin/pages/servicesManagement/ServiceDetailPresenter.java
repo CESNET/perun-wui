@@ -18,7 +18,6 @@ import cz.metacentrum.perun.wui.json.managers.ServicesManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Service;
 
-
 /**
  * Presenter for PERUN ADMIN - SERVICE DETAIL
  *

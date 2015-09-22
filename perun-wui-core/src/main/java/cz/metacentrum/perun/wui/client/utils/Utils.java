@@ -28,7 +28,7 @@ public class Utils {
 
 	public static GrowlOptions getDefaultGrowlOptions() {
 		GrowlOptions options = new GrowlOptions();
-		options.setDelay(5000);
+		options.setDelay(10000);
 		options.setAllowDismiss(false);
 		options.setOffset(20, 65);
 		options.setAnimation(Animation.LIGHTSPEED_IN, Animation.LIGHTSPEED_OUT);

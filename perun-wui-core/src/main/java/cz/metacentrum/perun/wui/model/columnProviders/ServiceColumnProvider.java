@@ -17,7 +17,7 @@ import java.util.ArrayList;
  * Implementation of {@link cz.metacentrum.perun.wui.model.ColumnProvider ColumnProvider}
  * for {@link cz.metacentrum.perun.wui.model.beans.Service Service}.
  *
- * Created Kristyna Kysela.
+ * @author Kristyna Kysela
  */
 public class ServiceColumnProvider extends ColumnProvider<Service> {
 

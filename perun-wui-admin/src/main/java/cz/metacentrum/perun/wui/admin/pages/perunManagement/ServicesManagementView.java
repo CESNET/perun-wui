@@ -88,12 +88,6 @@ public class ServicesManagementView extends ViewImpl implements ServicesManageme
 				public void onError(PerunException error) {
 					remove.setProcessing(false);
 					Growl.growl("Service "+service.getName()+" was not deleted - " + error.getMessage() + ".", GrowlType.DANGER);
-					grid.getLoaderWidget().onError(error, new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							ServicesManager.deleteService(service, loadAgain);
-						}
-					});
 				}
 
 				@Override
@@ -119,6 +113,10 @@ public class ServicesManagementView extends ViewImpl implements ServicesManageme
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 				grid.setList(JsUtils.<Service>jsoAsList(jso));
+				// fill oracle
+				for (Service s : grid.getList()) {
+					oracle.add(s.getName());
+				}
 			}
 
 			@Override
@@ -134,6 +132,7 @@ public class ServicesManagementView extends ViewImpl implements ServicesManageme
 			@Override
 			public void onLoadingStart() {
 				grid.clearTable();
+				oracle.clear();
 				grid.getLoaderWidget().onLoading();
 			}
 		});
