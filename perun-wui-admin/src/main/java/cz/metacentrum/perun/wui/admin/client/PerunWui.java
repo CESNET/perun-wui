@@ -10,6 +10,8 @@ import cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources;
 import cz.metacentrum.perun.wui.admin.pages.perunManagement.*;
 import cz.metacentrum.perun.wui.admin.pages.servicesManagement.ServiceDetailPresenter;
 import cz.metacentrum.perun.wui.admin.pages.servicesManagement.ServiceDetailView;
+import cz.metacentrum.perun.wui.admin.pages.perunManagement.ownersManagement.OwnerCreatePresenter;
+import cz.metacentrum.perun.wui.admin.pages.perunManagement.ownersManagement.OwnerCreateView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectPresenter;
@@ -59,10 +61,14 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 		bindPresenter(UsersManagementPresenter.class, UsersManagementPresenter.MyView.class, UsersManagementView.class, UsersManagementPresenter.MyProxy.class);
 		bindPresenter(FacilitiesManagementPresenter.class, FacilitiesManagementPresenter.MyView.class, FacilitiesManagementView.class, FacilitiesManagementPresenter.MyProxy.class);
 		bindPresenter(AttributesManagementPresenter.class, AttributesManagementPresenter.MyView.class, AttributesManagementView.class, AttributesManagementPresenter.MyProxy.class);
+		bindPresenter(ExtSourcesManagementPresenter.class, ExtSourcesManagementPresenter.MyView.class, ExtSourcesManagementView.class, ExtSourcesManagementPresenter.MyProxy.class);
+		bindPresenter(OwnersManagementPresenter.class, OwnersManagementPresenter.MyView.class, OwnersManagementView.class, OwnersManagementPresenter.MyProxy.class);
 
 		// Bind Presenter-Widgets
 		bindSingletonPresenterWidget(LeftMenuPresenter.class, LeftMenuPresenter.MyView.class, LeftMenuView.class);
 		bindSingletonPresenterWidget(VoSelectPresenter.class, VoSelectPresenter.MyView.class, VoSelectView.class);
+		bindSingletonPresenterWidget(OwnerCreatePresenter.class, OwnerCreatePresenter.MyView.class, OwnerCreateView.class);
+
 
 	}
 

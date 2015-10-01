@@ -3,9 +3,10 @@ package cz.metacentrum.perun.wui.model.columnProviders;
 import com.google.gwt.cell.client.FieldUpdater;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.beans.Facility;
-import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.model.beans.Owner;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.cells.PerunLinkCell;
@@ -13,6 +14,7 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Implementation of {@link ColumnProvider ColumnProvider}
@@ -29,6 +31,7 @@ public class FacilityColumnProvider extends ColumnProvider<Facility> {
 		columns.add(PerunColumnType.ID);
 		columns.add(PerunColumnType.NAME);
 		columns.add(PerunColumnType.DESCRIPTION);
+		columns.add(PerunColumnType.FACILITY_OWNERS);
 		return columns;
 
 	}
@@ -154,7 +157,7 @@ public class FacilityColumnProvider extends ColumnProvider<Facility> {
 				table.setColumnWidth(nameColumn, widthInPixels + "px");
 			} else {
 				// by default not with fixed width
-				table.setColumnWidth(nameColumn, "60%");
+				table.setColumnWidth(nameColumn, "30%");
 			}
 
 		} else if (PerunColumnType.DESCRIPTION.equals(column)) {
@@ -178,6 +181,34 @@ public class FacilityColumnProvider extends ColumnProvider<Facility> {
 				table.setColumnWidth(shortNameColumn, widthInPixels + "px");
 			} else {
 				table.setColumnWidth(shortNameColumn, "30%");
+			}
+
+		} else if (PerunColumnType.FACILITY_OWNERS.equals(column)) {
+
+			PerunColumn<Facility, String> ownersColumn = createColumn(
+					column,
+					new GetValue<Facility, String>() {
+						@Override
+						public String getValue(Facility object) {
+							ArrayList<String> result = new ArrayList<>();
+							for (Owner o : object.getOwners()) {
+								if (o.getType().equals("technical")) result.add(o.getName());
+							}
+							Collections.sort(result, PerunComparator.getNativeComparator());
+							return Utils.join(result, ", ");
+						}
+					},
+					this.<String>getFieldUpdater(table)
+			);
+
+			ownersColumn.setSortable(true);
+			table.getColumnSortHandler().setComparator(ownersColumn, new PerunComparator<Facility>(PerunColumnType.FACILITY_OWNERS));
+			ownersColumn.setColumnType(column);
+			table.addColumn(ownersColumn, "Technical owners");
+			if (widthInPixels > 0) {
+				table.setColumnWidth(ownersColumn, widthInPixels + "px");
+			} else {
+				table.setColumnWidth(ownersColumn, "30%");
 			}
 
 		}
