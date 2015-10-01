@@ -37,11 +37,11 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 	 * @return comparison result used in comparators
 	 */
 	public static final native int nativeCompare(String o1, String o2) /*-{
-        if (o1 == null && o2 != null) return -1;
-        if (o2 == null && o1 != null) return 1;
+		if (o1 == null && o2 != null) return -1;
+		if (o2 == null && o1 != null) return 1;
 		if (o1 == null && o2 == null) return 0;
-        return o1.localeCompare(o2);
-    }-*/;
+		return o1.localeCompare(o2);
+	}-*/;
 
 	/**
 	 * Return Comparator<String> which uses browser's localeCompare().
@@ -100,6 +100,24 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 
 		// Facility columns
 		if (PerunColumnType.FACILITY_OWNERS.equals(this.column)) return this.compareByOwnersNames(o1, o2);
+
+		// Owner
+		if (PerunColumnType.OWNER_TYPE.equals(this.column))
+			return getNativeComparator().compare(((Owner) o1).getType(), ((Owner) o2).getType());
+		if (PerunColumnType.OWNER_CONTACT.equals(this.column))
+			return getNativeComparator().compare(((Owner) o1).getContact(), ((Owner) o2).getContact());
+
+		// ExtSource columns
+		if (PerunColumnType.EXT_SOURCE_TYPE.equals(this.column))
+			return getNativeComparator().compare(((ExtSource) o1).getType(), ((ExtSource) o2).getType());
+
+		// Rich User
+		if (PerunColumnType.USER_ORGANIZATION.equals(this.column))
+			return getNativeComparator().compare(((RichUser) o1).getOrganization(), ((RichUser) o2).getOrganization());
+		if (PerunColumnType.USER_EMAIL.equals(this.column))
+			return getNativeComparator().compare(((RichUser) o1).getPreferredEmail(), ((RichUser) o2).getPreferredEmail());
+		if (PerunColumnType.USER_LOGIN.equals(this.column))
+			return getNativeComparator().compare(((RichUser) o1).getLogins(), ((RichUser) o2).getLogins());
 
 		// Application columns
 		if (PerunColumnType.APPLICATION_USER.equals(this.column)) return this.compareByApplicationUser(o1, o2);

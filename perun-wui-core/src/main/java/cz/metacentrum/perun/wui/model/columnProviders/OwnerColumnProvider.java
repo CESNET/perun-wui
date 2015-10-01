@@ -54,6 +54,7 @@ public class OwnerColumnProvider extends ColumnProvider<Owner> {
 			public boolean filterOnObject(String text, Owner object) {
 				if (object != null) {
 					if (object.getName().toLowerCase().contains(text.toLowerCase())) return true;
+					if (object.getType().toLowerCase().contains(text.toLowerCase())) return true;
 				}
 				return false;
 			}

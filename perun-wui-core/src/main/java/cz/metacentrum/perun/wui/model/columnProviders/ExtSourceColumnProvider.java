@@ -23,8 +23,8 @@ public class ExtSourceColumnProvider extends ColumnProvider<ExtSource> {
 
 		ArrayList<PerunColumnType> columns = new ArrayList<>();
 		columns.add(PerunColumnType.ID);
-		columns.add(PerunColumnType.NAME);
 		columns.add(PerunColumnType.EXT_SOURCE_TYPE);
+		columns.add(PerunColumnType.NAME);
 		return columns;
 	}
 
@@ -56,6 +56,7 @@ public class ExtSourceColumnProvider extends ColumnProvider<ExtSource> {
 			public boolean filterOnObject(String text, ExtSource object) {
 				if (object != null) {
 					if (object.getName().toLowerCase().contains(text.toLowerCase())) return true;
+					if (object.getType().toLowerCase().contains(text.toLowerCase())) return true;
 				}
 				return false;
 			}
@@ -100,7 +101,7 @@ public class ExtSourceColumnProvider extends ColumnProvider<ExtSource> {
 				table.setColumnWidth(idColumn, "10%");
 			}
 
-		}else if(PerunColumnType.NAME.equals(column)){
+		} else if (PerunColumnType.NAME.equals(column)) {
 
 			PerunColumn<ExtSource, String> idColumn = createColumn(column,
 					new GetValue<ExtSource, String>() {
@@ -117,17 +118,16 @@ public class ExtSourceColumnProvider extends ColumnProvider<ExtSource> {
 			if (widthInPixels > 0) {
 				table.setColumnWidth(idColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(idColumn, "70%");
+				table.setColumnWidth(idColumn, "90%");
 			}
 
-		}else if(PerunColumnType.EXT_SOURCE_TYPE.equals(column)){
+		} else if (PerunColumnType.EXT_SOURCE_TYPE.equals(column)) {
 
 			PerunColumn<ExtSource, String> idColumn = createColumn(column,
 					new GetValue<ExtSource, String>() {
 						@Override
 						public String getValue(ExtSource object) {
-							String type = object.getObjectType();
-							return type.substring(9);
+							return object.getType().substring(40).toUpperCase();
 						}
 					}, this.<String>getFieldUpdater(table)
 			);
@@ -138,9 +138,10 @@ public class ExtSourceColumnProvider extends ColumnProvider<ExtSource> {
 			if (widthInPixels > 0) {
 				table.setColumnWidth(idColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(idColumn, "30%");
+				table.setColumnWidth(idColumn, "10%");
 			}
 
 		}
 	}
+
 }

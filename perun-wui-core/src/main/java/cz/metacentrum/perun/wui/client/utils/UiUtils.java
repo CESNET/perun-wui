@@ -16,7 +16,6 @@ import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import cz.metacentrum.perun.wui.widgets.SuggestBox;
-import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 
 /**
  * Utility class for common actions with Ui widgets and their binding.
@@ -71,40 +70,6 @@ public class UiUtils {
 			@Override
 			public void onClick(ClickEvent event) {
 				box.setFocus(false);
-			}
-		});
-
-	}
-
-
-	/**
-	 * Bind ExtendedTextBoxes and PerunButton to work together.
-	 *
-	 * @param firstExtendedTextBox		ExtendedTextBox
-	 * @param secondExtendedBox 		ExtendedTextBox
-	 * @param button					PerunButton
-	 */
-	public static void bindButtonBoxes(final ExtendedTextBox firstExtendedTextBox, final ExtendedTextBox secondExtendedBox, final PerunButton button){
-
-		firstExtendedTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				if (!firstExtendedTextBox.getText().trim().isEmpty() && !secondExtendedBox.getText().trim().isEmpty()) {
-					button.setEnabled(true);
-				} else {
-					button.setEnabled(false);
-				}
-			}
-		});
-
-		secondExtendedBox.addValueChangeHandler(new ValueChangeHandler<String>() {
-			@Override
-			public void onValueChange(ValueChangeEvent<String> event) {
-				if (!firstExtendedTextBox.getText().trim().isEmpty() && !secondExtendedBox.getText().trim().isEmpty()) {
-					button.setEnabled(true);
-				} else {
-					button.setEnabled(false);
-				}
 			}
 		});
 

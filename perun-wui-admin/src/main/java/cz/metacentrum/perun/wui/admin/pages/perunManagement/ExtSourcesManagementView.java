@@ -22,7 +22,9 @@ import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedSuggestBox;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
-
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.extras.growl.client.ui.Growl;
+import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 /**
  * PERUN ADMIN - EXT SOURCES MANAGEMENT VIEW
@@ -31,7 +33,7 @@ import org.gwtbootstrap3.client.ui.*;
  */
 public class ExtSourcesManagementView extends ViewImpl implements ExtSourcesManagementPresenter.MyView, FocusableView {
 
-	private UnaccentMultiWordSuggestOracle oracle = new UnaccentMultiWordSuggestOracle();
+	private UnaccentMultiWordSuggestOracle oracle = new UnaccentMultiWordSuggestOracle(" ./-=");
 
 	@UiField(provided = true)
 	PerunDataGrid<ExtSource> grid;
@@ -41,7 +43,9 @@ public class ExtSourcesManagementView extends ViewImpl implements ExtSourcesMana
 
 	@UiField ButtonToolBar menu;
 	@UiField PerunButton filterButton;
-	@UiField PerunButton loadButton;
+	@UiField(provided = true) PerunButton loadButton;
+	@UiField PerunButton createButton;
+	@UiField PerunButton removeButton;
 
 	ExtSourcesManagementView view = this;
 
@@ -52,20 +56,70 @@ public class ExtSourcesManagementView extends ViewImpl implements ExtSourcesMana
 	ExtSourcesManagementView(final ExtSourcesManagementViewUiBinder uiBinder) {
 
 		grid = new PerunDataGrid<ExtSource>(new ExtSourceColumnProvider());
+		loadButton = new PerunButton("Load ext sources", "Load ext sources definitions from xml file", IconType.GLOBE);
 
 		initWidget(uiBinder.createAndBindUi(this));
+
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
 		UiUtils.bindTableLoading(grid, loadButton, true);
+		UiUtils.bindTableLoading(grid, createButton, true);
+		UiUtils.bindTableSelection(grid, removeButton);
 
 		draw();
+	}
+
+	@UiHandler(value = "removeButton")
+	public void deleteExtSource(ClickEvent event) {
+
+		for (final ExtSource extSource: grid.getSelectedList()) {
+
+			ExtSourcesManager.deleteExtSource(extSource, new JsonEvents() {
+
+				@Override
+				public void onFinished(JavaScriptObject jso) {
+					removeButton.setProcessing(false);
+					Growl.growl("ExtSource " + extSource.getName() + " was deleted.", GrowlType.SUCCESS);
+					grid.removeFromTable(extSource);
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					removeButton.setProcessing(false);
+					Growl.growl("ExtSource " + extSource.getName() + " was not deleted. " + error.getMessage(), GrowlType.DANGER);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					removeButton.setProcessing(true);
+				}
+
+			});
+		}
+
 	}
 
 	@UiHandler(value = "loadButton")
 	public void onClick(ClickEvent event) {
 
-		draw();
+		ExtSourcesManager.loadExtSourcesDefinitions(new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject jso) {
+				loadButton.setProcessing(false);
+				draw();
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				loadButton.setProcessing(false);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				loadButton.setProcessing(true);
+			}
+		});
 
 	}
 
@@ -78,6 +132,10 @@ public class ExtSourcesManagementView extends ViewImpl implements ExtSourcesMana
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 				grid.setList(JsUtils.<ExtSource>jsoAsList(jso));
+				for (ExtSource source : grid.getList()) {
+					oracle.add(source.getName());
+					oracle.add(source.getType().substring(40).toUpperCase());
+				}
 			}
 
 			@Override
@@ -92,6 +150,7 @@ public class ExtSourcesManagementView extends ViewImpl implements ExtSourcesMana
 
 			@Override
 			public void onLoadingStart() {
+				oracle.clear();
 				grid.clearTable();
 				grid.getLoaderWidget().onLoading();
 			}

@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.json.managers;
 import com.google.gwt.http.client.Request;
 import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.model.beans.ExtSource;
 
 /**
  * Manager with standard callbacks to Perun's API (ExtSourcesManager).
@@ -30,6 +31,22 @@ public class ExtSourcesManager {
 	}
 
 	/**
+	 * Delete ext source
+	 *
+	 * @param events  events done on callback
+	 * @return Request unique request
+	 */
+	public static Request deleteExtSource(ExtSource extSource, JsonEvents events) {
+
+		if (extSource == null) return null;
+
+		JsonClient client = new JsonClient(true, events);
+		client.put("id", extSource.getId());
+		return client.call(EXT_SOURCES_MANAGER + "deleteExtSource");
+
+	}
+
+	/**
 	 * Loads ext source definitions from the configuration file and updates entries stored in the DB.
 	 *
 	 * @param events  events done on callback
@@ -37,7 +54,7 @@ public class ExtSourcesManager {
 	 */
 	public static Request loadExtSourcesDefinitions(JsonEvents events) {
 
-		JsonClient client = new JsonClient(events);
+		JsonClient client = new JsonClient(true, events);
 		return client.call(EXT_SOURCES_MANAGER + "loadExtSourcesDefinitions");
 
 	}

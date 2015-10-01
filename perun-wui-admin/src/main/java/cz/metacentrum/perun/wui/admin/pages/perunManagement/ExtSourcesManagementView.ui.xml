@@ -14,22 +14,32 @@
 
 			<b:Heading size="H2" ui:field="pageTitle">
 				<b:Icon ui:field="icon" type="GLOBE" fixedWidth="true" pull="LEFT" />
-				<b.html:Text text="External Sources"/>
+				<b.html:Text text="External sources"/>
 				<b.html:Small text=""/>
 			</b:Heading>
 
 			<p:PerunToolbar ui:field="menu">
 
 				<b:InputGroup addStyleNames="col-md-3">
-					<p.boxes:ExtendedSuggestBox focus="true" ui:field="textBox" placeholder="Filter by name..."/>
+					<p.boxes:ExtendedSuggestBox focus="true" ui:field="textBox" placeholder="Filter by name or type..."/>
 				</b:InputGroup>
 
 				<b:ButtonGroup>
 					<p:PerunButton icon="FILTER" type="PRIMARY" ui:field="filterButton" focus="true">Filter</p:PerunButton>
 				</b:ButtonGroup>
+
+				<b:ButtonGroup>
+					<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="createButton" >Create</p:PerunButton>
+				</b:ButtonGroup>
+
+				<b:ButtonGroup>
+					<p:PerunButton type="DANGER" icon="TRASH_O" ui:field="removeButton">Remove</p:PerunButton>
+				</b:ButtonGroup>
+
 				<b:ButtonGroup>
 					<p:PerunButton icon="GLOBE" type="DEFAULT" ui:field="loadButton">Load ext sources</p:PerunButton>
 				</b:ButtonGroup>
+
 			</p:PerunToolbar>
 
 		</b.html:Div>

@@ -27,7 +27,6 @@ import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
-
 /**
  * PERUN ADMIN - OWNERS MANAGEMENT VIEW
  *
@@ -61,7 +60,6 @@ public class OwnersManagementView extends ViewWithUiHandlers<PerunManagementUiHa
 
 		grid = new PerunDataGrid<Owner>(new OwnerColumnProvider());
 		remove = PerunButton.getButton(PerunButtonType.REMOVE, ButtonType.DANGER, "Remove selected Owner(s)");
-
 
 		initWidget(uiBinder.createAndBindUi(this));
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
@@ -134,6 +132,10 @@ public class OwnersManagementView extends ViewWithUiHandlers<PerunManagementUiHa
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 				grid.setList(JsUtils.<Owner>jsoAsList(jso));
+				for (Owner owner : grid.getList()) {
+					oracle.add(owner.getName());
+					oracle.add(owner.getType());
+				}
 			}
 
 			@Override
@@ -150,6 +152,7 @@ public class OwnersManagementView extends ViewWithUiHandlers<PerunManagementUiHa
 			public void onLoadingStart() {
 				grid.clearTable();
 				grid.getLoaderWidget().onLoading();
+				oracle.clear();
 			}
 		});
 
@@ -159,7 +162,5 @@ public class OwnersManagementView extends ViewWithUiHandlers<PerunManagementUiHa
 	public void focus() {
 		textBox.setFocus(true);
 	}
-
-
 
 }

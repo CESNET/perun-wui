@@ -1,14 +1,15 @@
 package cz.metacentrum.perun.wui.admin.pages.perunManagement.ownersManagement;
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.*;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.admin.pages.perunManagement.OwnersManagementView;
-import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.OwnersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -16,7 +17,6 @@ import cz.metacentrum.perun.wui.model.beans.Owner;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.*;
-
 
 /**
  *
@@ -76,7 +76,6 @@ public class OwnerCreateView extends ViewImpl implements OwnerCreatePresenter.My
 				}
 			});
 
-
 	}
 
 	@UiHandler(value = "cancelButton")
@@ -89,10 +88,29 @@ public class OwnerCreateView extends ViewImpl implements OwnerCreatePresenter.My
 	public void show() {
 
 		setBlank();
-		UiUtils.bindButtonBoxes(nameTextBox, contactTextBox, createButton);
 		createButton.setEnabled(false);
 		itself.show();
 
+		nameTextBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+				createButton.setEnabled(!nameTextBox.getText().trim().isEmpty());
+			}
+		});
+
+		nameTextBox.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent event) {
+				createButton.setEnabled(!nameTextBox.getText().trim().isEmpty());
+			}
+		});
+
+		nameTextBox.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				createButton.setEnabled(!nameTextBox.getText().trim().isEmpty());
+			}
+		});
 
 	}
 
