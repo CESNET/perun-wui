@@ -22,6 +22,8 @@ import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Utility class used to handle Perun Application forms.
@@ -145,6 +147,15 @@ public class PerunForm extends FieldSet {
 			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
 		}
 
+	}
+
+	/**
+	 * Get form items of form.
+	 *
+	 * @return unmodifiable list of PerunFormItems
+	 */
+	public List<PerunFormItem> getPerunFormItems() {
+		return Collections.unmodifiableList(items);
 	}
 
 	/**

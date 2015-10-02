@@ -20,16 +20,42 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.*;
+import cz.metacentrum.perun.wui.model.beans.Application;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.model.beans.Attribute;
+import cz.metacentrum.perun.wui.model.beans.ExtSource;
+import cz.metacentrum.perun.wui.model.beans.Group;
+import cz.metacentrum.perun.wui.model.beans.Identity;
+import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunFormItem;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
-import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.constants.*;
+import org.gwtbootstrap3.client.ui.Alert;
+import org.gwtbootstrap3.client.ui.AnchorListItem;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.ButtonGroup;
+import org.gwtbootstrap3.client.ui.DropDownMenu;
+import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.Icon;
+import org.gwtbootstrap3.client.ui.Image;
+import org.gwtbootstrap3.client.ui.ListGroup;
+import org.gwtbootstrap3.client.ui.ListGroupItem;
+import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
+import org.gwtbootstrap3.client.ui.ModalFooter;
+import org.gwtbootstrap3.client.ui.constants.AlertType;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.HeadingSize;
+import org.gwtbootstrap3.client.ui.constants.IconPosition;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
+import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Text;
 
@@ -53,6 +79,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	private Vo vo;
 	private Group group;
+	private boolean registeredUnknownMail;
 
 	@UiField
 	PerunForm form;
@@ -255,6 +282,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				@Override
 				public void onFinished(JavaScriptObject jso) {
+					if (mustRevalidateMail(form)) {
+						registeredUnknownMail = true;
+					}
 					next.call(pp, registrar);
 				}
 
@@ -289,6 +319,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			form.setOnSubmitEvent(new JsonEvents() {
 				@Override
 				public void onFinished(JavaScriptObject jso) {
+					if (mustRevalidateMail(form)) {
+						registeredUnknownMail = true;
+					}
 					next.call(pp, registrar);
 				}
 
@@ -323,6 +356,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				@Override
 				public void onFinished(JavaScriptObject jso) {
+					if (mustRevalidateMail(form)) {
+						registeredUnknownMail = true;
+					}
 					next.call(pp, registrar);
 				}
 
@@ -439,6 +475,16 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	private boolean isApplyingToGroup(RegistrarObject ro) {
 		return (group != null);
 	}
+	private boolean mustRevalidateMail(PerunForm form) {
+		for (PerunFormItem item : form.getPerunFormItems()) {
+			if (ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL.equals(item.getItem().getFormItem().getType())) {
+				if (item.getValidator().getReturnCode() == 12) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	private void displaySummaryTitle(RegistrarObject registrar, ApplicationType voApp, ApplicationType groupApp) {
 		Heading title = new Heading(HeadingSize.H2);
@@ -506,21 +552,15 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 						displayException(registrar.getVoFormExtensionException());
 						break;
 					case "MemberNotExistsException":
+						if (registrar.getVoFormInitialException() != null) {
+							displayVoFormInitialException(registrar);
+						}
 						break;
 					default:
 						displayException(registrar.getVoFormExtensionException());
 				}
 			} else if (registrar.getVoFormInitialException() != null) {
-				switch (registrar.getVoFormInitialException().getName()) {
-					case "DuplicateRegistrationAttemptException":
-						displayException(registrar.getVoFormInitialException());
-						break;
-					case "AlreadyRegisteredException":
-						displayException(registrar.getVoFormInitialException());
-						break;
-					default:
-						displayException(registrar.getVoFormInitialException());
-				}
+				displayVoFormInitialException(registrar);
 			}
 
 		} else {
@@ -571,14 +611,30 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					message.add(groupStat);
 				}
 			}
-			ListGroupItem verifyMail = new ListGroupItem();
-			verifyMail.add(new Icon(IconType.WARNING));
-			verifyMail.add(new Text(" " + translation.verifyMail()));
-			message.add(verifyMail);
+			if (registeredUnknownMail) {
+				ListGroupItem verifyMail = new ListGroupItem();
+				verifyMail.add(new Icon(IconType.WARNING));
+				verifyMail.add(new Text(" " + translation.verifyMail()));
+				message.add(verifyMail);
+			}
 			form.add(message);
 		}
 
 	}
+
+	private void displayVoFormInitialException(RegistrarObject registrar) {
+		switch (registrar.getVoFormInitialException().getName()) {
+			case "DuplicateRegistrationAttemptException":
+				displayException(registrar.getVoFormInitialException());
+				break;
+			case "AlreadyRegisteredException":
+				displayException(registrar.getVoFormInitialException());
+				break;
+			default:
+				displayException(registrar.getVoFormInitialException());
+		}
+	}
+
 	private void displayContinueButton(RegistrarObject registrar, ApplicationType redirect) {
 
 		PerunButton cont;

@@ -93,7 +93,10 @@ public class PerunFormItem extends FormGroup {
 
 		/**
 		 * Translate error messages based on inner return codes.
-		 *
+		 */
+		public void translate();
+
+		/**
 		 * -1 = no message
 		 * 0 = OK
 		 * 1 = isEmpty
@@ -108,8 +111,7 @@ public class PerunFormItem extends FormGroup {
 		 * 11 = password mismatch
 		 * 12 = must validate email
 		 */
-		public void translate();
-
+		public int getReturnCode();
 	}
 
 	public PerunFormItem(PerunForm form, ApplicationFormItemData item) {
@@ -733,6 +735,11 @@ public class PerunFormItem extends FormGroup {
 
 					}
 
+					@Override
+					public int getReturnCode() {
+						return returnCode;
+					}
+
 				};
 
 			}
@@ -859,6 +866,11 @@ public class PerunFormItem extends FormGroup {
 						setValidationState(ValidationState.ERROR, translation.passMismatch());
 					}
 
+				}
+
+				@Override
+				public int getReturnCode() {
+					return returnCode;
 				}
 
 			};
@@ -1321,6 +1333,11 @@ public class PerunFormItem extends FormGroup {
 				}
 
 
+			}
+
+			@Override
+			public int getReturnCode() {
+				return returnCode;
 			}
 
 		};
