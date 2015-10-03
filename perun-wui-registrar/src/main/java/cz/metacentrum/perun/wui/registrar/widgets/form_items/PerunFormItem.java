@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.registrar.widgets;
+package cz.metacentrum.perun.wui.registrar.widgets.form_items;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
@@ -18,6 +18,8 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
+import cz.metacentrum.perun.wui.registrar.widgets.Select;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextArea;
@@ -40,7 +42,64 @@ import java.util.Map;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunFormItem extends FormGroup {
+public abstract class PerunFormItem extends FormGroup {
+
+	public final static int TEXT_AREA_MAX_LENGTH = 3999;
+	public final static int TEXT_BOX_MAX_LENGTH = 1024;
+	private static final int PERUN_ATTRIBUTE_LOGIN_NAMESPACE_POSITION = 49;
+	private final String lang;
+	private final ApplicationFormItemData item;
+
+	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+
+
+	public PerunFormItem(ApplicationFormItemData item, String lang) {
+		this.item = item;
+		this.lang = lang;
+		if (item != null) {
+			generateWidget();
+		}
+	}
+
+	protected abstract void generateWidget();
+
+	public abstract boolean isValid(boolean b);
+
+
+
+
+	/**
+	 * Safely return items label/description. If nothing defined, return empty string.
+	 *
+	 * @return items label or shortName
+	 */
+	public String getLabelOrShortName() {
+
+		if (item.getFormItem() != null) {
+			if (item.getFormItem().getItemTexts(lang) != null) {
+				if (item.getFormItem().getItemTexts(lang).getLabel() == null) return "";
+				return item.getFormItem().getItemTexts(lang).getLabel();
+			}
+			if (item.getFormItem().getShortName() == null) return "";
+			return item.getFormItem().getShortName();
+		} else {
+			if (item.getShortname() == null) return "";
+			return item.getShortname();
+		}
+
+	}
+}
+
+
+
+
+
+
+
+
+
+
+abstract class PerunFormItemBck extends FormGroup {
 
 	public final static int TEXT_AREA_MAX_LENGTH = 3999;
 	public final static int TEXT_BOX_MAX_LENGTH = 1024;
@@ -71,50 +130,8 @@ public class PerunFormItem extends FormGroup {
 	private Paragraph helpText = new Paragraph();
 	private Paragraph statusText = new Paragraph();
 
-	/**
-	 * Interface for anonymous classes used as customized item validators.
-	 */
-	public interface PerunFormItemValidator {
 
-		/**
-		 * Validates form item.
-		 *
-		 * @param forceNew TRUE = force new validation / FALSE = use value from last check
-		 * @return TRUE = valid / FALSE = not valid
-		 */
-		public boolean validate(boolean forceNew);
-
-		/**
-		 * Return TRUE if validation is processing (for items with callbacks to core)
-		 *
-		 * @return TRUE = validation is processing / FALSE = validation is done
-		 */
-		public boolean isProcessing();
-
-		/**
-		 * Translate error messages based on inner return codes.
-		 */
-		public void translate();
-
-		/**
-		 * -1 = no message
-		 * 0 = OK
-		 * 1 = isEmpty
-		 * 2 = isEmptySelect
-		 * 3 = tooLong
-		 * 4 = invalid format
-		 * 5 = invalid format email
-		 * 6 = login not available
-		 * 7 = can't check login
-		 * 9 = checking login...
-		 * 10 = password can't be empty
-		 * 11 = password mismatch
-		 * 12 = must validate email
-		 */
-		public int getReturnCode();
-	}
-
-	public PerunFormItem(PerunForm form, ApplicationFormItemData item) {
+	public PerunFormItemBck(PerunForm form, ApplicationFormItemData item) {
 		this.form = form;
 		this.item = item;
 		this.formLabel.getElement().addClassName("formLabel");
@@ -123,7 +140,7 @@ public class PerunFormItem extends FormGroup {
 		}
 	}
 
-	public PerunFormItem(PerunForm form, ApplicationFormItemData item, String lang) {
+	public PerunFormItemBck(PerunForm form, ApplicationFormItemData item, String lang) {
 		this.form = form;
 		this.item = item;
 		this.lang = lang;
@@ -1678,4 +1695,7 @@ public class PerunFormItem extends FormGroup {
 
 	}
 
+	public static PerunFormItem getInstance(PerunForm form, ApplicationFormItemData itemData, String lang) {
+		return null;
+	}
 }

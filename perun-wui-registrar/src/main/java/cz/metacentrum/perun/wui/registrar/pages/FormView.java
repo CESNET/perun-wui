@@ -20,8 +20,6 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.Application;
-import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.ExtSource;
@@ -31,33 +29,29 @@ import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
+import cz.metacentrum.perun.wui.registrar.pages.steps.GroupInitStep;
+import cz.metacentrum.perun.wui.registrar.pages.steps.Summary;
+import cz.metacentrum.perun.wui.registrar.pages.steps.VoExtOfferStep;
+import cz.metacentrum.perun.wui.registrar.pages.steps.VoExtStep;
+import cz.metacentrum.perun.wui.registrar.pages.steps.VoInitStep;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
-import cz.metacentrum.perun.wui.registrar.widgets.PerunFormItem;
-import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
 import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ButtonGroup;
 import org.gwtbootstrap3.client.ui.DropDownMenu;
-import org.gwtbootstrap3.client.ui.Heading;
-import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.Image;
-import org.gwtbootstrap3.client.ui.ListGroup;
-import org.gwtbootstrap3.client.ui.ListGroupItem;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.ModalFooter;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
-import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
-import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -74,6 +68,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	interface FormViewUiBinder extends UiBinder<Widget, FormView> {
 	}
+
+	private FormView formView = this;
 
 	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
@@ -97,6 +93,25 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		initWidget(binder.createAndBindUi(this));
 		draw();
 	}
+
+
+	public PerunForm getForm() {
+		return form;
+	}
+
+	public RegistrarTranslation getTranslation() {
+		return translation;
+	}
+
+	public void setRegisteredUnknownMail() {
+		registeredUnknownMail = true;
+	}
+
+	public boolean getRegisteredUnknownMail() {
+		return registeredUnknownMail;
+	}
+
+
 
 	public void draw() {
 
@@ -175,16 +190,26 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 							if (voInitialFormExists(registrar)) {
 
-								(new VoInit(new GroupInit(new Summary(ApplicationType.INITIAL, ApplicationType.INITIAL)))).call(pp, registrar);
+								(new VoInitStep(formView,
+										new GroupInitStep(formView,
+												new Summary(formView, ApplicationType.INITIAL, ApplicationType.INITIAL)
+										))).call(pp, registrar);
 
 							} else if (voExtensionFormExists(registrar)) {
 
-								(new VoExtOffer(new VoExt(new GroupInit(new Summary(ApplicationType.EXTENSION, ApplicationType.INITIAL))),
-										new GroupInit(new Summary(null, ApplicationType.INITIAL)))).call(pp, registrar);
+								(new VoExtOfferStep(formView,
+										new VoExtStep(formView,
+												new GroupInitStep(formView,
+														new Summary(formView, ApplicationType.EXTENSION, ApplicationType.INITIAL))),
+										new GroupInitStep(formView,
+												new Summary(formView, null, ApplicationType.INITIAL)
+										))).call(pp, registrar);
 
 							} else {
 
-								(new GroupInit(new Summary(null, ApplicationType.INITIAL))).call(pp, registrar);
+								(new GroupInitStep(formView,
+										new Summary(formView, null, ApplicationType.INITIAL)
+								)).call(pp, registrar);
 
 							}
 
@@ -192,16 +217,20 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 							if (voInitialFormExists(registrar)) {
 
-								(new VoInit(new Summary(ApplicationType.INITIAL, null))).call(pp, registrar);
+								(new VoInitStep(formView,
+										new Summary(formView, ApplicationType.INITIAL, null)
+								)).call(pp, registrar);
 
 							} else if (voExtensionFormExists(registrar)) {
 
-								(new VoExtOffer(new VoExt(new Summary(ApplicationType.EXTENSION, null)),
-										new Summary(null, null))).call(pp, registrar);
+								(new VoExtOfferStep(formView,
+										new VoExtStep(formView,
+												new Summary(formView, ApplicationType.EXTENSION, null)),
+										new Summary(formView, null, null))).call(pp, registrar);
 
 							} else {
 
-								(new Summary(null, null)).call(pp, registrar);
+								(new Summary(formView, null, null)).call(pp, registrar);
 
 							}
 
@@ -211,15 +240,19 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 						if (voInitialFormExists(registrar)) {
 
-							(new VoInit(new Summary(ApplicationType.INITIAL, null))).call(pp, registrar);
+							(new VoInitStep(formView,
+									new Summary(formView, ApplicationType.INITIAL, null)
+							)).call(pp, registrar);
 
 						} else if (voExtensionFormExists(registrar)) {
 
-							(new VoExt(new Summary(ApplicationType.EXTENSION, null))).call(pp, registrar);
+							(new VoExtStep(formView,
+									new Summary(formView, ApplicationType.EXTENSION, null)
+							)).call(pp, registrar);
 
 						} else {
 
-							(new Summary(null, null)).call(pp, registrar);
+							(new Summary(formView, null, null)).call(pp, registrar);
 
 						}
 
@@ -253,462 +286,29 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 
 
-	private interface Step {
-		void call(PerunPrincipal pp, RegistrarObject registrar);
-	}
-	private abstract class StepImpl implements Step {
-
-		protected Step next;
-
-		public StepImpl(Step next) {
-			this.next = next;
-		}
-	}
-
-
-	private class VoInit extends StepImpl {
-
-		public VoInit(Step next) {
-			super(next);
-		}
-
-		@Override
-		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-
-			form.clear();
-			form.setFormItems(registrar.getVoFormInitial());
-			form.setApp(Application.createNew(vo, null, ApplicationType.INITIAL, getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
-			form.setOnSubmitEvent(new JsonEvents() {
-
-				@Override
-				public void onFinished(JavaScriptObject jso) {
-					if (mustRevalidateMail(form)) {
-						registeredUnknownMail = true;
-					}
-					next.call(pp, registrar);
-				}
-
-				@Override
-				public void onError(PerunException error) {
-					displayException(error);
-				}
-
-				@Override
-				public void onLoadingStart() {
-
-				}
-			});
-		}
-
-	}
-
-
-
-	private class VoExt extends StepImpl {
-
-		public VoExt(Step next) {
-			super(next);
-		}
-
-		@Override
-		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-
-			form.clear();
-			form.setFormItems(registrar.getVoFormExtension());
-			form.setApp(Application.createNew(vo, null, ApplicationType.EXTENSION, getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
-			form.setOnSubmitEvent(new JsonEvents() {
-				@Override
-				public void onFinished(JavaScriptObject jso) {
-					if (mustRevalidateMail(form)) {
-						registeredUnknownMail = true;
-					}
-					next.call(pp, registrar);
-				}
-
-				@Override
-				public void onError(PerunException error) {
-					displayException(error);
-				}
-
-				@Override
-				public void onLoadingStart() {
-
-				}
-			});
-		}
-	}
-
-
-
-	private class GroupInit extends StepImpl {
-
-		public GroupInit(Step next) {
-			super(next);
-		}
-
-		@Override
-		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-
-			form.clear();
-			form.setFormItems(registrar.getGroupFormInitial());
-			form.setApp(Application.createNew(vo, group, ApplicationType.INITIAL, getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
-			form.setOnSubmitEvent(new JsonEvents() {
-
-				@Override
-				public void onFinished(JavaScriptObject jso) {
-					if (mustRevalidateMail(form)) {
-						registeredUnknownMail = true;
-					}
-					next.call(pp, registrar);
-				}
-
-				@Override
-				public void onError(PerunException error) {
-					displayException(error);
-				}
-
-				@Override
-				public void onLoadingStart() {
-
-				}
-			});
-		}
-	}
-
-
-
-	private class VoExtOffer implements Step {
-		protected Step yes;
-		protected Step no;
-
-		public VoExtOffer(Step yes, Step no) {
-			this.yes = yes;
-			this.no = no;
-		}
-
-		@Override
-		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-
-			final Modal modal = new Modal();
-			modal.setTitle(translation.offerMembershipExtensionTitle());
-			modal.setFade(true);
-			modal.setDataKeyboard(false);
-			modal.setDataBackdrop(ModalBackdrop.STATIC);
-			modal.setClosable(false);
-
-			ModalBody body = new ModalBody();
-			body.add(new Paragraph(translation.offerMembershipExtensionMessage(vo.getName())));
-
-
-			ModalFooter footer = new ModalFooter();
-
-			final Button noThanks = new Button(translation.offerMembershipExtensionNoThanks(), new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					modal.hide();
-					no.call(pp, registrar);
-				}
-			});
-			noThanks.setType(ButtonType.DEFAULT);
-
-			final Button extend = new Button(translation.offerMembershipExtensionExtend(), new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					modal.hide();
-					yes.call(pp, registrar);
-				}
-			});
-			extend.setType(ButtonType.SUCCESS);
-			footer.add(extend);
-			footer.add(noThanks);
-
-			modal.add(body);
-			modal.add(footer);
-			modal.show();
-
-
-		}
-	}
-
-
-
-	private class Summary implements Step {
-
-		private final ApplicationType voApplication;
-		private final ApplicationType groupApplication;
-
-		public Summary(ApplicationType voApplication, ApplicationType groupApplication) {
-			this.voApplication = voApplication;
-			this.groupApplication = groupApplication;
-		}
-
-		@Override
-		public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
-			form.clear();
-			displaySummaryTitle(registrar, voApplication, groupApplication);
-			displaySummaryMessage(registrar, voApplication, groupApplication);
-			displayContinueButton(registrar, (groupApplication != null) ? groupApplication : voApplication);
-		}
-
-
-	}
-
-
-
-
-	protected String getFedInfo(PerunPrincipal pp) {
-		return "{" + " displayName=\"" + pp.getAdditionInformation("displayName")+"\"" + " commonName=\"" + pp.getAdditionInformation("cn")+"\""
-				+ " givenName=\"" + pp.getAdditionInformation("givenName")+"\"" + " sureName=\"" + pp.getAdditionInformation("sn")+"\""
-				+ " loa=\"" + pp.getAdditionInformation("loa")+"\"" + " mail=\"" + pp.getAdditionInformation("mail")+"\""
-				+ " organization=\"" + pp.getAdditionInformation("o")+"\"" + " }";
-	}
-
 	private boolean voInitialFormExists(RegistrarObject ro) {
 		return !ro.getVoFormInitial().isEmpty();
 	}
+
 	private boolean voExtensionFormExists(RegistrarObject ro) {
 		return !ro.getVoFormExtension().isEmpty();
 	}
+
 	private boolean groupFormExists(RegistrarObject ro) {
 		return !ro.getGroupFormInitial().isEmpty();
 	}
+
 	private boolean isApplyingToGroup(RegistrarObject ro) {
 		return (group != null);
 	}
-	private boolean mustRevalidateMail(PerunForm form) {
-		for (PerunFormItem item : form.getPerunFormItems()) {
-			if (ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL.equals(item.getItem().getFormItem().getType())) {
-				if (item.getValidator().getReturnCode() == 12) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
 
-	private void displaySummaryTitle(RegistrarObject registrar, ApplicationType voApp, ApplicationType groupApp) {
-		Heading title = new Heading(HeadingSize.H2);
-		Text text = new Text();
 
-		if (voApp == null && groupApp == null) {
 
-			//text.setText(translation.canDoNothing());
-
-		} else {
-			Icon success = new Icon(IconType.CHECK_CIRCLE);
-			success.setColor("#5cb85c");
-			title.add(success);
-			if (groupApp == ApplicationType.INITIAL) {
-
-				if (registrar.hasGroupFormAutoApproval()) {
-					text.setText(" "+translation.initTitleAutoApproval());
-				} else {
-					text.setText(" "+translation.initTitle());
-				}
-
-			} else if (voApp == ApplicationType.EXTENSION) {
-
-				if (registrar.hasVoFormAutoApprovalExtension()) {
-					text.setText(" "+translation.extendTitleAutoApproval());
-				} else {
-					text.setText(" "+translation.extendTitle());
-				}
-
-			} else if (voApp == ApplicationType.INITIAL) {
-
-				if (registrar.hasVoFormAutoApproval()) {
-					text.setText(" "+translation.initTitleAutoApproval());
-				} else {
-					text.setText(" "+translation.initTitle());
-				}
-
-			}
-		}
-		title.add(text);
-		form.add(title);
-	}
-	private void displaySummaryMessage(RegistrarObject registrar, ApplicationType voApp, ApplicationType groupApp) {
-
-		if (voApp == null && groupApp == null) {
-
-			if (registrar.getGroupFormInitialException() != null) {
-				switch (registrar.getGroupFormInitialException().getName()) {
-					case "DuplicateRegistrationAttemptException":
-						displayException(registrar.getGroupFormInitialException());
-						break;
-					case "AlreadyRegisteredException":
-						displayException(registrar.getGroupFormInitialException());
-						break;
-					default:
-						displayException(registrar.getGroupFormInitialException());
-				}
-			} else if (registrar.getVoFormExtensionException() != null) {
-				switch (registrar.getVoFormExtensionException().getName()) {
-					case "ExtendMembershipException":
-						displayException(registrar.getVoFormExtensionException());
-						break;
-					case "DuplicateRegistrationAttemptException":
-						registrar.getVoFormExtensionException().setName("DuplicateExtensionAttemptException");
-						displayException(registrar.getVoFormExtensionException());
-						break;
-					case "MemberNotExistsException":
-						if (registrar.getVoFormInitialException() != null) {
-							displayVoFormInitialException(registrar);
-						}
-						break;
-					default:
-						displayException(registrar.getVoFormExtensionException());
-				}
-			} else if (registrar.getVoFormInitialException() != null) {
-				displayVoFormInitialException(registrar);
-			}
-
-		} else {
-			ListGroup message = new ListGroup();
-			ListGroupItem groupStat = new ListGroupItem();
-			if (groupApp == ApplicationType.INITIAL) {
-
-				if (registrar.hasGroupFormAutoApproval()) {
-					groupStat.setText(translation.registered(group.getName()));
-				} else {
-					groupStat.setText(translation.waitForAcceptation(group.getName()));
-				}
-				message.add(groupStat);
-			}
-			ListGroupItem voStat = new ListGroupItem();
-			if (voApp == ApplicationType.EXTENSION) {
-
-				if (registrar.hasVoFormAutoApprovalExtension()) {
-					voStat.setText(translation.extended(vo.getName()));
-				} else {
-					voStat.setText(translation.waitForExtAcceptation(vo.getName()));
-				}
-				message.add(voStat);
-
-			} else if (voApp == ApplicationType.INITIAL) {
-
-				if (registrar.hasVoFormAutoApproval()) {
-					voStat.setText(translation.registered(vo.getName()));
-				} else {
-					voStat.setText(translation.waitForAcceptation(vo.getName()));
-				}
-				message.add(voStat);
-
-			}
-			if (groupApp == null) {
-
-				if (registrar.getGroupFormInitialException() != null) {
-					switch (registrar.getGroupFormInitialException().getName()) {
-						case "DuplicateRegistrationAttemptException":
-							groupStat.setText(translation.groupFailedAlreadyApplied(group.getName()));
-							break;
-						case "AlreadyRegisteredException":
-							groupStat.setText(translation.groupFailedAlreadyRegistered(group.getName()));
-							break;
-						default:
-							groupStat.setText(registrar.getGroupFormInitialException().getMessage());
-					}
-					message.add(groupStat);
-				}
-			}
-			if (registeredUnknownMail) {
-				ListGroupItem verifyMail = new ListGroupItem();
-				verifyMail.add(new Icon(IconType.WARNING));
-				verifyMail.add(new Text(" " + translation.verifyMail()));
-				message.add(verifyMail);
-			}
-			form.add(message);
-		}
-
-	}
-
-	private void displayVoFormInitialException(RegistrarObject registrar) {
-		switch (registrar.getVoFormInitialException().getName()) {
-			case "DuplicateRegistrationAttemptException":
-				displayException(registrar.getVoFormInitialException());
-				break;
-			case "AlreadyRegisteredException":
-				displayException(registrar.getVoFormInitialException());
-				break;
-			default:
-				displayException(registrar.getVoFormInitialException());
-		}
-	}
-
-	private void displayContinueButton(RegistrarObject registrar, ApplicationType redirect) {
-
-		PerunButton cont;
-		if (redirect == null) {
-
-			if (Window.Location.getParameter("targetexisting") != null) {
-				if (isApplyingToGroup(registrar)) {
-					PerunException pEx = registrar.getGroupFormInitialException();
-					if (pEx != null) {
-						if (pEx.getName().equals("DuplicateRegistrationAttemptException")
-								|| pEx.getName().equals("AlreadyRegisteredException")) {
-							cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									Window.Location.assign(Window.Location.getParameter("targetexisting"));
-								}
-							});
-							form.add(cont);
-						}
-					}
-				} else {
-					PerunException pEx = registrar.getVoFormInitialException();
-					if (pEx != null) {
-						if (pEx.getName().equals("DuplicateRegistrationAttemptException")
-								|| pEx.getName().equals("AlreadyRegisteredException")) {
-							cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									Window.Location.assign(Window.Location.getParameter("targetexisting"));
-								}
-							});
-							form.add(cont);
-						}
-					}
-				}
-			}
-
-		} else {
-			switch (redirect) {
-				case INITIAL:
-
-					if (Window.Location.getParameter("targetnew") != null) {
-						cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								Window.Location.assign(Window.Location.getParameter("targetnew"));
-							}
-						});
-						form.add(cont);
-					}
-
-					break;
-				case EXTENSION:
-
-					if (Window.Location.getParameter("targetextended") != null) {
-						cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
-								Window.Location.assign(Window.Location.getParameter("targetextended"));
-							}
-						});
-						form.add(cont);
-					}
-
-					break;
-			}
-		}
-
-	}
-
-	private void displayException(PerunException ex) {
+	public void displayException(PerunException ex) {
 		displayException(null, ex);
 	}
-	private void displayException(PerunLoader loader, PerunException ex) {
+
+	public void displayException(PerunLoader loader, PerunException ex) {
 
 		this.displayedException = ex;
 		notice.setType(AlertType.WARNING);
@@ -857,6 +457,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	}
 
+
+
 	private void showSimilarUsersDialog(RegistrarObject object) {
 
 		final Modal modal = new Modal();
@@ -1004,6 +606,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		modal.show();
 
 	}
+
 
 	private DropDownMenu getCertificatesJoinButton(ButtonGroup certGroup) {
 
