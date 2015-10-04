@@ -1,26 +1,23 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
+import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.widgets.form_items.PerunFormItem;
-import cz.metacentrum.perun.wui.registrar.widgets.form_items.PerunFormItemGenerator;
-import cz.metacentrum.perun.wui.registrar.widgets.form_items.PerunItemGeneratorImpl;
+import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.FieldSet;
 import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
+import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
-import org.gwtbootstrap3.extras.growl.client.ui.Growl;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -32,6 +29,12 @@ import java.util.List;
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
 public class PerunForm extends FieldSet {
+
+	public static final ColumnSize LABEL_SIZE = ColumnSize.MD_2;
+	public static final ColumnOffset LABEL_OFFSET = ColumnOffset.MD_2;
+	public static final ColumnSize WIDGET_WITH_TEXT_SIZE = ColumnSize.MD_10;
+	public static final ColumnSize WIDGET_SIZE = ColumnSize.SM_6;
+	public static final ColumnSize STATUS_SIZE = ColumnSize.SM_6;
 
 	private String lang = LocaleInfo.getCurrentLocale().getLocaleName().equals("default") ? "en" : LocaleInfo.getCurrentLocale().getLocaleName();
 
@@ -106,7 +109,7 @@ public class PerunForm extends FieldSet {
 			}
 		}
 
-		if (items.isEmpty()) {
+		if (this.items.isEmpty()) {
 			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
 		}
 
@@ -168,51 +171,20 @@ public class PerunForm extends FieldSet {
 	 */
 	public void submit(final PerunButton button) {
 
-		// force validation
-		boolean scrolled = false;
-		for (PerunFormItem item : items) {
-			if (!item.isValid(true) && !scrolled) {
-				int top = item.getAbsoluteTop();
-				Window.scrollTo(0, (top-85 >= 0) ? top-85 : top);
-				scrolled = true;
-			}
-		}
-
-		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+		validateAll(items, new Events<Boolean>() {
 			@Override
-			public boolean execute() {
+			public void onFinished(Boolean result) {
 
-				boolean processing = false;
-				boolean valid = true;
+				button.setProcessing(false);
+				button.setEnabled(true);
 
-				for (PerunFormItem item : items) {
-					if (!item.isValid(false)) {
-						valid = false;
-						/*if (item.getValidator() != null) {
-							if (item.getValidator().isProcessing()) {
-								processing = true;
-								break;
-							}
-						}*/
+				if (result) {
+
+					for (PerunFormItem item : items) {
+						GWT.log(item.getItemData().getFormItem().getShortname() + " : " + item.getValue());
 					}
-				}
-				// re-check after 400ms
-				if (processing) {
 
-					button.setProcessing(true);
-					button.setEnabled(false);
-
-					return true;
-
-				} else if (!valid) {
-
-					button.setProcessing(false);
-					button.setEnabled(true);
-					return false;
-
-				} else {
-
-					// create form
+					/*// create form
 					RegistrarManager.createApplication(app, getFormItemData(), new JsonEvents() {
 						@Override
 						public void onFinished(JavaScriptObject jso) {
@@ -242,14 +214,79 @@ public class PerunForm extends FieldSet {
 							if (onSubmitEvent != null) onSubmitEvent.onLoadingStart();
 						}
 					});
-
-					return false;
-
+*/
 				}
 			}
-		}, 400);
+
+			@Override
+			public void onError(PerunException error) {
+
+			}
+
+			@Override
+			public void onLoadingStart() {
+
+				button.setProcessing(true);
+				button.setEnabled(false);
+			}
+		});
+
 
 	}
+
+
+
+	private void validateAll(final List<PerunFormItem> items, final Events<Boolean> events) {
+
+		final int startCount = items.size();
+		final int[] currentCount = {0};
+		final boolean[] valid = {true};
+		final boolean[] firstLoop = {true};
+
+		for (final PerunFormItem item : items) {
+
+			item.validate(new Events<Boolean>() {
+				@Override
+				public void onFinished(Boolean result) {
+					if (!result) {
+						nonvalid();
+					}
+					increment();
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					nonvalid();
+					increment();
+				}
+
+				@Override
+				public void onLoadingStart() {
+					if (firstLoop[0]) {
+						events.onLoadingStart();
+						firstLoop[0] = false;
+					}
+				}
+
+				private void increment() {
+					currentCount[0]++;
+					if (currentCount[0] >= startCount) {
+						events.onFinished(valid[0]);
+					}
+				}
+
+				private void nonvalid() {
+					if (valid[0]) {
+						int top = item.getAbsoluteTop();
+						Window.scrollTo(0, (top - 85 >= 0) ? top - 85 : top);
+						item.focus();
+						valid[0] = false;
+					}
+				}
+			});
+		}
+	}
+
 
 	/**
 	 * Is form meant only for preview
@@ -299,9 +336,9 @@ public class PerunForm extends FieldSet {
 		List<ApplicationFormItemData> data = new ArrayList<ApplicationFormItemData>();
 		for (PerunFormItem item : items) {
 
-			/*String value = item.getValue();
-			String prefilled = item.getItem().getPrefilledValue();
-			JSONObject formItemJSON = new JSONObject(item.getItem().getFormItem());
+			String value = item.getValue();
+			String prefilled = item.getItemData().getPrefilledValue();
+			JSONObject formItemJSON = new JSONObject(item.getItemData().getFormItem());
 
 			// remove text (locale), saves data transfer & removes problem with parsing locale
 			formItemJSON.put("i18n", new JSONObject());
@@ -310,9 +347,9 @@ public class PerunForm extends FieldSet {
 			ApplicationFormItem formItem = formItemJSON.getJavaScriptObject().cast();
 
 			// prepare package with data
-			ApplicationFormItemData itemData = ApplicationFormItemData.construct(formItem, formItem.getShortName(), value, prefilled, item.getItem().getAssuranceLevel() != null ? item.getItem().getAssuranceLevel() : "");
+			ApplicationFormItemData itemData = ApplicationFormItemData.construct(formItem, formItem.getShortname(), value, prefilled, item.getItemData().getAssuranceLevel() != null ? item.getItemData().getAssuranceLevel() : "");
 
-			data.add(itemData);*/
+			data.add(itemData);
 
 		}
 

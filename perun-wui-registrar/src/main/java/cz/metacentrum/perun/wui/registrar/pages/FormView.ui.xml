@@ -12,7 +12,7 @@
 
 	<b.html:Div>
 
-		<b:Container fluid="true">
+		<b:Container>
 			<b:Row>
 				<b:Column size="MD_12">
 
