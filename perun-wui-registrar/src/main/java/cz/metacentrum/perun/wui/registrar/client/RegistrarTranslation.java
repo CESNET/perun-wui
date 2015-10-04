@@ -153,6 +153,12 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("<i>( HIDDEN )</i>")
 	public String isHidden();
 
+	@DefaultMessage("UNDEFINED")
+	public String undefinedFormItem();
+
+	@DefaultMessage("none of the above")
+	String clearRadiobox();
+
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
 	@DefaultMessage("Submitted registrations")
@@ -246,4 +252,5 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Your application has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
 	public String registrarException();
+
 }

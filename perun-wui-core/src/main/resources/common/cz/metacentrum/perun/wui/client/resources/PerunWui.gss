@@ -124,6 +124,10 @@ th.gwtb3-d {
 	border-top-right-radius: 4px !important;
 	border-bottom-right-radius: 4px !important;
 }
+.emailFormItem .dropdown-menu {
+	right: 0;
+	left: auto;
+}
 
 .passwordFormItemFirst {
 	border-top-right-radius: 4px !important;
@@ -144,6 +148,13 @@ th.gwtb3-d {
 	border-bottom-right-radius: 4px !important;
 	border-bottom-left-radius: 4px !important;
 }
+
+.radioboxDivider {
+	border-bottom: 1px solid #dddddd;
+	margin-top: 7px;
+	margin-bottom: -4px;
+}
+
 
 /* MENU FILTER WIDGET - SUGGEST BOX */
 .gwt-SuggestBoxPopup {

@@ -1,10 +1,11 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
-import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
-import cz.metacentrum.perun.wui.registrar.widgets.form_items.PerunFormItem;
+import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
+import cz.metacentrum.perun.wui.registrar.widgets.items.ValidatedEmail;
+import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 
 /**
  * Created by ondrej on 3.10.15.
@@ -23,8 +24,8 @@ public abstract class FormStep implements Step {
 
 	protected boolean mustRevalidateMail() {
 		for (PerunFormItem item : form.getPerunFormItems()) {
-			if (ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL.equals(item.getItem().getFormItem().getType())) {
-				if (item.getValidator().getReturnCode() == 12) {
+			if (item instanceof ValidatedEmail) {
+				if (item.getLastValidationResult().equals(PerunFormItemValidator.Result.MUST_VALIDATE_EMAIL)) {
 					return true;
 				}
 			}

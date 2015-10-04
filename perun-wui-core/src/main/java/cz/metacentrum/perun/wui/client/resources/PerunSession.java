@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.client.resources;
 import com.google.gwt.core.client.JsArrayInteger;
 import com.google.gwt.user.client.Window;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import com.sun.xml.internal.bind.v2.TODO;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.beans.Facility;
 import cz.metacentrum.perun.wui.model.beans.Group;
@@ -92,6 +93,8 @@ public class PerunSession {
 		}
 
 		String rpcType = getRpcServer();
+		// TODO - auth hack (I dont have permisions to edit apache conf)
+		rpcType = "krb";
 		if(rpcType == null){
 			Window.alert("Path to Perun server can't be determined, you probably used wrong URL.");
 		}

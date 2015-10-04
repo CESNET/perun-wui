@@ -1,5 +1,5 @@
 
-@def MIN_WIDTH 480px;
+@def MIN_WIDTH 320px;
 @def MIN_HEIGHT 320px;
 
 /* MAIN LAYOUT */
