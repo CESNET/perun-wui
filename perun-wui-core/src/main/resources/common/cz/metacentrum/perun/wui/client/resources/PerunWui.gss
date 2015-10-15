@@ -262,7 +262,7 @@ th.gwtb3-d {
 	margin-bottom: 0px;
 }
 
-/* GWT phantom div fix (it is there probably for computing zoom, real size, etc.) */
+/* GWT phantom div fix (it is there for measuring cm on real device for GWT. Maybe cm in gwt will not work properly) */
 body > div[aria-hidden="true"] {
 	right: 0px;
 }
