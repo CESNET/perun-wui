@@ -73,7 +73,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 			@Override
 			public void onLoadingStart() {
 				grid.clearTable();
-				grid.getLoaderWidget().onLoading();
+				grid.getLoaderWidget().onLoading(translation.loadingApplications());
 			}
 		});
 

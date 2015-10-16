@@ -8,6 +8,7 @@ import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
+import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.InputGroup;
 import org.gwtbootstrap3.client.ui.InputGroupAddon;
 import org.gwtbootstrap3.client.ui.constants.IconType;
@@ -120,11 +121,26 @@ public class Password extends PerunFormItemEditable {
 	}
 
 	public ExtendedPasswordTextBox getPassword() {
-		return ((ExtendedPasswordTextBox) widget.getWidget(1));
+		for (Widget box : getWidget()) {
+			if (box instanceof ExtendedPasswordTextBox) {
+				return (ExtendedPasswordTextBox) box;
+			}
+		}
+		return null;
 	}
 
 	public ExtendedPasswordTextBox getPasswordSecond() {
-		return ((ExtendedPasswordTextBox) widget.getWidget(2));
+		boolean second = false;
+		for (Widget box : getWidget()) {
+			if (box instanceof ExtendedPasswordTextBox) {
+				if (!second) {
+					second = true;
+				} else {
+					return (ExtendedPasswordTextBox) box;
+				}
+			}
+		}
+		return null;
 	}
 
 }

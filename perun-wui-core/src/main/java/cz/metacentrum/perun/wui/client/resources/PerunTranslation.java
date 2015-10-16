@@ -53,4 +53,17 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Extension")
 	public String applicationExtension();
 
+
+
+	/* ------------ LOADER MESSAGES ---------------- */
+
+	@DefaultMessage("Loading user")
+	public String loadingUser();
+
+	@DefaultMessage("Preparing interface")
+	public String preparingInterface();
+
+	@DefaultMessage("Preparing form")
+	public String preparingForm();
+
 }

@@ -1,7 +1,6 @@
 package cz.metacentrum.perun.wui.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -76,11 +75,11 @@ public class PerunLoader extends Composite {
 	public void onLoading() {
 
 		state = PerunLoaderState.loading;
-		bar.setPercent(0);
+		bar.setPercent(100);
 		bar.setType(ProgressBarType.DEFAULT);
 		alert.setVisible(false);
 
-		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+		/*Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
 			@Override
 			public boolean execute() {
 				if (state.equals(PerunLoaderState.loading)) {
@@ -93,7 +92,15 @@ public class PerunLoader extends Composite {
 					return false;
 				}
 			}
-		}, 100);
+		}, 100);*/
+
+	}
+
+	public void onLoading(String label) {
+
+		onLoading();
+
+		bar.setText(label);
 
 	}
 

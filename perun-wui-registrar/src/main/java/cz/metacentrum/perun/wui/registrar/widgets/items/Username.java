@@ -128,7 +128,12 @@ public class Username extends PerunFormItemEditable {
 	}
 
 	public ExtendedTextBox getTextBox() {
-		return ((ExtendedTextBox) getWidget().getWidget(1));
+		for (Widget box : getWidget()) {
+			if (box instanceof ExtendedTextBox) {
+				return (ExtendedTextBox) box;
+			}
+		}
+		return null;
 	}
 
 	@Override

@@ -189,6 +189,9 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	// -------------- APP DETAIL PAGE ------------------------ //
 
+	@DefaultMessage("Registration detail")
+	public String detailDefaultTitle();
+
 	@DefaultMessage("Registration to {0}")
 	public String initialDetail(String registerTo);
 
@@ -256,5 +259,15 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Your application has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
 	public String registrarException();
+
+
+
+	/* ------------ LOADER MESSAGES ---------------- */
+
+	@DefaultMessage("Loading application")
+	public String loadingApplication();
+
+	@DefaultMessage("Loading applications")
+	public String loadingApplications();
 
 }

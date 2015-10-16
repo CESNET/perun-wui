@@ -71,7 +71,16 @@ public class SubmitButton extends PerunFormItemStatic {
 	}
 
 	public PerunButton getButton() {
-		return (PerunButton) ((Column) widget.getWidget(0)).getWidget(0);
+		for (Widget col : widget) {
+			if (col instanceof Column) {
+				for (Widget btn : (Column) col) {
+					if (btn instanceof PerunButton) {
+						return (PerunButton) btn;
+					}
+				}
+			}
+		}
+		return null;
 	}
 
 	public boolean hasAutoSubmit() {

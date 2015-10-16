@@ -23,6 +23,10 @@
 .table {
 	margin-bottom: 0px;
 }
+.table table {
+	/*because of PerunLoader width inside table*/
+	width: 100%;
+}
 /* table borders */
 .table table thead {
 	border-bottom: 1px solid #ddd;

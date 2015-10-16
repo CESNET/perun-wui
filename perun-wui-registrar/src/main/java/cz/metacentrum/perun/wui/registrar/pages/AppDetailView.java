@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.registrar.pages;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -20,6 +21,7 @@ import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
+import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.html.Text;
@@ -38,8 +40,32 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 	@Override
 	public void setApplication(Application application) {
 		this.app = application;
+
+		formWrapper.setVisible(true);
+		state.setVisible(true);
+		loader.setVisible(false);
+
 		draw();
 		loadForm();
+	}
+
+	@Override
+	public void onLoadingStartApplication() {
+		loader.setVisible(true);
+		loader.onLoading(translation.loadingApplication());
+		text.setText(translation.detailDefaultTitle());
+		formWrapper.setVisible(false);
+		state.setVisible(false);
+	}
+
+	@Override
+	public void onErrorApplication(PerunException error, final JsonEvents retry) {
+		loader.onError(error, new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				RegistrarManager.getApplicationDataById(app.getId(), retry);
+			}
+		});
 	}
 
 	PlaceManager placeManager = PerunSession.getPlaceManager();
@@ -55,6 +81,9 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 	@UiField
 	PerunForm form;
+
+	@UiField
+	Form formWrapper;
 
 	@UiField
 	Heading formTitle;
@@ -73,6 +102,9 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 	@UiField
 	Alert state;
+
+	@UiField
+	PerunLoader loader;
 
 	private Application app;
 
@@ -128,22 +160,28 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 	}
 
 	private boolean canSeeHiddenFields() {
-
+		// TODO - authorization shouldnt be in gui.
 		// admins can see hidden fields - users not
 		PerunSession sess = PerunSession.getInstance();
 		return (sess.isVoAdmin(app.getVo().getId()) || sess.isVoObserver(app.getVo().getId()) || (app.getGroup() != null && sess.isGroupAdmin(app.getGroup().getId())));
 
 	}
 
+
 	/**
 	 * Load form items
 	 */
 	private void loadForm() {
 
+		form.clear();
+
 		RegistrarManager.getApplicationDataById(app.getId(), new JsonEvents() {
+
+			final JsonEvents retry = this;
 
 			@Override
 			public void onFinished(JavaScriptObject jso) {
+				loader.setVisible(false);
 				ArrayList<ApplicationFormItemData> list = JsUtils.<ApplicationFormItemData>jsoAsList(jso);
 				Collections.sort(list, new Comparator<ApplicationFormItemData>() {
 					public int compare(ApplicationFormItemData arg0, ApplicationFormItemData arg1) {
@@ -165,11 +203,19 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 					placeManager.revealUnauthorizedPlace("");
 				}
 
+				loader.onError(error, new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						RegistrarManager.getApplicationDataById(app.getId(), retry);
+					}
+				});
+
 			}
 
 			@Override
 			public void onLoadingStart() {
-				//
+				loader.setVisible(true);
+				loader.onLoading(translation.preparingForm());
 			}
 
 		});

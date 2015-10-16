@@ -18,7 +18,7 @@
 						<p:PerunButton type="DEFAULT" icon="CHEVRON_LEFT" ui:field="backButton" marginRight="10" marginBottom="5"></p:PerunButton>
 					</b:ButtonGroup>
 					<b:Icon ui:field="icon" type="FILE_TEXT_O" fixedWidth="true" />
-					<b.html:Text text="Registration detail" ui:field="text"/>
+					<b.html:Text text="" ui:field="text"/>
 					<b.html:Small text="" />
 				</b:Heading>
 
@@ -38,13 +38,20 @@
 					-->
 				</b:Alert>
 
-				<b:Heading size="H3" text="Form data" ui:field="formTitle"/>
 
-				<b:Form type="HORIZONTAL">
+				<b:Form type="HORIZONTAL" ui:field="formWrapper">
+
+					<b:Heading size="H3" text="Form data" ui:field="formTitle"/>
+					<b.html:Hr/>
+
 					<p.registrar:PerunForm ui:field="form">
 
 					</p.registrar:PerunForm>
 				</b:Form>
+
+
+				<p:PerunLoader ui:field="loader" />
+
 
 			</b:Column>
 		</b:Row>

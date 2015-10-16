@@ -8,7 +8,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
@@ -121,12 +120,13 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		final String voName = Window.Location.getParameter("vo");
 		final String groupName = Window.Location.getParameter("group");
 
-		Scheduler.get().scheduleDeferred(new Command() {
+		// TODO - why it is here???
+		/*Scheduler.get().scheduleDeferred(new Command() {
 			@Override
 			public void execute() {
 				loader.getWidget().getElement().getFirstChildElement().setAttribute("style", "height: "+ (Window.getClientHeight()-100)+"px;");
 			}
-		});
+		});*/
 
 		if (voName == null || voName.isEmpty()) {
 			this.displayedException = PerunException.createNew("0", "WrongURL", "Missing parameters in URL.");
@@ -278,7 +278,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			@Override
 			public void onLoadingStart() {
-				loader.onLoading();
+				loader.onLoading(translation.preparingForm());
 			}
 		});
 
