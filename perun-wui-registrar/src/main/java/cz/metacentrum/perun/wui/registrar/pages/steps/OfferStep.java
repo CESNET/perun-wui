@@ -4,7 +4,9 @@ import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 
 /**
- * Created by ondrej on 3.10.15.
+ * Represents a question step in a registration process.
+ *
+ * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
 public abstract class OfferStep implements Step {
 

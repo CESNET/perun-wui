@@ -15,7 +15,9 @@ import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 /**
- * Created by ondrej on 3.10.15.
+ * Represents a question if user want to extend membership.
+ *
+ * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
 public class VoExtOfferStep extends OfferStep {
 

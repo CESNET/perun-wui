@@ -92,8 +92,7 @@ public class PerunSession {
 		}
 
 		String rpcType = getRpcServer();
-		// TODO - auth hack (I dont have permisions to edit apache conf)
-		rpcType = "krb";
+
 		if(rpcType == null){
 			Window.alert("Path to Perun server can't be determined, you probably used wrong URL.");
 		}

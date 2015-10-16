@@ -20,7 +20,9 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 /**
- * Created by ondrej on 3.10.15.
+ * Represents a final step in registration process.
+ *
+ * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
 public class Summary implements Step {
 

@@ -9,7 +9,9 @@ import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
 
 /**
- * Created by ondrej on 3.10.15.
+ * Represents VO initial application form step.
+ *
+ * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
 public class VoExtStep extends FormStep {
 

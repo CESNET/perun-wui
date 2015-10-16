@@ -8,7 +8,9 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.ValidatedEmail;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 
 /**
- * Created by ondrej on 3.10.15.
+ * Represents form step in a registration process.
+ *
+ * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
 public abstract class FormStep implements Step {
 
