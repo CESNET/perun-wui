@@ -298,7 +298,7 @@ public class PerunForm extends FieldSet {
 				private void nonvalid() {
 					if (valid[0]) {
 						int top = item.getAbsoluteTop();
-						Window.scrollTo(0, (top - 85 >= 0) ? top - 85 : top);
+						Window.scrollTo(0, (top - 85 >= 0) ? top - 85 : 0);
 						item.focus();
 						valid[0] = false;
 					}
