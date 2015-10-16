@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -10,7 +9,6 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.Select;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.ValidatedEmailValidator;
@@ -38,8 +36,8 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	private InputGroup widget;
 	private List<String> validMails;
 
-	public ValidatedEmail(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public ValidatedEmail(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 		this.validator = new ValidatedEmailValidator();
 	}
 
@@ -86,11 +84,15 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setEnable(boolean enable) {
-		getTextBox().setEnabled(enable);
-		if (getSelect() != null) {
-			getSelect().setEnabled(enable);
+	protected void makeOnlyPreviewWidget() {
+
+		getTextBox().setEnabled(false);
+		for (Widget box : getWidget()) {
+			if (box instanceof InputGroupButton) {
+				((InputGroupButton) box).removeFromParent();
+			}
 		}
+
 	}
 
 
@@ -174,13 +176,27 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	}
 
 	public ExtendedTextBox getTextBox() {
-		return ((ExtendedTextBox) getWidget().getWidget(1));
-	}
-	public Select getSelect() {
-		if (getWidget().getWidgetCount() < 3) {
-			return null;
+		for (Widget box : getWidget()) {
+			if (box instanceof ExtendedTextBox) {
+				return (ExtendedTextBox) box;
+			}
 		}
-		return ((Select) getWidget().getWidget(2));
+		return null;
+	}
+
+	public Select getSelect() {
+
+		for (Widget box : getWidget()) {
+			if (box instanceof InputGroupButton) {
+				for (Widget select : (InputGroupButton) box) {
+					if (select instanceof Select) {
+						return (Select) select;
+					}
+				}
+			}
+		}
+		return null;
+
 	}
 
 	public List<String> getValidMails() {

@@ -25,57 +25,66 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	private FormLabel label;
 	private HelpBlock status;
 	private HelpBlock help;
+	private final boolean onlyPreview;
 
-	public PerunFormItemEditable(ApplicationFormItemData item, String lang) {
+	public PerunFormItemEditable(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang);
-		setValidationTriggers();
+		this.onlyPreview = onlyPreview;
+		add(initFormItem());
+		if (!isOnlyPreview()) {
+			setValidationTriggers();
+		}
 	}
 
 	@Override
 	protected Widget initFormItem() {
 
 		Row item = new Row();
-
 		this.label = new FormLabel();
 		FlowPanel widgetWithTexts = new FlowPanel();
-
 		Row widgetWithStatus = new Row();
 		this.help = new HelpBlock();
-
 		Column widget = new Column(PerunForm.WIDGET_SIZE);
 		this.status = new HelpBlock();
 
 
-		item.add(label);
-		item.add(widgetWithTexts);
-
-		widgetWithTexts.add(widgetWithStatus);
-		widgetWithTexts.add(help);
-
-		widgetWithStatus.add(widget);
-		widgetWithStatus.add(status);
-
-		widget.add(initWidget());
-
-		setPrefilledValue();
-
-		setOnlyPreview(true);
-		if (isOnlyPreview()) {
-			setValue(getItemData().getValue());
-			setEnable(false);
-		}
-
 		label.setText(getLabelOrShortName());
 		label.setShowRequiredIndicator(getItemData().getFormItem().isRequired());
 
-		String helpText = getItemData().getFormItem().getItemTexts(getLang()).getHelp();
-		help.setHTML(helpText);
-
-		status.addStyleName(PerunForm.STATUS_SIZE.getCssName());
-		status.setMarginTop(0);
-		help.setMarginTop(0);
 		label.addStyleName(PerunForm.LABEL_SIZE.getCssName());
 		widgetWithTexts.addStyleName(PerunForm.WIDGET_WITH_TEXT_SIZE.getCssName());
+
+		status.addStyleName(PerunForm.STATUS_SIZE.getCssName());
+
+		widget.add(initWidget());
+
+		widgetWithStatus.add(widget);
+		widgetWithTexts.add(widgetWithStatus);
+
+
+		if (isOnlyPreview()) {
+
+			setValue(getItemData().getValue());
+			status.setVisible(false);
+
+			makeOnlyPreviewWidget();
+
+		} else {
+
+			setPrefilledValue();
+
+			String helpText = getItemData().getFormItem().getItemTexts(getLang()).getHelp();
+			help.setHTML(helpText);
+			help.setMarginTop(0);
+
+			widgetWithTexts.add(help);
+
+		}
+
+		widgetWithStatus.add(status);
+
+		item.add(label);
+		item.add(widgetWithTexts);
 
 		return item;
 	}
@@ -89,7 +98,12 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	protected abstract Widget initWidget();
 
 	/**
-	 * @return the same widget as initWidget() method returns. But it does not generate it.
+	 * Remake widget as preview. It should be disable (non editable) and display value.
+	 */
+	protected abstract void makeOnlyPreviewWidget();
+
+	/**
+	 * @return the same widget as initWidget() or initPreviewWidget method returns. But it does not generate it.
 	 */
 	protected abstract Widget getWidget();
 
@@ -123,6 +137,10 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 
 		return getItemData().getFormItem().isRequired();
 
+	}
+
+	public boolean isOnlyPreview() {
+		return onlyPreview;
 	}
 
 

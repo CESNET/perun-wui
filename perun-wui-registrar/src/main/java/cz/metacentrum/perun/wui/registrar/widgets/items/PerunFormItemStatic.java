@@ -13,6 +13,7 @@ public abstract class PerunFormItemStatic extends PerunFormItem {
 
 	public PerunFormItemStatic(ApplicationFormItemData item, String lang) {
 		super(item, lang);
+		add(initFormItem());
 	}
 
 	@Override
@@ -46,8 +47,4 @@ public abstract class PerunFormItemStatic extends PerunFormItem {
 		// do nothing.
 	}
 
-	@Override
-	public void setEnable(boolean enable) {
-		// couldnt be editable
-	}
 }

@@ -22,8 +22,8 @@ public class Selectionbox extends PerunFormItemEditable {
 
 	private Select widget;
 
-	public Selectionbox(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public Selectionbox(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 		this.validator = new SelectionboxValidator();
 	}
 
@@ -72,8 +72,15 @@ public class Selectionbox extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setEnable(boolean enable) {
-		getWidget().setEnabled(enable);
+	protected void makeOnlyPreviewWidget() {
+
+		if (!getValue().isEmpty()) {
+			int i = getWidget().getSelectedIndex();
+			getWidget().setItemText(i, getWidget().getSelectedItemText() + " (" + getWidget().getSelectedValue() + ")");
+		}
+
+		getWidget().setEnabled(false);
+
 	}
 
 

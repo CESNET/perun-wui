@@ -5,6 +5,7 @@ import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
+import org.gwtbootstrap3.client.ui.constants.ValidationState;
 
 /**
  * Represents TextField with value prefilled from federation. It can be visible or hidden and it Should be disable.
@@ -15,9 +16,8 @@ public class FromFederation extends PerunFormItemEditable {
 
 	private ExtendedTextBox widget;
 
-	public FromFederation(ApplicationFormItemData item, String lang, boolean visible) {
-		super(item, lang);
-		setVisible(visible);
+	public FromFederation(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 	}
 
 	@Override
@@ -50,8 +50,11 @@ public class FromFederation extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setEnable(boolean enable) {
+	protected void makeOnlyPreviewWidget() {
 		// shouldnt be editable never.
+
+		setStatus(getTranslation().federation(), ValidationState.NONE);
+
 	}
 
 

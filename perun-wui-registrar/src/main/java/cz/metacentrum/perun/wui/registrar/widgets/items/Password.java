@@ -5,7 +5,6 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
@@ -25,8 +24,8 @@ public class Password extends PerunFormItemEditable {
 
 	private InputGroup widget;
 
-	public Password(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public Password(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 		this.validator = new PasswordValidator();
 	}
 
@@ -79,9 +78,11 @@ public class Password extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setEnable(boolean enable) {
-		getPassword().setEnabled(enable);
-		getPasswordSecond().setEnabled(enable);
+	protected void makeOnlyPreviewWidget() {
+
+		getPassword().setEnabled(false);
+		getPasswordSecond().setEnabled(false);
+
 	}
 
 

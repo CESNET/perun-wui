@@ -25,8 +25,8 @@ public class Username extends PerunFormItemEditable {
 
 	private InputGroup widget;
 
-	public Username(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public Username(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 		this.validator = new UsernameValidator();
 	}
 
@@ -131,8 +131,14 @@ public class Username extends PerunFormItemEditable {
 		return ((ExtendedTextBox) getWidget().getWidget(1));
 	}
 
+	@Override
+	public void makeOnlyPreviewWidget() {
+
+		getTextBox().setEnabled(false);
+
+	}
+
 	public void setEnable(boolean enable) {
 		getTextBox().setEnabled(enable);
 	}
-
 }

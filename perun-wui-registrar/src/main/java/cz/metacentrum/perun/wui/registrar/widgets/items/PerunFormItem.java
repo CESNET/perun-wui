@@ -17,7 +17,6 @@ public abstract class PerunFormItem extends FormGroup {
 
 	private ApplicationFormItemData itemData;
 	private String lang;
-	private boolean onlyPreview;
 
 	RegistrarTranslation translation;
 
@@ -25,7 +24,6 @@ public abstract class PerunFormItem extends FormGroup {
 		this.itemData = itemData;
 		this.lang = lang;
 		this.translation = GWT.create(RegistrarTranslation.class);
-		add(initFormItem());
 	}
 
 	/**
@@ -46,14 +44,6 @@ public abstract class PerunFormItem extends FormGroup {
 
 	public String getLang() {
 		return lang;
-	}
-
-	public boolean isOnlyPreview() {
-		return onlyPreview;
-	}
-
-	public void setOnlyPreview(boolean onlyPreview) {
-		this.onlyPreview = onlyPreview;
 	}
 
 	/**
@@ -102,13 +92,6 @@ public abstract class PerunFormItem extends FormGroup {
 	 * @return true if item was focused, false if item cant be focused. (e.g. non editable static item)
 	 */
 	public abstract boolean focus();
-
-	/**
-	 * enable / disable widget.
-	 *
-	 * @param enable true if widget should be enabled (editable)
-	 */
-	public abstract void setEnable(boolean enable);
 
 
 

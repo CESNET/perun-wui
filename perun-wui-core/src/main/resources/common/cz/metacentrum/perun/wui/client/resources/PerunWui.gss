@@ -45,11 +45,10 @@ a.linkCell {
 .gwtb3-cell {
 	/* Minimum row height */
 	min-height: 30px !important;
-	line-height: 2em !important;
 	/* Word wrapping and align */
 	word-wrap: break-word !important;
 	/*word-break: break-all !important;*/
-	vertical-align: text-top !important;
+	vertical-align: middle !important;
 	padding: 8px 5px;
 }
 /* Fix padding of cell in last column to prevent content from hiding beneath the table's scroll bar */
@@ -260,6 +259,14 @@ th.gwtb3-d {
 .alert h5,
 .alert h6 {
 	margin-bottom: 0px;
+}
+.bootstrap-select.disabled {
+	cursor: not-allowed;
+}
+.bootstrap-select.disabled > .selectpicker {
+	opacity: 1;
+	color: rgb(85, 85, 85);
+	background-color: #eee;
 }
 
 /* GWT phantom div fix (it is there for measuring cm on real device for GWT. Maybe cm in gwt will not work properly) */

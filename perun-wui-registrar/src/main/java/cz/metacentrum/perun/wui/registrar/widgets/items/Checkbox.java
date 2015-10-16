@@ -2,7 +2,6 @@ package cz.metacentrum.perun.wui.registrar.widgets.items;
 
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
@@ -29,8 +28,8 @@ public class Checkbox extends PerunFormItemEditable {
 
 	private FlowPanel widget;
 
-	public Checkbox(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public Checkbox(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 		this.validator = new CheckboxValidator();
 	}
 
@@ -58,6 +57,19 @@ public class Checkbox extends PerunFormItemEditable {
 	}
 
 	@Override
+	protected void makeOnlyPreviewWidget() {
+
+		for (Widget widget : getWidget()) {
+			if (widget instanceof CheckBox) {
+				CheckBox checkBox = (CheckBox) widget;
+				checkBox.setText(checkBox.getText() + " (" + checkBox.getName() + ")");
+				checkBox.setEnabled(false);
+			}
+		}
+
+	}
+
+	@Override
 	public void validate(Events<Boolean> events) {
 		validator.validate(this, events);
 	}
@@ -79,17 +91,6 @@ public class Checkbox extends PerunFormItemEditable {
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public void setEnable(boolean enable) {
-
-		for (Widget widget : getWidget()) {
-
-			CheckBox checkBox = (CheckBox) widget;
-			checkBox.setEnabled(enable);
-		}
-
 	}
 
 

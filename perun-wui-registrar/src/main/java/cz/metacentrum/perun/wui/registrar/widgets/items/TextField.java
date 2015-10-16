@@ -22,8 +22,8 @@ public class TextField extends PerunFormItemEditable {
 
 	private ExtendedTextBox widget;
 
-	public TextField(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public TextField(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 		this.validator = new TextFieldValidator();
 	}
 
@@ -62,8 +62,10 @@ public class TextField extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setEnable(boolean enable) {
-		getWidget().setEnabled(enable);
+	protected void makeOnlyPreviewWidget() {
+
+		getWidget().setEnabled(false);
+
 	}
 
 

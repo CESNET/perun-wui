@@ -150,8 +150,11 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("--- Custom value ---")
 	public String customValue();
 
-	@DefaultMessage("<i>( HIDDEN )</i>")
+	@DefaultMessage("<i>HIDDEN</i>")
 	public String isHidden();
+
+	@DefaultMessage("<i>FEDERATION</i>")
+	String federation();
 
 	@DefaultMessage("UNDEFINED")
 	public String undefinedFormItem();
@@ -159,12 +162,13 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("none of the above")
 	String clearRadiobox();
 
+
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
 	@DefaultMessage("Submitted registrations")
 	public String submittedTitle();
 
-	@DefaultMessage("Submitted on")
+	@DefaultMessage("Submitted")
 	public String submittedOn();
 
 	@DefaultMessage("State")

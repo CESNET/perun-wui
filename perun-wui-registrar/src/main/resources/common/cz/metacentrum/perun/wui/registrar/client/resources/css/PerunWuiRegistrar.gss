@@ -55,4 +55,8 @@ body {
     flex-grow: 1;
 
     margin-bottom: 10px;
+    overflow-x: auto;
+}
+.grid > div:last-child {
+    min-width: 767px;
 }

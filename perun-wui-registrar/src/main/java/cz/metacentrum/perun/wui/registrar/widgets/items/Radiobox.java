@@ -1,21 +1,16 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.RadioboxValidator;
-import org.gwtbootstrap3.client.ui.CheckBox;
 import org.gwtbootstrap3.client.ui.Radio;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 import org.gwtbootstrap3.client.ui.html.Div;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,8 +28,8 @@ public class Radiobox extends PerunFormItemEditable {
 
 	private FlowPanel widget;
 
-	public Radiobox(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public Radiobox(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 		this.validator = new RadioboxValidator();
 	}
 
@@ -98,13 +93,16 @@ public class Radiobox extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setEnable(boolean enable) {
+	protected void makeOnlyPreviewWidget() {
+
 		for (Widget widget : getWidget()) {
 			if (widget instanceof Radio) {
 				Radio radio = (Radio) widget;
-				radio.setEnabled(enable);
+
+				radio.setEnabled(false);
 			}
 		}
+
 	}
 
 

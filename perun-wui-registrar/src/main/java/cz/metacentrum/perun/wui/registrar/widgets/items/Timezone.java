@@ -21,8 +21,8 @@ public class Timezone extends PerunFormItemEditable {
 
 	private Select widget;
 
-	public Timezone(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public Timezone(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 		this.validator = new TimezoneValidator();
 	}
 
@@ -69,8 +69,10 @@ public class Timezone extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setEnable(boolean enable) {
-		getWidget().setEnabled(enable);
+	protected void makeOnlyPreviewWidget() {
+
+		getWidget().setEnabled(false);
+
 	}
 
 

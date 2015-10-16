@@ -8,16 +8,12 @@ import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
-import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.Select;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.ComboboxValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
-import org.gwtbootstrap3.client.ui.CheckBox;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -34,8 +30,8 @@ public class Combobox extends PerunFormItemEditable {
 
 	private FlowPanel widget;
 
-	public Combobox(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public Combobox(ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(item, lang, onlyPreview);
 		this.validator = new ComboboxValidator();
 	}
 
@@ -106,9 +102,21 @@ public class Combobox extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setEnable(boolean enable) {
-		getSelect().setEnabled(enable);
-		getTextBox().setEnabled(enable);
+	protected void makeOnlyPreviewWidget() {
+
+		getSelect().setEnabled(false);
+		getTextBox().setEnabled(false);
+
+		if (isCustomSelected()) {
+			getSelect().removeFromParent();
+			getTextBox().removeStyleName("comboboxFormItemFirst");
+			getTextBox().removeStyleName("comboboxFormItemLast");
+		} else if (!getValue().isEmpty()) {
+			int i = getSelect().getSelectedIndex();
+			getSelect().setItemText(i, getSelect().getSelectedItemText() + " (" + getSelect().getSelectedValue() + ")");
+		}
+
+
 	}
 
 
@@ -146,16 +154,26 @@ public class Combobox extends PerunFormItemEditable {
 
 	@Override
 	public void setValue(String value) {
+
 		for (int i = 0; i < getSelect().getItemCount(); i++) {
 			if (getSelect().getValue(i).equals(value)) {
+
 				getSelect().setSelectedIndex(i);
 				checkCustomSelected();
 				return;
 			}
 		}
-		getSelect().setValue(CUSTOM_ID);
-		getTextBox().setValue(value);
-		checkCustomSelected();
+
+		for (int i = 0; i < getSelect().getItemCount(); i++) {
+			if (getSelect().getValue(i).equals(CUSTOM_ID)) {
+
+				getSelect().setSelectedIndex(i);
+				getTextBox().setValue(value);
+				checkCustomSelected();
+				return;
+			}
+		}
+
 	}
 
 	public Select getSelect() {
