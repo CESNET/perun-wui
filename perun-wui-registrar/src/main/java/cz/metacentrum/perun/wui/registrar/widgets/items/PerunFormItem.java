@@ -17,6 +17,7 @@ public abstract class PerunFormItem extends FormGroup {
 
 	private ApplicationFormItemData itemData;
 	private String lang;
+	private boolean onlyPreview;
 
 	RegistrarTranslation translation;
 
@@ -47,7 +48,13 @@ public abstract class PerunFormItem extends FormGroup {
 		return lang;
 	}
 
+	public boolean isOnlyPreview() {
+		return onlyPreview;
+	}
 
+	public void setOnlyPreview(boolean onlyPreview) {
+		this.onlyPreview = onlyPreview;
+	}
 
 	/**
 	 * Get current Value of item. It have to be consistent with Perun RPC documentation for each item.
@@ -96,7 +103,12 @@ public abstract class PerunFormItem extends FormGroup {
 	 */
 	public abstract boolean focus();
 
-
+	/**
+	 * enable / disable widget.
+	 *
+	 * @param enable true if widget should be enabled (editable)
+	 */
+	public abstract void setEnable(boolean enable);
 
 
 

@@ -97,6 +97,16 @@ public class Radiobox extends PerunFormItemEditable {
 		return false;
 	}
 
+	@Override
+	public void setEnable(boolean enable) {
+		for (Widget widget : getWidget()) {
+			if (widget instanceof Radio) {
+				Radio radio = (Radio) widget;
+				radio.setEnabled(enable);
+			}
+		}
+	}
+
 
 	@Override
 	public void setValidationTriggers() {

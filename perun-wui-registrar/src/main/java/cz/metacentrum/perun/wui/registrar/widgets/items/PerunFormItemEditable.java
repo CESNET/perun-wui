@@ -59,6 +59,11 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 
 		setPrefilledValue();
 
+		setOnlyPreview(true);
+		if (isOnlyPreview()) {
+			setValue(getItemData().getValue());
+			setEnable(false);
+		}
 
 		label.setText(getLabelOrShortName());
 		label.setShowRequiredIndicator(getItemData().getFormItem().isRequired());
@@ -77,7 +82,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 
 	/**
 	 * Generate form item widget. Widget means part of item which is editable.
-	 * ithout label, helper and error texts.
+	 * without label, helper and error texts.
 	 *
 	 * @return generated form item widget
 	 */

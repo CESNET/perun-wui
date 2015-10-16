@@ -68,6 +68,11 @@ public class Timezone extends PerunFormItemEditable {
 		return true;
 	}
 
+	@Override
+	public void setEnable(boolean enable) {
+		getWidget().setEnabled(enable);
+	}
+
 
 	@Override
 	public void setValidationTriggers() {

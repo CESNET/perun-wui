@@ -25,10 +25,9 @@ public class Username extends PerunFormItemEditable {
 
 	private InputGroup widget;
 
-	public Username(ApplicationFormItemData item, String lang, boolean enable) {
+	public Username(ApplicationFormItemData item, String lang) {
 		super(item, lang);
 		this.validator = new UsernameValidator();
-		getTextBox().setEnabled(enable);
 	}
 
 	protected Widget initWidget() {
@@ -51,23 +50,37 @@ public class Username extends PerunFormItemEditable {
 
 	@Override
 	public void validate(Events<Boolean> events) {
-		validator.validate(this, events);
+		if (getTextBox().isEnabled()) {
+			validator.validate(this, events);
+		} else {
+			events.onLoadingStart();
+			events.onFinished(true);
+		}
 	}
 
 	@Override
 	public boolean validateLocal() {
-		return validator.validateLocal(this);
+		if (getTextBox().isEnabled()) {
+			return validator.validateLocal(this);
+		}
+		return true;
 	}
 
 	@Override
 	public PerunFormItemValidator.Result getLastValidationResult() {
-		return validator.getLastResult();
+		if (getTextBox().isEnabled()) {
+			return validator.getLastResult();
+		}
+		return PerunFormItemValidator.Result.OK;
 	}
 
 	@Override
 	public boolean focus() {
-		getTextBox().setFocus(true);
-		return true;
+		if (getTextBox().isEnabled()) {
+			getTextBox().setFocus(true);
+			return true;
+		}
+		return false;
 	}
 
 
@@ -116,6 +129,10 @@ public class Username extends PerunFormItemEditable {
 
 	public ExtendedTextBox getTextBox() {
 		return ((ExtendedTextBox) getWidget().getWidget(1));
+	}
+
+	public void setEnable(boolean enable) {
+		getTextBox().setEnabled(enable);
 	}
 
 }

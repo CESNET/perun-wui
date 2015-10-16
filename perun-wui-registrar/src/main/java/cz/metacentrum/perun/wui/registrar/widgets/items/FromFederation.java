@@ -49,6 +49,11 @@ public class FromFederation extends PerunFormItemEditable {
 		return false;
 	}
 
+	@Override
+	public void setEnable(boolean enable) {
+		// shouldnt be editable never.
+	}
+
 
 	@Override
 	public void setValidationTriggers() {

@@ -18,20 +18,33 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.Undefined;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Username;
 import cz.metacentrum.perun.wui.registrar.widgets.items.ValidatedEmail;
 
-/**
- * Created by ondrej on 3.10.15.
- */
-public class PerunFormItemGeneratorImpl implements PerunFormItemGenerator {
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * @author Ondrej Velisek <ondrejvelisek@gmail.com>
+ */
+public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 
 	private final PerunForm form;
 
-	public PerunFormItemGeneratorImpl(PerunForm form) {
+	public PerunFormItemsGeneratorImpl(PerunForm form) {
 		this.form = form;
 	}
 
+
 	@Override
-	public PerunFormItem generatePerunFormItem(ApplicationFormItemData data) {
+	public List<PerunFormItem> generatePerunFormItems(List<ApplicationFormItemData> items) {
+		List<PerunFormItem> perunFormItems = new ArrayList<>();
+		for (ApplicationFormItemData item : items) {
+			PerunFormItem perunFormItem = generatePerunFormItem(item);
+			perunFormItem.setOnlyPreview(form.isOnlyPreview());
+			perunFormItems.add(perunFormItem);
+		}
+		return perunFormItems;
+	}
+
+	private PerunFormItem generatePerunFormItem(ApplicationFormItemData data) {
 		switch (data.getFormItem().getType()) {
 			case HEADING:
 				return new Header(data, form.getLang());
@@ -42,11 +55,11 @@ public class PerunFormItemGeneratorImpl implements PerunFormItemGenerator {
 			case TEXTAREA:
 				return new TextArea(data, form.getLang());
 			case USERNAME:
-				// TODO - Bug. control only already added perun form items to the form.
-				if (formContainsClass(Password.class)) {
-					return new Username(data, form.getLang(), false);
+				Username username = new Username(data, form.getLang());
+				if (data.getPrefilledValue() != null && !data.getPrefilledValue().isEmpty()) {
+					username.setEnable(false);
 				}
-				return new Username(data, form.getLang(), true);
+				return username;
 			case PASSWORD:
 				return new Password(data, form.getLang());
 			case TIMEZONE:
@@ -68,7 +81,6 @@ public class PerunFormItemGeneratorImpl implements PerunFormItemGenerator {
 			case SUBMIT_BUTTON:
 				return new SubmitButton(data, form.getLang(), form, false);
 			case AUTO_SUBMIT_BUTTON:
-				// TODO - Bug. do not submit if it is not last item.
 				return new SubmitButton(data, form.getLang(), form, true);
 			default:
 				return new Undefined(data, form.getLang());

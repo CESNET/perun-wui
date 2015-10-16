@@ -1,22 +1,17 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
-import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.CheckboxValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import org.gwtbootstrap3.client.ui.CheckBox;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -84,6 +79,17 @@ public class Checkbox extends PerunFormItemEditable {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void setEnable(boolean enable) {
+
+		for (Widget widget : getWidget()) {
+
+			CheckBox checkBox = (CheckBox) widget;
+			checkBox.setEnabled(enable);
+		}
+
 	}
 
 

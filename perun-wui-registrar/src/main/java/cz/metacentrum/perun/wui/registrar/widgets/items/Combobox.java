@@ -105,6 +105,12 @@ public class Combobox extends PerunFormItemEditable {
 		return true;
 	}
 
+	@Override
+	public void setEnable(boolean enable) {
+		getSelect().setEnabled(enable);
+		getTextBox().setEnabled(enable);
+	}
+
 
 	@Override
 	public void setValidationTriggers() {

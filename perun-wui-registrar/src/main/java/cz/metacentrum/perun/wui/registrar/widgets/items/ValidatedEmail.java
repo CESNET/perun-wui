@@ -85,6 +85,14 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		return true;
 	}
 
+	@Override
+	public void setEnable(boolean enable) {
+		getTextBox().setEnabled(enable);
+		if (getSelect() != null) {
+			getSelect().setEnabled(enable);
+		}
+	}
+
 
 	@Override
 	public void setValidationTriggers() {
@@ -117,7 +125,11 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	@Override
 	public void setValue(String value) {
 
-		validMails = Arrays.asList(getItemData().getPrefilledValue().split(";"));
+		if (value.isEmpty()) {
+			return;
+		}
+
+		validMails = Arrays.asList(value.split(";"));
 
 		getTextBox().setValue(validMails.get(0));
 
@@ -165,6 +177,9 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		return ((ExtendedTextBox) getWidget().getWidget(1));
 	}
 	public Select getSelect() {
+		if (getWidget().getWidgetCount() < 3) {
+			return null;
+		}
 		return ((Select) getWidget().getWidget(2));
 	}
 

@@ -45,4 +45,9 @@ public abstract class PerunFormItemStatic extends PerunFormItem {
 	public void setValue(String value) {
 		// do nothing.
 	}
+
+	@Override
+	public void setEnable(boolean enable) {
+		// couldnt be editable
+	}
 }

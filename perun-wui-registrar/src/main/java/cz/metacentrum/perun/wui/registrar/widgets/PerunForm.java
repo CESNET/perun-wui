@@ -14,6 +14,7 @@ import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
+import cz.metacentrum.perun.wui.registrar.widgets.items.SubmitButton;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.FieldSet;
 import org.gwtbootstrap3.client.ui.Heading;
@@ -35,21 +36,23 @@ import java.util.List;
  */
 public class PerunForm extends FieldSet {
 
+	// LABEL_SIZE + WIDGET_WITH_TEXT_SIZE should be 12
+	// LABEL_OFFSET should be same as LABEL_SIZE
 	public static final ColumnSize LABEL_SIZE = ColumnSize.MD_2;
 	public static final ColumnOffset LABEL_OFFSET = ColumnOffset.MD_2;
 	public static final ColumnSize WIDGET_WITH_TEXT_SIZE = ColumnSize.MD_10;
+	// WIDGET_SIZE + STATUS_SIZE should be 12
 	public static final ColumnSize WIDGET_SIZE = ColumnSize.SM_6;
 	public static final ColumnSize STATUS_SIZE = ColumnSize.SM_6;
 
 	private String lang = LocaleInfo.getCurrentLocale().getLocaleName().equals("default") ? "en" : LocaleInfo.getCurrentLocale().getLocaleName();
 
-	// TRUE if only text preview with (prefilled)value should be shown
-	private boolean onlyPreview = false;
-	private boolean seeHiddenItems = false;
+	// contains info about onlyPreview and seeHiddenItems
+	private PerunFormItemsGenerator generator;
+	private boolean onlyPreview;
+	private boolean seeHiddenItems;
 	private Application app;
 	private JsonEvents onSubmitEvent;
-	private PerunFormItemGenerator generator = new PerunFormItemGeneratorImpl(this);
-
 	private PerunTranslation perunTranslation = GWT.create(PerunTranslation.class);
 
 	private List<PerunFormItem> items = new ArrayList<>();
@@ -57,7 +60,9 @@ public class PerunForm extends FieldSet {
 	/**
 	 * Create form instance
 	 */
-	public PerunForm() {}
+	public PerunForm() {
+		generator = new PerunFormItemsGeneratorImpl(this);
+	}
 
 	/**
 	 * Create form instance with possibility to set 'only preview' state.
@@ -73,24 +78,18 @@ public class PerunForm extends FieldSet {
 	 * Create form instance with possibility to set 'only preview' state.
 	 *
 	 * @param onlyPreview TRUE = form will display only preview / FALSE = form will allow editing
+	 * @param seeHiddenItems TRUE = form will display also hidden items
 	 */
-	public PerunForm(boolean onlyPreview, boolean seeHidden) {
+	public PerunForm(boolean onlyPreview, boolean seeHiddenItems) {
 		this(onlyPreview);
-		this.seeHiddenItems = seeHidden;
+		this.seeHiddenItems = seeHiddenItems;
 	}
 
-	public void addFormItem(ApplicationFormItemData itemData) {
+	public void addFormItems(List<ApplicationFormItemData> items) {
 
-		if (itemData != null) {
+		if (items != null) {
 
-			PerunFormItem item = generator.generatePerunFormItem(itemData);
-
-			if (item != null) items.add(item);
-
-			// if visible append to form
-			if (item.isVisible() || seeHiddenItems) {
-				add(item);
-			}
+			addPerunFormItems(generator.generatePerunFormItems(items));
 
 		}
 
@@ -108,30 +107,29 @@ public class PerunForm extends FieldSet {
 		this.clear();
 
 		// add items
-		if (items != null) {
-			for (ApplicationFormItemData item : items) {
-				addFormItem(item);
+		addFormItems(items);
+
+	}
+
+	public void addPerunFormItems(List<PerunFormItem> items) {
+
+		if (items != null)  {
+
+			for (PerunFormItem item : items) {
+				add(item);
 			}
+			this.items.addAll(items);
+
+			// auto submit
+			SubmitButton autoSubmit = getAutoSubmitButton(items);
+			if (autoSubmit != null && !isOnlyPreview()) {
+				submit(autoSubmit.getButton());
+			}
+
 		}
 
 		if (this.items.isEmpty()) {
 			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
-		}
-
-	}
-
-	public void addPerunFormItem(PerunFormItem item) {
-
-		if (item != null)  {
-
-			//item.setForm(this);
-			items.add(item);
-
-			// if visible append to form
-			if (item.isVisible() || seeHiddenItems) {
-				add(item);
-			}
-
 		}
 
 	}
@@ -147,16 +145,7 @@ public class PerunForm extends FieldSet {
 		this.items.clear();
 		this.clear();
 
-		// add items
-		if (items != null) {
-			for (PerunFormItem item : items) {
-				addPerunFormItem(item);
-			}
-		}
-
-		if (items.isEmpty()) {
-			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
-		}
+		addPerunFormItems(items);
 
 	}
 
@@ -167,6 +156,21 @@ public class PerunForm extends FieldSet {
 	 */
 	public List<PerunFormItem> getPerunFormItems() {
 		return Collections.unmodifiableList(items);
+	}
+
+	/**
+	 * @return SubmitButton if items contains auto submit button, null otherwise.
+	 */
+	private SubmitButton getAutoSubmitButton(List<PerunFormItem> items) {
+		for (PerunFormItem item : items) {
+			if (item instanceof SubmitButton) {
+				SubmitButton button = (SubmitButton) item;
+				if (button.hasAutoSubmit()) {
+					return button;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -310,7 +314,7 @@ public class PerunForm extends FieldSet {
 	 * @return TRUE = preview / FALSE = editing
 	 */
 	public boolean isOnlyPreview() {
-		return onlyPreview;
+		return this.onlyPreview;
 	}
 
 	/**
@@ -323,7 +327,7 @@ public class PerunForm extends FieldSet {
 	}
 
 	public boolean isSeeHiddenItems() {
-		return seeHiddenItems;
+		return this.seeHiddenItems;
 	}
 
 	public void setSeeHiddenItems(boolean seeHiddenItems) {

@@ -78,6 +78,12 @@ public class Password extends PerunFormItemEditable {
 		return true;
 	}
 
+	@Override
+	public void setEnable(boolean enable) {
+		getPassword().setEnabled(enable);
+		getPasswordSecond().setEnabled(enable);
+	}
+
 
 	@Override
 	public void setValidationTriggers() {
