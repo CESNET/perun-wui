@@ -21,9 +21,6 @@ import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
-import org.gwtbootstrap3.extras.growl.client.ui.Growl;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -120,12 +117,6 @@ public class PerunForm extends FieldSet {
 			}
 			this.items.addAll(items);
 
-			// auto submit
-			SubmitButton autoSubmit = getAutoSubmitButton(items);
-			if (autoSubmit != null && !isOnlyPreview()) {
-				submit(autoSubmit.getButton());
-			}
-
 		}
 
 		if (this.items.isEmpty()) {
@@ -156,6 +147,17 @@ public class PerunForm extends FieldSet {
 	 */
 	public List<PerunFormItem> getPerunFormItems() {
 		return Collections.unmodifiableList(items);
+	}
+
+	/**
+	 * perform auto submit if form contains auto submit button. Do nothing otherwise.
+	 */
+	public void performAutoSubmit() {
+
+		SubmitButton autoSubmit = getAutoSubmitButton(items);
+		if (autoSubmit != null && !isOnlyPreview()) {
+			submit(autoSubmit.getButton());
+		}
 	}
 
 	/**
@@ -190,9 +192,11 @@ public class PerunForm extends FieldSet {
 				if (result) {
 
 					// TODO - remove debug logging
+
 					for (PerunFormItem item : items) {
 						GWT.log(item.getItemData().getFormItem().getShortname() + " : " + item.getValue());
 					}
+					GWT.log(app.toString());
 
 					RegistrarManager.createApplication(app, getFormItemData(), new JsonEvents() {
 						@Override
@@ -200,10 +204,11 @@ public class PerunForm extends FieldSet {
 
 							button.setProcessing(false);
 							button.setEnabled(true);
-
+							/*
 							GrowlOptions go = new GrowlOptions();
 							go.setType(GrowlType.SUCCESS);
 							Growl.growl("Form submitted !!", go);
+							*/
 
 							if (onSubmitEvent != null) onSubmitEvent.onFinished(jso);
 

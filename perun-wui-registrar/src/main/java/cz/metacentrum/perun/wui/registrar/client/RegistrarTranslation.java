@@ -50,7 +50,7 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	// MESSAGES
 
-	@DefaultMessage("Please check your mailbox and verify your e-mail.")
+	@DefaultMessage("Please check your mailbox and verify your e-mail address.")
 	public String verifyMail();
 
 	@DefaultMessage("Please wait till administrator of {0} will accept your application.")

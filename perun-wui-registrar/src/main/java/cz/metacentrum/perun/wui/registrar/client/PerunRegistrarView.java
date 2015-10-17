@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -19,6 +20,7 @@ import cz.metacentrum.perun.wui.client.utils.Utils;
 import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
+import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
@@ -37,6 +39,12 @@ public class PerunRegistrarView extends ViewImpl implements PerunPresenter.MyVie
 	Div pageContent;
 
 	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+
+	@UiField
+	NavbarCollapse collapse;
+
+	@UiField
+	FocusPanel collapseClickHandler;
 
 	@UiField
 	AnchorButton language;

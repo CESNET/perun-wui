@@ -46,5 +46,7 @@ public class GroupInitStep extends FormStep {
 
 			}
 		});
+
+		form.performAutoSubmit();
 	}
 }

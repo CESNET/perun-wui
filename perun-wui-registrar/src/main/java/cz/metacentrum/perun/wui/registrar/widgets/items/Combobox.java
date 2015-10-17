@@ -110,14 +110,18 @@ public class Combobox extends PerunFormItemEditable {
 		getTextBox().setEnabled(false);
 
 		if (isCustomSelected()) {
+
 			getSelect().removeFromParent();
 			getTextBox().removeStyleName("comboboxFormItemFirst");
 			getTextBox().removeStyleName("comboboxFormItemLast");
+
 		} else if (!getValue().isEmpty()) {
+
 			int i = getSelect().getSelectedIndex();
 			getSelect().setItemText(i, getSelect().getSelectedItemText() + " (" + getSelect().getSelectedValue() + ")");
-		}
+			getSelect().refresh();
 
+		}
 	}
 
 
@@ -175,7 +179,7 @@ public class Combobox extends PerunFormItemEditable {
 			}
 		}
 
-		getSelect().render();
+		getSelect().refresh();
 
 	}
 

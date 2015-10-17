@@ -81,6 +81,8 @@ public class Selectionbox extends PerunFormItemEditable {
 
 		getWidget().setEnabled(false);
 
+		getWidget().refresh();
+
 	}
 
 
@@ -113,7 +115,7 @@ public class Selectionbox extends PerunFormItemEditable {
 				break;
 			}
 		}
-		getWidget().render();
+		getWidget().refresh();
 	}
 
 }

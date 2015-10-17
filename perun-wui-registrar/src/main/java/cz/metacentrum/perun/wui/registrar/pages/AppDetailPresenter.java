@@ -46,8 +46,8 @@ public class AppDetailPresenter extends Presenter<AppDetailPresenter.MyView, App
 
 	@Override
 	public void prepareFromRequest(final PlaceRequest request) {
-
 		super.prepareFromRequest(request);
+
 		try {
 			final int id = Integer.valueOf(request.getParameter("id", null));
 			if (id < 1) {

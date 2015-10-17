@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.model.PerunException;
 import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.ButtonToolBar;
+import org.gwtbootstrap3.client.ui.Progress;
 import org.gwtbootstrap3.client.ui.ProgressBar;
 import org.gwtbootstrap3.client.ui.constants.ProgressBarType;
 
@@ -37,6 +38,7 @@ public class PerunLoader extends Composite {
 	private static PerunLoaderUiBinder ourUiBinder = GWT.create(PerunLoaderUiBinder.class);
 
 	Widget rootElement;
+	@UiField Progress progress;
 	@UiField ProgressBar bar;
 	@UiField Alert alert;
 	@UiField Alert message;
@@ -75,6 +77,7 @@ public class PerunLoader extends Composite {
 	public void onLoading() {
 
 		state = PerunLoaderState.loading;
+		progress.setActive(true);
 		bar.setPercent(100);
 		bar.setType(ProgressBarType.DEFAULT);
 		alert.setVisible(false);
@@ -107,6 +110,7 @@ public class PerunLoader extends Composite {
 	public void onEmpty(){
 
 		state = PerunLoaderState.finished;
+		progress.setActive(false);
 
 		/*
 		bar.setVisible(false);
@@ -122,6 +126,7 @@ public class PerunLoader extends Composite {
 	public void onFinished(){
 
 		state = PerunLoaderState.finished;
+		progress.setActive(false);
 		bar.setVisible(false);
 
 		// TODO ALERT
@@ -133,6 +138,7 @@ public class PerunLoader extends Composite {
 	public void onError(PerunException error, final ClickHandler handler) {
 
 		state = PerunLoaderState.error;
+		progress.setActive(false);
 		bar.setVisible(true);
 		bar.setType(ProgressBarType.DANGER);
 		alert.setText(error.getName()+": "+error.getMessage());

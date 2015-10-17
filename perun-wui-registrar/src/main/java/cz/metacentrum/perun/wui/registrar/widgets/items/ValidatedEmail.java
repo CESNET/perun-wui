@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -86,6 +87,9 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	@Override
 	protected void makeOnlyPreviewWidget() {
 
+		if (getSelect() != null) {
+			getSelect().setEnabled(false);
+		}
 		getTextBox().setEnabled(false);
 		for (Widget box : getWidget()) {
 			if (box instanceof InputGroupButton) {
@@ -135,6 +139,11 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 		getTextBox().setValue(validMails.get(0));
 
+		if (isOnlyPreview()) {
+			// should contain only one value;
+			return;
+		}
+
 		final Select emailSelect = new Select();
 		emailSelect.addStyleName("emailFormItem");
 		emailSelect.setWidth("38px");
@@ -170,6 +179,8 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 		InputGroupButton dropdown = new InputGroupButton();
 		dropdown.add(emailSelect);
+
+		emailSelect.refresh();
 
 		widget.add(dropdown);
 

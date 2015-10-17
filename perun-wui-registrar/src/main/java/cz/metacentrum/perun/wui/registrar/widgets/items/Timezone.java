@@ -72,6 +72,7 @@ public class Timezone extends PerunFormItemEditable {
 	protected void makeOnlyPreviewWidget() {
 
 		getWidget().setEnabled(false);
+		getWidget().refresh();
 
 	}
 
@@ -105,7 +106,7 @@ public class Timezone extends PerunFormItemEditable {
 				break;
 			}
 		}
-		getWidget().render();
+		getWidget().refresh();
 	}
 
 }

@@ -64,8 +64,8 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 
 		if (isOnlyPreview()) {
 
-			makeOnlyPreviewWidget();
 			setValue(getItemData().getValue());
+			makeOnlyPreviewWidget();
 
 			status.setVisible(false);
 

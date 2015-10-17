@@ -46,6 +46,9 @@ public class VoInitStep extends FormStep {
 
 			}
 		});
+
+		form.performAutoSubmit();
+
 	}
 
 }

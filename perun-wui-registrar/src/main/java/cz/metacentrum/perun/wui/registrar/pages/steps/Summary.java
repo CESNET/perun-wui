@@ -46,7 +46,6 @@ public class Summary implements Step {
 		displaySummaryMessage(registrar);
 		displayContinueButton(registrar, (groupApplication != null) ? groupApplication : voApplication);
 
-
 	}
 
 	private void displaySummaryTitle(RegistrarObject registrar) {
