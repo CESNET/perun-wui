@@ -53,7 +53,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 
 		RegistrarManager.getApplicationsForUser(PerunSession.getInstance().getUserId(), new JsonEvents() {
 
-			JsonEvents loadAgain = this;
+			JsonEvents retry = this;
 
 			@Override
 			public void onFinished(JavaScriptObject jso) {
@@ -65,7 +65,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 				grid.getLoaderWidget().onError(error, new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						RegistrarManager.getApplicationsForUser(PerunSession.getInstance().getUser().getId(), loadAgain);
+						RegistrarManager.getApplicationsForUser(PerunSession.getInstance().getUser().getId(), retry);
 					}
 				});
 			}

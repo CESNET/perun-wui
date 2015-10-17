@@ -59,6 +59,7 @@ public abstract class PerunFormItem extends FormGroup {
 	 * Set value (usually prefilled value). It have to be consistent with Perun RPC documentation for each item.
 	 * Also it have to be symetric with getValue() method.
 	 * It should be displayed visible in the form.
+	 * FORM ITEM HAS TO HAVE PARENT WHEN YOU CALL THIS METHOD. use add(this). It is because refreshing of Select.
 	 *
 	 * @param value
 	 */

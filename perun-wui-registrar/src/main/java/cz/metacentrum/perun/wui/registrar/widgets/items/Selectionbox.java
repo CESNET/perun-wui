@@ -106,12 +106,14 @@ public class Selectionbox extends PerunFormItemEditable {
 
 	@Override
 	public void setValue(String value) {
+
 		for (int i = 0; i < getWidget().getItemCount(); i++) {
 			if (getWidget().getValue(i).equals(value)) {
 				getWidget().setSelectedIndex(i);
 				break;
 			}
 		}
+		getWidget().render();
 	}
 
 }

@@ -60,6 +60,8 @@ public class Combobox extends PerunFormItemEditable {
 
 		final ExtendedTextBox box = new ExtendedTextBox();
 
+
+
 		widget.add(select);
 		widget.add(box);
 
@@ -115,7 +117,6 @@ public class Combobox extends PerunFormItemEditable {
 			int i = getSelect().getSelectedIndex();
 			getSelect().setItemText(i, getSelect().getSelectedItemText() + " (" + getSelect().getSelectedValue() + ")");
 		}
-
 
 	}
 
@@ -173,6 +174,8 @@ public class Combobox extends PerunFormItemEditable {
 				return;
 			}
 		}
+
+		getSelect().render();
 
 	}
 
