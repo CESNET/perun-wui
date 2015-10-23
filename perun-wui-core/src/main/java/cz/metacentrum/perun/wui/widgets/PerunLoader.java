@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
@@ -45,13 +46,13 @@ public class PerunLoader extends Composite {
 	@UiField ButtonToolBar tool;
 	@UiField PerunButton retry;
 	@UiField PerunButton report;
+	private HandlerRegistration lastRetryHandler;
 
 	public PerunLoader() {
 
 		rootElement = ourUiBinder.createAndBindUi(this);
 		initWidget(rootElement);
 		bar.setPercent(0);
-		alert.setVisible(false);
 
 	}
 
@@ -76,11 +77,16 @@ public class PerunLoader extends Composite {
 
 	public void onLoading() {
 
+		setVisible(true);
+		progress.setVisible(true);
+		message.setVisible(false);
+		alert.setVisible(false);
+
 		state = PerunLoaderState.loading;
 		progress.setActive(true);
 		bar.setPercent(100);
 		bar.setType(ProgressBarType.DEFAULT);
-		alert.setVisible(false);
+
 
 		/*Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
 			@Override
@@ -125,27 +131,33 @@ public class PerunLoader extends Composite {
 
 	public void onFinished(){
 
+		progress.setVisible(true);
+		message.setVisible(true);
+		alert.setVisible(false);
+
 		state = PerunLoaderState.finished;
 		progress.setActive(false);
-		bar.setVisible(false);
 
 		// TODO ALERT
 		message.setText("Loading finished.");
-		message.setVisible(true);
 
 	}
 
 	public void onError(PerunException error, final ClickHandler handler) {
 
-		state = PerunLoaderState.error;
-		progress.setActive(false);
-		bar.setVisible(true);
-		bar.setType(ProgressBarType.DANGER);
-		alert.setText(error.getName()+": "+error.getMessage());
+		progress.setVisible(true);
+		message.setVisible(false);
 		alert.setVisible(true);
 
-		tool.setVisible(true);
-		retry.addClickHandler(handler);
+		state = PerunLoaderState.error;
+		progress.setActive(false);
+		bar.setType(ProgressBarType.DANGER);
+		alert.setText(error.getName() + ": " + error.getMessage());
+
+		if (lastRetryHandler != null) {
+			lastRetryHandler.removeHandler();
+		}
+		lastRetryHandler = retry.addClickHandler(handler);
 
 	}
 

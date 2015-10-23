@@ -60,3 +60,10 @@ body {
 .grid > div:last-child {
     min-width: 767px;
 }
+
+/* HACKS */
+
+/* correctly animatable status (because of pulse animation) */
+.status {
+    display: inline-block;
+}

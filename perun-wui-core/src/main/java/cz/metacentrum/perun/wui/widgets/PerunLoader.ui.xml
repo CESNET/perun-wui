@@ -28,8 +28,8 @@
 					<b:ProgressBar ui:field="bar" />
 				</b:Progress>
 
-				<b:Alert dismissable="false" ui:field="alert" type="DANGER">
-					<b:ButtonToolBar visible="false" ui:field="tool" addStyleNames="{style.top}">
+				<b:Alert dismissable="false" ui:field="alert" type="DANGER" visible="false">
+					<b:ButtonToolBar ui:field="tool" addStyleNames="{style.top}">
 						<p:PerunButton ui:field="retry" icon="REFRESH" pull="LEFT">Try again</p:PerunButton>
 						<p:PerunButton ui:field="report" icon="BUG" pull="RIGHT" type="DANGER">Report error</p:PerunButton>
 					</b:ButtonToolBar>

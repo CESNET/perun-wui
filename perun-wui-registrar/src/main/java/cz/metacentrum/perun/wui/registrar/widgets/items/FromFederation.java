@@ -75,7 +75,7 @@ public class FromFederation extends PerunFormItemEditable {
 
 	@Override
 	public void setValue(String value) {
-		widget.setValue(value);
+		widget.setValue(value.split(";")[0]);
 	}
 
 }

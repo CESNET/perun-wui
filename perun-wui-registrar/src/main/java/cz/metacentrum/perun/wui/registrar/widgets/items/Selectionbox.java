@@ -42,6 +42,8 @@ public class Selectionbox extends PerunFormItemEditable {
 
 		Map<String, String> opts = parseItemOptions();
 
+		opts.put("key", "sdlkjsadkljsdklfjas sdlkj asdlkasdj salkjsadjk ldsalk jsadlksajdflkasdjflskdjf asdflkj dsafkljas asdflkj sadflkjasd flkasjdf lsakdfj ");
+
 		for (Map.Entry<String, String> entry : opts.entrySet()) {
 			widget.addItem(entry.getValue(), entry.getKey());
 		}

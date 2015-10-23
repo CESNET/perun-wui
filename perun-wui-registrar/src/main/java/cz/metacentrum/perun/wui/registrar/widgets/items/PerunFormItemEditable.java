@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.registrar.widgets.items;
 
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.FormLabel;
@@ -46,6 +47,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		this.help = new HelpBlock();
 		Column widget = new Column(PerunForm.WIDGET_SIZE);
 		this.status = new HelpBlock();
+		Column statusWrap = new Column(PerunForm.STATUS_SIZE);
 
 
 		label.setText(getLabelOrShortName());
@@ -54,7 +56,8 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		label.addStyleName(PerunForm.LABEL_SIZE.getCssName());
 		widgetWithTexts.addStyleName(PerunForm.WIDGET_WITH_TEXT_SIZE.getCssName());
 
-		status.addStyleName(PerunForm.STATUS_SIZE.getCssName());
+		status.addStyleName(PerunWuiRegistrarResources.INSTANCE.gss().status());
+
 
 		widget.add(initWidget());
 
@@ -67,7 +70,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 			setValue(getItemData().getValue());
 			makeOnlyPreviewWidget();
 
-			status.setVisible(false);
+			statusWrap.setVisible(false);
 
 		} else {
 
@@ -81,7 +84,8 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 
 		}
 
-		widgetWithStatus.add(status);
+		statusWrap.add(status);
+		widgetWithStatus.add(statusWrap);
 
 		item.add(label);
 		item.add(widgetWithTexts);
@@ -159,7 +163,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		}
 		if (state.equals(ValidationState.ERROR)
 		|| state.equals(ValidationState.WARNING)) {
-			Animate.animate(status, Animation.SHAKE, 1, 700);
+			Animate.animate(status, Animation.PULSE, 1, 400);
 		}
 		this.status.setHTML(text);
 		this.setValidationState(state);

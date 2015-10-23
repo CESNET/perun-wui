@@ -257,6 +257,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 						}
 
 					}
+					
 
 					// CHECK SIMILAR USERS
 					if (!registrar.getSimilarUsers().isEmpty()) {

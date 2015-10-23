@@ -24,6 +24,8 @@ public interface PerunWuiRegistrarResources extends ClientBundle {
 		String grid();
 
 		String header();
+
+		String status();
 	}
 
 	@Source("css/PerunWuiRegistrar.gss")
