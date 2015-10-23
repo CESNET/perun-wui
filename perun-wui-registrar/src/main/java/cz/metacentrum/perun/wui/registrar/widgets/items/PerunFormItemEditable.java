@@ -59,21 +59,30 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		status.addStyleName(PerunWuiRegistrarResources.INSTANCE.gss().status());
 
 
-		widget.add(initWidget());
-
 		widgetWithStatus.add(widget);
 		widgetWithTexts.add(widgetWithStatus);
+
+		statusWrap.add(status);
+		widgetWithStatus.add(statusWrap);
+
+		item.add(label);
+		item.add(widgetWithTexts);
 
 
 		if (isOnlyPreview()) {
 
-			setValue(getItemData().getValue());
-			makeOnlyPreviewWidget();
-
 			statusWrap.setVisible(false);
+
+			Widget w = initWidgetOnlyPreview();
+			w.addStyleName(PerunWuiRegistrarResources.INSTANCE.gss().preview());
+			widget.add(w);
+
+			setValue(getItemData().getValue());
+
 
 		} else {
 
+			widget.add(initWidget());
 			setPrefilledValue();
 
 			String helpText = getItemData().getFormItem().getItemTexts(getLang()).getHelp();
@@ -83,12 +92,6 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 			widgetWithTexts.add(help);
 
 		}
-
-		statusWrap.add(status);
-		widgetWithStatus.add(statusWrap);
-
-		item.add(label);
-		item.add(widgetWithTexts);
 
 		return item;
 	}
@@ -102,12 +105,12 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	protected abstract Widget initWidget();
 
 	/**
-	 * Remake widget as preview. It should be disable (non editable) and display value.
+	 * Generate form item widget for preview.
 	 */
-	protected abstract void makeOnlyPreviewWidget();
+	protected abstract Widget initWidgetOnlyPreview();
 
 	/**
-	 * @return the same widget as initWidget() or initPreviewWidget method returns. But it does not generate it.
+	 * @return the same widget as initWidget() or initWidgetOnlyPreview() method returns. But it does not generate it.
 	 */
 	protected abstract Widget getWidget();
 
@@ -157,9 +160,9 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	 */
 	public void setStatus(String text, ValidationState state) {
 		if (text.isEmpty()) {
-			this.status.setVisible(false);
+			this.status.getParent().setVisible(false);
 		} else {
-			this.status.setVisible(true);
+			this.status.getParent().setVisible(true);
 		}
 		if (state.equals(ValidationState.ERROR)
 		|| state.equals(ValidationState.WARNING)) {
@@ -219,4 +222,5 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		}
 		return map;
 	}
+
 }

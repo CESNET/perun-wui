@@ -57,7 +57,8 @@ public class Checkbox extends PerunFormItemEditable {
 	}
 
 	@Override
-	protected void makeOnlyPreviewWidget() {
+	protected Widget initWidgetOnlyPreview() {
+		initWidget();
 
 		for (Widget widget : getWidget()) {
 			if (widget instanceof CheckBox) {
@@ -66,6 +67,7 @@ public class Checkbox extends PerunFormItemEditable {
 				checkBox.setEnabled(false);
 			}
 		}
+		return widget;
 
 	}
 
@@ -86,6 +88,9 @@ public class Checkbox extends PerunFormItemEditable {
 
 	@Override
 	public boolean focus() {
+		if (isOnlyPreview()) {
+			return false;
+		}
 		if (getWidget().getWidgetCount() > 0) {
 			((CheckBox) getWidget().getWidget(0)).setFocus(true);
 			return true;

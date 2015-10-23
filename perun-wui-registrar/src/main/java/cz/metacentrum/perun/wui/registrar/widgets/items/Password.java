@@ -79,16 +79,19 @@ public class Password extends PerunFormItemEditable {
 	}
 
 	@Override
-	protected void makeOnlyPreviewWidget() {
-
+	protected Widget initWidgetOnlyPreview() {
+		initWidget();
 		getPassword().setEnabled(false);
 		getPasswordSecond().setEnabled(false);
-
+		return widget;
 	}
 
 
 	@Override
 	public void setValidationTriggers() {
+		if (isOnlyPreview()) {
+			return;
+		}
 		getPassword().addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {

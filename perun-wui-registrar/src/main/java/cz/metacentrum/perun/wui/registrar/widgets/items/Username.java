@@ -12,6 +12,7 @@ import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.InputGroup;
 import org.gwtbootstrap3.client.ui.InputGroupAddon;
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 /**
  * Represents text field for user.
@@ -48,6 +49,23 @@ public class Username extends PerunFormItemEditable {
 		return widget;
 	}
 
+
+	@Override
+	public Widget initWidgetOnlyPreview() {
+
+		InputGroupAddon addon = new InputGroupAddon();
+		addon.setIcon(IconType.USER);
+
+		Paragraph box = new Paragraph();
+		box.addStyleName("form-control");
+
+		widget = new InputGroup();
+		widget.add(addon);
+		widget.add(box);
+
+		return widget;
+	}
+
 	@Override
 	public void validate(Events<Boolean> events) {
 		if (getTextBox().isEnabled()) {
@@ -76,6 +94,9 @@ public class Username extends PerunFormItemEditable {
 
 	@Override
 	public boolean focus() {
+		if (isOnlyPreview()) {
+			return false;
+		}
 		if (getTextBox().isEnabled()) {
 			getTextBox().setFocus(true);
 			return true;
@@ -86,6 +107,9 @@ public class Username extends PerunFormItemEditable {
 
 	@Override
 	public void setValidationTriggers() {
+		if (isOnlyPreview()) {
+			return;
+		}
 
 		final Events<Boolean> nothingEvents = new Events<Boolean>() {
 			@Override
@@ -114,6 +138,9 @@ public class Username extends PerunFormItemEditable {
 
 	@Override
 	public String getValue() {
+		if (isOnlyPreview()) {
+			return getPreview().getText();
+		}
 		return getTextBox().getValue();
 	}
 
@@ -124,6 +151,10 @@ public class Username extends PerunFormItemEditable {
 
 	@Override
 	public void setValue(String value) {
+		if (isOnlyPreview()) {
+			getPreview().setText(value);
+			return;
+		}
 		getTextBox().setValue(value);
 	}
 
@@ -135,12 +166,13 @@ public class Username extends PerunFormItemEditable {
 		}
 		return null;
 	}
-
-	@Override
-	public void makeOnlyPreviewWidget() {
-
-		getTextBox().setEnabled(false);
-
+	public Paragraph getPreview() {
+		for (Widget box : getWidget()) {
+			if (box instanceof Paragraph) {
+				return (Paragraph) box;
+			}
+		}
+		return null;
 	}
 
 	public void setEnable(boolean enable) {

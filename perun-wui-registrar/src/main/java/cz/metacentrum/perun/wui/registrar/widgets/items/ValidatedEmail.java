@@ -18,7 +18,9 @@ import org.gwtbootstrap3.client.ui.InputGroup;
 import org.gwtbootstrap3.client.ui.InputGroupAddon;
 import org.gwtbootstrap3.client.ui.InputGroupButton;
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -81,28 +83,35 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 	@Override
 	public boolean focus() {
+		if (isOnlyPreview()) {
+			return false;
+		}
 		getTextBox().setFocus(true);
 		return true;
 	}
 
 	@Override
-	protected void makeOnlyPreviewWidget() {
+	public Widget initWidgetOnlyPreview() {
 
-		if (getSelect() != null) {
-			getSelect().setEnabled(false);
-		}
-		getTextBox().setEnabled(false);
-		for (Widget box : getWidget()) {
-			if (box instanceof InputGroupButton) {
-				((InputGroupButton) box).removeFromParent();
-			}
-		}
+		InputGroupAddon addon = new InputGroupAddon();
+		addon.setIcon(IconType.ENVELOPE);
 
+		Paragraph box = new Paragraph();
+		box.addStyleName("form-control");
+
+		widget = new InputGroup();
+		widget.add(addon);
+		widget.add(box);
+
+		return widget;
 	}
 
 
 	@Override
 	public void setValidationTriggers() {
+		if (isOnlyPreview()) {
+			return;
+		}
 		getTextBox().addValueChangeHandler(new ValueChangeHandler() {
 			@Override
 			public void onValueChange(ValueChangeEvent event) {
@@ -113,6 +122,9 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 	@Override
 	public String getValue() {
+		if (isOnlyPreview()) {
+			return getPreview().getText();
+		}
 		return getTextBox().getValue();
 	}
 
@@ -125,6 +137,11 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	public void setValue(String value) {
 
 		if (value.isEmpty()) {
+			return;
+		}
+
+		if (isOnlyPreview()) {
+			getPreview().setText(value.split(";")[0]);
 			return;
 		}
 
@@ -213,4 +230,12 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		return validMails;
 	}
 
+	public Paragraph getPreview() {
+		for (Widget par : getWidget()) {
+			if (par instanceof Paragraph) {
+				return (Paragraph) par;
+			}
+		}
+		return null;
+	}
 }

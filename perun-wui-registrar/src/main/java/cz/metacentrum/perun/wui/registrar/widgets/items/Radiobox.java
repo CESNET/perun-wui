@@ -93,7 +93,9 @@ public class Radiobox extends PerunFormItemEditable {
 	}
 
 	@Override
-	protected void makeOnlyPreviewWidget() {
+	protected Widget initWidgetOnlyPreview() {
+
+		initWidget();
 
 		for (Widget widget : getWidget()) {
 			if (widget instanceof Radio) {
@@ -103,6 +105,7 @@ public class Radiobox extends PerunFormItemEditable {
 			}
 		}
 
+		return widget;
 	}
 
 

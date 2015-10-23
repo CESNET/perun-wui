@@ -191,12 +191,11 @@ public class PerunForm extends FieldSet {
 
 				if (result) {
 
-					// TODO - remove debug logging
-
+					/* debug logging
 					for (PerunFormItem item : items) {
 						GWT.log(item.getItemData().getFormItem().getShortname() + " : " + item.getValue());
 					}
-					GWT.log(app.toString());
+					GWT.log(app.toString());*/
 
 					RegistrarManager.createApplication(app, getFormItemData(), new JsonEvents() {
 						@Override

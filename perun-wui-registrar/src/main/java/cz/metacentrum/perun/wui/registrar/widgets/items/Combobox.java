@@ -1,10 +1,10 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
+import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
@@ -12,7 +12,12 @@ import cz.metacentrum.perun.wui.registrar.widgets.Select;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.ComboboxValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
+import org.gwtbootstrap3.client.ui.Icon;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.constants.Pull;
 import org.gwtbootstrap3.client.ui.gwt.FlowPanel;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
+import org.gwtbootstrap3.client.ui.html.Span;
 
 import java.util.Map;
 
@@ -28,7 +33,7 @@ public class Combobox extends PerunFormItemEditable {
 
 	private final ComboboxValidator validator;
 
-	private FlowPanel widget;
+	private Widget widget;
 
 	public Combobox(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang, onlyPreview);
@@ -61,9 +66,8 @@ public class Combobox extends PerunFormItemEditable {
 		final ExtendedTextBox box = new ExtendedTextBox();
 
 
-
-		widget.add(select);
-		widget.add(box);
+		getWidgetPanel().add(select);
+		getWidgetPanel().add(box);
 
 		checkCustomSelected();
 
@@ -95,6 +99,9 @@ public class Combobox extends PerunFormItemEditable {
 
 	@Override
 	public boolean focus() {
+		if (isOnlyPreview()) {
+			return false;
+		}
 		if (isCustomSelected()) {
 			getTextBox().setFocus(true);
 		} else {
@@ -104,48 +111,44 @@ public class Combobox extends PerunFormItemEditable {
 	}
 
 	@Override
-	protected void makeOnlyPreviewWidget() {
+	protected Widget initWidgetOnlyPreview() {
 
-		getSelect().setEnabled(false);
-		getTextBox().setEnabled(false);
-
-		if (isCustomSelected()) {
-
-			getSelect().removeFromParent();
-			getTextBox().removeStyleName("comboboxFormItemFirst");
-			getTextBox().removeStyleName("comboboxFormItemLast");
-
-		} else if (!getValue().isEmpty()) {
-
-			int i = getSelect().getSelectedIndex();
-			getSelect().setItemText(i, getSelect().getSelectedItemText() + " (" + getSelect().getSelectedValue() + ")");
-			getSelect().refresh();
-
-		}
+		widget = new Paragraph();
+		Icon caret = new Icon(IconType.CARET_DOWN);
+		caret.setPull(Pull.RIGHT);
+		getPreview().add(caret);
+		getPreview().addStyleName("form-control");
+		return widget;
 	}
 
 
 	@Override
 	public void setValidationTriggers() {
+		if (getSelect() != null) {
+			getSelect().addChangeHandler(new ChangeHandler() {
+				@Override
+				public void onChange(ChangeEvent event) {
+					validateLocal();
+				}
+			});
+		}
 
-		getSelect().addChangeHandler(new ChangeHandler() {
-			@Override
-			public void onChange(ChangeEvent event) {
-				validateLocal();
-			}
-		});
-
-		getTextBox().addBlurHandler(new BlurHandler() {
-			@Override
-			public void onBlur(BlurEvent event) {
-				validateLocal();
-			}
-		});
+		if (getTextBox() != null) {
+			getTextBox().addBlurHandler(new BlurHandler() {
+				@Override
+				public void onBlur(BlurEvent event) {
+					validateLocal();
+				}
+			});
+		}
 
 	}
 
 	@Override
 	public String getValue() {
+		if (isOnlyPreview()) {
+			return getPreview().getText();
+		}
 		if (isCustomSelected()) {
 			return getTextBox().getValue();
 		}
@@ -153,13 +156,42 @@ public class Combobox extends PerunFormItemEditable {
 	}
 
 	@Override
-	public FlowPanel getWidget() {
+	public Widget getWidget() {
 		return widget;
 	}
 
 	@Override
 	public void setValue(String value) {
 
+		if (isOnlyPreview()) {
+			setValueOnlyPreview(value);
+		} else {
+			setValueReal(value);
+		}
+
+
+	}
+
+	private void setValueOnlyPreview(String value) {
+
+		if (value.isEmpty()) {
+			return;
+		}
+
+		Map<String, String> opts = parseItemOptions();
+
+		for (Map.Entry<String, String> entry : opts.entrySet()) {
+			if (entry.getKey().equals(value)) {
+				getPreview().add(new Span(entry.getValue() + " (" + value + ")"));
+				return;
+			}
+		}
+
+		getPreview().setText(value + " (custom value)");
+	}
+	private void setValueReal(String value) {
+
+		// Value is already in select
 		for (int i = 0; i < getSelect().getItemCount(); i++) {
 			if (getSelect().getValue(i).equals(value)) {
 
@@ -169,6 +201,7 @@ public class Combobox extends PerunFormItemEditable {
 			}
 		}
 
+		// Value is different => put it as custom value;
 		for (int i = 0; i < getSelect().getItemCount(); i++) {
 			if (getSelect().getValue(i).equals(CUSTOM_ID)) {
 
@@ -180,11 +213,10 @@ public class Combobox extends PerunFormItemEditable {
 		}
 
 		getSelect().refresh();
-
 	}
 
 	public Select getSelect() {
-		for (Widget select : getWidget()) {
+		for (Widget select : getWidgetPanel()) {
 			if (select instanceof Select) {
 				return (Select) select;
 			}
@@ -193,7 +225,7 @@ public class Combobox extends PerunFormItemEditable {
 	}
 
 	public ExtendedTextBox getTextBox() {
-		for (Widget box : getWidget()) {
+		for (Widget box : getWidgetPanel()) {
 			if (box instanceof ExtendedTextBox) {
 				return (ExtendedTextBox) box;
 			}
@@ -202,10 +234,16 @@ public class Combobox extends PerunFormItemEditable {
 	}
 
 	public boolean isCustomSelected() {
+		if (getSelect() == null) {
+			return false;
+		}
 		return getSelect().getValue().equals(CUSTOM_ID);
 	}
 
-	public void checkCustomSelected() {
+	private void checkCustomSelected() {
+		if (isOnlyPreview()) {
+			return;
+		}
 		if (isCustomSelected()) {
 			getTextBox().setVisible(true);
 			getTextBox().setFocus(true);
@@ -220,6 +258,21 @@ public class Combobox extends PerunFormItemEditable {
 			// FIXME - hack bug in BootstrapSelect
 			getSelect().getElement().getNextSiblingElement().removeClassName("comboboxFormItemFirst");
 		}
+	}
+
+
+	public Panel getWidgetPanel() {
+		if (widget instanceof Panel) {
+			return (Panel) widget;
+		}
+		return null;
+	}
+
+	public Paragraph getPreview() {
+		if (widget instanceof Paragraph) {
+			return (Paragraph) widget;
+		}
+		return null;
 	}
 
 }

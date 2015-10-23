@@ -17,7 +17,7 @@ public class TextFieldValidator extends PerunFormItemValidatorImpl<TextField> {
 			return false;
 		}
 
-		if (!textField.getWidget().isValid()) {
+		if (!textField.getBox().isValid()) {
 			setResult(Result.INVALID_FORMAT);
 			textField.setStatus(getErrorMsgOrDefault(textField), ValidationState.ERROR);
 			return false;

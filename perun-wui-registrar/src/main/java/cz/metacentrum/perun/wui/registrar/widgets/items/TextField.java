@@ -9,6 +9,7 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItem
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.TextFieldValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 /**
  * Represents text field form item.
@@ -20,7 +21,7 @@ public class TextField extends PerunFormItemEditable {
 	public final static int MAX_LENGTH = 1024;
 	private final TextFieldValidator validator;
 
-	private ExtendedTextBox widget;
+	private Widget widget;
 
 	public TextField(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang, onlyPreview);
@@ -30,13 +31,25 @@ public class TextField extends PerunFormItemEditable {
 	protected Widget initWidget() {
 
 		widget = new ExtendedTextBox();
-		widget.setMaxLength(MAX_LENGTH);
-		widget.addStyleName(ColumnSize.MD_6.getCssName());
+		getBox().setMaxLength(MAX_LENGTH);
+		getBox().addStyleName(ColumnSize.MD_6.getCssName());
 
 		if (getItemData().getFormItem().getRegex() != null) {
-			widget.setRegex(getItemData().getFormItem().getRegex());
+			getBox().setRegex(getItemData().getFormItem().getRegex());
 		}
 
+		return widget;
+	}
+
+	protected Widget initWidgetOnlyPreview() {
+
+		widget = new Paragraph();
+		getPreview().addStyleName("form-control");
+		return widget;
+	}
+
+	@Override
+	protected Widget getWidget() {
 		return widget;
 	}
 
@@ -57,21 +70,19 @@ public class TextField extends PerunFormItemEditable {
 
 	@Override
 	public boolean focus() {
-		getWidget().setFocus(true);
+		if (getBox() == null) {
+			return false;
+		}
+		getBox().setFocus(true);
 		return true;
 	}
 
 	@Override
-	protected void makeOnlyPreviewWidget() {
-
-		getWidget().setEnabled(false);
-
-	}
-
-
-	@Override
 	public void setValidationTriggers() {
-		getWidget().addBlurHandler(new BlurHandler() {
+		if (isOnlyPreview()) {
+			return;
+		}
+		getBox().addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {
 				validateLocal();
@@ -81,17 +92,32 @@ public class TextField extends PerunFormItemEditable {
 
 	@Override
 	public String getValue() {
-		return getWidget().getValue();
-	}
-
-	@Override
-	public ExtendedTextBox getWidget() {
-		return widget;
+		if (isOnlyPreview()) {
+			return getPreview().getText();
+		}
+		return getBox().getValue();
 	}
 
 	@Override
 	public void setValue(String value) {
-		widget.setValue(value);
+		if (isOnlyPreview()) {
+			getPreview().setText(value);
+			return;
+		}
+		getBox().setValue(value);
 	}
 
+
+	public ExtendedTextBox getBox() {
+		if (widget instanceof ExtendedTextBox) {
+			return (ExtendedTextBox) widget;
+		}
+		return null;
+	}
+	public Paragraph getPreview() {
+		if (widget instanceof Paragraph) {
+			return (Paragraph) widget;
+		}
+		return null;
+	}
 }

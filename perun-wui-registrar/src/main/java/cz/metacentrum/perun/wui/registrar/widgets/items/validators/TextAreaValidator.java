@@ -17,7 +17,7 @@ public class TextAreaValidator extends PerunFormItemValidatorImpl<TextArea> {
 			return false;
 		}
 
-		if (!textArea.getWidget().isValid()) {
+		if (!textArea.getBox().isValid()) {
 			setResult(Result.INVALID_FORMAT);
 			textArea.setStatus(getErrorMsgOrDefault(textArea), ValidationState.ERROR);
 			return false;

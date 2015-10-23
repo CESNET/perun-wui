@@ -21,7 +21,9 @@ import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextArea;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.shared.event.ModalShownEvent;
 import org.gwtbootstrap3.client.shared.event.ModalShownHandler;
-import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.Alert;
+import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 
 import java.util.Set;

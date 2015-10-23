@@ -6,6 +6,8 @@ import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
+import org.gwtbootstrap3.client.ui.html.Span;
 
 /**
  * Represents TextField with value prefilled from federation. It can be visible or hidden and it Should be disable.
@@ -14,7 +16,7 @@ import org.gwtbootstrap3.client.ui.constants.ValidationState;
  */
 public class FromFederation extends PerunFormItemEditable {
 
-	private ExtendedTextBox widget;
+	private Widget widget;
 
 	public FromFederation(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang, onlyPreview);
@@ -24,7 +26,7 @@ public class FromFederation extends PerunFormItemEditable {
 	protected Widget initWidget() {
 
 		widget = new ExtendedTextBox();
-		widget.setEnabled(false);
+		getBox().setEnabled(false);
 		return widget;
 	}
 
@@ -50,11 +52,11 @@ public class FromFederation extends PerunFormItemEditable {
 	}
 
 	@Override
-	protected void makeOnlyPreviewWidget() {
-		// shouldnt be editable never.
-
+	protected Widget initWidgetOnlyPreview() {
+		widget = new Paragraph();
+		getPreview().addStyleName("form-control");
 		setStatus(getTranslation().federation(), ValidationState.NONE);
-
+		return widget;
 	}
 
 
@@ -65,17 +67,39 @@ public class FromFederation extends PerunFormItemEditable {
 
 	@Override
 	public String getValue() {
-		return getWidget().getValue();
+		if (isOnlyPreview()) {
+			return getPreview().getText();
+		}
+		return getBox().getValue();
 	}
 
 	@Override
-	public ExtendedTextBox getWidget() {
+	public Widget getWidget() {
 		return widget;
 	}
 
 	@Override
 	public void setValue(String value) {
-		widget.setValue(value.split(";")[0]);
+		if (isOnlyPreview()) {
+			Span span = new Span();
+			span.setText(value.split(";")[0]);
+			getPreview().add(span);
+			return;
+		}
+		getBox().setValue(value.split(";")[0]);
 	}
 
+
+	public ExtendedTextBox getBox() {
+		if (widget instanceof ExtendedTextBox) {
+			return (ExtendedTextBox) widget;
+		}
+		return null;
+	}
+	public Paragraph getPreview() {
+		if (widget instanceof Paragraph) {
+			return (Paragraph) widget;
+		}
+		return null;
+	}
 }
