@@ -118,7 +118,7 @@ public class SelectPage {
 					} else {
 						identity.setText(translatedActor);
 					}
-					identity.setSubText(translatedExtSourceName);
+					identity.setSubText(" " + translation.at() + " " + translatedExtSourceName);
 					identity.setVisible(true);
 					joinHeading.setVisible(true);
 

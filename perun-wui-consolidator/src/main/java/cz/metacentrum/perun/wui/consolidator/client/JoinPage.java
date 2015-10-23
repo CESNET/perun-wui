@@ -182,7 +182,7 @@ public class JoinPage {
 					translatedExtSourceName = Utils.translateIdp(translatedExtSourceName);
 					// social identity
 					if (translatedActor.endsWith("extidp.cesnet.cz")) {
-						translatedExtSourceName = Utils.translateIdp(translatedActor.split("@")[1]);
+						translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
 						translatedActor = translatedActor.split("@")[0];
 					}
 
@@ -208,7 +208,7 @@ public class JoinPage {
 				} else {
 					identity.setText(translatedActor);
 				}
-				identity.setSubText(translatedExtSourceName);
+				identity.setSubText(" " + translation.at() + " " + translatedExtSourceName);
 				heading.setVisible(true);
 				identity.setVisible(true);
 

@@ -17,11 +17,33 @@ public enum PerunColumnType {
 	MODIFIED_AT,
 	MODIFIED_BY,
 
+	//user columns
+	USER_ORGANIZATION,
+	USER_EMAIL,
+	USER_LOGIN,
+	USER_TYPE,
+
+	//attributes
+	ATTR_NAME,
+	ATTR_TYPE,
+	ATTR_DEF,
+	ATTR_ENTITY,
+	ATTR_URN,
+	ATTR_FRIENDLY_NAME,
+	ATTR_VALUE,
+
 	// vo columns
 	VO_SHORT_NAME,
 
 	// facility columns
 	FACILITY_OWNERS,
+
+	//ext source columns
+	EXT_SOURCE_TYPE,
+
+	//owner columns
+	OWNER_CONTACT,
+	OWNER_TYPE,
 
 	// application columns
 	APPLICATION_TYPE,

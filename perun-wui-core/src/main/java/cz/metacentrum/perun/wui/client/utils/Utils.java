@@ -24,11 +24,11 @@ public class Utils {
 	public static final String GROUP_SHORT_NAME_MATCHER = "^[- a-zA-Z.0-9_]+$";
 	public static final String VO_SHORT_NAME_MATCHER = "^[-a-zA-Z0-9_]+$";
 	public static final String ATTRIBUTE_FRIENDLY_NAME_MATCHER = "^[-a-zA-Z0-9.]+([:][-a-zA-Z0-9.]+)?$";
-	public static final String LOGIN_VALUE_MATCHER = "^[a-zA-Z0-9][-A-z0-9_.@/]*$";
+	public static final String LOGIN_VALUE_MATCHER = "^[a-zA-Z0-9_][-A-z0-9_.@/]*$";
 
 	public static GrowlOptions getDefaultGrowlOptions() {
 		GrowlOptions options = new GrowlOptions();
-		options.setDelay(5000);
+		options.setDelay(10000);
 		options.setAllowDismiss(false);
 		options.setOffset(20, 65);
 		options.setAnimation(Animation.FADE_IN_RIGHT, Animation.FADE_OUT_RIGHT);
@@ -1571,7 +1571,7 @@ public class Utils {
 
 		orgs.put("@google.extidp.cesnet.cz", "Google");
 		orgs.put("@facebook.extidp.cesnet.cz", "Facebook");
-		orgs.put("@mojeid.extidp.cesnet.cz", "mojeID");
+		orgs.put("@mojeid.extidp.cesnet.cz", "MojeID");
 		orgs.put("@linkedin.extidp.cesnet.cz", "LinkedIn");
 		orgs.put("@twitter.extidp.cesnet.cz", "Twitter");
 		orgs.put("@seznam.extidp.cesnet.cz", "Seznam");

@@ -16,6 +16,8 @@ public class UtilsManager {
 
 	private static final String UTILS_MANAGER = "utils/";
 
+	private static final String RT_MESSAGES_MANAGER = "rtMessagesManager/";
+
 	/**
 	 * Logout from Perun. Destroys session on server side.
 	 *
@@ -83,6 +85,28 @@ public class UtilsManager {
 
 		JsonClient client = new JsonClient(events);
 		return client.call(UTILS_MANAGER+"getPerunStatus");
+
+	}
+
+	/**
+	 * Send message to RT (request tracking system) of CESNET.
+	 *
+	 * @param subject Subject of RT report message
+	 * @param message Body of RT report message
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request sendMessageToRT(String subject, String message, JsonEvents events) {
+
+		// appended space after each new line ("\n" to "\n ")
+		// required by RT system to be parsed as multi-line text
+		message = message.replace("\n", "\n ");
+
+		JsonClient client = new JsonClient(events);
+		client.put("queue", "perun");
+		client.put("subject", subject);
+		client.put("text", message);
+		return client.call(RT_MESSAGES_MANAGER+"sentMessageToRT");
 
 	}
 

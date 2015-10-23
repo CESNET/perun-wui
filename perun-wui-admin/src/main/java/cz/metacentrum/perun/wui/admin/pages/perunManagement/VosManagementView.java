@@ -4,8 +4,6 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.ResizeEvent;
-import com.google.gwt.event.logical.shared.ResizeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -14,6 +12,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.VosManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -22,7 +21,7 @@ import cz.metacentrum.perun.wui.model.columnProviders.VoColumnProvider;
 import cz.metacentrum.perun.wui.pages.FocusableView;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
-import cz.metacentrum.perun.wui.widgets.SuggestBox;
+import cz.metacentrum.perun.wui.widgets.boxes.ExtendedSuggestBox;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
@@ -48,7 +47,7 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 	PerunButton remove;
 
 	@UiField(provided = true)
-	SuggestBox textBox = new SuggestBox(oracle);
+	ExtendedSuggestBox textBox = new ExtendedSuggestBox(oracle);
 
 	@UiField ButtonToolBar menu;
 	@UiField PerunButton filterButton;
@@ -67,17 +66,15 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 	VosManagementView(final VosManagementViewUiBinder uiBinder) {
 
 		grid = new PerunDataGrid<Vo>(new VoColumnProvider());
-		grid.setHeight("100%");
 		remove = PerunButton.getButton(PerunButtonType.REMOVE, ButtonType.DANGER, "Remove selected VO(s)");
 
 		initWidget(uiBinder.createAndBindUi(this));
-		// FIXME - is this right place to draw ?
-		draw();
-	}
+		UiUtils.bindFilterBox(grid, textBox, filterButton);
+		UiUtils.bindTableLoading(grid, filterButton, true);
+		UiUtils.bindTableLoading(grid, textBox, true);
+		UiUtils.bindTableSelection(grid, remove);
 
-	@UiHandler(value = "filterButton")
-	public void filter(ClickEvent event) {
-		grid.filterTable(textBox.getValue());
+		draw();
 	}
 
 	@UiHandler(value = "remove")
@@ -104,7 +101,6 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 		button.addStyleName("GIM-RRTCAJ");
 		group.add(button);
 		menu.add(group);
-		//onResize();
 	}
 
 	@UiHandler(value = "growl1")
@@ -141,9 +137,6 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 	}
 
 	public void draw() {
-
-		remove.setTableManaged(grid);
-		grid.addTableLoadingManagedWidget(remove, false);
 
 		VosManager.getVos(false, new JsonEvents() {
 

@@ -230,7 +230,7 @@ public class JsonClient {
 	 * @param url URL to send data to
 	 * @return Request unique handling Request
 	 */
-	public Request call(String url) {
+	public Request call(final String url) {
 
 		final PerunRequest perunRequest = new JSONObject().getJavaScriptObject().cast();
 		perunRequest.setStartTime();
@@ -266,7 +266,7 @@ public class JsonClient {
 							PerunException error = (PerunException)jso;
 
 							if (error.getErrorId() != null && error.getMessage() != null) {
-								error.setRequestURL(requestUrl);
+								error.setRequestURL(url);
 								error.setPostData((json != null) ? json.toString() : "");
 								if (checkIfPending) runningRequests.remove(callbackName);
 								events.onError(error);
@@ -288,7 +288,7 @@ public class JsonClient {
 						error.setName(resp.getStatusText());
 						error.setMessage("Server responded with HTTP error: " + resp.getStatusCode() + " - " + resp.getStatusText());
 						error.setPostData(data);
-						error.setRequestURL(requestUrl);
+						error.setRequestURL(url);
 
 						if (resp.getStatusCode() == 401 || resp.getStatusCode() == 403) {
 
@@ -337,7 +337,7 @@ public class JsonClient {
 																	PerunException error = (PerunException) result;
 
 																	if (error.getErrorId() != null && error.getMessage() != null) {
-																		error.setRequestURL(requestUrl);
+																		error.setRequestURL(url);
 																		error.setPostData((json != null) ? json.toString() : "");
 																		if (checkIfPending) runningRequests.remove(callbackName);
 																		events.onError(error);

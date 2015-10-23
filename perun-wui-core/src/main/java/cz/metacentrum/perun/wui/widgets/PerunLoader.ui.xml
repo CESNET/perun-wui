@@ -24,13 +24,13 @@
 		<b:Row addStyleNames="{style.marginTop}">
 			<b.html:Div addStyleNames="{style.wrapper}">
 
-				<b:Progress active="true" type="STRIPED" addStyleNames="{style.progress}" ui:field="progress">
+				<b:Progress active="true" type="STRIPED" addStyleNames="{style.progress}" ui:field="progress" visible="false">
 					<b:ProgressBar ui:field="bar" />
 				</b:Progress>
 
 				<b:Alert dismissable="false" ui:field="alert" type="DANGER" visible="false">
-					<b:ButtonToolBar ui:field="tool" addStyleNames="{style.top}">
-						<p:PerunButton ui:field="retry" icon="REFRESH" pull="LEFT">Try again</p:PerunButton>
+					<b:ButtonToolBar visible="false" ui:field="tool" addStyleNames="{style.top}">
+						<p:PerunButton ui:field="retry" icon="REFRESH" pull="LEFT" visible="false">Try again</p:PerunButton>
 						<p:PerunButton ui:field="report" icon="BUG" pull="RIGHT" type="DANGER">Report error</p:PerunButton>
 					</b:ButtonToolBar>
 				</b:Alert>

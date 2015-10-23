@@ -253,6 +253,9 @@ public class Wayf extends Composite {
 								btngrp2.add(button);
 								socialButton.setVisible(true);
 								socialButtons.add(button);
+
+								GWT.log(key);
+
 							} else {
 								idpButton.setVisible(true);
 								btngrp.add(button);
@@ -262,11 +265,14 @@ public class Wayf extends Composite {
 							button.addClickHandler(new ClickHandler() {
 								@Override
 								public void onClick(ClickEvent event) {
-									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token);
+									// hack to make extIdp feature to work
+									String usedKey = key.replace("&amp;", "&");
+									String target = "";
 									if (redirect != null && !redirect.isEmpty()) {
-										consolidatorUrl = consolidatorUrl + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
+										target = "&target_url=" + redirect;
 									}
-									String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + key + "&target=" + consolidatorUrl);
+									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
+									final String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + usedKey + "&target=" + consolidatorUrl);
 									Window.Location.replace(redirectUrl);
 								}
 							});
@@ -434,11 +440,14 @@ public class Wayf extends Composite {
 					button.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
-							String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token);
+							// hack to make extIdp feature to work
+							String usedKey = key.replace("&amp;", "&");
+							String target = "";
 							if (redirect != null && !redirect.isEmpty()) {
-								consolidatorUrl = consolidatorUrl + "&target_url=" + URL.encodeQueryString(URL.encodeQueryString(redirect));
+								target = "&target_url=" + redirect;
 							}
-							String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + key + "&target=" + consolidatorUrl);
+							String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
+							final String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + usedKey + "&target=" + consolidatorUrl);
 							Window.Location.replace(redirectUrl);
 						}
 					});
