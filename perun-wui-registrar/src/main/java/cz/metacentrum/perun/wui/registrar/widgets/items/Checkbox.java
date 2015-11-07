@@ -131,6 +131,9 @@ public class Checkbox extends PerunFormItemEditable {
 			value = value.substring(0, value.length() - 1);
 		}
 
+		if (value.equals("")) {
+			return null;
+		}
 		return value;
 	}
 
@@ -140,7 +143,7 @@ public class Checkbox extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setValue(String value) {
+	protected void setValueImpl(String value) {
 
 		List<String> values = Arrays.asList(value.split("\\|"));
 

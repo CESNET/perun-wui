@@ -12,13 +12,13 @@ public class ValidatedEmailValidator extends PerunFormItemValidatorImpl<Validate
 	@Override
 	public boolean validateLocal(ValidatedEmail mail) {
 
-		if (mail.isRequired() && mail.getValue().isEmpty()) {
+		if (mail.isRequired() && isNullOrEmpty(mail.getValue())) {
 			setResult(Result.EMPTY);
 			mail.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 
-		if (!Utils.isValidEmail(mail.getValue()) && !mail.getValue().isEmpty()) {
+		if (!Utils.isValidEmail(mail.getValue()) && !isNullOrEmpty(mail.getValue())) {
 			setResult(Result.INVALID_FORMAT_EMAIL);
 			mail.setStatus(getTransl().incorrectEmail(), ValidationState.ERROR);
 			return false;
@@ -30,13 +30,13 @@ public class ValidatedEmailValidator extends PerunFormItemValidatorImpl<Validate
 			return false;
 		}
 
-		if (mail.getValue().length() > mail.MAX_LENGTH) {
+		if (mail.getValue() != null && mail.getValue().length() > mail.MAX_LENGTH) {
 			setResult(Result.TOO_LONG);
 			mail.setStatus(getTransl().tooLong(), ValidationState.ERROR);
 			return false;
 		}
 
-		if (!mail.getValidMails().contains(mail.getValue()) && !mail.getValue().isEmpty()) {
+		if (!mail.getValidMails().contains(mail.getValue()) && !isNullOrEmpty(mail.getValue())) {
 			setResult(Result.MUST_VALIDATE_EMAIL);
 			mail.setStatus(getTransl().mustValidateEmail(), ValidationState.WARNING);
 			return true;

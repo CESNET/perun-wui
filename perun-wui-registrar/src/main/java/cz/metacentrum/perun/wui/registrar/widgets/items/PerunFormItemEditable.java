@@ -79,11 +79,10 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 
 			setValue(getItemData().getValue());
 
-
 		} else {
 
 			widget.add(initWidget());
-			setPrefilledValue();
+			setValue(getItemData().getPrefilledValue());
 
 			String helpText = getItemData().getFormItem().getItemTexts(getLang()).getHelp();
 			help.setHTML(helpText);
@@ -119,20 +118,22 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	 */
 	protected abstract void setValidationTriggers();
 
+	@Override
+	public void setValue(String value) {
+		if (value == null) {
+			return;
+		}
+		if (value.equals("")) {
+			return;
+		}
+		if (value.equals("null")) {
+			return;
+		}
 
-	public void setPrefilledValue() {
-		if (getItemData().getPrefilledValue() == null) {
-			return;
-		}
-		if (getItemData().getPrefilledValue().equals("")) {
-			return;
-		}
-		if (getItemData().getPrefilledValue().equals("null")) {
-			return;
-		}
-
-		setValue(getItemData().getPrefilledValue());
+		setValueImpl(value);
 	}
+
+	protected abstract void setValueImpl(String value);
 
 
 	/**

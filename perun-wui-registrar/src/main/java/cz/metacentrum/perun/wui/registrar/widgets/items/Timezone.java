@@ -39,7 +39,7 @@ public class Timezone extends PerunFormItemEditable {
 		getSelect().setShowTick(true);
 
 		if (!isRequired()) {
-			getSelect().addItem(getTranslation().notSelected(), "");
+			getSelect().addItem(getTranslation().notSelected(), (String) null);
 		}
 
 		for (String timezone : Utils.getTimezones()) {
@@ -114,7 +114,7 @@ public class Timezone extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setValue(String value) {
+	protected void setValueImpl(String value) {
 
 		if (isOnlyPreview()) {
 			getPreview().add(new Span(value));
@@ -136,6 +136,7 @@ public class Timezone extends PerunFormItemEditable {
 		}
 		return null;
 	}
+
 	public Paragraph getPreview() {
 		if (widget instanceof Paragraph) {
 			return (Paragraph) widget;

@@ -52,7 +52,7 @@ public class Combobox extends PerunFormItemEditable {
 		select.clear();
 
 		if (!isRequired()) {
-			select.addItem(getTranslation().notSelected(), "");
+			select.addItem(getTranslation().notSelected(), (String) null);
 		}
 		select.addItem(getTranslation().customValue(), CUSTOM_ID);
 
@@ -161,7 +161,7 @@ public class Combobox extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setValue(String value) {
+	protected void setValueImpl(String value) {
 
 		if (isOnlyPreview()) {
 			setValueOnlyPreview(value);

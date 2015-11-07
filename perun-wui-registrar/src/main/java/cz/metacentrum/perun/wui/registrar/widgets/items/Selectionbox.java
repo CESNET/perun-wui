@@ -42,7 +42,7 @@ public class Selectionbox extends PerunFormItemEditable {
 		getSelect().clear();
 
 		if (!isRequired()) {
-			getSelect().addItem(translation.notSelected(), "");
+			getSelect().addItem(translation.notSelected(), (String) null);
 		}
 
 		Map<String, String> opts = parseItemOptions();
@@ -118,7 +118,7 @@ public class Selectionbox extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setValue(String value) {
+	protected void setValueImpl(String value) {
 		if (isOnlyPreview()) {
 			getPreview().add(new Span(value));
 			return;

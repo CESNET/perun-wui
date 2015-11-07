@@ -101,7 +101,7 @@ public class TextArea extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setValue(String value) {
+	protected void setValueImpl(String value) {
 		if (isOnlyPreview()) {
 			getPreview().setText(value);
 		} else {

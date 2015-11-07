@@ -11,7 +11,7 @@ public class PasswordValidator extends PerunFormItemValidatorImpl<Password> {
 	@Override
 	public boolean validateLocal(Password password) {
 
-		if (password.isRequired() && password.getValue().isEmpty()) {
+		if (password.isRequired() && isNullOrEmpty(password.getValue())) {
 			setResult(Result.EMPTY_PASSWORD);
 			password.setStatus(getTransl().passEmpty(), ValidationState.ERROR);
 			return false;

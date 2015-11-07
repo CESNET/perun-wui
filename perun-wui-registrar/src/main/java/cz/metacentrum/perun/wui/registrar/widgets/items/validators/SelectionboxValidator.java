@@ -11,7 +11,7 @@ public class SelectionboxValidator extends PerunFormItemValidatorImpl<Selectionb
 	@Override
 	public boolean validateLocal(Selectionbox selectionbox) {
 
-		if (selectionbox.isRequired() && selectionbox.getValue().isEmpty()) {
+		if (selectionbox.isRequired() && isNullOrEmpty(selectionbox.getValue())) {
 			setResult(Result.EMPTY_SELECT);
 			selectionbox.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;

@@ -11,7 +11,7 @@ public class TimezoneValidator extends PerunFormItemValidatorImpl<Timezone> {
 	@Override
 	public boolean validateLocal(Timezone timezone) {
 
-		if (timezone.isRequired() && timezone.getValue().isEmpty()) {
+		if (timezone.isRequired() && isNullOrEmpty(timezone.getValue())) {
 			setResult(Result.EMPTY_SELECT);
 			timezone.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;

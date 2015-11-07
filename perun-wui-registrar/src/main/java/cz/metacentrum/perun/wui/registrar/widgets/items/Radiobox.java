@@ -141,7 +141,7 @@ public class Radiobox extends PerunFormItemEditable {
 		}
 
 		if (value.equals(NONE_ID)) {
-			return "";
+			return null;
 		}
 		return value;
 	}
@@ -152,7 +152,7 @@ public class Radiobox extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setValue(String value) {
+	protected void setValueImpl(String value) {
 
 		for (Widget widget : getWidget()) {
 			if (widget instanceof Radio) {

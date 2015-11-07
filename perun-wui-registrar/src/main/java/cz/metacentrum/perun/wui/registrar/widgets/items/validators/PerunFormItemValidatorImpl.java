@@ -44,4 +44,8 @@ public abstract class PerunFormItemValidatorImpl<T extends PerunFormItem> implem
 		}
 	}
 
+	protected boolean isNullOrEmpty(String value) {
+		return (value == null || value.isEmpty());
+	}
+
 }

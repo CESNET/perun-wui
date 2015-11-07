@@ -19,7 +19,7 @@ public class UsernameValidator extends PerunFormItemValidatorImpl<Username> {
 	@Override
 	public boolean validateLocal(Username username) {
 
-		if (username.isRequired() && username.getValue().isEmpty()) {
+		if (username.isRequired() && isNullOrEmpty(username.getValue())) {
 			setResult(Result.EMPTY);
 			username.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
@@ -31,7 +31,7 @@ public class UsernameValidator extends PerunFormItemValidatorImpl<Username> {
 			return false;
 		}
 
-		if (username.getValue().length() > username.MAX_LENGTH) {
+		if (username.getValue() != null && username.getValue().length() > username.MAX_LENGTH) {
 			setResult(Result.TOO_LONG);
 			username.setStatus(getTransl().tooLong(), ValidationState.ERROR);
 			return false;
@@ -50,9 +50,12 @@ public class UsernameValidator extends PerunFormItemValidatorImpl<Username> {
 			events.onFinished(false);
 			return;
 		}
+		if (username.getValue() == null) {
+			events.onFinished(true);
+			return;
+		}
 
-		//String loginNamespace = username.getItemData().getFormItem().getPerunAttribute().substring(PERUN_ATTRIBUTE_LOGIN_NAMESPACE_POSITION);
-		String loginNamespace = "cesnet";
+		String loginNamespace = username.getItemData().getFormItem().getPerunAttribute().substring(PERUN_ATTRIBUTE_LOGIN_NAMESPACE_POSITION);
 
 		UsersManager.isLoginAvailable(loginNamespace, username.getValue(), new JsonEvents() {
 

@@ -11,7 +11,7 @@ public class CheckboxValidator extends PerunFormItemValidatorImpl<Checkbox> {
 	@Override
 	public boolean validateLocal(Checkbox checkbox) {
 
-		if (checkbox.isRequired() && checkbox.getValue().isEmpty()) {
+		if (checkbox.isRequired() && isNullOrEmpty(checkbox.getValue())) {
 			setResult(Result.EMPTY);
 			checkbox.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;

@@ -79,7 +79,7 @@ public class FromFederation extends PerunFormItemEditable {
 	}
 
 	@Override
-	public void setValue(String value) {
+	protected void setValueImpl(String value) {
 		if (isOnlyPreview()) {
 			Span span = new Span();
 			span.setText(value.split(";")[0]);

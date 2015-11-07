@@ -11,7 +11,7 @@ public class TextAreaValidator extends PerunFormItemValidatorImpl<TextArea> {
 	@Override
 	public boolean validateLocal(TextArea textArea) {
 
-		if (textArea.isRequired() && textArea.getValue().isEmpty()) {
+		if (textArea.isRequired() && isNullOrEmpty(textArea.getValue())) {
 			setResult(Result.EMPTY);
 			textArea.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
@@ -23,7 +23,7 @@ public class TextAreaValidator extends PerunFormItemValidatorImpl<TextArea> {
 			return false;
 		}
 
-		if (textArea.getValue().length() > textArea.MAX_LENGTH) {
+		if (textArea.getValue() != null && textArea.getValue().length() > textArea.MAX_LENGTH) {
 			setResult(Result.TOO_LONG);
 			textArea.setStatus(getTransl().tooLong(), ValidationState.ERROR);
 			return false;
