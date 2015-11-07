@@ -22,6 +22,7 @@ public class VoInitStep extends FormStep {
 	@Override
 	public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 
+		formView.getNotice().setVisible(false);
 		form.clear();
 		form.setFormItems(registrar.getVoFormInitial());
 		form.setApp(Application.createNew(registrar.getVo(), null, Application.ApplicationType.INITIAL,

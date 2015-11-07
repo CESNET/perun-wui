@@ -458,6 +458,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	}
 
+	public Alert getNotice() {
+		return notice;
+	}
 
 
 	private void showSimilarUsersDialog(RegistrarObject object) {

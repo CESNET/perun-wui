@@ -8,6 +8,9 @@
 	<!-- Mobile device support -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
+	<!-- Default GWT locale	-->
+	<meta id="meta-lang" name="gwt:property" content="locale=en">
+
 	<!-- Set language -->
 	<script type="text/javascript" language="javascript" >
 
@@ -44,8 +47,9 @@
 
 		}
 
-		/*$("meta[name='gwt:property']").attr('content', 'locale='+l_lang);
-*/
+		var ele = document.getElementById("meta-lang");
+		ele.setAttribute('content', 'locale='+l_lang);
+
 	</script>
 
     <!-- FavIcons -->

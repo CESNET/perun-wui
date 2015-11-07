@@ -17,6 +17,7 @@ import org.gwtbootstrap3.client.ui.ListGroup;
 import org.gwtbootstrap3.client.ui.ListGroupItem;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.constants.ListGroupItemType;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 /**
@@ -41,6 +42,7 @@ public class Summary implements Step {
 	@Override
 	public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 
+		formView.getNotice().setVisible(false);
 		formView.getForm().clear();
 		displaySummaryTitle(registrar);
 		displaySummaryMessage(registrar);
@@ -92,7 +94,7 @@ public class Summary implements Step {
 
 	private void displaySummaryMessage(RegistrarObject registrar) {
 
-		if (voApplication == null && groupApplication == null) {
+		if (voApplication == null && groupApplication == null) {    // We can do nothing for user. Everything is fine.
 
 			if (registrar.getGroupFormInitialException() != null) {
 				switch (registrar.getGroupFormInitialException().getName()) {
@@ -126,18 +128,9 @@ public class Summary implements Step {
 				displayVoFormInitialException(registrar);
 			}
 
-		} else {
+		} else {    // user filled some form.
 			ListGroup message = new ListGroup();
-			ListGroupItem groupStat = new ListGroupItem();
-			if (groupApplication == Application.ApplicationType.INITIAL) {
 
-				if (registrar.hasGroupFormAutoApproval()) {
-					groupStat.setText(translation.registered(registrar.getGroup().getName()));
-				} else {
-					groupStat.setText(translation.waitForAcceptation(registrar.getGroup().getName()));
-				}
-				message.add(groupStat);
-			}
 			ListGroupItem voStat = new ListGroupItem();
 			if (voApplication == Application.ApplicationType.EXTENSION) {
 
@@ -158,7 +151,28 @@ public class Summary implements Step {
 				message.add(voStat);
 
 			}
-			if (groupApplication == null) {
+
+			if (formView.getRegisteredUnknownMail()) {
+				ListGroupItem verifyMail = new ListGroupItem();
+				verifyMail.add(new Icon(IconType.WARNING));
+				verifyMail.add(new Text(" " + translation.verifyMail()));
+				verifyMail.setType(ListGroupItemType.WARNING);
+				message.add(verifyMail);
+			}
+
+			ListGroupItem groupStat = new ListGroupItem();
+			if (groupApplication == Application.ApplicationType.INITIAL) {
+
+				if (!registrar.hasGroupFormAutoApproval()) {
+					groupStat.setText(translation.waitForAcceptation(registrar.getGroup().getName()));
+				} else if (voApplication == Application.ApplicationType.INITIAL && !registrar.hasVoFormAutoApproval()) {
+					groupStat.setText(translation.waitForAcceptation(registrar.getVo().getName()));
+				} else {
+					groupStat.setText(translation.registered(registrar.getGroup().getName()));
+				}
+				message.add(groupStat);
+
+			} else if (groupApplication == null) {
 
 				if (registrar.getGroupFormInitialException() != null) {
 					switch (registrar.getGroupFormInitialException().getName()) {
@@ -174,12 +188,7 @@ public class Summary implements Step {
 					message.add(groupStat);
 				}
 			}
-			if (formView.getRegisteredUnknownMail()) {
-				ListGroupItem verifyMail = new ListGroupItem();
-				verifyMail.add(new Icon(IconType.WARNING));
-				verifyMail.add(new Text(" " + translation.verifyMail()));
-				message.add(verifyMail);
-			}
+
 			formView.getForm().add(message);
 		}
 

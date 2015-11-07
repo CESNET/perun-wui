@@ -1,7 +1,9 @@
 package cz.metacentrum.perun.wui.widgets;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickHandler;
+import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Tooltip;
@@ -123,78 +125,80 @@ public class PerunButton extends Button {
 	 */
 	public static PerunButton getButton(PerunButtonType type) {
 
+		PerunTranslation translation = GWT.create(PerunTranslation.class);
+
 		PerunButton button = new PerunButton();
 
 		if (PerunButtonType.ADD.equals(type)) {
 			button.setIcon(IconType.PLUS);
-			button.setText("Add");
+			button.setText(translation.add());
 			button.setType(ButtonType.SUCCESS);
 		} else if (PerunButtonType.REMOVE.equals(type)) {
-			button.setText("Remove");
+			button.setText(translation.remove());
 			button.setIcon(IconType.TRASH_O);
 			button.setType(ButtonType.DANGER);
 		} else if (PerunButtonType.CREATE.equals(type)) {
-			button.setText("Create");
+			button.setText(translation.create());
 			button.setIcon(IconType.PLUS);
 			button.setType(ButtonType.SUCCESS);
 		} else if (PerunButtonType.DELETE.equals(type)) {
-			button.setText("Delete");
+			button.setText(translation.delete());
 			button.setIcon(IconType.TRASH_O);
 			button.setType(ButtonType.DANGER);
 		} else if (PerunButtonType.OK.equals(type)) {
-			button.setText("OK");
+			button.setText(translation.ok());
 		} else if (PerunButtonType.CANCEL.equals(type)) {
-			button.setText("Cancel");
+			button.setText(translation.cancel());
 		} else if (PerunButtonType.YES.equals(type)) {
-			button.setText("Yes");
+			button.setText(translation.yes());
 		} else if (PerunButtonType.NO.equals(type)) {
-			button.setText("No");
+			button.setText(translation.yes());
 		} else if (PerunButtonType.FILTER.equals(type)) {
-			button.setText("Filter");
+			button.setText(translation.filter());
 			button.setIcon(IconType.FILTER);
 		} else if (PerunButtonType.SEARCH.equals(type)) {
-			button.setText("Search");
+			button.setText(translation.search());
 			button.setIcon(IconType.SEARCH);
 		} else if (PerunButtonType.SAVE.equals(type)) {
-			button.setText("Save");
+			button.setText(translation.save());
 			button.setIcon(IconType.SAVE);
 		} else if (PerunButtonType.EDIT.equals(type)) {
-			button.setText("Edit");
+			button.setText(translation.edit());
 			button.setIcon(IconType.PENCIL);
 		} else if (PerunButtonType.ASSIGN.equals(type)) {
-			button.setText("Assign");
+			button.setText(translation.assign());
 			button.setIcon(IconType.PLUS);
 		} else if (PerunButtonType.REFRESH.equals(type)) {
-			button.setText("Refresh");
+			button.setText(translation.refresh());
 			button.setIcon(IconType.REFRESH);
 		} else if (PerunButtonType.REPORT_ERROR.equals(type)) {
-			button.setText("Report error");
+			button.setText(translation.reportError());
 			button.setIcon(IconType.BUG);
 		} else if (PerunButtonType.COPY.equals(type)) {
-			button.setText("Copy");
+			button.setText(translation.copy());
 			button.setIcon(IconType.COPY);
 		} else if (PerunButtonType.BACK.equals(type)) {
-			button.setText("Back");
+			button.setText(translation.back());
 			button.setIcon(IconType.ARROW_LEFT);
 		} else if (PerunButtonType.NEXT.equals(type)) {
-			button.setText("Next");
+			button.setText(translation.next());
 			button.setIcon(IconType.ARROW_RIGHT);
 			button.setIconPosition(IconPosition.RIGHT);
 		} else if (PerunButtonType.EXIT.equals(type)) {
-			button.setText("Exit");
+			button.setText(translation.exit());
 			button.setIcon(IconType.SIGN_OUT);
 		} else if (PerunButtonType.APPROVE.equals(type)) {
-			button.setText("Approve");
+			button.setText(translation.approve());
 			button.setIcon(IconType.CHECK);
 		} else if (PerunButtonType.REJECT.equals(type)) {
-			button.setText("Reject");
+			button.setText(translation.reject());
 			button.setIcon(IconType.MINUS);
 		} else if (PerunButtonType.VERIFY.equals(type)) {
-			button.setText("Verify");
+			button.setText(translation.verify());
 			button.setIcon(IconType.CERTIFICATE);
 		} else if (PerunButtonType.CONTINUE.equals(type)) {
-			button.setText("Continue");
-			button.setIcon(IconType.ARROW_RIGHT);
+			button.setText(translation.continue_());
+			button.setIcon(IconType.CHEVRON_RIGHT);
 			button.setIconPosition(IconPosition.RIGHT);
 		}
 

@@ -1,6 +1,8 @@
 package cz.metacentrum.perun.wui.client.resources;
 
 import com.google.gwt.i18n.client.Messages;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 
 /**
  * Global UI translations
@@ -65,5 +67,78 @@ public interface PerunTranslation extends Messages {
 
 	@DefaultMessage("Preparing form")
 	public String preparingForm();
+
+
+
+	/* ------------ BUTTONS ---------------- */
+
+	@DefaultMessage("Add")
+	public String add();
+
+	@DefaultMessage("Remove")
+	public String remove();
+
+	@DefaultMessage("Create")
+	public String create();
+
+	@DefaultMessage("Delete")
+	public String delete();
+
+	@DefaultMessage("OK")
+	public String ok();
+
+	@DefaultMessage("Cancel")
+	public String cancel();
+
+	@DefaultMessage("Yes")
+	public String yes();
+
+	@DefaultMessage("No")
+	public String no();
+
+	@DefaultMessage("Filter")
+	public String filter();
+
+	@DefaultMessage("Search")
+	public String search();
+
+	@DefaultMessage("Save")
+	public String save();
+
+	@DefaultMessage("Edit")
+	public String edit();
+
+	@DefaultMessage("Assign")
+	public String assign();
+
+	@DefaultMessage("Refresh")
+	public String refresh();
+
+	@DefaultMessage("Report error")
+	public String reportError();
+
+	@DefaultMessage("Copy")
+	public String copy();
+
+	@DefaultMessage("Back")
+	public String back();
+
+	@DefaultMessage("Next")
+	public String next();
+
+	@DefaultMessage("Exit")
+	public String exit();
+
+	@DefaultMessage("Approve")
+	public String approve();
+
+	@DefaultMessage("Reject")
+	public String reject();
+
+	@DefaultMessage("Verify")
+	public String verify();
+
+	@DefaultMessage("Continue")
+	public String continue_();  //continue is a keyword
 
 }

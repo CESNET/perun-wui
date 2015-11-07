@@ -22,6 +22,7 @@ public class GroupInitStep extends FormStep {
 	@Override
 	public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 
+		formView.getNotice().setVisible(false);
 		form.clear();
 		form.setFormItems(registrar.getGroupFormInitial());
 		form.setApp(Application.createNew(registrar.getVo(), registrar.getGroup(), Application.ApplicationType.INITIAL,
