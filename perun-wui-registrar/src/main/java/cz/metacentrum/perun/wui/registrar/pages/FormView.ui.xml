@@ -3,6 +3,7 @@
              xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
              xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
              xmlns:p='urn:import:cz.metacentrum.perun.wui.registrar.widgets'
+			 xmlns:p.core='urn:import:cz.metacentrum.perun.wui.widgets'
 		>
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources"/>
@@ -18,7 +19,7 @@
 
 					<b:Image visible="false" ui:field="logo"/>
 
-					<b:Alert visible="false" type="WARNING" ui:field="notice" dismissable="false" marginTop="20"/>
+					<p.core:AlertErrorReporter visible="false" type="WARNING" ui:field="notice" marginTop="20"/>
 
 					<b:Form type="HORIZONTAL">
 						<p:PerunForm ui:field="form">

@@ -60,6 +60,9 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Please wait till administrator of {0} will accept your extension.")
 	public String waitForExtAcceptation(String voOrGroupName);
 
+	@DefaultMessage("After acceptation you will become member of {0} automatically.")
+	String waitForVoAcceptation(String groupName);
+
 	@DefaultMessage("From now you are member of {0}.")
 	public String registered(String voOrGroupName);
 

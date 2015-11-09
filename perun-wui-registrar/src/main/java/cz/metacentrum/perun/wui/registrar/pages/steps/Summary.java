@@ -42,7 +42,6 @@ public class Summary implements Step {
 	@Override
 	public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 
-		formView.getNotice().setVisible(false);
 		formView.getForm().clear();
 		displaySummaryTitle(registrar);
 		displaySummaryMessage(registrar);
@@ -64,7 +63,11 @@ public class Summary implements Step {
 			title.add(success);
 			if (groupApplication == Application.ApplicationType.INITIAL) {
 
-				if (registrar.hasGroupFormAutoApproval()) {
+				if (registrar.hasGroupFormAutoApproval()
+						&& (voApplication == Application.ApplicationType.INITIAL && !registrar.hasVoFormAutoApproval())) {
+					text.setText(" "+translation.initTitleAutoApproval());
+				} else if (registrar.hasGroupFormAutoApproval()
+						&& (voApplication != Application.ApplicationType.INITIAL)) {
 					text.setText(" "+translation.initTitleAutoApproval());
 				} else {
 					text.setText(" "+translation.initTitle());
@@ -113,6 +116,7 @@ public class Summary implements Step {
 						displayException(registrar.getVoFormExtensionException());
 						break;
 					case "DuplicateRegistrationAttemptException":
+						// TODO - solve this BLEEE hack in better way.
 						registrar.getVoFormExtensionException().setName("DuplicateExtensionAttemptException");
 						displayException(registrar.getVoFormExtensionException());
 						break;
@@ -163,12 +167,14 @@ public class Summary implements Step {
 			ListGroupItem groupStat = new ListGroupItem();
 			if (groupApplication == Application.ApplicationType.INITIAL) {
 
-				if (!registrar.hasGroupFormAutoApproval()) {
-					groupStat.setText(translation.waitForAcceptation(registrar.getGroup().getName()));
-				} else if (voApplication == Application.ApplicationType.INITIAL && !registrar.hasVoFormAutoApproval()) {
-					groupStat.setText(translation.waitForAcceptation(registrar.getVo().getName()));
-				} else {
+				if (registrar.hasGroupFormAutoApproval()
+						&& (voApplication == Application.ApplicationType.INITIAL && !registrar.hasVoFormAutoApproval())) {
+					groupStat.setText(translation.waitForVoAcceptation(registrar.getGroup().getName()));
+				} else if (registrar.hasGroupFormAutoApproval()
+						&& (voApplication != Application.ApplicationType.INITIAL)) {
 					groupStat.setText(translation.registered(registrar.getGroup().getName()));
+				} else {
+					groupStat.setText(translation.waitForAcceptation(registrar.getGroup().getName()));
 				}
 				message.add(groupStat);
 
@@ -278,6 +284,6 @@ public class Summary implements Step {
 	}
 
 	private void displayException(PerunException ex) {
-		formView.displayException(ex);
+		formView.resolveException(ex);
 	}
 }

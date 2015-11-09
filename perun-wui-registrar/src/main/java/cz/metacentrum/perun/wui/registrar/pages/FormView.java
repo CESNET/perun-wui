@@ -19,7 +19,6 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.ExtSource;
 import cz.metacentrum.perun.wui.model.beans.Group;
@@ -27,6 +26,7 @@ import cz.metacentrum.perun.wui.model.beans.Identity;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.model.ExceptionResolver;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.pages.steps.GroupInitStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.Summary;
@@ -34,8 +34,8 @@ import cz.metacentrum.perun.wui.registrar.pages.steps.VoExtOfferStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.VoExtStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.VoInitStep;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
+import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ButtonGroup;
@@ -44,9 +44,7 @@ import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.ModalFooter;
-import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
-import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
@@ -75,6 +73,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	private Vo vo;
 	private Group group;
 	private boolean registeredUnknownMail;
+	private ExceptionResolver exceptionResolver;
 
 	@UiField
 	PerunForm form;
@@ -83,16 +82,16 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	Image logo;
 
 	@UiField
-	Alert notice;
+	AlertErrorReporter notice;
 
 	private PerunException displayedException;
 
 	@Inject
 	public FormView(FormViewUiBinder binder) {
 		initWidget(binder.createAndBindUi(this));
+		exceptionResolver = new ExceptionResolver();
 		draw();
 	}
-
 
 	public PerunForm getForm() {
 		return form;
@@ -114,11 +113,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	public void draw() {
 
-		final PerunLoader loader = new PerunLoader();
-		form.add(loader);
-
 		final String voName = Window.Location.getParameter("vo");
 		final String groupName = Window.Location.getParameter("group");
+		final PerunPrincipal pp = PerunSession.getInstance().getPerunPrincipal();
 
 		// TODO - why it is here???
 		/*Scheduler.get().scheduleDeferred(new Command() {
@@ -130,12 +127,13 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		if (voName == null || voName.isEmpty()) {
 			this.displayedException = PerunException.createNew("0", "WrongURL", "Missing parameters in URL.");
-			displayException(loader, displayedException);
+			resolveException(displayedException);
 			return;
 		}
 
-		final PerunPrincipal pp = PerunSession.getInstance().getPerunPrincipal();
 
+		final PerunLoader loader = new PerunLoader();
+		form.add(loader);
 		RegistrarManager.initializeRegistrar(voName, groupName, new JsonEvents() {
 
 			JsonEvents retry = this;
@@ -167,7 +165,12 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					if (registrar.getException().getName().equals("VoNotExistsException") ||
 							registrar.getException().getName().equals("GroupNotExistsException") ||
 							registrar.getException().getName().equals("FormNotExistsException")) {
-						displayException(loader, registrar.getException());
+						if (loader != null) {
+							loader.onFinished();
+							loader.removeFromParent();
+						}
+						resolveException(registrar.getException());
+
 						return;
 					}
 
@@ -305,160 +308,17 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 
 
-	public void displayException(PerunException ex) {
-		displayException(null, ex);
-	}
-
-	public void displayException(PerunLoader loader, PerunException ex) {
-
-		this.displayedException = ex;
-		notice.setType(AlertType.WARNING);
-
-		Button continueButton = new Button(translation.continueButton());
-		continueButton.setIcon(IconType.CHEVRON_RIGHT);
-		continueButton.setType(ButtonType.WARNING);
-		continueButton.setIconPosition(IconPosition.RIGHT);
-		continueButton.setMarginTop(20);
-
-		if (ex.getName().equals("ExtendMembershipException")) {
-
-			if (ex.getReason().equals("OUTSIDEEXTENSIONPERIOD")) {
-
-				String exceptionText = "<i>unlimited</i>";
-				if (ex.getExpirationDate() != null) exceptionText = ex.getExpirationDate().split(" ")[0];
-				notice.getElement().setInnerHTML("<h4>"+translation.cantExtendMembership()+"</h4><p>"+translation.cantExtendMembershipOutside(exceptionText));
-
-				if (Window.Location.getParameter("targetexisting") != null) {
-
-					continueButton.addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							Window.Location.replace(Window.Location.getParameter("targetexisting"));
-						}
-					});
-					notice.add(continueButton);
-
-				}
-
-			} else if (ex.getReason().equals("NOUSERLOA")) {
-
-				notice.getElement().setInnerHTML("<h4>"+translation.cantBecomeMember((group != null) ? group.getShortName() : vo.getName())+"</h4><p>"+translation.cantBecomeMemberLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-
-			} else if (ex.getReason().equals("INSUFFICIENTLOA")) {
-
-				notice.getElement().setInnerHTML("<h4>"+translation.cantBecomeMember((group != null) ? group.getShortName() : vo.getName())+"</h4><p>"+translation.cantBecomeMemberInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-
-			} else if (ex.getReason().equals("INSUFFICIENTLOAFOREXTENSION")) {
-
-				notice.getElement().setInnerHTML("<h4>"+translation.cantExtendMembership()+"</h4><p>"+translation.cantExtendMembershipInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-
-			}
-
-		} else if (ex.getName().equals("AlreadyRegisteredException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.alreadyRegistered((group != null) ? group.getShortName() : vo.getName())+"</h4>");
-
-			if (Window.Location.getParameter("targetexisting") != null) {
-
-				continueButton.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						Window.Location.replace(Window.Location.getParameter("targetexisting"));
-					}
-				});
-				notice.add(continueButton);
-
-			}
-
-		} else if (ex.getName().equals("DuplicateRegistrationAttemptException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+ translation.alreadySubmitted(((group != null) ? group.getShortName() : vo.getName())) + "</h4><p>"+translation.visitSubmitted(Window.Location.getHref().split("#")[0], translation.submittedTitle()));
-
-			if (Window.Location.getParameter("targetnew") != null) {
-
-				continueButton.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						Window.Location.replace(Window.Location.getParameter("targetnew"));
-					}
-				});
-				notice.add(continueButton);
-
-			}
-
-		} else if (ex.getName().equals("DuplicateExtensionAttemptException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+ translation.alreadySubmittedExtension((vo.getName())) + "</h4><p>"+translation.visitSubmitted(Window.Location.getHref().split("#")[0], translation.submittedTitle()));
-
-			if (Window.Location.getParameter("targetextended") != null) {
-
-				continueButton.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						Window.Location.replace(Window.Location.getParameter("targetextended"));
-					}
-				});
-				notice.add(continueButton);
-
-			}
-
-		} else if (ex.getName().equalsIgnoreCase("MissingRequiredDataException")) {
-
-			String missingItems = "<p><ul>";
-			if (!ex.getFormItems().isEmpty()) {
-				for (ApplicationFormItemData item : ex.getFormItems()) {
-					missingItems += "<li>" + translation.missingAttribute(item.getFormItem().getFederationAttribute());
-				}
-			}
-			missingItems += "<ul/>";
-
-			notice.getElement().setInnerHTML(translation.missingRequiredData(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())) + missingItems);
-
-		} else if (ex.getName().equalsIgnoreCase("VoNotExistsException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.voNotExistsException(Window.Location.getParameter("vo"))+"</h4>");
-
-		} else if (ex.getName().equalsIgnoreCase("GroupNotExistsException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.groupNotExistsException(Window.Location.getParameter("group"))+"</h4>");
-
-		} else if (ex.getName().equalsIgnoreCase("WrongURL")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.missingVoInURL()+"</h4>");
-
-		} else if (ex.getName().equalsIgnoreCase("FormNotExistsException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.formNotExist()+"</h4>");
-
-		} else if (ex.getName().equalsIgnoreCase("ApplicationNotCreatedException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.applicationNotCreated()+"</h4>");
-
-		} else  if (ex.getName().equalsIgnoreCase("RpcException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.applicationNotCreated()+"</h4>");
-
-		} else  if (ex.getName().equalsIgnoreCase("RegistrarException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.registrarException()+"</h4>");
-
-		} else {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.registrarException()+"</h4>");
-
-		}
-
+	public boolean resolveException(PerunException ex) {
 		Window.scrollTo(0, 0);
-
-		notice.setVisible(true);
-		if (loader != null) {
-			loader.onFinished();
-			loader.removeFromParent();
-		}
-
+		return exceptionResolver.resolve(ex, notice, vo, group);
 	}
 
-	public Alert getNotice() {
+	public ExceptionResolver getExceptionResolver() {
+		return exceptionResolver;
+	}
+
+
+	public AlertErrorReporter getNotice() {
 		return notice;
 	}
 

@@ -15,9 +15,6 @@
 		.progress {
 			margin-bottom: 10px;
 		}
-		.top {
-			margin-top: 10px;
-		}
 	</ui:style>
 
 	<b:Container fluid="true">
@@ -28,12 +25,7 @@
 					<b:ProgressBar ui:field="bar" />
 				</b:Progress>
 
-				<b:Alert dismissable="false" ui:field="alert" type="DANGER" visible="false">
-					<b:ButtonToolBar visible="false" ui:field="tool" addStyleNames="{style.top}">
-						<p:PerunButton ui:field="retry" icon="REFRESH" pull="LEFT" visible="false">Try again</p:PerunButton>
-						<p:PerunButton ui:field="report" icon="BUG" pull="RIGHT" type="DANGER">Report error</p:PerunButton>
-					</b:ButtonToolBar>
-				</b:Alert>
+				<p:AlertErrorReporter ui:field="alert" type="DANGER"/>
 
 				<b:Alert dismissable="false" ui:field="message" type="INFO" visible="false" />
 

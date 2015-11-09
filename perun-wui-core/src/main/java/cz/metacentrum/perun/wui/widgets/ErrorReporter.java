@@ -19,6 +19,8 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.RTMessage;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextArea;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
+import org.gwtbootstrap3.client.shared.event.ModalHiddenEvent;
+import org.gwtbootstrap3.client.shared.event.ModalHiddenHandler;
 import org.gwtbootstrap3.client.shared.event.ModalShownEvent;
 import org.gwtbootstrap3.client.shared.event.ModalShownHandler;
 import org.gwtbootstrap3.client.ui.Alert;
@@ -66,7 +68,7 @@ public class ErrorReporter {
 			public void onClick(ClickEvent event) {
 
 				if (subject.getText().isEmpty()) {
-					subject.setText("Reported error: " + ex.getRequestURL() + " (" +ex.getErrorId() + ")");
+					subject.setText("Reported error: " + ex.getRequestURL() + " (" + ex.getErrorId() + ")");
 				}
 
 				final String text = getMessage(ex);
@@ -74,7 +76,7 @@ public class ErrorReporter {
 					@Override
 					public void onFinished(JavaScriptObject jso) {
 						sendButton.setProcessing(false);
-						showSuccess((RTMessage)jso);
+						showSuccess((RTMessage) jso);
 					}
 
 					@Override
@@ -89,6 +91,13 @@ public class ErrorReporter {
 					}
 				});
 
+			}
+		});
+
+		widget.addHiddenHandler(new ModalHiddenHandler() {
+			@Override
+			public void onHidden(ModalHiddenEvent modalHiddenEvent) {
+				widget.removeFromParent();
 			}
 		});
 

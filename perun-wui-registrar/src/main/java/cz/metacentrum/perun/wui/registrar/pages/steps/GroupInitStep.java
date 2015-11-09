@@ -22,11 +22,10 @@ public class GroupInitStep extends FormStep {
 	@Override
 	public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 
-		formView.getNotice().setVisible(false);
 		form.clear();
 		form.setFormItems(registrar.getGroupFormInitial());
 		form.setApp(Application.createNew(registrar.getVo(), registrar.getGroup(), Application.ApplicationType.INITIAL,
-				getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+				getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa(), pp.getUser()));
 		form.setOnSubmitEvent(new JsonEvents() {
 
 			@Override
@@ -34,12 +33,15 @@ public class GroupInitStep extends FormStep {
 				if (mustRevalidateMail()) {
 					formView.setRegisteredUnknownMail();
 				}
+				formView.getNotice().setVisible(false);
 				next.call(pp, registrar);
 			}
 
 			@Override
 			public void onError(PerunException error) {
-				formView.displayException(error);
+				if (formView.resolveException(error)) {
+					next.call(pp, registrar);
+				}
 			}
 
 			@Override

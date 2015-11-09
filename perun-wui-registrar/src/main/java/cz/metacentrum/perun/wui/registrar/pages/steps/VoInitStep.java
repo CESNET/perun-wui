@@ -26,7 +26,7 @@ public class VoInitStep extends FormStep {
 		form.clear();
 		form.setFormItems(registrar.getVoFormInitial());
 		form.setApp(Application.createNew(registrar.getVo(), null, Application.ApplicationType.INITIAL,
-				getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+				getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa(), pp.getUser()));
 		form.setOnSubmitEvent(new JsonEvents() {
 
 			@Override
@@ -34,12 +34,15 @@ public class VoInitStep extends FormStep {
 				if (mustRevalidateMail()) {
 					formView.setRegisteredUnknownMail();
 				}
+				formView.getNotice().setVisible(false);
 				next.call(pp, registrar);
 			}
 
 			@Override
 			public void onError(PerunException error) {
-				formView.displayException(error);
+				if (formView.resolveException(error)) {
+					next.call(pp, registrar);
+				}
 			}
 
 			@Override

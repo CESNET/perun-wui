@@ -1,7 +1,6 @@
 package cz.metacentrum.perun.wui.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -10,7 +9,6 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.model.PerunException;
 import org.gwtbootstrap3.client.ui.Alert;
-import org.gwtbootstrap3.client.ui.ButtonToolBar;
 import org.gwtbootstrap3.client.ui.Progress;
 import org.gwtbootstrap3.client.ui.ProgressBar;
 import org.gwtbootstrap3.client.ui.constants.ProgressBarType;
@@ -45,11 +43,8 @@ public class PerunLoader extends Composite {
 	Widget rootElement;
 	@UiField Progress progress;
 	@UiField ProgressBar bar;
-	@UiField Alert alert;
+	@UiField AlertErrorReporter alert;
 	@UiField Alert message;
-	@UiField ButtonToolBar tool;
-	@UiField PerunButton retry;
-	@UiField PerunButton report;
 	private HandlerRegistration lastRetryHandler;
 
 	String emptyMessage = "No items found.";
@@ -65,17 +60,6 @@ public class PerunLoader extends Composite {
 		initWidget(rootElement);
 		bar.setPercent(0);
 		alert.setVisible(false);
-
-		// common error reporting
-		report.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (catchedException != null) {
-					ErrorReporter reportBox = new ErrorReporter(catchedException);
-					reportBox.getWidget().show();
-				}
-			}
-		});
 
 	}
 
@@ -227,16 +211,8 @@ public class PerunLoader extends Composite {
 		bar.setType(ProgressBarType.DANGER);
 		alert.setText(error.getName() + ": " + error.getMessage());
 
-		tool.setVisible(true);
-		if (handler != null) {
-			retry.setVisible(true);
-			if (lastRetryHandler != null) {
-				lastRetryHandler.removeHandler();
-			}
-			lastRetryHandler = retry.addClickHandler(handler);
-		}
-
-		catchedException = error;
+		alert.setRetryHandler(handler);
+		alert.setReportInfo(error);
 
 	}
 

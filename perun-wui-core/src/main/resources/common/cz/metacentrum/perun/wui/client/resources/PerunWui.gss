@@ -264,6 +264,9 @@ th.gwtb3-d {
 .alert h6 {
 	margin-bottom: 0px;
 }
+.alert .gwt-HTML > p:last-child {
+	margin-bottom: 0px;
+}
 .bootstrap-select.disabled {
 	cursor: not-allowed;
 }
