@@ -6,6 +6,7 @@ import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
@@ -41,8 +42,6 @@ public class PerunForm extends FieldSet {
 	// WIDGET_SIZE + STATUS_SIZE should be 12
 	public static final ColumnSize WIDGET_SIZE = ColumnSize.SM_6;
 	public static final ColumnSize STATUS_SIZE = ColumnSize.SM_6;
-
-	private String lang = LocaleInfo.getCurrentLocale().getLocaleName().equals("default") ? "en" : LocaleInfo.getCurrentLocale().getLocaleName();
 
 	// contains info about onlyPreview and seeHiddenItems
 	private PerunFormItemsGenerator generator;
@@ -381,7 +380,17 @@ public class PerunForm extends FieldSet {
 
 	}
 
+	/**
+	 * @return code of current language.
+     */
 	public String getLang() {
-		return lang;
+		// always EN if no native language is defined in Perun.
+		if (Utils.getNativeLanguage() == null) {
+			return "en";
+		}
+		if (LocaleInfo.getCurrentLocale().getLocaleName().equals("default")) {
+			return "en";
+		}
+		return  LocaleInfo.getCurrentLocale().getLocaleName();
 	}
 }

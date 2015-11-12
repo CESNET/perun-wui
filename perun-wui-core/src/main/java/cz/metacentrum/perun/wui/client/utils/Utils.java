@@ -1,13 +1,18 @@
 package cz.metacentrum.perun.wui.client.utils;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
+import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
+import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.extras.animate.client.ui.constants.Animation;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
 
@@ -514,27 +519,36 @@ public class Utils {
 
 	}
 
+	public static final Map<String, String> ENGLISH_LANGUAGE;
+	static
+	{
+		ENGLISH_LANGUAGE = new HashMap<>();
+		ENGLISH_LANGUAGE.put("code", "en");
+		ENGLISH_LANGUAGE.put("nativeName", "English");
+		ENGLISH_LANGUAGE.put("englishName", "English");
+	}
 	/**
-	 * Returns list of Strings representing native language in order "code","native name","english name"
+	 * Returns Map of Strings representing native language with keys "code","nativeName","englishName"
 	 *
-	 * e,g. "cs","Česky","Czech" for Czech language.
+	 * e,g. "code":"cs", "nativeName":"Česky", "englishName":"Czech" for Czech language.
 	 *
-	 * @return list of strings representing native language
+	 * @return map of strings representing native language. If language is not set, return null.
 	 */
-	public static ArrayList<String> getNativeLanguage() {
+	public static Map<String,String> getNativeLanguage() {
 
-		ArrayList<String> list = new ArrayList<String>();
 		if (PerunSession.getInstance().getConfiguration() != null) {
 			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "nativeLanguage");
 			if (value != null && !value.isEmpty()) {
 				String[] parts = value.split(",");
-				for (int i=0; i<parts.length; i++) {
-					list.add(parts[i]);
-				}
+
+                Map<String, String> language = new HashMap<>();
+                language.put("code", parts[0]);
+                language.put("nativeName", parts[1]);
+                language.put("englishName", parts[2]);
+                return language;
 			}
 		}
-		return list;
-
+		return null;
 	}
 
 	/**
@@ -568,6 +582,50 @@ public class Utils {
 			}
 		}
 		return "UNKNOWN INSTANCE";
+
+	}
+
+	/**
+	 * Returns Image of Perun`s instance logo
+	 *
+	 * if not set, use default: "perunDefaultLogoResource()"
+	 *
+	 * @return URL of Perun`s logo
+	 */
+	public static Image perunInstanceLogo() {
+
+		final Image image = new Image();
+
+		image.addErrorHandler(new com.google.gwt.event.dom.client.ErrorHandler() {
+			public void onError(ErrorEvent event) {
+				if (perunDefaultLogoResource() != null) {
+					image.setResource(perunDefaultLogoResource());
+				}
+			}
+		});
+
+		if (PerunSession.getInstance().getConfiguration() == null) {
+			return new Image(perunDefaultLogoResource());
+		}
+
+		String url = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "logoUrl");
+
+		if (url == null || url.isEmpty()) {
+			return new Image(perunDefaultLogoResource());
+		}
+
+		image.setUrl(url);
+
+		return image;
+	}
+	/**
+	 * Returns Perun`s logo resource
+	 *
+	 * @return Image of Perun`s logo
+	 */
+	public static ImageResource perunDefaultLogoResource() {
+
+		return PerunResources.INSTANCE.getPerunLogo();
 
 	}
 
