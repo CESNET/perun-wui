@@ -27,5 +27,6 @@ public enum PerunButtonType {
 	VERIFY,
 	REJECT,
 	REFRESH,
-	SEARCH
+	SEARCH,
+	CONTINUE
 }

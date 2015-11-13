@@ -39,6 +39,33 @@ public class RegistrarObject extends JavaScriptObject {
 	}
 
 	/**
+	 * Check if VO has automatic approval of initial application
+	 *
+	 * @return true if automatic approval is activated
+	 */
+	public final boolean hasVoFormAutoApproval() {
+		return JsUtils.getNativePropertyBoolean(JsUtils.getNativePropertyObject(this, "voForm"), "automaticApproval");
+	}
+
+	/**
+	 * Check if VO has automatic approval of extension application
+	 *
+	 * @return true if automatic approval is activated
+	 */
+	public final boolean hasVoFormAutoApprovalExtension() {
+		return JsUtils.getNativePropertyBoolean(JsUtils.getNativePropertyObject(this, "voForm"), "automaticApprovalExtension");
+	}
+
+	/**
+	 * Check if group has automatic approval of application
+	 *
+	 * @return true if automatic approval is activated
+	 */
+	public final boolean hasGroupFormAutoApproval() {
+		return JsUtils.getNativePropertyBoolean(JsUtils.getNativePropertyObject(this, "groupForm"), "automaticApproval");
+	}
+
+	/**
 	 * Get group
 	 *
 	 * @return Group

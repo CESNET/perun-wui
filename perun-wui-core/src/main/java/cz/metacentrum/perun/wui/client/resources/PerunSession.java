@@ -92,6 +92,7 @@ public class PerunSession {
 		}
 
 		String rpcType = getRpcServer();
+
 		if(rpcType == null){
 			Window.alert("Path to Perun server can't be determined, you probably used wrong URL.");
 		}

@@ -1,17 +1,23 @@
 package cz.metacentrum.perun.wui.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.Bootstrapper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
+import cz.metacentrum.perun.wui.widgets.PerunLoader;
 
 /**
  * Generic Bootstrapper for Perun Wui apps which is used to load user
@@ -35,7 +41,16 @@ public class PerunBootstrapper implements Bootstrapper {
 	@Override
 	public void onBootstrap() {
 
+		final PerunTranslation translation = GWT.create(PerunTranslation.class);
+
+		final PerunLoader loader = new PerunLoader();
+		RootPanel.get().clear();
+		RootPanel.get().add(loader);
+
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
+
+			final JsonEvents retry = this;
+
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 
@@ -48,6 +63,9 @@ public class PerunBootstrapper implements Bootstrapper {
 				PerunSession.getInstance().setExtendedInfoVisible(PerunSession.getInstance().isPerunAdmin());
 
 				UtilsManager.getGuiConfiguration(new JsonEvents() {
+
+					final JsonEvents retry = this;
+
 					@Override
 					public void onFinished(JavaScriptObject jso) {
 
@@ -68,12 +86,17 @@ public class PerunBootstrapper implements Bootstrapper {
 					public void onError(PerunException error) {
 						PerunSession.setPerunLoading(false);
 						PerunSession.setPerunLoaded(false);
-						//loader.onError(error, null);
+						loader.onError(error, new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								AuthzManager.getPerunPrincipal(retry);
+							}
+						});
 					}
 
 					@Override
 					public void onLoadingStart() {
-
+						loader.onLoading(translation.preparingInterface());
 					}
 				});
 
@@ -83,16 +106,19 @@ public class PerunBootstrapper implements Bootstrapper {
 			public void onError(PerunException error) {
 				PerunSession.setPerunLoading(false);
 				PerunSession.setPerunLoaded(false);
-				//loader.onError(error, null);
+				loader.onError(error, new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						AuthzManager.getPerunPrincipal(retry);
+					}
+				});
 			}
 
 			@Override
 			public void onLoadingStart() {
-				/*
-				RootPanel.get().clear();
-				RootPanel.get().add(loader);
-				loader.onLoading();
-				*/
+
+				loader.onLoading(translation.loadingUser());
+
 				PerunSession.setPerunLoading(true);
 				PerunSession.setPerunLoaded(false);
 			}

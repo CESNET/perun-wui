@@ -30,6 +30,8 @@ public class AppDetailPresenter extends Presenter<AppDetailPresenter.MyView, App
 
 	public interface MyView extends View {
 		void setApplication(Application application);
+		void onLoadingStartApplication();
+		void onErrorApplication(PerunException error, JsonEvents retry);
 	}
 
 	@NameToken(RegistrarPlaceTokens.APP_DETAIL)
@@ -44,14 +46,18 @@ public class AppDetailPresenter extends Presenter<AppDetailPresenter.MyView, App
 
 	@Override
 	public void prepareFromRequest(final PlaceRequest request) {
-
 		super.prepareFromRequest(request);
+
 		try {
 			final int id = Integer.valueOf(request.getParameter("id", null));
 			if (id < 1) {
 				placeManager.revealErrorPlace(request.getNameToken());
 			}
+
 			RegistrarManager.getApplicationById(id, new JsonEvents() {
+
+				final JsonEvents retry = this;
+
 				@Override
 				public void onFinished(JavaScriptObject jso) {
 					Application app  = jso.cast();
@@ -67,12 +73,14 @@ public class AppDetailPresenter extends Presenter<AppDetailPresenter.MyView, App
 					} else {
 						getProxy().manualRevealFailed();
 						placeManager.revealErrorPlace(request.getNameToken());
+
+						getView().onErrorApplication(error, retry);
 					}
 				}
 
 				@Override
 				public void onLoadingStart() {
-					// TODO - show loader ??
+					getView().onLoadingStartApplication();
 				}
 			});
 		} catch( NumberFormatException e ) {
