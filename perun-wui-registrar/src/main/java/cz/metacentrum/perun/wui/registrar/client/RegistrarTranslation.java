@@ -29,6 +29,66 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("English")
 	public String english();
 
+	// -------------- REGISTRATION FORM ------------------------ //
+
+	// TITLES
+
+	@DefaultMessage("We are sorry but we can do nothing for you now.")
+	public String canDoNothing();
+
+	@DefaultMessage("You have successfully applied for membership")
+	public String initTitle();
+
+	@DefaultMessage("You have successfully applied for extension")
+	public String extendTitle();
+
+	@DefaultMessage("You have been successfully registered")
+	public String initTitleAutoApproval();
+
+	@DefaultMessage("You have successfully extend your membership")
+	public String extendTitleAutoApproval();
+
+	// MESSAGES
+
+	@DefaultMessage("Please check your mailbox and verify your e-mail address. " +
+			"Without verification it is not possible to approve your application.")
+	public String verifyMail();
+
+	@DefaultMessage("Please wait till administrator of {0} will accept your application.")
+	public String waitForAcceptation(String voOrGroupName);
+
+	@DefaultMessage("Please wait till administrator of {0} will accept your extension.")
+	public String waitForExtAcceptation(String voOrGroupName);
+
+	@DefaultMessage("After acceptation you will become member of {0} automatically.")
+	String waitForVoAcceptation(String groupName);
+
+	@DefaultMessage("From now you are member of {0}.")
+	public String registered(String voOrGroupName);
+
+	@DefaultMessage("Your membership in {0} is valid now.")
+	public String extended(String voOrGroupName);
+
+  	@DefaultMessage("It seems you want to submit application for membership in group {0}. However you have already applied.")
+  	public String groupFailedAlreadyApplied(String groupName);
+
+	@DefaultMessage("It seems you want to submit application for membership in group {0}. However you are already registered.")
+	public String groupFailedAlreadyRegistered(String groupName);
+
+	// OTHERS
+
+	@DefaultMessage("Do you want to extend a membership?")
+	public String offerMembershipExtensionTitle();
+
+	@DefaultMessage("After a while your membership in <b>{0}</b> will expire. We recommend you to extend the membership right now.")
+	public String offerMembershipExtensionMessage(String vo);
+
+	@DefaultMessage("No thanks")
+	public String offerMembershipExtensionNoThanks();
+
+	@DefaultMessage("Extend")
+	public String offerMembershipExtensionExtend();
+
 	// -------------- REGISTRATION FORM WIDGETS ------------------------ //
 
 	@DefaultMessage("Text is too long!")
@@ -94,15 +154,25 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("--- Custom value ---")
 	public String customValue();
 
-	@DefaultMessage("<i>( HIDDEN )</i>")
+	@DefaultMessage("<i>HIDDEN</i>")
 	public String isHidden();
+
+	@DefaultMessage("<i>FEDERATION</i>")
+	String federation();
+
+	@DefaultMessage("UNDEFINED")
+	public String undefinedFormItem();
+
+	@DefaultMessage("none of the above")
+	String clearRadiobox();
+
 
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
 	@DefaultMessage("Submitted registrations")
 	public String submittedTitle();
 
-	@DefaultMessage("Submitted on")
+	@DefaultMessage("Submitted")
 	public String submittedOn();
 
 	@DefaultMessage("State")
@@ -123,6 +193,9 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	// -------------- APP DETAIL PAGE ------------------------ //
 
+	@DefaultMessage("Registration detail")
+	public String detailDefaultTitle();
+
 	@DefaultMessage("Registration to {0}")
 	public String initialDetail(String registerTo);
 
@@ -142,6 +215,9 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("You already have submitted registration to {0}")
 	public String alreadySubmitted(String voOrGroupName);
+
+	@DefaultMessage("You have already submitted extension application to {0}")
+	public String alreadySubmittedExtension(String voName);
 
 	@DefaultMessage("You can check state of your application in <a href=\"{0}#submitted\">{1}</a>.")
 	public String visitSubmitted(String url, String title);
@@ -178,5 +254,24 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Organization / project you wish to register into is missing in a browser`s address bar. Please specify it by: <i>?vo=[name]</i>.")
 	public String missingVoInURL();
+
+	@DefaultMessage("Registration form is not created. Please contact administrator.")
+	public String formNotExist();
+
+	@DefaultMessage("Application couldn`t been created. Probably your login can`t be reserved.")
+	public String applicationNotCreated();
+
+	@DefaultMessage("Your application has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
+	public String registrarException();
+
+
+
+	/* ------------ LOADER MESSAGES ---------------- */
+
+	@DefaultMessage("Loading application")
+	public String loadingApplication();
+
+	@DefaultMessage("Loading applications")
+	public String loadingApplications();
 
 }

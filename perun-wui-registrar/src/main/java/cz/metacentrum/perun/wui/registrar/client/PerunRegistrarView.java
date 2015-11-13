@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -19,10 +20,13 @@ import cz.metacentrum.perun.wui.client.utils.Utils;
 import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
+import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.html.Div;
+
+import java.util.Map;
 
 /**
  * Main View for Perun WUI Registrar.
@@ -37,6 +41,12 @@ public class PerunRegistrarView extends ViewImpl implements PerunPresenter.MyVie
 	Div pageContent;
 
 	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+
+	@UiField
+	NavbarCollapse collapse;
+
+	@UiField
+	FocusPanel collapseClickHandler;
 
 	@UiField
 	AnchorButton language;
@@ -64,12 +74,12 @@ public class PerunRegistrarView extends ViewImpl implements PerunPresenter.MyVie
 
 	@UiHandler(value="czech")
 	public void czechClick(ClickEvent event) {
-		setLocale(Utils.getNativeLanguage().get(0));
+		setLocale(Utils.getNativeLanguage());
 	}
 
 	@UiHandler(value="english")
 	public void englishClick(ClickEvent event) {
-		setLocale("en");
+		setLocale(Utils.ENGLISH_LANGUAGE);
 	}
 
 	@UiHandler(value="application")
@@ -95,10 +105,14 @@ public class PerunRegistrarView extends ViewImpl implements PerunPresenter.MyVie
 	/**
 	 * Update localization of whole GUI (reset the app)
 	 *
-	 * @param locale Locale code to set
+	 * @param locale Locale to set. Structure is "code":"val", "nativeName":"val", "englishName":"val"
 	 */
-	public void setLocale(String locale) {
-		UrlBuilder builder = Window.Location.createUrlBuilder().setParameter("locale", locale);
+	public void setLocale(Map<String, String> locale) {
+		if (locale == null) {
+			GWT.log("WARN: Locale is null");
+			return;
+		}
+		UrlBuilder builder = Window.Location.createUrlBuilder().setParameter("locale", locale.get("code"));
 		Window.Location.replace(builder.buildString());
 	}
 
@@ -108,10 +122,13 @@ public class PerunRegistrarView extends ViewImpl implements PerunPresenter.MyVie
 		initWidget(binder.createAndBindUi(this));
 
 		// put logo
-		Image logo = new Image(PerunResources.INSTANCE.getPerunLogo());
+		Image logo = Utils.perunInstanceLogo();
 		logo.setWidth("auto");
 		logo.setHeight("50px");
 		navbarHeader.insert(logo, 0);
+
+		// FIXME - temporary disabled
+		help.setVisible(false);
 
 		// init buttons
 		application.setText(translation.application());
@@ -120,19 +137,27 @@ public class PerunRegistrarView extends ViewImpl implements PerunPresenter.MyVie
 		language.setText(translation.language());
 		logout.setText(translation.logout());
 
-		if ("default".equals(LocaleInfo.getCurrentLocale().getLocaleName()) ||
-				"en".equalsIgnoreCase(LocaleInfo.getCurrentLocale().getLocaleName())) {
-			// use english name of native language
-			czech.setText(Utils.getNativeLanguage().get(2));
-			english.setIcon(IconType.CHECK);
-			english.setIconPosition(IconPosition.RIGHT);
-			czech.setIcon(null);
+		if (Utils.getNativeLanguage() != null) {
+
+			if ("default".equals(LocaleInfo.getCurrentLocale().getLocaleName()) ||
+					"en".equalsIgnoreCase(LocaleInfo.getCurrentLocale().getLocaleName())) {
+				// use english name of native language
+				czech.setText(Utils.getNativeLanguage().get("englishName"));
+				english.setIcon(IconType.CHECK);
+				english.setIconPosition(IconPosition.RIGHT);
+				czech.setIcon(null);
+			} else {
+				// use native name of native language
+				czech.setText(Utils.getNativeLanguage().get("nativeName"));
+				czech.setIcon(IconType.CHECK);
+				czech.setIconPosition(IconPosition.RIGHT);
+				english.setIcon(null);
+			}
+			english.setText(translation.english());
+
 		} else {
-			// use native name of native language
-			czech.setText(Utils.getNativeLanguage().get(1));
-			czech.setIcon(IconType.CHECK);
-			czech.setIconPosition(IconPosition.RIGHT);
-			english.setIcon(null);
+			// no language switching
+			language.setVisible(false);
 		}
 
 		english.setText(translation.english());

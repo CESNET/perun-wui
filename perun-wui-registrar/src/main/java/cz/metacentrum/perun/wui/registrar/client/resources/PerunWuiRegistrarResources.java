@@ -11,6 +11,7 @@ public interface PerunWuiRegistrarResources extends ClientBundle {
 
 	PerunWuiRegistrarResources INSTANCE = GWT.create(PerunWuiRegistrarResources.class);
 
+
 	interface PerunWuiRegistrarCss extends CssResource {
 
 		String page();
@@ -24,6 +25,12 @@ public interface PerunWuiRegistrarResources extends ClientBundle {
 		String grid();
 
 		String header();
+
+		String status();
+
+		String preview();
+
+		String checkbox(); // External
 	}
 
 	@Source("css/PerunWuiRegistrar.gss")

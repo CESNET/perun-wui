@@ -23,6 +23,10 @@
 .table {
 	margin-bottom: 0px;
 }
+.table table {
+	/*because of PerunLoader width inside table*/
+	width: 100%;
+}
 /* table borders */
 .table table thead {
 	border-bottom: 1px solid #ddd;
@@ -45,11 +49,10 @@ a.linkCell {
 .gwtb3-cell {
 	/* Minimum row height */
 	min-height: 30px !important;
-	line-height: 2em !important;
 	/* Word wrapping and align */
 	word-wrap: break-word !important;
 	/*word-break: break-all !important;*/
-	vertical-align: text-top !important;
+	vertical-align: middle !important;
 	padding: 8px 5px;
 }
 /* Fix padding of cell in last column to prevent content from hiding beneath the table's scroll bar */
@@ -124,6 +127,10 @@ th.gwtb3-d {
 	border-top-right-radius: 4px !important;
 	border-bottom-right-radius: 4px !important;
 }
+.emailFormItem .dropdown-menu {
+	right: 0;
+	left: auto;
+}
 
 .passwordFormItemFirst {
 	border-top-right-radius: 4px !important;
@@ -144,6 +151,13 @@ th.gwtb3-d {
 	border-bottom-right-radius: 4px !important;
 	border-bottom-left-radius: 4px !important;
 }
+
+.radioboxDivider {
+	border-bottom: 1px solid #dddddd;
+	margin-top: 7px;
+	margin-bottom: -4px;
+}
+
 
 /* MENU FILTER WIDGET - SUGGEST BOX */
 .gwt-SuggestBoxPopup {
@@ -238,4 +252,31 @@ th.gwtb3-d {
 	background-repeat: repeat-x;
 	outline: 0;
 	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0088cc', endColorstr='#ff0077b3', GradientType=0);
+}
+
+/* GwtBootstrap3 FIXES */
+
+.alert h1,
+.alert h2,
+.alert h3,
+.alert h4,
+.alert h5,
+.alert h6 {
+	margin-bottom: 0px;
+}
+.alert .gwt-HTML > p:last-child {
+	margin-bottom: 0px;
+}
+.bootstrap-select.disabled {
+	cursor: not-allowed;
+}
+.bootstrap-select.disabled > .selectpicker {
+	opacity: 1;
+	color: rgb(85, 85, 85);
+	background-color: #eee;
+}
+
+/* GWT phantom div fix (it is there for measuring cm on real device for GWT. Maybe cm in gwt will not work properly) */
+body > div[aria-hidden="true"] {
+	right: 0px;
 }

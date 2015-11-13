@@ -46,7 +46,7 @@ public class Application extends JavaScriptObject {
 	 * @param extSourceLoa level of assurance of user in external source
 	 * @return Application object to submit to Perun.
 	 */
-	static public Application createNew(Vo vo, Group group, ApplicationType type, String fedInfo, String actor, String extSourceName, String extSourceType, int extSourceLoa) {
+	static public Application createNew(Vo vo, Group group, ApplicationType type, String fedInfo, String actor, String extSourceName, String extSourceType, int extSourceLoa, User user) {
 
 		Application app = new JSONObject().getJavaScriptObject().cast();
 
@@ -66,6 +66,7 @@ public class Application extends JavaScriptObject {
 		app.setExtSourceType(extSourceType);
 		app.setExtSourceLoa(extSourceLoa);
 		app.setObjectType("Application");
+		app.setUser(user);
 		return app;
 	}
 

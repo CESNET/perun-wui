@@ -2,27 +2,30 @@ package cz.metacentrum.perun.wui.registrar.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
+import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
+import cz.metacentrum.perun.wui.registrar.widgets.items.SubmitButton;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.FieldSet;
 import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
+import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
-import org.gwtbootstrap3.extras.growl.client.ui.Growl;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlPosition;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Utility class used to handle Perun Application forms.
@@ -31,22 +34,31 @@ import java.util.ArrayList;
  */
 public class PerunForm extends FieldSet {
 
-	private String lang = LocaleInfo.getCurrentLocale().getLocaleName().equals("default") ? "en" : LocaleInfo.getCurrentLocale().getLocaleName();
+	// LABEL_SIZE + WIDGET_WITH_TEXT_SIZE should be 12
+	// LABEL_OFFSET should be same as LABEL_SIZE
+	public static final ColumnSize LABEL_SIZE = ColumnSize.MD_2;
+	public static final ColumnOffset LABEL_OFFSET = ColumnOffset.MD_2;
+	public static final ColumnSize WIDGET_WITH_TEXT_SIZE = ColumnSize.MD_10;
+	// WIDGET_SIZE + STATUS_SIZE should be 12
+	public static final ColumnSize WIDGET_SIZE = ColumnSize.SM_6;
+	public static final ColumnSize STATUS_SIZE = ColumnSize.SM_6;
 
-	// TRUE if only text preview with (prefilled)value should be shown
-	private boolean onlyPreview = false;
-	private boolean seeHiddenItems = false;
+	// contains info about onlyPreview and seeHiddenItems
+	private PerunFormItemsGenerator generator;
+	private boolean onlyPreview;
+	private boolean seeHiddenItems;
 	private Application app;
 	private JsonEvents onSubmitEvent;
-
 	private PerunTranslation perunTranslation = GWT.create(PerunTranslation.class);
 
-	ArrayList<PerunFormItem> items = new ArrayList<PerunFormItem>();
+	private List<PerunFormItem> items = new ArrayList<>();
 
 	/**
 	 * Create form instance
 	 */
-	public PerunForm() {}
+	public PerunForm() {
+		generator = new PerunFormItemsGeneratorImpl(this);
+	}
 
 	/**
 	 * Create form instance with possibility to set 'only preview' state.
@@ -54,6 +66,7 @@ public class PerunForm extends FieldSet {
 	 * @param onlyPreview TRUE = form will display only preview / FALSE = form will allow editing
 	 */
 	public PerunForm(boolean onlyPreview) {
+		this();
 		this.onlyPreview = onlyPreview;
 	}
 
@@ -61,24 +74,18 @@ public class PerunForm extends FieldSet {
 	 * Create form instance with possibility to set 'only preview' state.
 	 *
 	 * @param onlyPreview TRUE = form will display only preview / FALSE = form will allow editing
+	 * @param seeHiddenItems TRUE = form will display also hidden items
 	 */
-	public PerunForm(boolean onlyPreview, boolean seeHidden) {
-		this.onlyPreview = onlyPreview;
-		this.seeHiddenItems = seeHidden;
+	public PerunForm(boolean onlyPreview, boolean seeHiddenItems) {
+		this(onlyPreview);
+		this.seeHiddenItems = seeHiddenItems;
 	}
 
-	public void addFormItem(ApplicationFormItemData itemData) {
+	public void addFormItems(List<ApplicationFormItemData> items) {
 
-		if (itemData != null) {
+		if (items != null) {
 
-			PerunFormItem item = new PerunFormItem(this, itemData, lang);
-
-			if (item != null) items.add(item);
-
-			// if visible append to form
-			if (item.isVisible() || seeHiddenItems) {
-				add(item);
-			}
+			addPerunFormItems(generator.generatePerunFormItems(items));
 
 		}
 
@@ -89,63 +96,82 @@ public class PerunForm extends FieldSet {
 	 *
 	 * @param items Items to set.
 	 */
-	public void setFormItems(ArrayList<ApplicationFormItemData> items) {
+	public void setFormItems(List<ApplicationFormItemData> items) {
 
 		// clear form
 		this.items.clear();
 		this.clear();
 
 		// add items
-		if (items != null) {
-			for (ApplicationFormItemData item : items) {
-				addFormItem(item);
-			}
-		}
-
-		if (items.isEmpty()) {
-			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
-		}
+		addFormItems(items);
 
 	}
 
-	public void addPerunFormItem(PerunFormItem item) {
+	public void addPerunFormItems(List<PerunFormItem> items) {
 
-		if (item != null)  {
+		if (items != null)  {
 
-			item.setForm(this);
-			items.add(item);
-
-			// if visible append to form
-			if (item.isVisible() || seeHiddenItems) {
-				add(item);
-			}
-
-		}
-
-	}
-
-	/**
-	 * Set form items to form. Form is cleared before set
-	 *
-	 * @param items Items to set.
-	 */
-	public void setPerunFormItems(ArrayList<PerunFormItem> items) {
-
-		// clear form
-		this.items.clear();
-		this.clear();
-
-		// add items
-		if (items != null) {
 			for (PerunFormItem item : items) {
-				addPerunFormItem(item);
+				add(item);
 			}
+			this.items.addAll(items);
+
 		}
 
-		if (items.isEmpty()) {
+		if (this.items.isEmpty()) {
 			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
 		}
 
+	}
+
+	/**
+	 * Set form items to form. Form is cleared before set
+	 *
+	 * @param items Items to set.
+	 */
+	public void setPerunFormItems(List<PerunFormItem> items) {
+
+		// clear form
+		this.items.clear();
+		this.clear();
+
+		addPerunFormItems(items);
+
+	}
+
+	/**
+	 * Get form items of form.
+	 *
+	 * @return unmodifiable list of PerunFormItems
+	 */
+	public List<PerunFormItem> getPerunFormItems() {
+		return Collections.unmodifiableList(items);
+	}
+
+	/**
+	 * perform auto submit if form contains auto submit button. Do nothing otherwise.
+	 */
+	public void performAutoSubmit() {
+
+		SubmitButton autoSubmit = getAutoSubmitButton(items);
+		if (autoSubmit != null && !isOnlyPreview()) {
+			submit(autoSubmit.getButton());
+		}
+	}
+
+	/**
+	 * @return SubmitButton if items contains auto submit button, null otherwise.
+	 */
+	private SubmitButton getAutoSubmitButton(List<PerunFormItem> items) {
+		for (PerunFormItem item : items) {
+			if (item instanceof SubmitButton) {
+				SubmitButton button = (SubmitButton) item;
+				if (button.hasAutoSubmit()) {
+					return button;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -155,62 +181,32 @@ public class PerunForm extends FieldSet {
 	 */
 	public void submit(final PerunButton button) {
 
-		// force validation
-		boolean scrolled = false;
-		for (PerunFormItem item : items) {
-			if (!item.isValid(true) && !scrolled) {
-				int top = item.getFormItemWidget().getAbsoluteTop();
-				Window.scrollTo(0, (top-85 >= 0) ? top-85 : top);
-				scrolled = true;
-			}
-		}
-
-		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
+		validateAll(items, new Events<Boolean>() {
 			@Override
-			public boolean execute() {
+			public void onFinished(Boolean result) {
 
-				boolean processing = false;
-				boolean valid = true;
+				button.setProcessing(false);
+				button.setEnabled(true);
 
-				for (PerunFormItem item : items) {
-					if (!item.isValid(false)) {
-						valid = false;
-						if (item.getValidator() != null) {
-							if (item.getValidator().isProcessing()) {
-								processing = true;
-								break;
-							}
-						}
+				if (result) {
+
+					/* debug logging
+					for (PerunFormItem item : items) {
+						GWT.log(item.getItemData().getFormItem().getShortname() + " : " + item.getValue());
 					}
-				}
-				// re-check after 400ms
-				if (processing) {
+					GWT.log(app.toString());*/
 
-					button.setProcessing(true);
-					button.setEnabled(false);
-
-					return true;
-
-				} else if (!valid) {
-
-					button.setProcessing(false);
-					button.setEnabled(true);
-					return false;
-
-				} else {
-
-					// create form
 					RegistrarManager.createApplication(app, getFormItemData(), new JsonEvents() {
 						@Override
 						public void onFinished(JavaScriptObject jso) {
 
 							button.setProcessing(false);
 							button.setEnabled(true);
-
+							/*
 							GrowlOptions go = new GrowlOptions();
-							go.setPosition(GrowlPosition.TOP_CENTER);
 							go.setType(GrowlType.SUCCESS);
 							Growl.growl("Form submitted !!", go);
+							*/
 
 							if (onSubmitEvent != null) onSubmitEvent.onFinished(jso);
 
@@ -231,13 +227,89 @@ public class PerunForm extends FieldSet {
 						}
 					});
 
-					return false;
-
 				}
 			}
-		}, 400);
+
+			@Override
+			public void onError(PerunException error) {
+				// Shouldn't happen
+			}
+
+			@Override
+			public void onLoadingStart() {
+
+				button.setProcessing(true);
+				button.setEnabled(false);
+			}
+		});
+
 
 	}
+
+
+	/**
+	 * Validate all PerunFormItems and return true (in callback.onFinished() method) if all of them are valid.
+	 *
+	 * @param items
+	 * @param events callback events
+	 */
+	private void validateAll(final List<PerunFormItem> items, final Events<Boolean> events) {
+
+		if (items.size() == 0) {
+			events.onLoadingStart();
+			events.onFinished(true);
+			return;
+		}
+
+		final int startCount = items.size();
+		final int[] currentCount = {0};
+		final boolean[] valid = {true};
+		final boolean[] firstLoop = {true};
+
+		for (final PerunFormItem item : items) {
+
+			item.validate(new Events<Boolean>() {
+				@Override
+				public void onFinished(Boolean result) {
+					if (!result) {
+						nonvalid();
+					}
+					increment();
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					nonvalid();
+					increment();
+				}
+
+				@Override
+				public void onLoadingStart() {
+					if (firstLoop[0]) {
+						events.onLoadingStart();
+						firstLoop[0] = false;
+					}
+				}
+
+				private void increment() {
+					currentCount[0]++;
+					if (currentCount[0] >= startCount) {
+						events.onFinished(valid[0]);
+					}
+				}
+
+				private void nonvalid() {
+					if (valid[0]) {
+						int top = item.getAbsoluteTop();
+						Window.scrollTo(0, (top - 85 >= 0) ? top - 85 : 0);
+						item.focus();
+						valid[0] = false;
+					}
+				}
+			});
+		}
+	}
+
 
 	/**
 	 * Is form meant only for preview
@@ -245,7 +317,7 @@ public class PerunForm extends FieldSet {
 	 * @return TRUE = preview / FALSE = editing
 	 */
 	public boolean isOnlyPreview() {
-		return onlyPreview;
+		return this.onlyPreview;
 	}
 
 	/**
@@ -258,7 +330,7 @@ public class PerunForm extends FieldSet {
 	}
 
 	public boolean isSeeHiddenItems() {
-		return seeHiddenItems;
+		return this.seeHiddenItems;
 	}
 
 	public void setSeeHiddenItems(boolean seeHiddenItems) {
@@ -281,15 +353,15 @@ public class PerunForm extends FieldSet {
 		this.onSubmitEvent = onSubmitEvent;
 	}
 
-	private ArrayList<ApplicationFormItemData> getFormItemData() {
+	private List<ApplicationFormItemData> getFormItemData() {
 
 		// convert data
-		ArrayList<ApplicationFormItemData> data = new ArrayList<ApplicationFormItemData>();
+		List<ApplicationFormItemData> data = new ArrayList<ApplicationFormItemData>();
 		for (PerunFormItem item : items) {
 
 			String value = item.getValue();
-			String prefilled = item.getItem().getPrefilledValue();
-			JSONObject formItemJSON = new JSONObject(item.getItem().getFormItem());
+			String prefilled = item.getItemData().getPrefilledValue();
+			JSONObject formItemJSON = new JSONObject(item.getItemData().getFormItem());
 
 			// remove text (locale), saves data transfer & removes problem with parsing locale
 			formItemJSON.put("i18n", new JSONObject());
@@ -298,7 +370,7 @@ public class PerunForm extends FieldSet {
 			ApplicationFormItem formItem = formItemJSON.getJavaScriptObject().cast();
 
 			// prepare package with data
-			ApplicationFormItemData itemData = ApplicationFormItemData.construct(formItem, formItem.getShortName(), value, prefilled, item.getItem().getAssuranceLevel() != null ? item.getItem().getAssuranceLevel() : "");
+			ApplicationFormItemData itemData = ApplicationFormItemData.construct(formItem, formItem.getShortname(), value, prefilled, item.getItemData().getAssuranceLevel() != null ? item.getItemData().getAssuranceLevel() : "");
 
 			data.add(itemData);
 
@@ -308,4 +380,17 @@ public class PerunForm extends FieldSet {
 
 	}
 
+	/**
+	 * @return code of current language.
+     */
+	public String getLang() {
+		// always EN if no native language is defined in Perun.
+		if (Utils.getNativeLanguage() == null) {
+			return "en";
+		}
+		if (LocaleInfo.getCurrentLocale().getLocaleName().equals("default")) {
+			return "en";
+		}
+		return  LocaleInfo.getCurrentLocale().getLocaleName();
+	}
 }
