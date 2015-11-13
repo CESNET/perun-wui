@@ -12,6 +12,7 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Implementation of {@link ColumnProvider ColumnProvider}
@@ -62,13 +63,28 @@ public class AttributeDefinitionColumnProvider extends ColumnProvider<AttributeD
 	public PerunDataGrid.PerunFilterEvent<AttributeDefinition> getDefaultFilterEvent() {
 		return new PerunDataGrid.PerunFilterEvent<AttributeDefinition>() {
 			@Override
-			public boolean filterOnObject(String text, AttributeDefinition object) {
-				if (object != null) {
-					if (object.getName().toLowerCase().contains(text.toLowerCase())
-							|| object.getURN().toLowerCase().contains(text.toLowerCase()))
+			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, AttributeDefinition object) {
+
+				if (object != null){
+					if (columnTypeSet.isEmpty() && object.getFriendlyName().toLowerCase().contains(text.toLowerCase())){
 						return true;
-				}
-				return false;
+					}
+					for (PerunColumnType columnType : columnTypeSet){
+						if(columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).toLowerCase().startsWith(text.toLowerCase())){
+							return true;
+						}else if(columnType.equals(PerunColumnType.ATTR_FRIENDLY_NAME) && object.getFriendlyName().toLowerCase().contains(text.toLowerCase())) {
+							return true;
+						}else if(columnType.equals(PerunColumnType.ATTR_DEF) && object.getDefinition().toLowerCase().startsWith(text.toLowerCase())) {
+							return true;
+						}else if(columnType.equals(PerunColumnType.ATTR_TYPE) && object.getType().toLowerCase().contains(text.toLowerCase())) {
+							return true;
+						}else if(columnType.equals(PerunColumnType.DESCRIPTION) && object.getDescription() != null && object.getDescription().toLowerCase().contains(text.toLowerCase())) {
+							return true;
+						}else if(columnType.equals(PerunColumnType.ATTR_ENTITY) && object.getEntity().toLowerCase().startsWith(text.toLowerCase())) {
+							return true;
+						}
+					}
+				}return false;
 			}
 		};
 	}

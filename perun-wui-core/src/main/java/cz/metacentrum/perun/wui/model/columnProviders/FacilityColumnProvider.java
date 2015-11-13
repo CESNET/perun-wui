@@ -15,6 +15,7 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Set;
 
 /**
  * Implementation of {@link ColumnProvider ColumnProvider}
@@ -63,14 +64,26 @@ public class FacilityColumnProvider extends ColumnProvider<Facility> {
 	public PerunDataGrid.PerunFilterEvent<Facility> getDefaultFilterEvent() {
 		return new PerunDataGrid.PerunFilterEvent<Facility>() {
 			@Override
-			public boolean filterOnObject(String text, Facility object) {
+			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, Facility object) {
 				if (object != null) {
-					if (object.getName().toLowerCase().contains(text.toLowerCase())) return true;
+					if (columnTypeSet.isEmpty() && object.getName().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					}
+					for (PerunColumnType columnType : columnTypeSet) {
+						if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).toLowerCase().startsWith(text.toLowerCase())) {
+							return true;
+						} else if (columnType.equals(PerunColumnType.NAME) && object.getName().toLowerCase().contains(text.toLowerCase())) {
+							return true;
+						} else if (columnType.equals(PerunColumnType.DESCRIPTION) && object.getDescription() != null && object.getDescription().toLowerCase().contains(text.toLowerCase())) {
+							return true;
+						}
+					}
 				}
 				return false;
 			}
 		};
 	}
+
 
 	@Override
 	public void addColumnToTable(PerunDataGrid<Facility> table, PerunColumnType column) {

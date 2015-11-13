@@ -11,11 +11,19 @@ import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.SuggestOracle;
+import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import cz.metacentrum.perun.wui.widgets.SuggestBox;
+import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
+import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
+import org.gwtbootstrap3.client.ui.AnchorListItem;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+
+import java.util.HashMap;
+import java.util.Set;
 
 /**
  * Utility class for common actions with Ui widgets and their binding.
@@ -116,7 +124,7 @@ public class UiUtils {
 			}
 		});
 
-		// filter table when suggestion is selected
+		//filter table when suggestion is selected
 		box.addSelectionHandler(new SelectionHandler<SuggestOracle.Suggestion>() {
 			public void onSelection(SelectionEvent<SuggestOracle.Suggestion> event) {
 				table.filterTable(event.getSelectedItem().getReplacementString());
@@ -133,6 +141,28 @@ public class UiUtils {
 			}
 		});
 
+	}
+
+	/**
+	 * add dropdown to set
+	 *
+	 * @param table        Table to bind filtering to
+	 */
+	public static <T extends JavaScriptObject,  C extends SuggestBox> void bindDropdown(final HashMap<AnchorListItem, PerunColumnType> anchorMap, final PerunDataGrid<T> table){
+		Set<AnchorListItem> keySet = anchorMap.keySet();
+		for (final AnchorListItem anchor : keySet){
+			anchor.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					if (anchor.getIcon().equals(IconType.CHECK)){
+						anchor.setIcon(IconType.MINUS);
+					}else{
+						anchor.setIcon(IconType.CHECK);
+					}
+					table.updateColumn(anchorMap.get(anchor));
+				}
+			});
+		}
 	}
 
 	/**

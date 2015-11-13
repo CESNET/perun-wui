@@ -21,11 +21,14 @@ import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedSuggestBox;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
+import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
+
+import java.util.HashMap;
 
 /**
  * PERUN ADMIN - SERVICES MANAGEMENT VIEW
@@ -51,6 +54,13 @@ public class ServicesManagementView extends ViewImpl implements ServicesManageme
 
 	ServicesManagementView view = this;
 
+	@UiField AnchorListItem idDropdown;
+	@UiField AnchorListItem nameDropdown;
+	@UiField Button dropdown;
+
+	private HashMap<AnchorListItem, PerunColumnType> anchorColumnMap;
+
+
 	interface ServicesManagementViewUiBinder extends UiBinder<Widget, ServicesManagementView> {
 	}
 
@@ -61,9 +71,15 @@ public class ServicesManagementView extends ViewImpl implements ServicesManageme
 		remove = PerunButton.getButton(PerunButtonType.REMOVE, ButtonType.DANGER, "Remove selected service(s)");
 
 		initWidget(uiBinder.createAndBindUi(this));
+		anchorColumnMap = new HashMap<AnchorListItem, PerunColumnType>();
+		anchorColumnMap.put(idDropdown, PerunColumnType.ID);
+		anchorColumnMap.put(nameDropdown, PerunColumnType.NAME);
+
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
+		UiUtils.bindDropdown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
+		UiUtils.bindTableLoading(grid, dropdown, true);
 		UiUtils.bindTableSelection(grid, remove);
 
 		draw();

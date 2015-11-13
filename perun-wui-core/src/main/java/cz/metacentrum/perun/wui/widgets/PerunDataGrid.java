@@ -15,10 +15,7 @@ import cz.metacentrum.perun.wui.widgets.cells.PerunCheckboxCell;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * This is wrapper around standard GridTable which provides necessary and most common functionality used in Perun GUI.
@@ -77,6 +74,8 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	Map<Column<T, ?>, Header<?>> columnHeaders = new HashMap<>();
 	Map<Column<T, ?>, Header<?>> columnFooters = new HashMap<>();
 
+	Set<PerunColumnType> columnTypeSet = new HashSet<>();
+
 	// loading widget used for table loading / filtering / error
 	PerunLoader loaderWidget;
 
@@ -92,11 +91,12 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 		 * Return TRUE if filtering rule should add object to table.
 		 * FALSE otherwise.
 		 *
+		 * @param columnTypeSet   set of columns
 		 * @param text   filtering input
 		 * @param object object to filter on
 		 * @return TRUE if object should be added to table
 		 */
-		public boolean filterOnObject(String text, T object);
+		public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, T object);
 
 	}
 
@@ -677,7 +677,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 		} else {
 			// do filtering
 			for (T object : backup) {
-				if (filter.filterOnObject(text, object)) {
+				if (filter.filterOnObject(columnTypeSet, text, object)) {
 					content.add(object);
 				}
 			}
@@ -689,6 +689,15 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 		sortTable();
 		refresh();
 
+	}
+
+	/**
+	 * Remove or add column to set.
+	 */
+	public void updateColumn(PerunColumnType perunColumnType){
+		if (columnTypeSet.contains(perunColumnType)){
+			columnTypeSet.remove(perunColumnType);
+		}else columnTypeSet.add(perunColumnType);
 	}
 
 	/**

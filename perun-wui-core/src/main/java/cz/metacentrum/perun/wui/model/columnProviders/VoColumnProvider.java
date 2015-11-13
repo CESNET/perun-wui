@@ -12,6 +12,7 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Implementation of {@link cz.metacentrum.perun.wui.model.ColumnProvider ColumnProvider}
@@ -59,11 +60,20 @@ public class VoColumnProvider extends ColumnProvider<Vo> {
 	public PerunDataGrid.PerunFilterEvent<Vo> getDefaultFilterEvent() {
 		return new PerunDataGrid.PerunFilterEvent<Vo>() {
 			@Override
-			public boolean filterOnObject(String text, Vo object) {
+			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, Vo object) {
 				if (object != null) {
-					if (object.getName().toLowerCase().startsWith(text.toLowerCase()) ||
-							object.getShortName().toLowerCase().startsWith(text.toLowerCase()))
+					if (columnTypeSet.isEmpty() && object.getName().toLowerCase().contains(text.toLowerCase())) {
 						return true;
+					}
+					for (PerunColumnType columnType : columnTypeSet) {
+						if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).toLowerCase().startsWith(text.toLowerCase())) {
+							return true;
+						} else if (columnType.equals(PerunColumnType.NAME) && object.getName().toLowerCase().contains(text.toLowerCase())) {
+							return true;
+						} else if (columnType.equals(PerunColumnType.VO_SHORT_NAME) && object.getShortName().toLowerCase().contains(text.toLowerCase())) {
+							return true;
+						}
+					}
 				}
 				return false;
 			}

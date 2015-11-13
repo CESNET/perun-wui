@@ -9,6 +9,7 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Implementation of {@link cz.metacentrum.perun.wui.model.ColumnProvider ColumnProvider}
@@ -57,10 +58,21 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 
 		return new PerunDataGrid.PerunFilterEvent<RichUser>() {
 			@Override
-			public boolean filterOnObject(String text, RichUser object) {
+			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, RichUser object) {
 				if (object != null) {
-					if (object.getName().toLowerCase().startsWith(text.toLowerCase())) {
+					if (columnTypeSet.isEmpty() && object.getName().toLowerCase().contains(text.toLowerCase())) {
 						return true;
+					}
+					for (PerunColumnType columnType : columnTypeSet) {
+						if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).toLowerCase().startsWith(text.toLowerCase())) {
+							return true;
+						} else if (columnType.equals(PerunColumnType.NAME) && object.getName().toLowerCase().startsWith(text.toLowerCase())) {
+							return true;
+						} else if (columnType.equals(PerunColumnType.USER_ORGANIZATION) && object.getOrganization().toLowerCase().startsWith(text.toLowerCase())) {
+							return true;
+						} else if (columnType.equals(PerunColumnType.USER_EMAIL) && object.getPreferredEmail().toLowerCase().startsWith(text.toLowerCase())) {
+							return true;
+						}
 					}
 				}
 				return false;

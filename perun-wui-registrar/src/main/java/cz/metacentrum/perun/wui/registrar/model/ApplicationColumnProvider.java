@@ -68,7 +68,7 @@ public class ApplicationColumnProvider extends cz.metacentrum.perun.wui.model.co
 	public PerunDataGrid.PerunFilterEvent<Application> getDefaultFilterEvent() {
 		return new PerunDataGrid.PerunFilterEvent<Application>() {
 			@Override
-			public boolean filterOnObject(String text, Application object) {
+			public boolean filterOnObject(PerunColumnType perunColumnType, String text, Application object) {
 				if (object != null) {
 
 					// compare by vo

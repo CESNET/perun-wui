@@ -10,6 +10,7 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 /**
  * Implementation of {@link cz.metacentrum.perun.wui.model.ColumnProvider ColumnProvider}
@@ -62,7 +63,7 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 	public PerunDataGrid.PerunFilterEvent<Application> getDefaultFilterEvent() {
 		return new PerunDataGrid.PerunFilterEvent<Application>() {
 			@Override
-			public boolean filterOnObject(String text, Application object) {
+			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, Application object) {
 				if (object != null) {
 
 					// compare by vo
