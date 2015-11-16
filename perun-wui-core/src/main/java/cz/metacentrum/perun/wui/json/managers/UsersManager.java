@@ -56,7 +56,7 @@ public class UsersManager {
 
 		JsonClient client = new JsonClient(events);
 		client.put("searchString", searchString);
-		client.put("attrNames", attrNames);
+		client.put("attrsNames", attrNames);
 		return client.call(USERS_MANAGER + "findRichUsersWithAttributes");
 	}
 
