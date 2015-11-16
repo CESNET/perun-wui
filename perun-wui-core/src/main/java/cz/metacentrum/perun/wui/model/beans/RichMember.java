@@ -164,7 +164,7 @@ public class RichMember extends Member {
 		ArrayList<String> list = new ArrayList<>();
 		for (Attribute a : JsUtils.<Attribute>jsoAsList(JsUtils.getNativePropertyArray(this, "userAttributes"))) {
 			if (a.getBaseFriendlyName().equals("login-namespace")) {
-				list.add(a.getFriendlyNameParameter() + ": " + a.getValue());
+				if (a.getValue() != null) list.add(a.getFriendlyNameParameter() + ": " + a.getValue());
 			}
 		}
 		Collections.sort(list, PerunComparator.getNativeComparator());

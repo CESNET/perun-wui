@@ -49,10 +49,11 @@ a.linkCell {
 .gwtb3-cell {
 	/* Minimum row height */
 	min-height: 30px !important;
+	line-height: 2em !important;
 	/* Word wrapping and align */
 	word-wrap: break-word !important;
 	/*word-break: break-all !important;*/
-	vertical-align: middle !important;
+	vertical-align: text-top !important;
 	padding: 8px 5px;
 }
 /* Fix padding of cell in last column to prevent content from hiding beneath the table's scroll bar */
