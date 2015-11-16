@@ -8,7 +8,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
@@ -20,19 +19,42 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.*;
+import cz.metacentrum.perun.wui.model.beans.Attribute;
+import cz.metacentrum.perun.wui.model.beans.ExtSource;
+import cz.metacentrum.perun.wui.model.beans.Group;
+import cz.metacentrum.perun.wui.model.beans.Identity;
+import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.model.ExceptionResolver;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
+import cz.metacentrum.perun.wui.registrar.pages.steps.GroupInitStep;
+import cz.metacentrum.perun.wui.registrar.pages.steps.Summary;
+import cz.metacentrum.perun.wui.registrar.pages.steps.VoExtOfferStep;
+import cz.metacentrum.perun.wui.registrar.pages.steps.VoExtStep;
+import cz.metacentrum.perun.wui.registrar.pages.steps.VoInitStep;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
+import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.constants.*;
+import org.gwtbootstrap3.client.ui.AnchorListItem;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.ButtonGroup;
+import org.gwtbootstrap3.client.ui.DropDownMenu;
+import org.gwtbootstrap3.client.ui.Image;
+import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
+import org.gwtbootstrap3.client.ui.ModalFooter;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
+import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+
+import static cz.metacentrum.perun.wui.model.beans.Application.ApplicationType;
 
 /**
  * View for displaying registration form of VO / Group
@@ -44,10 +66,14 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	interface FormViewUiBinder extends UiBinder<Widget, FormView> {
 	}
 
+	private FormView formView = this;
+
 	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
 	private Vo vo;
 	private Group group;
+	private boolean registeredUnknownMail;
+	private ExceptionResolver exceptionResolver;
 
 	@UiField
 	PerunForm form;
@@ -56,45 +82,58 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	Image logo;
 
 	@UiField
-	Alert notice;
+	AlertErrorReporter notice;
 
 	private PerunException displayedException;
 
 	@Inject
 	public FormView(FormViewUiBinder binder) {
 		initWidget(binder.createAndBindUi(this));
+		exceptionResolver = new ExceptionResolver();
 		draw();
 	}
 
-	public void draw() {
+	public PerunForm getForm() {
+		return form;
+	}
 
-		final PerunLoader loader = new PerunLoader();
-		form.add(loader);
+	public RegistrarTranslation getTranslation() {
+		return translation;
+	}
+
+	public void setRegisteredUnknownMail() {
+		registeredUnknownMail = true;
+	}
+
+	public boolean getRegisteredUnknownMail() {
+		return registeredUnknownMail;
+	}
+
+
+
+	public void draw() {
 
 		final String voName = Window.Location.getParameter("vo");
 		final String groupName = Window.Location.getParameter("group");
+		final PerunPrincipal pp = PerunSession.getInstance().getPerunPrincipal();
 
-		Scheduler.get().scheduleDeferred(new Command() {
+		// TODO - why it is here???
+		/*Scheduler.get().scheduleDeferred(new Command() {
 			@Override
 			public void execute() {
 				loader.getWidget().getElement().getFirstChildElement().setAttribute("style", "height: "+ (Window.getClientHeight()-100)+"px;");
 			}
-		});
+		});*/
 
 		if (voName == null || voName.isEmpty()) {
 			this.displayedException = PerunException.createNew("0", "WrongURL", "Missing parameters in URL.");
-			displayException(loader, displayedException);
+			resolveException(displayedException);
 			return;
 		}
 
-		final PerunPrincipal pp = PerunSession.getInstance().getPerunPrincipal();
 
-		// fed info
-		final String fedInfo = "{" + " displayName=\"" + pp.getAdditionInformation("displayName")+"\"" + " commonName=\"" + pp.getAdditionInformation("cn")+"\""
-		+ " givenName=\"" + pp.getAdditionInformation("givenName")+"\"" + " sureName=\"" + pp.getAdditionInformation("sn")+"\""
-		+ " loa=\"" + pp.getAdditionInformation("loa")+"\"" + " mail=\"" + pp.getAdditionInformation("mail")+"\""
-		+ " organization=\"" + pp.getAdditionInformation("o")+"\"" + " }";
-
+		final PerunLoader loader = new PerunLoader();
+		form.add(loader);
 		RegistrarManager.initializeRegistrar(voName, groupName, new JsonEvents() {
 
 			JsonEvents retry = this;
@@ -102,35 +141,41 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 
-				final RegistrarObject object = jso.cast();
+				final RegistrarObject registrar = jso.cast();
 
 				// recreate VO and group
-				vo = object.getVo();
+				vo = registrar.getVo();
 
 				if (groupName != null && !groupName.isEmpty()) {
-					group = object.getGroup();
+					group = registrar.getGroup();
 				}
 
-				ArrayList<Attribute> attrList = object.getVoAttributes();
+				ArrayList<Attribute> attrList = registrar.getVoAttributes();
 				for (Attribute a : attrList) {
 					if (a.getFriendlyName().equals("voLogoURL")) {
-						//PerunRegistrar.setLogo(a.getValue().replace("https://", "http://"));
-						// FIXME - for testing remove https
-						logo.setUrl(a.getValue().replace("https://", "http://"));
+						logo.setUrl(a.getValue());
 						logo.setVisible(true);
 					}
 				}
 
-				if (object.getException() != null) {
 
-					if (object.getException().getName().equals("VoNotExistsException") ||
-							object.getException().getName().equals("GroupNotExistsException")) {
-						displayException(loader, object.getException());
+
+				if (registrar.getException() != null) {
+					GWT.log("Exception " + registrar.getException().getMessage());
+					if (registrar.getException().getName().equals("VoNotExistsException") ||
+							registrar.getException().getName().equals("GroupNotExistsException") ||
+							registrar.getException().getName().equals("FormNotExistsException")) {
+						if (loader != null) {
+							loader.onFinished();
+							loader.removeFromParent();
+						}
+						resolveException(registrar.getException());
+
 						return;
 					}
 
 					// SEVERE EXCEPTION - DO NOT LOAD FORM
-					loader.onError(object.getException(), new ClickHandler() {
+					loader.onError(registrar.getException(), new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 							RegistrarManager.initializeRegistrar(voName, groupName, retry);
@@ -139,95 +184,56 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				} else {
 
-					// TODO - properly handle all cases and exceptions in object
-					if (!object.getVoFormInitial().isEmpty()) {
+					loader.onFinished();
+					loader.removeFromParent();
 
-						// VO initial
-						loader.onFinished();
-						loader.removeFromParent();
-						form.setFormItems(object.getVoFormInitial());
-						form.setApp(Application.createNew(vo, null, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+					if (isApplyingToGroup(registrar)) {
 
-						form.setOnSubmitEvent(new JsonEvents() {
-							@Override
-							public void onFinished(JavaScriptObject jso) {
+						if (groupFormExists(registrar)) {
 
-								// TODO - if group and groupForm != null then after submission redirect to group form
-								if (!object.getGroupFormInitial().isEmpty()) {
+							if (voInitialFormExists(registrar)) {
 
-									form.clear();
-									form.setFormItems(object.getGroupFormInitial());
-									form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
-									form.setOnSubmitEvent(new JsonEvents() {
-										@Override
-										public void onFinished(JavaScriptObject jso) {
+								(new VoInitStep(formView,
+										new GroupInitStep(formView,
+												new Summary(formView, ApplicationType.INITIAL, ApplicationType.INITIAL)
+										))).call(pp, registrar);
 
-											// TODO - success of VO + Group + redirect new
+							} else if (voExtensionFormExists(registrar)) {
 
-										}
-
-										@Override
-										public void onError(PerunException error) {
-											// TODO - display error for group
-										}
-
-										@Override
-										public void onLoadingStart() {
-
-										}
-									});
-
-
-								} else {
-									// TODO- done success of VO + redirect new
-								}
-							}
-
-							@Override
-							public void onError(PerunException error) {
-								// TODO - display error for VO
-							}
-
-							@Override
-							public void onLoadingStart() {
-
-							}
-						});
-
-					} else if (!object.getVoFormExtension().isEmpty()) {
-
-						if (group == null) {
-
-							// offer VO membership extension
-							loader.onFinished();
-							loader.removeFromParent();
-							form.setFormItems(object.getVoFormExtension());
-							form.setApp(Application.createNew(vo, null, Application.ApplicationType.EXTENSION, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
-
-							// TODO - events for success of VO extension + target extended
-
-						} else {
-
-							if (!object.getGroupFormInitial().isEmpty()) {
-
-								// TODO - ask for optional membership extension
-								// YES - display VO extension then redirect to Group init after
-								// NO - display Group init
-								loader.onFinished();
-								loader.removeFromParent();
-								form.setFormItems(object.getGroupFormInitial());
-								form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+								(new VoExtOfferStep(formView,
+										new VoExtStep(formView,
+												new GroupInitStep(formView,
+														new Summary(formView, ApplicationType.EXTENSION, ApplicationType.INITIAL))),
+										new GroupInitStep(formView,
+												new Summary(formView, null, ApplicationType.INITIAL)
+										))).call(pp, registrar);
 
 							} else {
 
-								// TODO - can't be member of group, offer VO extension
-								// YES - display VO extension
-								// NO - display Group error
-								loader.onFinished();
-								loader.removeFromParent();
-								form.setFormItems(object.getVoFormExtension());
-								form.setApp(Application.createNew(vo, null, Application.ApplicationType.EXTENSION, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
-								// TODO - events for success of VO extension + target extended
+								(new GroupInitStep(formView,
+										new Summary(formView, null, ApplicationType.INITIAL)
+								)).call(pp, registrar);
+
+							}
+
+						} else {
+
+							if (voInitialFormExists(registrar)) {
+
+								(new VoInitStep(formView,
+										new Summary(formView, ApplicationType.INITIAL, null)
+								)).call(pp, registrar);
+
+							} else if (voExtensionFormExists(registrar)) {
+
+								(new VoExtOfferStep(formView,
+										new VoExtStep(formView,
+												new Summary(formView, ApplicationType.EXTENSION, null)),
+										new Summary(formView, null, null))).call(pp, registrar);
+
+							} else {
+
+								(new Summary(formView, null, null)).call(pp, registrar);
 
 							}
 
@@ -235,54 +241,31 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 					} else {
 
-						// not init / not extension / check group
-						if (group != null) {
+						if (voInitialFormExists(registrar)) {
 
-							if (!object.getGroupFormInitial().isEmpty()) {
+							(new VoInitStep(formView,
+									new Summary(formView, ApplicationType.INITIAL, null)
+							)).call(pp, registrar);
 
-								loader.onFinished();
-								loader.removeFromParent();
-								form.setFormItems(object.getGroupFormInitial());
-								form.setApp(Application.createNew(vo, group, Application.ApplicationType.INITIAL, fedInfo, pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa()));
+						} else if (voExtensionFormExists(registrar)) {
 
-								// TODO - events for success of group initial + target new
-
-							} else {
-
-								// FIXME - can't be member of group -> display notice
-								// check extension exceptions
-								displayException(loader, object.getGroupFormInitialException());
-								return;
-
-							}
+							(new VoExtStep(formView,
+									new Summary(formView, ApplicationType.EXTENSION, null)
+							)).call(pp, registrar);
 
 						} else {
 
-							// FIXME - can't become member of VO / extend membership -> display better notice
-
-							if (object.getVoFormInitialException().getName().equals("AlreadyRegisteredException")) {
-
-								// check extension exceptions
-								displayException(loader, object.getVoFormExtensionException());
-								return;
-
-							} else {
-
-								// not registered in VO, show initial exceptions
-								displayException(loader, object.getVoFormInitialException());
-								return;
-
-							}
+							(new Summary(formView, null, null)).call(pp, registrar);
 
 						}
 
 					}
+					
 
 					// CHECK SIMILAR USERS
-					if (!object.getSimilarUsers().isEmpty()) {
-						showSimilarUsersDialog(object);
+					if (!registrar.getSimilarUsers().isEmpty()) {
+						showSimilarUsersDialog(registrar);
 					}
-
 				}
 
 			}
@@ -299,126 +282,46 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			@Override
 			public void onLoadingStart() {
-				loader.onLoading();
+				loader.onLoading(translation.preparingForm());
 			}
 		});
 
 	}
 
-	private void displaySuccess() {
-		// TODO - generic display success page
+
+
+	private boolean voInitialFormExists(RegistrarObject ro) {
+		return !ro.getVoFormInitial().isEmpty();
 	}
 
-	private void displayException(PerunLoader loader, PerunException ex) {
-
-		this.displayedException = ex;
-		notice.setType(AlertType.WARNING);
-
-		Button continueButton = new Button(translation.continueButton());
-		continueButton.setIcon(IconType.CHEVRON_RIGHT);
-		continueButton.setType(ButtonType.WARNING);
-		continueButton.setIconPosition(IconPosition.RIGHT);
-		continueButton.setMarginTop(20);
-
-		if (ex.getName().equals("ExtendMembershipException")) {
-
-			if (ex.getReason().equals("OUTSIDEEXTENSIONPERIOD")) {
-
-				String exceptionText = "<i>unlimited</i>";
-				if (ex.getExpirationDate() != null) exceptionText = ex.getExpirationDate().split(" ")[0];
-				notice.getElement().setInnerHTML("<h4>"+translation.cantExtendMembership()+"</h4><p>"+translation.cantExtendMembershipOutside(exceptionText));
-
-				if (Window.Location.getParameter("targetexisting") != null) {
-
-					continueButton.addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							Window.Location.replace(Window.Location.getParameter("targetexisting"));
-						}
-					});
-					notice.add(continueButton);
-
-				}
-
-			} else if (ex.getReason().equals("NOUSERLOA")) {
-
-				notice.getElement().setInnerHTML("<h4>"+translation.cantBecomeMember((group != null) ? group.getShortName() : vo.getName())+"</h4><p>"+translation.cantBecomeMemberLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-
-			} else if (ex.getReason().equals("INSUFFICIENTLOA")) {
-
-				notice.getElement().setInnerHTML("<h4>"+translation.cantBecomeMember((group != null) ? group.getShortName() : vo.getName())+"</h4><p>"+translation.cantBecomeMemberInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-
-			} else if (ex.getReason().equals("INSUFFICIENTLOAFOREXTENSION")) {
-
-				notice.getElement().setInnerHTML("<h4>"+translation.cantExtendMembership()+"</h4><p>"+translation.cantExtendMembershipInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-
-			}
-
-		} else if (ex.getName().equals("AlreadyRegisteredException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.alreadyRegistered((group != null) ? group.getShortName() : vo.getName())+"</h4>");
-
-			if (Window.Location.getParameter("targetexisting") != null) {
-
-				continueButton.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						Window.Location.replace(Window.Location.getParameter("targetexisting"));
-					}
-				});
-				notice.add(continueButton);
-
-			}
-
-		} else if (ex.getName().equals("DuplicateRegistrationAttemptException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+ translation.alreadySubmitted(((group != null) ? group.getShortName() : vo.getName())) + "</h4><p>"+translation.visitSubmitted(Window.Location.getHref().split("#")[0], translation.submittedTitle()));
-
-			if (Window.Location.getParameter("targetnew") != null) {
-
-				continueButton.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						Window.Location.replace(Window.Location.getParameter("targetnew"));
-					}
-				});
-				notice.add(continueButton);
-
-			}
-
-		} else if (ex.getName().equalsIgnoreCase("MissingRequiredDataException")) {
-
-			String missingItems = "<p><ul>";
-			if (!ex.getFormItems().isEmpty()) {
-				for (ApplicationFormItemData item : ex.getFormItems()) {
-					missingItems += "<li>" + translation.missingAttribute(item.getFormItem().getFederationAttribute());
-				}
-			}
-			missingItems += "<ul/>";
-
-			notice.getElement().setInnerHTML(translation.missingRequiredData(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())) + missingItems);
-
-		} else if (ex.getName().equalsIgnoreCase("VoNotExistsException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.voNotExistsException(Window.Location.getParameter("vo"))+"</h4>");
-
-		} else if (ex.getName().equalsIgnoreCase("GroupNotExistsException")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.groupNotExistsException(Window.Location.getParameter("group"))+"</h4>");
-
-		} else if (ex.getName().equalsIgnoreCase("WrongURL")) {
-
-			notice.getElement().setInnerHTML("<h4>"+translation.missingVoInURL()+"</h4>");
-
-		}
-
-		notice.setVisible(true);
-		if (loader != null) {
-			loader.onFinished();
-			loader.removeFromParent();
-		}
-
+	private boolean voExtensionFormExists(RegistrarObject ro) {
+		return !ro.getVoFormExtension().isEmpty();
 	}
+
+	private boolean groupFormExists(RegistrarObject ro) {
+		return !ro.getGroupFormInitial().isEmpty();
+	}
+
+	private boolean isApplyingToGroup(RegistrarObject ro) {
+		return (group != null);
+	}
+
+
+
+	public boolean resolveException(PerunException ex) {
+		Window.scrollTo(0, 0);
+		return exceptionResolver.resolve(ex, notice, vo, group);
+	}
+
+	public ExceptionResolver getExceptionResolver() {
+		return exceptionResolver;
+	}
+
+
+	public AlertErrorReporter getNotice() {
+		return notice;
+	}
+
 
 	private void showSimilarUsersDialog(RegistrarObject object) {
 
@@ -567,6 +470,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		modal.show();
 
 	}
+
 
 	private DropDownMenu getCertificatesJoinButton(ButtonGroup certGroup) {
 

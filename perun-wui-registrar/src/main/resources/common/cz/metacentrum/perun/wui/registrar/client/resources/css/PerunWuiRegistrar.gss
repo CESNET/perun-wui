@@ -1,5 +1,5 @@
 
-@def MIN_WIDTH 480px;
+@def MIN_WIDTH 320px;
 @def MIN_HEIGHT 320px;
 
 /* MAIN LAYOUT */
@@ -55,4 +55,34 @@ body {
     flex-grow: 1;
 
     margin-bottom: 10px;
+    overflow-x: auto;
+}
+.grid > div:last-child {
+    min-width: 767px;
+}
+
+
+/* HACKS */
+
+/* correctly animatable status (because of pulse animation) */
+.status {
+    display: inline-block;
+}
+
+/* LOOK */
+.preview {
+    margin: 0px;
+    height: auto;
+    min-height: 34px;
+}
+.preview i {
+    margin-top: 2px;
+}
+
+@external checkbox;
+.preview .checkbox label {
+    cursor: default;
+}
+.preview .checkbox label > span {
+    cursor: text;
 }

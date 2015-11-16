@@ -125,7 +125,7 @@ public class ApplicationColumnProvider extends cz.metacentrum.perun.wui.model.co
 			if (widthInPixels > 0) {
 				table.setColumnWidth(createdAtColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(createdAtColumn, "5%");
+				table.setColumnWidth(createdAtColumn, "10%");
 			}
 
 		} else if (PerunColumnType.APPLICATION_STATE.equals(column)) {
@@ -152,7 +152,7 @@ public class ApplicationColumnProvider extends cz.metacentrum.perun.wui.model.co
 			if (widthInPixels > 0) {
 				table.setColumnWidth(stateColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(stateColumn, "5%");
+				table.setColumnWidth(stateColumn, "10%");
 			}
 
 		} else if (PerunColumnType.APPLICATION_TYPE.equals(column)) {
@@ -179,7 +179,7 @@ public class ApplicationColumnProvider extends cz.metacentrum.perun.wui.model.co
 			if (widthInPixels > 0) {
 				table.setColumnWidth(typeColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(typeColumn, "5%");
+				table.setColumnWidth(typeColumn, "10%");
 			}
 
 		} if (PerunColumnType.APPLICATION_DETAIL.equals(column)) {
@@ -203,7 +203,7 @@ public class ApplicationColumnProvider extends cz.metacentrum.perun.wui.model.co
 			if (widthInPixels > 0) {
 				table.setColumnWidth(appDetailButtonColumn, widthInPixels + "px");
 			} else {
-				table.setColumnWidth(appDetailButtonColumn, "5%");
+				table.setColumnWidth(appDetailButtonColumn, "10%");
 			}
 
 		} else if (PerunColumnType.APPLICATION_VO_NAME.equals(column)) {

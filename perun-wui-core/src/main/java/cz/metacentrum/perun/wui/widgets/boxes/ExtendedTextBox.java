@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.widgets.boxes;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.regexp.shared.MatchResult;

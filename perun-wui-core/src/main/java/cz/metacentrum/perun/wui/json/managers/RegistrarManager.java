@@ -7,6 +7,7 @@ import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manager with standard callbacks to Perun's API (RegistrarManager).
@@ -206,7 +207,7 @@ public class RegistrarManager {
 	 *
 	 * @return Request unique request
 	 */
-	public static Request createApplication(Application application, ArrayList<ApplicationFormItemData> data, JsonEvents events) {
+	public static Request createApplication(Application application, List<ApplicationFormItemData> data, JsonEvents events) {
 
 		JsonClient client = new JsonClient(true, events);
 		if (application != null) {

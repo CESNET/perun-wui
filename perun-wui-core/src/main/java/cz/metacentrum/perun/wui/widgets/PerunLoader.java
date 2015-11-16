@@ -1,16 +1,15 @@
 package cz.metacentrum.perun.wui.widgets;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.model.PerunException;
 import org.gwtbootstrap3.client.ui.Alert;
-import org.gwtbootstrap3.client.ui.ButtonToolBar;
+import org.gwtbootstrap3.client.ui.Progress;
 import org.gwtbootstrap3.client.ui.ProgressBar;
 import org.gwtbootstrap3.client.ui.constants.ProgressBarType;
 
@@ -42,12 +41,11 @@ public class PerunLoader extends Composite {
 	private static PerunLoaderUiBinder ourUiBinder = GWT.create(PerunLoaderUiBinder.class);
 
 	Widget rootElement;
+	@UiField Progress progress;
 	@UiField ProgressBar bar;
-	@UiField Alert alert;
+	@UiField AlertErrorReporter alert;
 	@UiField Alert message;
-	@UiField ButtonToolBar tool;
-	@UiField PerunButton retry;
-	@UiField PerunButton report;
+	private HandlerRegistration lastRetryHandler;
 
 	String emptyMessage = "No items found.";
 
@@ -62,17 +60,6 @@ public class PerunLoader extends Composite {
 		initWidget(rootElement);
 		bar.setPercent(0);
 		alert.setVisible(false);
-
-		// common error reporting
-		report.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				if (catchedException != null) {
-					ErrorReporter reportBox = new ErrorReporter(catchedException);
-					reportBox.getWidget().show();
-				}
-			}
-		});
 
 	}
 
@@ -133,15 +120,18 @@ public class PerunLoader extends Composite {
 	 */
 	public void onLoading() {
 
-		state = PerunLoaderState.loading;
-		bar.getParent().setVisible(true);
-		bar.setVisible(true);
-		bar.setPercent(0);
-		bar.setType(ProgressBarType.DEFAULT);
-		alert.setVisible(false);
+		setVisible(true);
+		progress.setVisible(true);
 		message.setVisible(false);
+		alert.setVisible(false);
 
-		Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
+		state = PerunLoaderState.loading;
+		progress.setActive(true);
+		bar.setPercent(100);
+		bar.setType(ProgressBarType.DEFAULT);
+
+
+		/*Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
 			@Override
 			public boolean execute() {
 				if (state.equals(PerunLoaderState.loading)) {
@@ -154,7 +144,15 @@ public class PerunLoader extends Composite {
 					return false;
 				}
 			}
-		}, 100);
+		}, 100);*/
+
+	}
+
+	public void onLoading(String label) {
+
+		onLoading();
+
+		bar.setText(label);
 
 	}
 
@@ -167,7 +165,6 @@ public class PerunLoader extends Composite {
 		bar.getParent().setVisible(false);
 		message.setText(emptyMessage);
 		message.setVisible(true);
-
 	}
 
 	/**
@@ -175,11 +172,15 @@ public class PerunLoader extends Composite {
 	 */
 	public void onFinished(){
 
-		state = PerunLoaderState.finished;
-		bar.getParent().setVisible(false);
-
-		message.setText("Loading finished.");
+		progress.setVisible(true);
 		message.setVisible(true);
+		alert.setVisible(false);
+
+		state = PerunLoaderState.finished;
+		bar.setVisible(false);
+
+		// TODO ALERT
+		message.setText("Loading finished.");
 
 	}
 
@@ -201,19 +202,17 @@ public class PerunLoader extends Composite {
 	 */
 	public void onError(PerunException error, final ClickHandler handler) {
 
-		state = PerunLoaderState.error;
-		bar.getParent().setVisible(true);
-		bar.setType(ProgressBarType.DANGER);
-		alert.setText(error.getName() + ": " + error.getMessage());
+		progress.setVisible(true);
+		message.setVisible(false);
 		alert.setVisible(true);
 
-		tool.setVisible(true);
-		if (handler != null) {
-			retry.setVisible(true);
-			retry.addClickHandler(handler);
-		}
+		state = PerunLoaderState.error;
+		progress.setActive(false);
+		bar.setType(ProgressBarType.DANGER);
+		alert.setText(error.getName() + ": " + error.getMessage());
 
-		catchedException = error;
+		alert.setRetryHandler(handler);
+		alert.setReportInfo(error);
 
 	}
 

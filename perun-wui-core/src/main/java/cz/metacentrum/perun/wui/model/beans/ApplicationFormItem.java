@@ -63,8 +63,8 @@ public class ApplicationFormItem extends JavaScriptObject {
 	 *
 	 * @return shortName of form item.
 	 */
-	public final String getShortName() {
-		return JsUtils.getNativePropertyString(this, "shortName");
+	public final String getShortname() {
+		return JsUtils.getNativePropertyString(this, "shortname");
 	}
 
 	/**
@@ -72,8 +72,8 @@ public class ApplicationFormItem extends JavaScriptObject {
 	 *
 	 * @param shortName shortName to set
 	 */
-	public final native void setShortName(String shortName) /*-{
-		this.shortName = shortName;
+	public final native void setShortname(String shortName) /*-{
+		this.shortname = shortName;
 	}-*/;
 
 	/**
