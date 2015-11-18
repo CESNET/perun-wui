@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.admin.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
@@ -20,6 +21,7 @@ import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
 import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.model.PerunUncaughtExceptionHandler;
 import cz.metacentrum.perun.wui.pages.*;
 
 /**
@@ -50,6 +52,7 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 		bindPresenter(NotAuthorizedPresenter.class, NotAuthorizedPresenter.MyView.class, NotAuthorizedView.class, NotAuthorizedPresenter.MyProxy.class);
 		bindPresenter(NotFoundPresenter.class, NotFoundPresenter.MyView.class, NotFoundView.class, NotFoundPresenter.MyProxy.class);
 		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class, LogoutView.class, LogoutPresenter.MyProxy.class);
+		bindPresenter(ErrorReportPresenter.class, ErrorReportPresenter.MyView.class, ErrorReportView.class, ErrorReportPresenter.MyProxy.class);
 
 		// Perun Admin WUI specific pages
 		bindPresenter(VosManagementPresenter.class, VosManagementPresenter.MyView.class, VosManagementView.class, VosManagementPresenter.MyProxy.class);
@@ -75,14 +78,21 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 
-		// ensure injecting custom CSS styles of PerunWui
-		PerunResources.INSTANCE.gss().ensureInjected();
+		GWT.UncaughtExceptionHandler handler = new PerunUncaughtExceptionHandler();
+		GWT.setUncaughtExceptionHandler(handler);
 
-		PerunWuiAdminResources.INSTANCE.gss().ensureInjected();
+		// fix of confirmed GWT bug. exception handler doesn't catch exceptions in onModuleLoad.
+		try {
+			// ensure injecting custom CSS styles of PerunWui
+			PerunResources.INSTANCE.gss().ensureInjected();
 
-		// set default for Growl plugin
-		Utils.getDefaultGrowlOptions().makeDefault();
+			PerunWuiAdminResources.INSTANCE.gss().ensureInjected();
 
+			// set default for Growl plugin
+			Utils.getDefaultGrowlOptions().makeDefault();
+		} catch (RuntimeException e) {
+			handler.onUncaughtException(e);
+		}
 	}
 
 }

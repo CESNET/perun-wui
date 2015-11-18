@@ -14,6 +14,7 @@ public class PlaceTokens {
 	public static final String UNAUTHORIZED = "unauthorized";
 	public static final String LOGOUT = "logout";
 	public static final String HELP = "help";
+	public static final String ERROR = "error";
 
 	// PerunWui pages
 	public static final String PERUN_VOS = "perun-vos";
@@ -70,6 +71,10 @@ public class PlaceTokens {
 
 	public static String getHelp() {
 		return HELP;
+	}
+
+	public static String getError() {
+		return ERROR;
 	}
 
 	public static String getVos() {

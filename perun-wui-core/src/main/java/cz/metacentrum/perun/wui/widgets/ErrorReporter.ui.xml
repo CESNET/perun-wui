@@ -4,6 +4,8 @@
              xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
              xmlns:p.boxes='urn:import:cz.metacentrum.perun.wui.widgets.boxes'>
 
+	<ui:with field='tran' type='cz.metacentrum.perun.wui.client.resources.PerunTranslation'/>
+
 	<ui:style>
 
 	</ui:style>
@@ -13,26 +15,32 @@
 		<b:ModalHeader>
 			<b:Heading size="H3" marginTop="5" marginBottom="5">
 				<b:Icon ui:field="icon" type="BUG" fixedWidth="true" pull="LEFT" paddingTop="4"/>
-				<b.html:Text text="Report error"/>
+				<b.html:Text >
+					<ui:text from="{tran.reportError}" />
+				</b.html:Text>
 			</b:Heading>
 		</b:ModalHeader>
 		<b:ModalBody ui:field="modalBody">
 			<b:Form>
 				<b:FieldSet>
 					<b:FormGroup>
-						<b:FormLabel>Subject: </b:FormLabel>
+						<b:FormLabel><ui:text from="{tran.subject}" />: </b:FormLabel>
 						<p.boxes:ExtendedTextBox ui:field="subject"/>
 					</b:FormGroup>
 					<b:FormGroup>
-						<b:FormLabel>Message: </b:FormLabel>
+						<b:FormLabel><ui:text from="{tran.message}" />: </b:FormLabel>
 						<p.boxes:ExtendedTextArea placeholder="You can attach custom message describing what you tried to do." focus="true" ui:field="message" />
 					</b:FormGroup>
 				</b:FieldSet>
 			</b:Form>
 		</b:ModalBody>
 		<b:ModalFooter>
-			<p:PerunButton type="SUCCESS" text="Send report" icon="BUG" iconFixedWidth="true" ui:field="sendButton"/>
-			<p:PerunButton type="DEFAULT" text="Close" icon="CLOSE" iconFixedWidth="true" ui:field="cancelButton" />
+			<p:PerunButton type="SUCCESS" icon="BUG" iconFixedWidth="true" ui:field="sendButton">
+				<ui:text from="{tran.send}" />
+			</p:PerunButton>
+			<p:PerunButton type="DEFAULT" icon="CLOSE" iconFixedWidth="true" ui:field="cancelButton" >
+				<ui:text from="{tran.close}" />
+			</p:PerunButton>
 
 		</b:ModalFooter>
 	</b:Modal>
