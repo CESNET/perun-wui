@@ -20,15 +20,6 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Help")
 	public String help();
 
-	@DefaultMessage("Logout")
-	public String logout();
-
-	@DefaultMessage("Language")
-	public String language();
-
-	@DefaultMessage("English")
-	public String english();
-
 	// -------------- REGISTRATION FORM ------------------------ //
 
 	// TITLES

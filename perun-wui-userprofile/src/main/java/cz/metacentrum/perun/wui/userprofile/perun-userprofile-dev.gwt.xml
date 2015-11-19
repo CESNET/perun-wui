@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='PerunUserProfile'>
+<module rename-to='UserProfile'>
 
 	<inherits name="cz.metacentrum.perun.wui.userprofile.perun-userprofile"/>
 

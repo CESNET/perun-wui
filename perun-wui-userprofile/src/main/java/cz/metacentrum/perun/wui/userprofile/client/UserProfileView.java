@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.userprofile.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.http.client.UrlBuilder;
+import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -14,11 +15,15 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
+import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
+import org.gwtbootstrap3.client.ui.constants.IconPosition;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.html.Div;
 
 import java.util.Map;
@@ -28,14 +33,14 @@ import java.util.Map;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunUserProfileView extends ViewImpl implements PerunPresenter.MyView{
+public class UserProfileView extends ViewImpl implements PerunPresenter.MyView{
 
-	interface PerunUserProfileViewUiBinder extends UiBinder<Widget, PerunUserProfileView> {}
+	interface PerunUserProfileViewUiBinder extends UiBinder<Widget, UserProfileView> {}
 
 	@UiField
 	Div pageContent;
 
-	//private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private UserProfileTranslation translation = GWT.create(UserProfileTranslation.class);
 
 	@UiField
 	NavbarCollapse collapse;
@@ -49,9 +54,31 @@ public class PerunUserProfileView extends ViewImpl implements PerunPresenter.MyV
 	@UiField
 	static NavbarHeader navbarHeader;
 
+	@UiField
+	AnchorListItem user;
+
+	@UiField
+	AnchorButton language;
+
+	@UiField
+	AnchorListItem czech;
+
+	@UiField
+	AnchorListItem english;
+
 	@UiHandler(value="logout")
 	public void logoutClick(ClickEvent event) {
 		History.newItem("logout");
+	}
+
+	@UiHandler(value="czech")
+	public void czechClick(ClickEvent event) {
+		setLocale(Utils.getNativeLanguage());
+	}
+
+	@UiHandler(value="english")
+	public void englishClick(ClickEvent event) {
+		setLocale(Utils.ENGLISH_LANGUAGE);
 	}
 
 	/**
@@ -69,7 +96,7 @@ public class PerunUserProfileView extends ViewImpl implements PerunPresenter.MyV
 	}
 
 	@Inject
-	PerunUserProfileView(final PerunUserProfileViewUiBinder binder) {
+	UserProfileView(final PerunUserProfileViewUiBinder binder) {
 
 		initWidget(binder.createAndBindUi(this));
 
@@ -78,6 +105,36 @@ public class PerunUserProfileView extends ViewImpl implements PerunPresenter.MyV
 		logo.setWidth("auto");
 		logo.setHeight("50px");
 		navbarHeader.insert(logo, 0);
+
+		language.setText(translation.language());
+		logout.setText(translation.logout());
+
+		user.setText(PerunSession.getInstance().getUser().getFullName());
+
+		if (Utils.getNativeLanguage() != null) {
+
+			if ("default".equals(LocaleInfo.getCurrentLocale().getLocaleName()) ||
+					"en".equalsIgnoreCase(LocaleInfo.getCurrentLocale().getLocaleName())) {
+				// use english name of native language
+				czech.setText(Utils.getNativeLanguage().get("englishName"));
+				english.setIcon(IconType.CHECK);
+				english.setIconPosition(IconPosition.RIGHT);
+				czech.setIcon(null);
+			} else {
+				// use native name of native language
+				czech.setText(Utils.getNativeLanguage().get("nativeName"));
+				czech.setIcon(IconType.CHECK);
+				czech.setIconPosition(IconPosition.RIGHT);
+				english.setIcon(null);
+			}
+			english.setText(translation.english());
+
+		} else {
+			// no language switching
+			language.setVisible(false);
+		}
+
+		english.setText(translation.english());
 
 	}
 

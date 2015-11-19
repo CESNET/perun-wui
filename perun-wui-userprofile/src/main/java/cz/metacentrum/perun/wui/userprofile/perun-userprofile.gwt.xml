@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='PerunUserProfile'>
+<module rename-to='UserProfile'>
 
 	<!-- inherits base wui module  -->
 	<!-- support GWT Bootstrap 3 theme -->
@@ -9,12 +9,14 @@
 	<inherits name="com.google.gwt.inject.Inject"/>
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
 	<!-- define gin module injector -->
-	<set-configuration-property name="gin.ginjector.modules" value="cz.metacentrum.perun.wui.userprofile.client.PerunUserProfile"/>
+	<set-configuration-property name="gin.ginjector.modules" value="cz.metacentrum.perun.wui.userprofile.client.UserProfile"/>
 	<!-- bootstrap app before loading page -->
 	<set-configuration-property name="gwtp.bootstrapper" value="cz.metacentrum.perun.wui.client.PerunBootstrapper"/>
 
 	<!-- Specify the app entry point class. -->
-	<entry-point class="cz.metacentrum.perun.wui.userprofile.client.PerunUserProfile"/>
+	<entry-point class="cz.metacentrum.perun.wui.userprofile.client.UserProfile"/>
+
+	<extend-property name="locale" values="cs" />
 
 	<!--  Support only these browsers for devel -->
 	<set-property name="user.agent" value="gecko1_8"/>
