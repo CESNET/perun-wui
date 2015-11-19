@@ -7,7 +7,7 @@ import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunUserProfilePlaceTokens extends PlaceTokens {
+public class UserProfilePlaceTokens extends PlaceTokens {
 
 	// General Pages
 	public static final String PERSONAL = "personal";

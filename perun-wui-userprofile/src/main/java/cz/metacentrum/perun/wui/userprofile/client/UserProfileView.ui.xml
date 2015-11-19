@@ -1,0 +1,45 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui' xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
+			 xmlns:p.client='urn:import:cz.metacentrum.perun.wui.registrar.client'
+			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
+		>
+
+	<ui:with field="res" type="cz.metacentrum.perun.wui.userprofile.client.resources.UserProfileResources"/>
+
+	<ui:style>
+		.bottom { border-radius: 0px !important; }
+		.minWidthTop { min-width: 1200px; margin-bottom: 0px !important; }
+	</ui:style>
+
+	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.userprofile.client.UserProfilePlaceTokens"/>
+
+	<b.html:Div addStyleNames="{res.gss.webContent}">
+
+		<b:Navbar position="FIXED_TOP" addStyleNames="{style.bottom} {style.minWidthTop}" >
+			<b:NavbarHeader ui:field="navbarHeader" addStyleNames="{res.gss.header}">
+				<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
+			</b:NavbarHeader>
+
+			<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse" >
+
+				<g:FocusPanel ui:field="collapseClickHandler">
+					<b:NavbarNav>
+						<b:AnchorListItem ui:field="user" icon="USER" iconSize="LARGE" targetHistoryToken="{placeTokens.getPersonal}" />
+						<b:ListDropDown>
+							<b:AnchorButton icon="FLAG" dataToggle="DROPDOWN" ui:field="language">Language</b:AnchorButton>
+							<b:DropDownMenu>
+								<b:AnchorListItem ui:field="english" iconPosition="RIGHT">English</b:AnchorListItem>
+								<b:AnchorListItem ui:field="czech" iconPosition="RIGHT">Czech</b:AnchorListItem>
+							</b:DropDownMenu>
+						</b:ListDropDown>
+						<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>
+					</b:NavbarNav>
+				</g:FocusPanel>
+			</b:NavbarCollapse>
+		</b:Navbar>
+
+		<b.html:Div ui:field="pageContent" addStyleNames="{res.gss.pageWrapper}" />
+
+	</b.html:Div>
+
+</ui:UiBinder>

@@ -141,4 +141,15 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Continue")
 	public String continue_();  //continue is a keyword
 
+	@DefaultMessage("Logout")
+	public String logout();
+
+	/* ------------ LANGUAGE SWITCHING ---------------- */
+
+	@DefaultMessage("Language")
+	public String language();
+
+	@DefaultMessage("English")
+	public String english();
+
 }

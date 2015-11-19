@@ -16,6 +16,7 @@
 		<module>perun-wui-cabinet</module>
 		<module>perun-wui-registrar</module>
 		<module>perun-wui-consolidator</module>
+		<module>perun-wui-userprofile</module>
 	</modules>
 
 	<!-- common environmental and version properties-->

@@ -8,9 +8,9 @@ import com.google.gwt.resources.client.CssResource;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public interface PerunUserProfileResources extends ClientBundle {
+public interface UserProfileResources extends ClientBundle {
 
-	PerunUserProfileResources INSTANCE = GWT.create(PerunUserProfileResources.class);
+	UserProfileResources INSTANCE = GWT.create(UserProfileResources.class);
 
 	interface PerunUserProfileCss extends CssResource {
 
