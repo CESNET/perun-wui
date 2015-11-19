@@ -90,7 +90,7 @@ public class SelectPage {
 					if (extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
 						translatedExtSourceName = Utils.translateIdp(translatedExtSourceName);
 						// social identity
-						if (translatedActor.endsWith("extidp.cesnet.cz")) {
+						if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org")) {
 							translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
 							translatedActor = translatedActor.split("@")[0];
 						}
@@ -110,6 +110,8 @@ public class SelectPage {
 					} else if (extSourceType.equals(ExtSource.ExtSourceType.X509.getType())) {
 						translatedActor = Utils.convertCertCN(translatedActor);
 						translatedExtSourceName = Utils.convertCertCN(translatedExtSourceName);
+					} else if (extSourceType.equals(ExtSource.ExtSourceType.KERBEROS.getType())) {
+						translatedExtSourceName = Utils.translateKerberos(translatedExtSourceName);
 					}
 
 					heading.setVisible(true);

@@ -85,7 +85,12 @@ public class Wayf extends Composite {
 		}
 		idpButton.setText(translation.idpButton());
 		certButton.setText(translation.certButton());
-		krbButton.setText(translation.krbButton());
+		String krbName = Utils.getWayfKrbName();
+		if (krbName == null) {
+			krbButton.setText(translation.krbButton());
+		} else {
+			krbButton.setText(krbName);
+		}
 		socialButton.setText(translation.socialButton());
 		this.redirect = redirect;
 		initModals();
