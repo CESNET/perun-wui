@@ -269,6 +269,31 @@ public class Utils {
 	}
 
 	/**
+	 * Returns TRUE if WAYF should support Kerberos authz
+	 *
+	 * @return TRUE if WAYF should support Kerberos authz
+	 */
+	public static String getWayfKrbName() {
+
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
+			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "krbName")) {
+				return JsUtils.getNativePropertyString(wayfConfig, "krbName");
+			}
+		}
+
+		if (PerunSession.getInstance().getConfiguration() != null) {
+			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.krbName");
+			if (value != null && !value.isEmpty()) {
+				return value;
+			}
+		}
+
+		return null;
+
+	}
+
+	/**
 	 * Returns TRUE if WAYF should support cert authz
 	 *
 	 * @see #getCertWayfHostnames()
@@ -1618,6 +1643,11 @@ public class Utils {
 		orgs.put("https://login.ics.muni.cz/idp/shibboleth", "MetaCentrum");
 		orgs.put("https://idp.hostel.eduid.cz/idp/shibboleth", "eduID.cz Hostel");
 		orgs.put("https://shibboleth.techlib.cz/idp/shibboleth", "National Library of Technology");
+		orgs.put("https://eduid.jamu.cz/idp/shibboleth", "Janacek Academy of Music and Performing Arts in Brno");
+		orgs.put("https://marisa.uochb.cas.cz/simplesaml/saml2/idp/metadata.php", "Institute of Organic Chemistry and Biochemistry AS CR");
+		orgs.put("https://shibboleth.utb.cz/idp/shibboleth", "Tomas Bata University in Zlin");
+		orgs.put("https://www.egi.eu/idp/shibboleth", "EGI");
+		orgs.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
 
 		// Handle social identities
 
@@ -1633,6 +1663,29 @@ public class Utils {
 		orgs.put("@linkedin.extidp.cesnet.cz", "LinkedIn");
 		orgs.put("@twitter.extidp.cesnet.cz", "Twitter");
 		orgs.put("@seznam.extidp.cesnet.cz", "Seznam");
+		orgs.put("@elixir-europe.org", "Elixir Europe");
+
+		if (orgs.get(name) != null) {
+			return orgs.get(name);
+		} else {
+			return name;
+		}
+
+	}
+
+	/**
+	 * Translate Kerberos realm identification (ExtSource name property) into English name of institution.
+	 *
+	 * @param name ExtSource name from Kerberos realm to translate
+	 * @return Translated name of Kerberos realm or original value if unknown.
+	 */
+	public static String translateKerberos(String name) {
+
+		HashMap<String, String> orgs = new HashMap<String, String>();
+		orgs.put("META", "MetaCentrum");
+		orgs.put("EINFRA", "CESNET eInfrastructure");
+		orgs.put("SITOLA.FI.MUNI.CZ", "Sitola");
+		orgs.put("ICS.MUNI.CZ", "Masaryk University");
 
 		if (orgs.get(name) != null) {
 			return orgs.get(name);

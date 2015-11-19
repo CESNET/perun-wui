@@ -143,7 +143,6 @@ public class User extends GeneralObject {
 
 	/**
 	 * Get full name with academic titles of user. If no part of name is present, null is returned.
-	 * By definition of User in Perun, it should have always at least "lastName" set.
 	 *
 	 * @return full name with academic titles of user
 	 */
@@ -161,7 +160,7 @@ public class User extends GeneralObject {
         if (firstName !== null) fullName += " " + firstName;
         if (middleName !== null) fullName += " " + middleName;
         if (lastName !== null) fullName += " " + lastName;
-        if (titleAfter !== null) fullName += " " + titleAfter;
+        if (titleAfter !== null) fullName += ", " + titleAfter;
 
         if (fullName.length > 0) return fullName;
         return null;

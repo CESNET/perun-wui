@@ -181,7 +181,7 @@ public class JoinPage {
 				if (extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
 					translatedExtSourceName = Utils.translateIdp(translatedExtSourceName);
 					// social identity
-					if (translatedActor.endsWith("extidp.cesnet.cz")) {
+					if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org")) {
 						translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
 						translatedActor = translatedActor.split("@")[0];
 					}
@@ -201,6 +201,8 @@ public class JoinPage {
 				} else if (extSourceType.equals(ExtSource.ExtSourceType.X509.getType())) {
 					translatedActor = Utils.convertCertCN(translatedActor);
 					translatedExtSourceName = Utils.convertCertCN(translatedExtSourceName);
+				} else if (extSourceType.equals(ExtSource.ExtSourceType.KERBEROS.getType())) {
+					translatedExtSourceName = Utils.translateKerberos(translatedExtSourceName);
 				}
 
 				if (PerunSession.getInstance().getUser() != null) {
@@ -241,14 +243,16 @@ public class JoinPage {
 
 				if (extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
 					translatedExtSourceName = Utils.translateIdp(translatedExtSourceName);
-					// social identity
-					if (translatedActor.endsWith("extidp.cesnet.cz")) {
+					// social identity or proxy IdP
+					if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org")) {
 						translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
 						translatedActor = translatedActor.split("@")[0];
 					}
 				} else if (extSourceType.equals(ExtSource.ExtSourceType.X509.getType())) {
 					translatedActor = Utils.convertCertCN(translatedActor);
 					translatedExtSourceName = Utils.convertCertCN(translatedExtSourceName);
+				} else if (extSourceType.equals(ExtSource.ExtSourceType.KERBEROS.getType())) {
+					translatedExtSourceName = Utils.translateKerberos(translatedExtSourceName);
 				}
 
 				place.insert(new Heading(HeadingSize.H4, translatedActor, translatedExtSourceName), 4);
