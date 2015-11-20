@@ -109,8 +109,13 @@ public class ValidatedEmail extends PerunFormItemEditable {
 			return;
 		}
 		getTextBox().addValueChangeHandler(new ValueChangeHandler() {
+			private boolean first = true;
 			@Override
 			public void onValueChange(ValueChangeEvent event) {
+				if (first && isCustomSelected() && getValue().isEmpty()) {
+					first = false;
+					return;
+				}
 				validateLocal();
 			}
 		});
@@ -234,4 +239,9 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		}
 		return null;
 	}
+
+	private boolean isCustomSelected() {
+		return getSelect().getSelectedValue().equals(CUSTOM_ID);
+	}
+
 }
