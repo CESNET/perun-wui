@@ -26,7 +26,7 @@ import cz.metacentrum.perun.wui.model.beans.Identity;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
-import cz.metacentrum.perun.wui.registrar.model.ExceptionResolver;
+import cz.metacentrum.perun.wui.registrar.client.ExceptionResolver;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.pages.steps.GroupInitStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.Summary;

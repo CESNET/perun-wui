@@ -37,8 +37,15 @@
 			</b:NavbarCollapse>
 		</b:Navbar>
 
+
 		<b.html:Div ui:field="pageContent" addStyleNames="{res.gss.pageWrapper}" />
 
+
+		<b.html:Div addStyleNames="{res.gss.footer}">
+			<b.html:Text ui:field="footer"/>
+		</b.html:Div>
+
 	</b.html:Div>
+
 
 </ui:UiBinder>

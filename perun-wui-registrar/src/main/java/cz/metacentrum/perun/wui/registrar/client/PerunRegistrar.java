@@ -26,8 +26,8 @@ public class PerunRegistrar extends AbstractPresenterModule implements EntryPoin
 
 		install(new DefaultModule(PerunPlaceManager.class));
 
-		// Main Application must bind generic Presenter and custom View !!
-		bindPresenter(PerunPresenter.class, PerunPresenter.MyView.class, PerunRegistrarView.class, PerunPresenter.MyProxy.class);
+		// Main Application must bind generic Presenter or its subclass and custom View !!
+		bindPresenter(PerunRegistrarPresenter.class, PerunRegistrarPresenter.MyView.class, PerunRegistrarView.class, PerunRegistrarPresenter.MyProxy.class);
 
 		// bind app-specific pages
 		bindPresenter(FormPresenter.class, FormPresenter.MyView.class, FormView.class, FormPresenter.MyProxy.class);

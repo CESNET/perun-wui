@@ -33,7 +33,7 @@ import java.util.Map;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class UserProfileView extends ViewImpl implements PerunPresenter.MyView{
+public class UserProfileView extends ViewImpl implements UserProfilePresenter.MyView{
 
 	interface PerunUserProfileViewUiBinder extends UiBinder<Widget, UserProfileView> {}
 

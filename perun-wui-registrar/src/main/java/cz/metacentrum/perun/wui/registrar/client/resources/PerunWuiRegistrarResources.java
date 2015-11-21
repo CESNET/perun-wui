@@ -31,6 +31,8 @@ public interface PerunWuiRegistrarResources extends ClientBundle {
 		String preview();
 
 		String checkbox(); // External
+
+		String footer();
 	}
 
 	@Source("css/PerunWuiRegistrar.gss")

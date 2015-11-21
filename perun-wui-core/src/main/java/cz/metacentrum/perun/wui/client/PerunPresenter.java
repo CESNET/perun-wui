@@ -23,23 +23,15 @@ import cz.metacentrum.perun.wui.pages.FocusableView;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunPresenter extends Presenter<PerunPresenter.MyView, PerunPresenter.MyProxy> {
-
-	@ProxyStandard
-	public interface MyProxy extends Proxy<PerunPresenter> {
-	}
-
-	public interface MyView extends View {
-	}
+public abstract class PerunPresenter<V extends View, P extends Proxy<? extends PerunPresenter>> extends Presenter<V, P> {
 
 	/**
 	 * Use this in leaf presenters, inside their {@link #revealInParent} method.
 	 */
 	@ContentSlot
-	public static final GwtEvent.Type<RevealContentHandler<?>> SET_MAIN_CONTENT = new GwtEvent.Type<RevealContentHandler<?>>();
+	public static final GwtEvent.Type<RevealContentHandler<?>> SET_MAIN_CONTENT = new GwtEvent.Type<>();
 
-	@Inject
-	PerunPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
+	protected PerunPresenter(final EventBus eventBus, final V view, final P proxy) {
 		super(eventBus, view, proxy, RevealType.Root);
 	}
 

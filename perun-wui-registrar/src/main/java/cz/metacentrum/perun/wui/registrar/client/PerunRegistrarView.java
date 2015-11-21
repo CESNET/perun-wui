@@ -15,7 +15,6 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
-import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
@@ -25,7 +24,9 @@ import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.html.Div;
+import org.gwtbootstrap3.client.ui.html.Text;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,7 +34,7 @@ import java.util.Map;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunRegistrarView extends ViewImpl implements PerunPresenter.MyView{
+public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresenter.MyView {
 
 	interface PerunRegistrarViewUiBinder extends UiBinder<Widget, PerunRegistrarView> {}
 
@@ -70,6 +71,9 @@ public class PerunRegistrarView extends ViewImpl implements PerunPresenter.MyVie
 	AnchorListItem logout;
 
 	@UiField
+	static Text footer;
+
+	@UiField
 	static NavbarHeader navbarHeader;
 
 	@UiHandler(value="czech")
@@ -100,6 +104,22 @@ public class PerunRegistrarView extends ViewImpl implements PerunPresenter.MyVie
 	@UiHandler(value="logout")
 	public void logoutClick(ClickEvent event) {
 		History.newItem("logout");
+	}
+
+
+	@Override
+	public void onLoadingStartFooter() {
+		footer.setText(translation.loading());
+	}
+
+	@Override
+	public void onFinishedFooter(List<String> contactEmail) {
+		if (contactEmail == null || contactEmail.isEmpty()) {
+			footer.setText(translation.footer("perun@cesnet.cz"));
+			return;
+		}
+		String mails = contactEmail.toString();
+		footer.setText(translation.footer(mails.substring(1, mails.length()-1)));
 	}
 
 	/**
