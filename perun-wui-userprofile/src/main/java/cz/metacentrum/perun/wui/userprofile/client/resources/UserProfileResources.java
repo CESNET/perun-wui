@@ -26,11 +26,6 @@ public interface UserProfileResources extends ClientBundle {
 
 		String header();
 
-		String status();
-
-		String preview();
-
-		String checkbox(); // External
 	}
 
 	@Source("css/PerunUserProfile.gss")

@@ -63,26 +63,3 @@ body {
 
 
 /* HACKS */
-
-/* correctly animatable status (because of pulse animation) */
-.status {
-    display: inline-block;
-}
-
-/* LOOK */
-.preview {
-    margin: 0px;
-    height: auto;
-    min-height: 34px;
-}
-.preview i {
-    margin-top: 2px;
-}
-
-@external checkbox;
-.preview .checkbox label {
-    cursor: default;
-}
-.preview .checkbox label > span {
-    cursor: text;
-}
