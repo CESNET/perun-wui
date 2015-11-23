@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
@@ -91,48 +92,45 @@ public class Summary implements Step {
 
 			}
 		}
-		title.add(text);
-		formView.getForm().add(title);
+
+		if (!text.getText().isEmpty()) {
+			title.add(text);
+			formView.getForm().add(title);
+		}
 	}
 
 	private void displaySummaryMessage(RegistrarObject registrar) {
 
-		if (voApplication == null && groupApplication == null) {    // We can do nothing for user. Everything is fine.
+        // We can do nothing for user => Everything is fine.
+		if (voApplication == null && groupApplication == null) {
 
 			if (registrar.getGroupFormInitialException() != null) {
-				switch (registrar.getGroupFormInitialException().getName()) {
-					case "DuplicateRegistrationAttemptException":
-						displayException(registrar.getGroupFormInitialException());
-						break;
-					case "AlreadyRegisteredException":
-						displayException(registrar.getGroupFormInitialException());
-						break;
-					default:
-						displayException(registrar.getGroupFormInitialException());
-				}
+
+			    displayException(registrar.getGroupFormInitialException());
+
 			} else if (registrar.getVoFormExtensionException() != null) {
-				switch (registrar.getVoFormExtensionException().getName()) {
-					case "ExtendMembershipException":
-						displayException(registrar.getVoFormExtensionException());
-						break;
-					case "DuplicateRegistrationAttemptException":
-						// TODO - solve this BLEEE hack in better way.
-						registrar.getVoFormExtensionException().setName("DuplicateExtensionAttemptException");
-						displayException(registrar.getVoFormExtensionException());
-						break;
-					case "MemberNotExistsException":
-						if (registrar.getVoFormInitialException() != null) {
-							displayVoFormInitialException(registrar);
-						}
-						break;
-					default:
-						displayException(registrar.getVoFormExtensionException());
-				}
+
+                if (registrar.getVoFormExtensionException().getName().equals("MemberNotExistsException")) {
+                    if (registrar.getVoFormInitialException() != null) {
+                        displayException(registrar.getVoFormInitialException());
+                    }
+                } else {
+                    // TODO - solve this BLEEEH hack in better way.
+                    if (registrar.getVoFormExtensionException().getName().equals("DuplicateRegistrationAttemptException")) {
+                        registrar.getVoFormExtensionException().setName("DuplicateExtensionAttemptException");
+                    }
+
+                    displayException(registrar.getVoFormExtensionException());
+
+                }
 			} else if (registrar.getVoFormInitialException() != null) {
-				displayVoFormInitialException(registrar);
+
+                displayException(registrar.getVoFormInitialException());
+
 			}
 
-		} else {    // user filled some form.
+        // user filled some form.
+		} else {
 			ListGroup message = new ListGroup();
 
 			ListGroupItem voStat = new ListGroupItem();
@@ -200,54 +198,33 @@ public class Summary implements Step {
 
 	}
 
-	private void displayVoFormInitialException(RegistrarObject registrar) {
-		switch (registrar.getVoFormInitialException().getName()) {
-			case "DuplicateRegistrationAttemptException":
-				displayException(registrar.getVoFormInitialException());
-				break;
-			case "AlreadyRegisteredException":
-				displayException(registrar.getVoFormInitialException());
-				break;
-			default:
-				displayException(registrar.getVoFormInitialException());
-		}
-	}
-
 	private void displayContinueButton(RegistrarObject registrar, Application.ApplicationType redirect) {
 
 		PerunButton cont;
 		if (redirect == null) {
 
 			if (Window.Location.getParameter("targetexisting") != null) {
+
+				PerunException exception;
 				if (registrar.getGroup() != null) {
-					PerunException pEx = registrar.getGroupFormInitialException();
-					if (pEx != null) {
-						if (pEx.getName().equals("DuplicateRegistrationAttemptException")
-								|| pEx.getName().equals("AlreadyRegisteredException")) {
-							cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									Window.Location.assign(Window.Location.getParameter("targetexisting"));
-								}
-							});
-							formView.getForm().add(cont);
-						}
-					}
+					exception = registrar.getGroupFormInitialException();
 				} else {
-					PerunException pEx = registrar.getVoFormInitialException();
-					if (pEx != null) {
-						if (pEx.getName().equals("DuplicateRegistrationAttemptException")
-								|| pEx.getName().equals("AlreadyRegisteredException")) {
-							cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									Window.Location.assign(Window.Location.getParameter("targetexisting"));
-								}
-							});
-							formView.getForm().add(cont);
-						}
-					}
+					exception = registrar.getVoFormInitialException();
 				}
+
+                if (exception != null) {
+                    if (exception.getName().equals("DuplicateRegistrationAttemptException")
+                            || exception.getName().equals("AlreadyRegisteredException")) {
+
+                        cont = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
+                            @Override
+                            public void onClick(ClickEvent event) {
+                                Window.Location.assign(Window.Location.getParameter("targetexisting"));
+                            }
+                        });
+                        formView.getForm().add(cont);
+                    }
+                }
 			}
 
 		} else {

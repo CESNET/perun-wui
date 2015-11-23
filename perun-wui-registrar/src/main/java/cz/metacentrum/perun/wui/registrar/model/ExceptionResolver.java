@@ -72,19 +72,16 @@ public class ExceptionResolver {
 		} else if (exception.getName().equalsIgnoreCase("AlreadyRegisteredException")) {
 
 			notice.setHTML("<h4>" + translation.alreadyRegistered((group != null) ? group.getShortName() : vo.getName()) + "</h4>");
-			addContinueButton("targetexisting", notice);
 
-		} else if (exception.getName().equalsIgnoreCase("DuplicateRegistrationAttemptExceptioon")) {
+		} else if (exception.getName().equalsIgnoreCase("DuplicateRegistrationAttemptException")) {
 
 			notice.setHTML("<h4>" + translation.alreadySubmitted(((group != null) ? group.getShortName() : vo.getName())) +
 					"</h4><p>" + translation.visitSubmitted(Window.Location.getHref().split("#")[0], translation.submittedTitle()));
-			addContinueButton("targetnew", notice);
 
 		} else if (exception.getName().equalsIgnoreCase("DuplicateExtensionAttemptException")) {
 
 			notice.getElement().setInnerHTML("<h4>" + translation.alreadySubmittedExtension((vo.getName())) +
 					"</h4><p>" + translation.visitSubmitted(Window.Location.getHref().split("#")[0], translation.submittedTitle()));
-			addContinueButton("targetextended", notice);
 
 		} else if (exception.getName().equalsIgnoreCase("MissingRequiredDataException")) {
 
@@ -162,8 +159,6 @@ public class ExceptionResolver {
 			if (exception.getExpirationDate() != null) exceptionText = exception.getExpirationDate().split(" ")[0];
 			notice.setHTML("<h4>" + translation.cantExtendMembership() + "</h4><p>" + translation.cantExtendMembershipOutside(exceptionText));
 
-			addContinueButton("targetexisting", notice);
-
 		} else if (exception.getReason().equals("NOUSERLOA")) {
 
 			notice.setHTML("<h4>" + translation.cantBecomeMember((group != null) ? group.getShortName() : vo.getName()) + "</h4><p>" + translation.cantBecomeMemberLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
@@ -177,23 +172,6 @@ public class ExceptionResolver {
 			notice.setHTML("<h4>" + translation.cantExtendMembership() + "</h4><p>" + translation.cantExtendMembershipInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 
 		}
-	}
-
-
-	private void addContinueButton(final String target, AlertErrorReporter notice) {
-
-		if (Window.Location.getParameter(target) != null) {
-
-			PerunButton continueButton = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					Window.Location.replace(Window.Location.getParameter(target));
-				}
-			});
-			notice.add(continueButton);
-
-		}
-
 	}
 
 }
