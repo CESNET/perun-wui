@@ -6,16 +6,13 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.userprofile.client.resources.UserProfileResources"/>
 
-	<ui:style>
-		.bottom { border-radius: 0px !important; }
-		.minWidthTop { min-width: 1200px; margin-bottom: 0px !important; }
-	</ui:style>
+
 
 	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.userprofile.client.UserProfilePlaceTokens"/>
 
 	<b.html:Div addStyleNames="{res.gss.webContent}">
 
-		<b:Navbar position="FIXED_TOP" addStyleNames="{style.bottom} {style.minWidthTop}" >
+		<b:Navbar position="FIXED_TOP" >
 			<b:NavbarHeader ui:field="navbarHeader" addStyleNames="{res.gss.header}">
 				<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
 			</b:NavbarHeader>
