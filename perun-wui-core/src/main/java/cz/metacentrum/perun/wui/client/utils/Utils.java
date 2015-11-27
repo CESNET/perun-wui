@@ -1656,6 +1656,8 @@ public class Utils {
 		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:facebook", "Facebook");
 		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:linkedin", "LinkedIn");
 		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:mojeid", "MojeID");
+		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:orcid", "OrcID");
+		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:github", "GitHub");
 
 		orgs.put("@google.extidp.cesnet.cz", "Google");
 		orgs.put("@facebook.extidp.cesnet.cz", "Facebook");
@@ -1664,6 +1666,8 @@ public class Utils {
 		orgs.put("@twitter.extidp.cesnet.cz", "Twitter");
 		orgs.put("@seznam.extidp.cesnet.cz", "Seznam");
 		orgs.put("@elixir-europe.org", "Elixir Europe");
+		orgs.put("@github.extidp.cesnet.cz", "GitHub");
+		orgs.put("@orcid.extidp.cesnet.cz", "OrcID");
 
 		if (orgs.get(name) != null) {
 			return orgs.get(name);
