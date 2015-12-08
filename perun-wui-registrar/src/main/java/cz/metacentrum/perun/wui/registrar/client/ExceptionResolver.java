@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.registrar.model;
+package cz.metacentrum.perun.wui.registrar.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;

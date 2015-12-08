@@ -39,7 +39,7 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 		install(new DefaultModule(PerunWuiPlaceManager.class));
 
 		// Main Application must bind generic Presenter and custom View !!
-		bindPresenter(PerunPresenter.class, PerunPresenter.MyView.class, PerunWuiView.class, PerunPresenter.MyProxy.class);
+		bindPresenter(PerunWuiPresenter.class, PerunWuiPresenter.MyView.class, PerunWuiView.class, PerunWuiPresenter.MyProxy.class);
 
 		// pre-defined places
 		bindConstant().annotatedWith(DefaultPlace.class).to(PlaceTokens.VOS);

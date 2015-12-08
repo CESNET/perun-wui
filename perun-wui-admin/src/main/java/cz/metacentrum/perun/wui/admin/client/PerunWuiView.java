@@ -16,7 +16,7 @@ import org.gwtbootstrap3.client.ui.html.Div;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunWuiView extends ViewImpl implements PerunPresenter.MyView {
+public class PerunWuiView extends ViewImpl implements PerunWuiPresenter.MyView {
 
 	interface PerunWuiViewUiBinder extends UiBinder<Widget, PerunWuiView> {}
 

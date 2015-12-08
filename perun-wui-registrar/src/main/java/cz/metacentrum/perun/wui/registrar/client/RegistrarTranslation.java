@@ -9,7 +9,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
  */
 public interface RegistrarTranslation extends PerunTranslation {
 
-	// -------------- MAIN PAGE - MENU------------------------ //
+	// -------------- MAIN PAGE - MENU ------------------------ //
 
 	@DefaultMessage("Form")
 	public String application();
@@ -19,6 +19,9 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Help")
 	public String help();
+
+	@DefaultMessage("Contact us by {0}.")
+	public String footer(String mails);
 
 	// -------------- REGISTRATION FORM ------------------------ //
 
@@ -258,6 +261,9 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 
 	/* ------------ LOADER MESSAGES ---------------- */
+
+	@DefaultMessage("Loading ...")
+	public String loading();
 
 	@DefaultMessage("Loading application")
 	public String loadingApplication();

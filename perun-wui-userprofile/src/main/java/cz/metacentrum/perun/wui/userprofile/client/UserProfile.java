@@ -28,7 +28,7 @@ public class UserProfile extends AbstractPresenterModule implements EntryPoint {
 		install(new DefaultModule(PerunPlaceManager.class));
 
 		// Main Application must bind generic Presenter and custom View !!
-		bindPresenter(PerunPresenter.class, PerunPresenter.MyView.class, UserProfileView.class, PerunPresenter.MyProxy.class);
+		bindPresenter(UserProfilePresenter.class, UserProfilePresenter.MyView.class, UserProfileView.class, UserProfilePresenter.MyProxy.class);
 
 		// bind app-specific pages
 		bindPresenter(PersonalPresenter.class, PersonalPresenter.MyView.class, PersonalView.class, PersonalPresenter.MyProxy.class);

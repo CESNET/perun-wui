@@ -22,6 +22,26 @@ public class RegistrarManager {
 	private static final String REGISTRAR_MANAGER = "registrarManager/";
 
 	/**
+	 * Retrieve list of VO attributes by its name. If group is not null or empty retrieve also group attributes.
+	 * Attributes can be distinguished by its entity field. "vo" or "group".
+	 *
+	 * @param voName Name of VO to get data for
+	 * @param groupName Full name of Group to get data for (optional)
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getVoAndGroupAttributes(String voName, String groupName, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		client.put("vo", voName);
+		if (groupName != null && !groupName.isEmpty()) client.put("group", groupName);
+
+		return client.call(REGISTRAR_MANAGER + "initialize");
+
+	}
+
+	/**
 	 * Retrieve init data for Registrar GUI in one big call.
 	 * Retrieves all possible forms, objects and relevant exceptions
 	 * if thrown in order to determine actual users state in registration process.
