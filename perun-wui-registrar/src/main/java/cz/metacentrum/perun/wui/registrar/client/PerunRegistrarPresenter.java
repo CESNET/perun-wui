@@ -44,6 +44,7 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
          */
         void onFinishedFooter(List<String> contactEmail);
 
+        void hideNavbar();
     }
 
     @Inject
@@ -90,6 +91,18 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 
     }
 
+
+    private int resets = 0;
+    @Override
+    protected void onReset() {
+        super.onReset();
+
+        // Because NavbarCollapse.hide() doesn't work properly. It shows the NavbarCollapse on application startup .
+        resets++;
+        if (resets > 2) {
+            getView().hideNavbar();
+        }
+    }
 
     private void loadVoAttributes(final Events<List<Attribute>> callback) {
 
