@@ -35,6 +35,9 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Form has no form items.")
 	public String formHasNoFormItems();
 
+	@DefaultMessage("An unexpected error occurred. Please help us improve our service and report the bug.")
+	public String errorOccured();
+
 	/* ========= OBJECT TRANSLATION ============ */
 
 	@DefaultMessage("Approved")
@@ -117,6 +120,9 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Report error")
 	public String reportError();
 
+	@DefaultMessage("Try again")
+	public String tryAgain();
+
 	@DefaultMessage("Copy")
 	public String copy();
 
@@ -138,11 +144,25 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Verify")
 	public String verify();
 
+	@DefaultMessage("Send")
+	public String send();
+
+	@DefaultMessage("Close")
+	public String close();
+
 	@DefaultMessage("Continue")
 	public String continue_();  //continue is a keyword
 
 	@DefaultMessage("Logout")
 	public String logout();
+
+
+
+	@DefaultMessage("Subject")
+	public String subject();
+
+	@DefaultMessage("Message")
+	public String message();
 
 	/* ------------ LANGUAGE SWITCHING ---------------- */
 

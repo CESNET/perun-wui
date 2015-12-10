@@ -4,6 +4,8 @@
              xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
              xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets' >
 
+	<ui:with field='tran' type='cz.metacentrum.perun.wui.client.resources.PerunTranslation'/>
+
 	<ui:style>
 		.top {
 			margin-top: 10px;
@@ -13,8 +15,12 @@
 	<b:Alert dismissable="false" ui:field="alert" type="DANGER" >
 		<g:HTML ui:field="html" />
 		<b:ButtonToolBar addStyleNames="{style.top}" visible="false">
-			<p:PerunButton ui:field="retry"  icon="REFRESH" pull="LEFT"  visible="false">Try again</p:PerunButton>
-			<p:PerunButton ui:field="report" icon="BUG"     pull="RIGHT" visible="false" type="DANGER">Report error</p:PerunButton>
+			<p:PerunButton ui:field="retry"  icon="REFRESH" pull="LEFT"  visible="false">
+				<ui:text from="{tran.tryAgain}" />
+			</p:PerunButton>
+			<p:PerunButton ui:field="report" icon="BUG"     pull="RIGHT" visible="false" type="DANGER">
+				<ui:text from="{tran.reportError}" />
+			</p:PerunButton>
 		</b:ButtonToolBar>
 	</b:Alert>
 
