@@ -122,6 +122,11 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		footer.setText(translation.footer(mails.substring(1, mails.length()-1)));
 	}
 
+	@Override
+	public void hideNavbar() {
+		collapse.hide();
+	}
+
 	/**
 	 * Update localization of whole GUI (reset the app)
 	 *
