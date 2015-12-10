@@ -2,9 +2,12 @@ package cz.metacentrum.perun.wui.model.beans;
 
 import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
+import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Overlay type for Facility object from Perun
@@ -71,6 +74,30 @@ public class Facility extends GeneralObject {
 		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "facilityOwners"));
 
 	}
+
+	/**
+	 * Return string with technical owners names used to be displayed in a table
+	 * @return sorted technical owners names
+	 */
+	public final String getTechnicalOwnersString() {
+		if (!JsUtils.hasOwnProperty(this, "$localTechnicalOwners")) {
+			ArrayList<String> result = new ArrayList<>();
+			for (Owner o : this.getOwners()) {
+				if (o.getType().equals("technical")) result.add(o.getName());
+			}
+			Collections.sort(result, PerunComparator.getNativeComparator());
+			setTechnicalOwnersString(Utils.join(result, ", "));
+		}
+		return JsUtils.getNativePropertyString(this, "$localTechnicalOwners");
+	}
+
+	/**
+	 * Used to fill string value displayed in a table
+	 * @param techString
+	 */
+	private final native void setTechnicalOwnersString(String techString) /*-{
+		this["$localTechnicalOwners"] = techString;
+	}-*/;
 
 	/**
 	 * Compares to another object

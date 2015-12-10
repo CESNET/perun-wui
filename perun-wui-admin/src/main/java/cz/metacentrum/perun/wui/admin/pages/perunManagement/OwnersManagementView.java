@@ -21,11 +21,14 @@ import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedSuggestBox;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
+import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
+
+import java.util.HashMap;
 
 /**
  * PERUN ADMIN - OWNERS MANAGEMENT VIEW
@@ -50,6 +53,14 @@ public class OwnersManagementView extends ViewWithUiHandlers<PerunManagementUiHa
 	@UiField PerunButton filterButton;
 	@UiField PerunButton createButton;
 
+	@UiField AnchorListItem idDropdown;
+	@UiField AnchorListItem nameDropdown;
+	@UiField AnchorListItem contactDropdown;
+	@UiField AnchorListItem typeDropdown;
+	@UiField Button dropdown;
+
+	private HashMap<AnchorListItem, PerunColumnType> anchorColumnMap;
+
 	OwnersManagementView view = this;
 
 	interface OwnersManagementViewUiBinder extends UiBinder<Widget, OwnersManagementView> {
@@ -62,15 +73,26 @@ public class OwnersManagementView extends ViewWithUiHandlers<PerunManagementUiHa
 		remove = PerunButton.getButton(PerunButtonType.REMOVE, ButtonType.DANGER, "Remove selected Owner(s)");
 
 		initWidget(uiBinder.createAndBindUi(this));
+
+		anchorColumnMap = new HashMap<AnchorListItem, PerunColumnType>();
+		anchorColumnMap.put(idDropdown, PerunColumnType.ID);
+		anchorColumnMap.put(nameDropdown, PerunColumnType.NAME);
+		anchorColumnMap.put(typeDropdown, PerunColumnType.OWNER_TYPE);
+		anchorColumnMap.put(contactDropdown, PerunColumnType.OWNER_CONTACT);
+
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
+		UiUtils.bindFilteringDropDown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
 		UiUtils.bindTableLoading(grid, createButton, true);
 		UiUtils.bindTableSelection(grid, remove);
+		UiUtils.bindTableLoading(grid, dropdown, true);
 		createButton.setEnabled(false);
 
 		draw();
 	}
+
+
 
 	@UiHandler(value = "createButton")
 	public void onClick(ClickEvent event) {

@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.admin.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
@@ -17,6 +18,7 @@ import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectView;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
+import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -75,13 +77,21 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 
-		// ensure injecting custom CSS styles of PerunWui
-		PerunResources.INSTANCE.gss().ensureInjected();
+		GWT.UncaughtExceptionHandler handler = new ExceptionLogger();
+		GWT.setUncaughtExceptionHandler(handler);
 
-		PerunWuiAdminResources.INSTANCE.gss().ensureInjected();
+		try {
+			// ensure injecting custom CSS styles of PerunWui
+			PerunResources.INSTANCE.gss().ensureInjected();
 
-		// set default for Growl plugin
-		Utils.getDefaultGrowlOptions().makeDefault();
+			PerunWuiAdminResources.INSTANCE.gss().ensureInjected();
+
+			// set default for Growl plugin
+			Utils.getDefaultGrowlOptions().makeDefault();
+
+		} catch (RuntimeException ex) {
+			handler.onUncaughtException(ex);
+		}
 
 	}
 

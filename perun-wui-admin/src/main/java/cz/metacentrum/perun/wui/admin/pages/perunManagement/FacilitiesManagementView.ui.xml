@@ -26,6 +26,13 @@
 
 				<b:ButtonGroup>
 					<p:PerunButton icon="FILTER" type="PRIMARY" ui:field="filterButton">Filter</p:PerunButton>
+					<b:Button dataToggle="DROPDOWN" type="PRIMARY" ui:field="dropdown"/>
+					<b:DropDownMenu>
+						<b:AnchorListItem ui:field="idDropdown">Id</b:AnchorListItem>
+						<b:AnchorListItem icon="CHECK" ui:field="nameDropdown">Name</b:AnchorListItem>
+						<b:AnchorListItem icon="CHECK" ui:field="descriptionDropdown">Description</b:AnchorListItem>
+						<b:AnchorListItem icon="CHECK" ui:field="ownersDropdown">Technical owners</b:AnchorListItem>
+					</b:DropDownMenu>
 				</b:ButtonGroup>
 				<b:ButtonGroup>
 					<p:PerunButton type="SUCCESS" icon="PLUS_CIRCLE" ui:field="button">New...</p:PerunButton>

@@ -12,6 +12,9 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementation of {@link ColumnProvider ColumnProvider}
@@ -21,18 +24,20 @@ import java.util.ArrayList;
  */
 public class AttributeDefinitionColumnProvider extends ColumnProvider<AttributeDefinition> {
 
+	private static ArrayList<PerunColumnType> defaultColumns = new ArrayList<>();
+
+	static {
+		defaultColumns.add(PerunColumnType.ID);
+		defaultColumns.add(PerunColumnType.ATTR_FRIENDLY_NAME);
+		defaultColumns.add(PerunColumnType.ATTR_ENTITY);
+		defaultColumns.add(PerunColumnType.ATTR_DEF);
+		defaultColumns.add(PerunColumnType.ATTR_TYPE);
+		defaultColumns.add(PerunColumnType.DESCRIPTION);
+	}
+
 	@Override
 	public ArrayList<PerunColumnType> getDefaultColumns() {
-
-		ArrayList<PerunColumnType> columns = new ArrayList<>();
-		columns.add(PerunColumnType.ID);
-		columns.add(PerunColumnType.ATTR_FRIENDLY_NAME);
-		columns.add(PerunColumnType.ATTR_ENTITY);
-		columns.add(PerunColumnType.ATTR_DEF);
-		columns.add(PerunColumnType.ATTR_TYPE);
-		columns.add(PerunColumnType.DESCRIPTION);
-		return columns;
-
+		return defaultColumns;
 	}
 
 	@Override
@@ -62,11 +67,38 @@ public class AttributeDefinitionColumnProvider extends ColumnProvider<AttributeD
 	public PerunDataGrid.PerunFilterEvent<AttributeDefinition> getDefaultFilterEvent() {
 		return new PerunDataGrid.PerunFilterEvent<AttributeDefinition>() {
 			@Override
-			public boolean filterOnObject(String text, AttributeDefinition object) {
-				if (object != null) {
-					if (object.getName().toLowerCase().contains(text.toLowerCase())
-							|| object.getURN().toLowerCase().contains(text.toLowerCase()))
+			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, AttributeDefinition object) {
+
+				if (object == null || text == null) return false;
+
+				if (columnTypeSet == null || columnTypeSet.isEmpty()) {
+					columnTypeSet = new HashSet<PerunColumnType>(Arrays.asList(PerunColumnType.NAME, PerunColumnType.ATTR_URN));
+				}
+				for (PerunColumnType columnType : columnTypeSet) {
+					if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).contains(text)) {
 						return true;
+					} else if (columnType.equals(PerunColumnType.NAME) && object.getName() != null &&
+							object.getName().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.ATTR_FRIENDLY_NAME) && object.getFriendlyName() != null &&
+							object.getFriendlyName().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.ATTR_ENTITY) && object.getEntity() != null &&
+							object.getEntity().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.ATTR_DEF) && object.getDefinition() != null &&
+							object.getDefinition().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.ATTR_TYPE) && object.getType() != null &&
+							object.getType().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.DESCRIPTION) && object.getDescription() != null &&
+							object.getDescription().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.ATTR_URN) && object.getURN() != null &&
+							object.getURN().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					}
 				}
 				return false;
 			}

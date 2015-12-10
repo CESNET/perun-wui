@@ -20,11 +20,14 @@ import cz.metacentrum.perun.wui.pages.FocusableView;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedSuggestBox;
+import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.extras.growl.client.ui.Growl;
 import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
+
+import java.util.HashMap;
 
 /**
  * PERUN ADMIN - EXT SOURCES MANAGEMENT VIEW
@@ -46,6 +49,12 @@ public class ExtSourcesManagementView extends ViewImpl implements ExtSourcesMana
 	@UiField(provided = true) PerunButton loadButton;
 	@UiField PerunButton createButton;
 	@UiField PerunButton removeButton;
+	@UiField AnchorListItem idDropdown;
+	@UiField AnchorListItem nameDropdown;
+	@UiField AnchorListItem typeDropdown;
+	@UiField Button dropdown;
+
+	private HashMap<AnchorListItem, PerunColumnType> anchorColumnMap;
 
 	ExtSourcesManagementView view = this;
 
@@ -59,12 +68,18 @@ public class ExtSourcesManagementView extends ViewImpl implements ExtSourcesMana
 		loadButton = new PerunButton("Load ext sources", "Load ext sources definitions from xml file", IconType.GLOBE);
 
 		initWidget(uiBinder.createAndBindUi(this));
+		anchorColumnMap = new HashMap<AnchorListItem, PerunColumnType>();
+		anchorColumnMap.put(idDropdown, PerunColumnType.ID);
+		anchorColumnMap.put(nameDropdown, PerunColumnType.NAME);
+		anchorColumnMap.put(typeDropdown, PerunColumnType.EXT_SOURCE_TYPE);
 
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
+		UiUtils.bindFilteringDropDown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
 		UiUtils.bindTableLoading(grid, loadButton, true);
 		UiUtils.bindTableLoading(grid, createButton, true);
+		UiUtils.bindTableLoading(grid, dropdown, true);
 		UiUtils.bindTableSelection(grid, removeButton);
 
 		draw();

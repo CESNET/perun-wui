@@ -9,6 +9,9 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementation of {@link cz.metacentrum.perun.wui.model.ColumnProvider ColumnProvider}
@@ -18,17 +21,19 @@ import java.util.ArrayList;
  */
 public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 
+	private static ArrayList<PerunColumnType> defaultColumns = new ArrayList<>();
+
+	static {
+		defaultColumns.add(PerunColumnType.ID);
+		defaultColumns.add(PerunColumnType.NAME);
+		defaultColumns.add(PerunColumnType.USER_ORGANIZATION);
+		defaultColumns.add(PerunColumnType.USER_EMAIL);
+		defaultColumns.add(PerunColumnType.USER_LOGIN);
+	}
 
 	@Override
 	public ArrayList<PerunColumnType> getDefaultColumns() {
-
-		ArrayList<PerunColumnType> columns = new ArrayList<>();
-		columns.add(PerunColumnType.ID);
-		columns.add(PerunColumnType.NAME);
-		columns.add(PerunColumnType.USER_ORGANIZATION);
-		columns.add(PerunColumnType.USER_EMAIL);
-		columns.add(PerunColumnType.USER_LOGIN);
-		return columns;
+		return defaultColumns;
 	}
 
 	@Override
@@ -57,9 +62,28 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 
 		return new PerunDataGrid.PerunFilterEvent<RichUser>() {
 			@Override
-			public boolean filterOnObject(String text, RichUser object) {
-				if (object != null) {
-					if (object.getName().toLowerCase().startsWith(text.toLowerCase())) {
+			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, RichUser object) {
+				if (object == null || text == null) return false;
+
+				if (columnTypeSet == null || columnTypeSet.isEmpty()) {
+					columnTypeSet = new HashSet<PerunColumnType>(Arrays.asList(PerunColumnType.NAME));
+				}
+				for (PerunColumnType columnType : columnTypeSet) {
+					if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).contains(text)) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.NAME) && object.getName() != null &&
+							object.getName().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.USER_EMAIL) && object.getPreferredEmail() != null &&
+							object.getPreferredEmail().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.USER_ORGANIZATION) && object.getOrganization() != null &&
+							object.getOrganization().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.USER_LOGIN) && object.getLogins().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.USER_TYPE) &&
+							String.valueOf(object.isServiceUser()).toLowerCase().contains(text.toLowerCase())) {
 						return true;
 					}
 				}
@@ -115,7 +139,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 							if (object.getFullName() == null) {
 								return "-";
 							} else {
-								return String.valueOf(object.getFullName());
+								return object.getFullName();
 							}
 						}
 					}, this.<String>getFieldUpdater(table)
@@ -142,7 +166,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 							if (object.getOrganization() == null) {
 								return "-";
 							} else {
-								return String.valueOf(object.getOrganization());
+								return object.getOrganization();
 							}
 						}
 					},
@@ -170,7 +194,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 							if (object.getPreferredEmail() == null) {
 								return "-";
 							} else {
-								return String.valueOf(object.getPreferredEmail());
+								return object.getPreferredEmail();
 							}
 						}
 					},
@@ -194,7 +218,11 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 					new GetValue<RichUser, String>() {
 						@Override
 						public String getValue(RichUser object) {
-							return String.valueOf(object.getLogins());
+							if (object.getLogins().isEmpty()) {
+								return "-";
+							} else {
+								return object.getLogins();
+							}
 						}
 					},
 					this.<String>getFieldUpdater(table)
@@ -219,13 +247,7 @@ public class RichUserColumnProvider extends ColumnProvider<RichUser> {
 							if (object.isServiceUser()) {
 								return "service";
 							}
-							else if (!object.isServiceUser()){
-								return "normal";
-							}else{
-								return "-";
-							}
-
-
+							return "normal";
 						}
 					},
 					this.<String>getFieldUpdater(table)

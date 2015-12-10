@@ -20,9 +20,14 @@ import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedSuggestBox;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
+import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
+import org.gwtbootstrap3.client.ui.AnchorListItem;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ButtonToolBar;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
+
+import java.util.HashMap;
 
 /**
  * PERUN ADMIN - FACILITIES MANAGEMENT VIEW
@@ -45,6 +50,13 @@ public class FacilitiesManagementView extends ViewImpl implements FacilitiesMana
 	@UiField ButtonToolBar menu;
 	@UiField PerunButton filterButton;
 	@UiField PerunButton button;
+	@UiField AnchorListItem idDropdown;
+	@UiField AnchorListItem nameDropdown;
+	@UiField AnchorListItem descriptionDropdown;
+	@UiField AnchorListItem ownersDropdown;
+	@UiField Button dropdown;
+
+	private HashMap<AnchorListItem, PerunColumnType> anchorColumnMap;
 
 	FacilitiesManagementView view = this;
 
@@ -58,18 +70,22 @@ public class FacilitiesManagementView extends ViewImpl implements FacilitiesMana
 		remove = PerunButton.getButton(PerunButtonType.REMOVE, ButtonType.DANGER, "Remove selected Facilities");
 		initWidget(uiBinder.createAndBindUi(this));
 
+		anchorColumnMap = new HashMap<AnchorListItem, PerunColumnType>();
+		anchorColumnMap.put(idDropdown, PerunColumnType.ID);
+		anchorColumnMap.put(nameDropdown, PerunColumnType.NAME);
+		anchorColumnMap.put(descriptionDropdown, PerunColumnType.DESCRIPTION);
+		anchorColumnMap.put(ownersDropdown, PerunColumnType.FACILITY_OWNERS);
+
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
+		UiUtils.bindFilteringDropDown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
+		UiUtils.bindTableLoading(grid, dropdown, true);
 		UiUtils.bindTableSelection(grid, remove);
 
 		draw();
 	}
 
-	@UiHandler(value = "filterButton")
-	public void filter(ClickEvent event) {
-		grid.filterTable(textBox.getValue());
-	}
 
 	@UiHandler(value = "remove")
 	public void removeOnClick(ClickEvent event) {

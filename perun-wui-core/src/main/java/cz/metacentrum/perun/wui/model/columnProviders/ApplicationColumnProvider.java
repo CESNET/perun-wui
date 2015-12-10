@@ -10,6 +10,9 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Implementation of {@link cz.metacentrum.perun.wui.model.ColumnProvider ColumnProvider}
@@ -19,20 +22,21 @@ import java.util.ArrayList;
  */
 public class ApplicationColumnProvider extends ColumnProvider<Application> {
 
+	private static ArrayList<PerunColumnType> defaultColumns = new ArrayList<>();
+
+	static {
+		defaultColumns.add(PerunColumnType.CREATED_AT);
+		defaultColumns.add(PerunColumnType.APPLICATION_STATE);
+		defaultColumns.add(PerunColumnType.APPLICATION_TYPE);
+		defaultColumns.add(PerunColumnType.APPLICATION_USER);
+		defaultColumns.add(PerunColumnType.APPLICATION_LOA);
+		defaultColumns.add(PerunColumnType.APPLICATION_VO_NAME);
+		defaultColumns.add(PerunColumnType.MODIFIED_BY);
+	}
+
 	@Override
 	public ArrayList<PerunColumnType> getDefaultColumns() {
-
-		ArrayList<PerunColumnType> columns = new ArrayList<>();
-		columns.add(PerunColumnType.CREATED_AT);
-		columns.add(PerunColumnType.APPLICATION_STATE);
-		columns.add(PerunColumnType.APPLICATION_TYPE);
-		columns.add(PerunColumnType.APPLICATION_USER);
-		columns.add(PerunColumnType.APPLICATION_LOA);
-		columns.add(PerunColumnType.APPLICATION_VO_NAME);
-		columns.add(PerunColumnType.MODIFIED_BY);
-
-		return columns;
-
+		return defaultColumns;
 	}
 
 	@Override
@@ -62,18 +66,34 @@ public class ApplicationColumnProvider extends ColumnProvider<Application> {
 	public PerunDataGrid.PerunFilterEvent<Application> getDefaultFilterEvent() {
 		return new PerunDataGrid.PerunFilterEvent<Application>() {
 			@Override
-			public boolean filterOnObject(String text, Application object) {
-				if (object != null) {
+			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, Application object) {
+				if (object == null || text == null) return false;
 
-					// compare by vo
-					if (object.getVo().getName().toLowerCase().startsWith(text.toLowerCase()) ||
-							object.getVo().getShortName().toLowerCase().startsWith(text.toLowerCase()))
+				// TODO - we should re-think this
+
+				if (columnTypeSet == null || columnTypeSet.isEmpty()) {
+					columnTypeSet = new HashSet<PerunColumnType>(Arrays.asList(PerunColumnType.APPLICATION_USER, PerunColumnType.APPLICATION_VO_NAME, PerunColumnType.APPLICATION_GROUP_NAME));
+				}
+				for (PerunColumnType columnType : columnTypeSet) {
+					if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).contains(text)) {
 						return true;
+					} else if (columnType.equals(PerunColumnType.APPLICATION_USER)) {
 
-					// compare by group
-					if (object.getGroup() != null && object.getGroup().getShortName().toLowerCase().startsWith(text.toLowerCase()))
+						if (object.getUser() != null) {
+							return object.getUser().getFullName().toLowerCase().contains(text.toLowerCase());
+						} else {
+							if ((Utils.convertCertCN(object.getCreatedBy()) + " / " + Utils.translateIdp(Utils.convertCertCN(object.getExtSourceName()))).toLowerCase().contains(text.toLowerCase())) {
+								return true;
+							}
+						}
+
+					} else if (columnType.equals(PerunColumnType.APPLICATION_VO_NAME) && object.getVo() != null) {
+						if (object.getVo().getName().toLowerCase().contains(text.toLowerCase()) ||
+								object.getVo().getShortName().toLowerCase().contains(text.toLowerCase())) return true;
+					} else if (columnType.equals(PerunColumnType.APPLICATION_GROUP_NAME) && object.getGroup() != null &&
+							object.getGroup().getShortName().toLowerCase().contains(text.toLowerCase())) {
 						return true;
-
+					}
 				}
 				return false;
 			}
