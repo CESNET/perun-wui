@@ -76,7 +76,7 @@ public class ServicesManagementView extends ViewImpl implements ServicesManageme
 		anchorColumnMap.put(nameDropdown, PerunColumnType.NAME);
 
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
-		UiUtils.bindDropdown(anchorColumnMap, grid);
+		UiUtils.bindFilteringDropDown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
 		UiUtils.bindTableLoading(grid, dropdown, true);

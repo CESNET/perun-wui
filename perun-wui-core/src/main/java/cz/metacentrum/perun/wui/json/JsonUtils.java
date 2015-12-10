@@ -95,7 +95,7 @@ public class JsonUtils {
 		JSONObject origin = new JSONObject(object);
 		JSONObject result = new JSONObject();
 		for (String key : origin.isObject().keySet()) {
-			if (key.equalsIgnoreCase("isChecked") || key.equalsIgnoreCase("$H")) {
+			if (key.equalsIgnoreCase("isChecked") || key.equalsIgnoreCase("$H") || key.startsWith("$local")) {
 				continue;
 			} else {
 				result.put(key, origin.get(key));

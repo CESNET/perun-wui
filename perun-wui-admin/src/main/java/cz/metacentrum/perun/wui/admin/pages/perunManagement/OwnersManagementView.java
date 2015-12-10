@@ -6,7 +6,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -82,7 +81,7 @@ public class OwnersManagementView extends ViewWithUiHandlers<PerunManagementUiHa
 		anchorColumnMap.put(contactDropdown, PerunColumnType.OWNER_CONTACT);
 
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
-		UiUtils.bindDropdown(anchorColumnMap, grid);
+		UiUtils.bindFilteringDropDown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
 		UiUtils.bindTableLoading(grid, createButton, true);

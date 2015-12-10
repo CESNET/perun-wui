@@ -3,10 +3,8 @@ package cz.metacentrum.perun.wui.model.columnProviders;
 import com.google.gwt.cell.client.FieldUpdater;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
-import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.beans.Facility;
-import cz.metacentrum.perun.wui.model.beans.Owner;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.cells.PerunLinkCell;
@@ -14,7 +12,8 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -25,16 +24,18 @@ import java.util.Set;
  */
 public class FacilityColumnProvider extends ColumnProvider<Facility> {
 
+	private static ArrayList<PerunColumnType> defaultColumns = new ArrayList<>();
+
+	static {
+		defaultColumns.add(PerunColumnType.ID);
+		defaultColumns.add(PerunColumnType.NAME);
+		defaultColumns.add(PerunColumnType.DESCRIPTION);
+		defaultColumns.add(PerunColumnType.FACILITY_OWNERS);
+	}
+
 	@Override
 	public ArrayList<PerunColumnType> getDefaultColumns() {
-
-		ArrayList<PerunColumnType> columns = new ArrayList<>();
-		columns.add(PerunColumnType.ID);
-		columns.add(PerunColumnType.NAME);
-		columns.add(PerunColumnType.DESCRIPTION);
-		columns.add(PerunColumnType.FACILITY_OWNERS);
-		return columns;
-
+		return defaultColumns;
 	}
 
 	@Override
@@ -65,18 +66,25 @@ public class FacilityColumnProvider extends ColumnProvider<Facility> {
 		return new PerunDataGrid.PerunFilterEvent<Facility>() {
 			@Override
 			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, Facility object) {
-				if (object != null) {
-					if (columnTypeSet.isEmpty() && object.getName().toLowerCase().contains(text.toLowerCase())) {
+
+				if (object == null || text == null) return false;
+
+				if (columnTypeSet == null || columnTypeSet.isEmpty()) {
+					columnTypeSet = new HashSet<PerunColumnType>(Arrays.asList(PerunColumnType.NAME, PerunColumnType.DESCRIPTION, PerunColumnType.FACILITY_OWNERS));
+				}
+
+				for (PerunColumnType columnType : columnTypeSet) {
+					if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).contains(text)) {
 						return true;
-					}
-					for (PerunColumnType columnType : columnTypeSet) {
-						if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).toLowerCase().startsWith(text.toLowerCase())) {
-							return true;
-						} else if (columnType.equals(PerunColumnType.NAME) && object.getName().toLowerCase().contains(text.toLowerCase())) {
-							return true;
-						} else if (columnType.equals(PerunColumnType.DESCRIPTION) && object.getDescription() != null && object.getDescription().toLowerCase().contains(text.toLowerCase())) {
-							return true;
-						}
+					} else if (columnType.equals(PerunColumnType.NAME) && object.getName() != null &&
+							object.getName().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.DESCRIPTION) && object.getDescription() != null &&
+							object.getDescription().toLowerCase().contains(text.toLowerCase())) {
+						return true;
+					} else if (columnType.equals(PerunColumnType.FACILITY_OWNERS) && object.getTechnicalOwnersString() != null &&
+							object.getTechnicalOwnersString().toLowerCase().contains(text.toLowerCase())) {
+						return true;
 					}
 				}
 				return false;
@@ -203,12 +211,9 @@ public class FacilityColumnProvider extends ColumnProvider<Facility> {
 					new GetValue<Facility, String>() {
 						@Override
 						public String getValue(Facility object) {
-							ArrayList<String> result = new ArrayList<>();
-							for (Owner o : object.getOwners()) {
-								if (o.getType().equals("technical")) result.add(o.getName());
-							}
-							Collections.sort(result, PerunComparator.getNativeComparator());
-							return Utils.join(result, ", ");
+							String owners = object.getTechnicalOwnersString();
+							if (owners == null) return "";
+							return owners;
 						}
 					},
 					this.<String>getFieldUpdater(table)

@@ -74,7 +74,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	Map<Column<T, ?>, Header<?>> columnHeaders = new HashMap<>();
 	Map<Column<T, ?>, Header<?>> columnFooters = new HashMap<>();
 
-	Set<PerunColumnType> columnTypeSet = new HashSet<>();
+	Set<PerunColumnType> columnsToFilterBy = new HashSet<>();
 
 	// loading widget used for table loading / filtering / error
 	PerunLoader loaderWidget;
@@ -677,7 +677,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 		} else {
 			// do filtering
 			for (T object : backup) {
-				if (filter.filterOnObject(columnTypeSet, text, object)) {
+				if (filter.filterOnObject(columnsToFilterBy, text, object)) {
 					content.add(object);
 				}
 			}
@@ -692,12 +692,16 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	}
 
 	/**
-	 * Remove or add column to set.
+	 * Switches column state to enable or disable filtering on it.
+	 *
+	 * @param columnType Type of column to switch on
 	 */
-	public void updateColumn(PerunColumnType perunColumnType){
-		if (columnTypeSet.contains(perunColumnType)){
-			columnTypeSet.remove(perunColumnType);
-		}else columnTypeSet.add(perunColumnType);
+	public void switchFilterOnColumn(PerunColumnType columnType){
+		if (columnsToFilterBy.contains(columnType)){
+			columnsToFilterBy.remove(columnType);
+		} else {
+			columnsToFilterBy.add(columnType);
+		}
 	}
 
 	/**

@@ -144,22 +144,24 @@ public class UiUtils {
 	}
 
 	/**
-	 * add dropdown to set
+	 * Bind filtering button DropDown to table filtering options
 	 *
-	 * @param table        Table to bind filtering to
+	 * @param anchorMap Map of Anchor items from DropDown.
+	 * @param table Table to bind filtering switching by.
 	 */
-	public static <T extends JavaScriptObject,  C extends SuggestBox> void bindDropdown(final HashMap<AnchorListItem, PerunColumnType> anchorMap, final PerunDataGrid<T> table){
+	public static <T extends JavaScriptObject> void bindFilteringDropDown(final HashMap<AnchorListItem, PerunColumnType> anchorMap, final PerunDataGrid<T> table){
 		Set<AnchorListItem> keySet = anchorMap.keySet();
 		for (final AnchorListItem anchor : keySet){
+			anchor.setIconFixedWidth(true);
 			anchor.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					if (anchor.getIcon().equals(IconType.CHECK)){
-						anchor.setIcon(IconType.MINUS);
-					}else{
+					if (IconType.CHECK.equals(anchor.getIcon())) {
+						anchor.setIcon(null);
+					} else {
 						anchor.setIcon(IconType.CHECK);
 					}
-					table.updateColumn(anchorMap.get(anchor));
+					table.switchFilterOnColumn(anchorMap.get(anchor));
 				}
 			});
 		}

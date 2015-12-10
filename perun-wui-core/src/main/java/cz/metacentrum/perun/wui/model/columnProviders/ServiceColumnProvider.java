@@ -12,6 +12,8 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -22,13 +24,16 @@ import java.util.Set;
  */
 public class ServiceColumnProvider extends ColumnProvider<Service> {
 
+	private static ArrayList<PerunColumnType> defaultColumns = new ArrayList<>();
+
+	static {
+		defaultColumns.add(PerunColumnType.ID);
+		defaultColumns.add(PerunColumnType.NAME);
+	}
+
 	@Override
 	public ArrayList<PerunColumnType> getDefaultColumns() {
-
-		ArrayList<PerunColumnType> columns = new ArrayList<>();
-		columns.add(PerunColumnType.ID);
-		columns.add(PerunColumnType.NAME);
-		return columns;
+		return defaultColumns;
 
 	}
 
@@ -59,16 +64,18 @@ public class ServiceColumnProvider extends ColumnProvider<Service> {
 		return new PerunDataGrid.PerunFilterEvent<Service>() {
 			@Override
 			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, Service object) {
-				if (object != null) {
-					if (columnTypeSet.isEmpty() && object.getName().toLowerCase().contains(text.toLowerCase())) {
+				if (object == null || text == null) return false;
+
+				if (columnTypeSet == null || columnTypeSet.isEmpty()) {
+					columnTypeSet = new HashSet<PerunColumnType>(Arrays.asList(PerunColumnType.NAME));
+				}
+
+				for (PerunColumnType columnType : columnTypeSet) {
+					if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).contains(text)) {
 						return true;
-					}
-					for (PerunColumnType columnType : columnTypeSet) {
-						if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).toLowerCase().startsWith(text.toLowerCase())) {
-							return true;
-						} else if (columnType.equals(PerunColumnType.NAME) && object.getName().toLowerCase().contains(text.toLowerCase())) {
-							return true;
-						}
+					} else if (columnType.equals(PerunColumnType.NAME) && object.getName() != null &&
+							object.getName().toLowerCase().contains(text.toLowerCase())) {
+						return true;
 					}
 				}
 				return false;

@@ -28,9 +28,9 @@
 					<p:PerunButton icon="FILTER" type="PRIMARY" ui:field="filterButton" focus="true">Filter</p:PerunButton>
 					<b:Button dataToggle="DROPDOWN" type="PRIMARY" ui:field="dropdown"/>
 					<b:DropDownMenu>
-						<b:AnchorListItem icon="MINUS" ui:field="idDropdown">Id</b:AnchorListItem>
-						<b:AnchorListItem icon="MINUS" ui:field="nameDropdown">Name</b:AnchorListItem>
-						<b:AnchorListItem icon="MINUS" ui:field="typeDropdown">Type</b:AnchorListItem>
+						<b:AnchorListItem ui:field="idDropdown">Id</b:AnchorListItem>
+						<b:AnchorListItem icon="CHECK" ui:field="nameDropdown">Name</b:AnchorListItem>
+						<b:AnchorListItem icon="CHECK" ui:field="typeDropdown">Type</b:AnchorListItem>
 					</b:DropDownMenu>
 				</b:ButtonGroup>
 

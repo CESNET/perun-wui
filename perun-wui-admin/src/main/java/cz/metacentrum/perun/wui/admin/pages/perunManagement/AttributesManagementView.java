@@ -27,10 +27,8 @@ import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ButtonToolBar;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
-import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * PERUN ADMIN - ATTRIBUTES MANAGEMENT VIEW
@@ -83,7 +81,7 @@ public class AttributesManagementView extends ViewImpl implements AttributesMana
 		anchorColumnMap.put(typeDropdown, PerunColumnType.ATTR_TYPE);
 
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
-		UiUtils.bindDropdown(anchorColumnMap, grid);
+		UiUtils.bindFilteringDropDown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
 		UiUtils.bindTableLoading(grid, dropdown, true);

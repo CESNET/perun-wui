@@ -74,7 +74,7 @@ public class ExtSourcesManagementView extends ViewImpl implements ExtSourcesMana
 		anchorColumnMap.put(typeDropdown, PerunColumnType.EXT_SOURCE_TYPE);
 
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
-		UiUtils.bindDropdown(anchorColumnMap, grid);
+		UiUtils.bindFilteringDropDown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
 		UiUtils.bindTableLoading(grid, loadButton, true);

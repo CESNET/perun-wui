@@ -86,7 +86,7 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 		anchorColumnMap.put(shortNameDropdown, PerunColumnType.VO_SHORT_NAME);
 
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
-		UiUtils.bindDropdown(anchorColumnMap, grid);
+		UiUtils.bindFilteringDropDown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
 		UiUtils.bindTableLoading(grid, dropdown, true);

@@ -53,6 +53,7 @@ public class FacilitiesManagementView extends ViewImpl implements FacilitiesMana
 	@UiField AnchorListItem idDropdown;
 	@UiField AnchorListItem nameDropdown;
 	@UiField AnchorListItem descriptionDropdown;
+	@UiField AnchorListItem ownersDropdown;
 	@UiField Button dropdown;
 
 	private HashMap<AnchorListItem, PerunColumnType> anchorColumnMap;
@@ -73,9 +74,10 @@ public class FacilitiesManagementView extends ViewImpl implements FacilitiesMana
 		anchorColumnMap.put(idDropdown, PerunColumnType.ID);
 		anchorColumnMap.put(nameDropdown, PerunColumnType.NAME);
 		anchorColumnMap.put(descriptionDropdown, PerunColumnType.DESCRIPTION);
+		anchorColumnMap.put(ownersDropdown, PerunColumnType.FACILITY_OWNERS);
 
 		UiUtils.bindFilterBox(grid, textBox, filterButton);
-		UiUtils.bindDropdown(anchorColumnMap, grid);
+		UiUtils.bindFilteringDropDown(anchorColumnMap, grid);
 		UiUtils.bindTableLoading(grid, filterButton, true);
 		UiUtils.bindTableLoading(grid, textBox, true);
 		UiUtils.bindTableLoading(grid, dropdown, true);
