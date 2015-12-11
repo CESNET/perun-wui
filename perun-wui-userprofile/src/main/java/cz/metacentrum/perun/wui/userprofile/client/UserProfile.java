@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.userprofile.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
@@ -8,6 +9,7 @@ import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import cz.metacentrum.perun.wui.client.PerunPlaceManager;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
+import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.pages.*;
@@ -51,13 +53,23 @@ public class UserProfile extends AbstractPresenterModule implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 
-		// set default for Growl plugin
-		Utils.getDefaultGrowlOptions().makeDefault();
+		ExceptionLogger exceptionHandler = new ExceptionLogger();
+		GWT.setUncaughtExceptionHandler(exceptionHandler);
 
-		// ensure injecting custom CSS styles of PerunWui
-		PerunResources.INSTANCE.gss().ensureInjected();
+		try {
 
-		UserProfileResources.INSTANCE.gss().ensureInjected();
+			// set default for Growl plugin
+			Utils.getDefaultGrowlOptions().makeDefault();
+
+			// ensure injecting custom CSS styles of PerunWui
+			PerunResources.INSTANCE.gss().ensureInjected();
+
+			UserProfileResources.INSTANCE.gss().ensureInjected();
+
+		} catch (Exception ex) {
+			exceptionHandler.onUncaughtException(ex);
+		}
+
 	}
 
 }
