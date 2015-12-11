@@ -17,7 +17,6 @@ import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectView;
-import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
@@ -38,7 +37,7 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 	@Override
 	protected void configure() {
 
-		install(new DefaultModule(PerunWuiPlaceManager.class));
+		install(new DefaultModule.Builder().placeManager(PerunWuiPlaceManager.class).build());
 
 		// Main Application must bind generic Presenter and custom View !!
 		bindPresenter(PerunWuiPresenter.class, PerunWuiPresenter.MyView.class, PerunWuiView.class, PerunWuiPresenter.MyProxy.class);

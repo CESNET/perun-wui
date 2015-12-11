@@ -8,6 +8,7 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.ContentSlot;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
+import com.gwtplatform.mvp.client.presenter.slots.NestedSlot;
 import com.gwtplatform.mvp.client.proxy.Proxy;
 import com.gwtplatform.mvp.client.proxy.RevealContentHandler;
 import cz.metacentrum.perun.wui.pages.FocusableView;
@@ -25,11 +26,10 @@ import cz.metacentrum.perun.wui.pages.FocusableView;
  */
 public abstract class PerunPresenter<V extends View, P extends Proxy<? extends PerunPresenter>> extends Presenter<V, P> {
 
-	/**
-	 * Use this in leaf presenters, inside their {@link #revealInParent} method.
-	 */
-	@ContentSlot
-	public static final GwtEvent.Type<RevealContentHandler<?>> SET_MAIN_CONTENT = new GwtEvent.Type<>();
+	public static final NestedSlot SLOT_MAIN_CONTENT = new NestedSlot();
+	public static final NestedSlot SLOT_LEFT_MENU = new NestedSlot();
+	public static final NestedSlot SLOT_HEADER = new NestedSlot();
+	public static final NestedSlot SLOT_FOOTER = new NestedSlot();
 
 	protected PerunPresenter(final EventBus eventBus, final V view, final P proxy) {
 		super(eventBus, view, proxy, RevealType.Root);

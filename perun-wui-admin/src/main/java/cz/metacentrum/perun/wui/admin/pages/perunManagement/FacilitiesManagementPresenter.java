@@ -28,7 +28,7 @@ public class FacilitiesManagementPresenter extends Presenter<FacilitiesManagemen
 
 	@Inject
 	public FacilitiesManagementPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
-		super(eventBus, view, proxy, PerunPresenter.SET_MAIN_CONTENT);
+		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 
 	@Override

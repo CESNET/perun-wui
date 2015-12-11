@@ -5,9 +5,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
-import com.gwtplatform.mvp.client.annotations.NoGatekeeper;
 import com.gwtplatform.mvp.client.annotations.ProxyStandard;
-import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
@@ -29,7 +27,7 @@ public class NotAuthorizedPresenter extends Presenter<NotAuthorizedPresenter.MyV
 
 	@Inject
 	public NotAuthorizedPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
-		super(eventBus, view, proxy, PerunPresenter.SET_MAIN_CONTENT);
+		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 
 }

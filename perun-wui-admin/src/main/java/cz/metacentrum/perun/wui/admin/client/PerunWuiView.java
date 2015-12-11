@@ -43,11 +43,14 @@ public class PerunWuiView extends ViewImpl implements PerunWuiPresenter.MyView {
 		menu.clear();
 		menu.add(leftMenu.asWidget());
 
+		bindSlot(PerunWuiPresenter.SLOT_LEFT_MENU, menu);
+		bindSlot(PerunWuiPresenter.SLOT_MAIN_CONTENT, pageContent);
+
 	}
 
 	@Override
 	public void setInSlot(final Object slot, final IsWidget content) {
-		if (slot == PerunPresenter.SET_MAIN_CONTENT) {
+		if (slot == PerunPresenter.SLOT_MAIN_CONTENT) {
 			pageContent.clear();
 			if (content != null) {
 				pageContent.add(content);

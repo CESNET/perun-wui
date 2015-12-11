@@ -37,7 +37,7 @@ public class OwnersManagementPresenter extends Presenter<OwnersManagementPresent
 
 	@Inject
 	public OwnersManagementPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy, OwnerCreatePresenter ownerCreatePresenter) {
-		super(eventBus, view, proxy, PerunPresenter.SET_MAIN_CONTENT);
+		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 		this.ownerCreatePresenter = ownerCreatePresenter;
 		getView().setUiHandlers(this);
 	}

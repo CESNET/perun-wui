@@ -27,7 +27,7 @@ public class FormPresenter extends Presenter<FormPresenter.MyView, FormPresenter
 
 	@Inject
 	public FormPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
-		super(eventBus, view, proxy, PerunPresenter.SET_MAIN_CONTENT);
+		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 
 }

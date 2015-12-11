@@ -41,7 +41,7 @@ public class AppDetailPresenter extends Presenter<AppDetailPresenter.MyView, App
 
 	@Inject
 	public AppDetailPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
-		super(eventBus, view, proxy, PerunPresenter.SET_MAIN_CONTENT);
+		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 
 	@Override

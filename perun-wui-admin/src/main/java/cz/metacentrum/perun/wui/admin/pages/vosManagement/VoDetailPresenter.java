@@ -39,7 +39,7 @@ public class VoDetailPresenter extends Presenter<VoDetailPresenter.MyView, VoDet
 
 	@Inject
 	public VoDetailPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
-		super(eventBus, view, proxy, PerunPresenter.SET_MAIN_CONTENT);
+		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 
 	@Override

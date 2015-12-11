@@ -32,7 +32,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 
 	@Inject
 	public PersonalPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
-		super(eventBus, view, proxy, PerunPresenter.SET_MAIN_CONTENT);
+		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 
 	/* TODO - we will probably want to fake authz for perun admin to see profiles of others

@@ -191,7 +191,7 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 
 	@Override
 	public void setInSlot(final Object slot, final IsWidget content) {
-		if (slot == PerunPresenter.SET_MAIN_CONTENT) {
+		if (slot == PerunPresenter.SLOT_MAIN_CONTENT) {
 			pageContent.clear();
 			if (content != null) {
 				pageContent.add(content);
