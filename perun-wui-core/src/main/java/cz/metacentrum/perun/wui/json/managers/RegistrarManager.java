@@ -274,4 +274,22 @@ public class RegistrarManager {
 
 	}
 
+	/**
+	 * Verify email address provided on registration form.
+	 *
+	 * @param i Token used to identify email to verify
+	 * @param m Token used to identify email to verify
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request validateEmail(String i, String m, JsonEvents events) {
+
+		JsonClient client = new JsonClient(true, events);
+		if (i != null) client.put("i", i);
+		if (m != null) client.put("m", m);
+		return client.call(REGISTRAR_MANAGER + "validateEmail");
+
+	}
+
 }

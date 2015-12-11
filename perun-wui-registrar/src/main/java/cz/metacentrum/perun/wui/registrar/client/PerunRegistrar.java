@@ -33,6 +33,7 @@ public class PerunRegistrar extends AbstractPresenterModule implements EntryPoin
 		bindPresenter(FormPresenter.class, FormPresenter.MyView.class, FormView.class, FormPresenter.MyProxy.class);
 		bindPresenter(AppsPresenter.class, AppsPresenter.MyView.class, AppsView.class, AppsPresenter.MyProxy.class);
 		bindPresenter(AppDetailPresenter.class, AppDetailPresenter.MyView.class, AppDetailView.class, AppDetailPresenter.MyProxy.class);
+		bindPresenter(VerifyEmailPresenter.class, VerifyEmailPresenter.MyView.class, VerifyEmailView.class, VerifyEmailPresenter.MyProxy.class);
 
 		// pre-defined places
 		bindConstant().annotatedWith(DefaultPlace.class).to(RegistrarPlaceTokens.FORM);

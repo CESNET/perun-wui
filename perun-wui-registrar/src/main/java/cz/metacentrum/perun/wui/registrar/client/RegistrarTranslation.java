@@ -63,8 +63,8 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Your membership in {0} is valid now.")
 	public String extended(String voOrGroupName);
 
-  	@DefaultMessage("It seems you want to submit application for membership in group {0}. However you have already applied.")
-  	public String groupFailedAlreadyApplied(String groupName);
+	@DefaultMessage("It seems you want to submit application for membership in group {0}. However you have already applied.")
+	public String groupFailedAlreadyApplied(String groupName);
 
 	@DefaultMessage("It seems you want to submit application for membership in group {0}. However you are already registered.")
 	public String groupFailedAlreadyRegistered(String groupName);
@@ -270,5 +270,17 @@ public interface RegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Loading applications")
 	public String loadingApplications();
+
+
+	/* ------------ MAIL VERIFICATION --------------- */
+
+	@DefaultMessage("Email verification")
+	public String emailVerification();
+
+	@DefaultMessage("Your email address was verified.")
+	public String emailWasVerified();
+
+	@DefaultMessage("We couldn't verify your email address.")
+	public String emailWasNotVerified();
 
 }
