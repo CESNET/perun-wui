@@ -280,7 +280,7 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Your email address was verified.")
 	public String emailWasVerified();
 
-	@DefaultMessage("We couldn't verify your email address.")
+	@DefaultMessage("We couldn`t verify your email address.")
 	public String emailWasNotVerified();
 
 }
