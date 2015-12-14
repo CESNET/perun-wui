@@ -24,6 +24,13 @@ body {
 .header {
 
 }
+
+.footer {
+	padding: 4px;
+	background-color: #F8F8F8;
+	border-top: 1px solid #e7e7e7;
+}
+
 .menuAndPageWrapper {
 	display: flex;
 	flex-direction: row;

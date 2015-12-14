@@ -25,8 +25,8 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
-import org.gwtbootstrap3.extras.growl.client.ui.Growl;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
+import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import java.util.HashMap;
 
@@ -118,7 +118,7 @@ public class OwnersManagementView extends ViewWithUiHandlers<PerunManagementUiHa
 				@Override
 				public void onFinished(JavaScriptObject jso) {
 					remove.setProcessing(false);
-					Growl.growl("Owner " + owner.getName() + " was deleted.", GrowlType.SUCCESS);
+					Notify.notify("Owner " + owner.getName() + " was deleted.", NotifyType.SUCCESS);
 					grid.removeFromTable(owner);
 					grid.refresh();
 				}
@@ -126,7 +126,7 @@ public class OwnersManagementView extends ViewWithUiHandlers<PerunManagementUiHa
 				@Override
 				public void onError(PerunException error) {
 					remove.setProcessing(false);
-					Growl.growl("Owner " + owner.getName() + " was not deleted. " + error.getMessage(), GrowlType.DANGER);
+					Notify.notify("Owner " + owner.getName() + " was not deleted. " + error.getMessage(), NotifyType.DANGER);
 							grid.getLoaderWidget().onError(error, new ClickHandler() {
 								@Override
 								public void onClick(ClickEvent event) {

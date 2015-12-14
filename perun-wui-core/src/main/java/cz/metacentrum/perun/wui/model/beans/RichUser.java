@@ -86,7 +86,7 @@ public class RichUser extends User {
 	 */
 	public final Attribute getAttribute(String urn) {
 		for (Attribute a : JsUtils.<Attribute>jsoAsList(JsUtils.getNativePropertyArray(this, "userAttributes"))) {
-			if (a.getName().equals(urn)) return a;
+			if (a.getURN().equals(urn)) return a;
 		}
 		return null;
 	}

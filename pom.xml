@@ -238,14 +238,14 @@
 			<dependency>
 				<groupId>org.gwtbootstrap3</groupId>
 				<artifactId>gwtbootstrap3</artifactId>
-				<version>0.9.1</version>
+				<version>0.9.2</version>
 				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.gwtbootstrap3</groupId>
 				<artifactId>gwtbootstrap3-extras</artifactId>
-				<version>0.9.1</version>
+				<version>0.9.2</version>
 				<scope>provided</scope>
 			</dependency>
 

@@ -16,6 +16,8 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
@@ -25,6 +27,7 @@ import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.html.Div;
+import org.gwtbootstrap3.client.ui.html.Span;
 
 import java.util.Map;
 
@@ -65,6 +68,11 @@ public class UserProfileView extends ViewImpl implements UserProfilePresenter.My
 
 	@UiField
 	AnchorListItem english;
+
+	@UiField
+	Span footerLeft;
+	@UiField
+	Span footerRight;
 
 	@UiHandler(value="logout")
 	public void logoutClick(ClickEvent event) {
@@ -135,6 +143,10 @@ public class UserProfileView extends ViewImpl implements UserProfilePresenter.My
 		}
 
 		english.setText(translation.english());
+
+		// TODO - more advanced footer
+		footerLeft.setHTML(translation.supportAt(Utils.perunReportEmailAddress()));
+		footerRight.setHTML(translation.credits(JsUtils.getCurrentYear()) + " | " +  translation.version(PerunWebConstants.INSTANCE.guiVersion()));
 
 	}
 

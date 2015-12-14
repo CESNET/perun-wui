@@ -275,4 +275,12 @@ public class JsUtils {
 		return btoa(decodedString);
 	}-*/;
 
+	/**
+	 * Return current year as number
+	 * @return current year
+	 */
+	public static final native int getCurrentYear() /*-{
+		return new Date().getFullYear()
+	}-*/;
+
 }

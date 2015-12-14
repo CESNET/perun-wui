@@ -26,6 +26,8 @@ public interface UserProfileResources extends ClientBundle {
 
 		String header();
 
+		String footer();
+
 	}
 
 	@Source("css/PerunUserProfile.gss")

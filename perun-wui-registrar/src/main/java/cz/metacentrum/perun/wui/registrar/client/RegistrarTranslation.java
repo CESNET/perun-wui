@@ -20,9 +20,6 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Help")
 	public String help();
 
-	@DefaultMessage("Contact us by {0}.")
-	public String footer(String mails);
-
 	// -------------- REGISTRATION FORM ------------------------ //
 
 	// TITLES

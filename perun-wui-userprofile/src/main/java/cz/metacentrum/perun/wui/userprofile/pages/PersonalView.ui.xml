@@ -3,7 +3,6 @@
              xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
              xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
              xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
-             xmlns:p.registrar='urn:import:cz.metacentrum.perun.wui.registrar.widgets'
 >
 
 	<ui:style>
@@ -20,6 +19,21 @@
 				</b:Heading>
 
 				<p:PerunLoader ui:field="loader" />
+
+				<b:Description horizontal="true" paddingTop="20">
+					<b:DescriptionTitle ui:field="nameLabel" paddingBottom="10" />
+					<b:DescriptionData ui:field="nameData" paddingBottom="10" />
+					<b:DescriptionTitle ui:field="orgLabel" paddingBottom="10" />
+					<b:DescriptionData ui:field="orgData" paddingBottom="10" />
+					<b:DescriptionTitle ui:field="emailLabel" paddingBottom="10" />
+					<b:DescriptionData ui:field="emailData" paddingBottom="10" />
+					<b:DescriptionTitle ui:field="phoneLabel" paddingBottom="10" />
+					<b:DescriptionData ui:field="phoneData" paddingBottom="10" />
+					<b:DescriptionTitle ui:field="langLabel" paddingBottom="10" />
+					<b:DescriptionData ui:field="langData" paddingBottom="10" />
+					<b:DescriptionTitle ui:field="timeLabel" paddingBottom="10" />
+					<b:DescriptionData ui:field="timeData" paddingBottom="10" />
+				</b:Description>
 
 			</b:Column>
 		</b:Row>

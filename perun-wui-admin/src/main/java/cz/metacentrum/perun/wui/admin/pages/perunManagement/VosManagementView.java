@@ -27,9 +27,9 @@ import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
-import org.gwtbootstrap3.extras.growl.client.ui.Growl;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
+import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
+import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 
 import java.util.HashMap;
 
@@ -99,14 +99,14 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 	public void removeOnClick(ClickEvent event) {
 		for (Vo vo : grid.getSelectedList()) {
 			if (vo.getName().length() > 10) {
-				GrowlOptions opts = new GrowlOptions();
+				NotifySettings opts = NotifySettings.newSettings();
 				opts.setAllowDismiss(true);
-				opts.setType(GrowlType.DANGER);
+				opts.setType(NotifyType.DANGER);
 				opts.setDelay(0);
-				Growl.growl("VO "+vo.getName()+" was not deleted.", opts);
+				Notify.notify("VO "+vo.getName()+" was not deleted.", opts);
 				grid.getSelectionModel().setSelected(vo, true);
 			} else {
-				Growl.growl("VO "+vo.getName()+" was deleted.", GrowlType.SUCCESS);
+				Notify.notify("VO "+vo.getName()+" was deleted.", NotifyType.SUCCESS);
 				grid.getSelectionModel().setSelected(vo, false);
 			}
 		}
@@ -124,26 +124,26 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 	@UiHandler(value = "growl1")
 	public void onClick2(ClickEvent event) {
 
-		final GrowlOptions opts = new GrowlOptions();
-		Growl.growl("Clicked on Growl", opts);
+		final NotifySettings opt = NotifySettings.newSettings();
+		Notify.notify("Clicked on Growl", opt);
 
 	}
 
 	@UiHandler(value = "growl2")
 	public void onClick3(ClickEvent event) {
-		Growl.growl("Title", "Message", IconType.AMBULANCE);
+		Notify.notify("Title", "Message", IconType.AMBULANCE);
 	}
 
 	@UiHandler(value = "growl3")
 	public void onClick4(ClickEvent event) {
-		GrowlOptions opt = new GrowlOptions();
-		opt.setType(GrowlType.SUCCESS);
+		NotifySettings opt = NotifySettings.newSettings();
+		opt.setType(NotifyType.SUCCESS);
 		opt.setDelay(0);
-		final Growl g = Growl.growl("Title", "Message", IconType.AMBULANCE, "http://perun.cesnet.cz/web/", opt);
+		final Notify g = Notify.notify("Title", "Message", IconType.AMBULANCE, "http://perun.cesnet.cz/web/", opt);
 		Scheduler.get().scheduleFixedDelay(new Scheduler.RepeatingCommand() {
 			@Override
 			public boolean execute() {
-				g.updateType(GrowlType.DANGER);
+				g.updateType(NotifyType.DANGER);
 				return false;
 			}
 		}, 2000);
@@ -151,7 +151,7 @@ public class VosManagementView extends ViewImpl implements VosManagementPresente
 
 	@UiHandler(value = "growl4")
 	public void onClick5(ClickEvent event) {
-		Growl.growl("", "Message", IconType.AMBULANCE, "http://perun.cesnet.cz/web/");
+		Notify.notify("", "Message", IconType.AMBULANCE, "http://perun.cesnet.cz/web/");
 	}
 
 	public void draw() {
