@@ -15,6 +15,9 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
+import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
+import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
@@ -24,6 +27,7 @@ import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.html.Div;
+import org.gwtbootstrap3.client.ui.html.Span;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.List;
@@ -71,7 +75,10 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	AnchorListItem logout;
 
 	@UiField
-	static Text footer;
+	static Span footerLeft;
+
+	@UiField
+	static Span footerRight;
 
 	@UiField
 	static NavbarHeader navbarHeader;
@@ -109,17 +116,18 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 
 	@Override
 	public void onLoadingStartFooter() {
-		footer.setText(translation.loading());
+		footerLeft.setText(translation.loading());
+		footerRight.setHTML(translation.credits(JsUtils.getCurrentYear()) + " | " +  translation.version(PerunWebConstants.INSTANCE.guiVersion()));
 	}
 
 	@Override
 	public void onFinishedFooter(List<String> contactEmail) {
 		if (contactEmail == null || contactEmail.isEmpty()) {
-			footer.setText(translation.footer("perun@cesnet.cz"));
+			footerLeft.setHTML(translation.supportAt("perun@cesnet.cz"));
 			return;
 		}
 		String mails = contactEmail.toString();
-		footer.setText(translation.footer(mails.substring(1, mails.length()-1)));
+		footerLeft.setHTML(translation.supportAt(mails.substring(1, mails.length()-1)));
 	}
 
 	@Override

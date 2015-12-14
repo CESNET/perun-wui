@@ -24,8 +24,8 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.IconType;
-import org.gwtbootstrap3.extras.growl.client.ui.Growl;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
+import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import java.util.HashMap;
 
@@ -95,14 +95,14 @@ public class ExtSourcesManagementView extends ViewImpl implements ExtSourcesMana
 				@Override
 				public void onFinished(JavaScriptObject jso) {
 					removeButton.setProcessing(false);
-					Growl.growl("ExtSource " + extSource.getName() + " was deleted.", GrowlType.SUCCESS);
+					Notify.notify("ExtSource " + extSource.getName() + " was deleted.", NotifyType.SUCCESS);
 					grid.removeFromTable(extSource);
 				}
 
 				@Override
 				public void onError(PerunException error) {
 					removeButton.setProcessing(false);
-					Growl.growl("ExtSource " + extSource.getName() + " was not deleted. " + error.getMessage(), GrowlType.DANGER);
+					Notify.notify("ExtSource " + extSource.getName() + " was not deleted. " + error.getMessage(), NotifyType.DANGER);
 				}
 
 				@Override

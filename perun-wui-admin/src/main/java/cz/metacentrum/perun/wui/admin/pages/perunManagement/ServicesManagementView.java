@@ -25,8 +25,8 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 import cz.metacentrum.perun.wui.widgets.resources.UnaccentMultiWordSuggestOracle;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
-import org.gwtbootstrap3.extras.growl.client.ui.Growl;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlType;
+import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import java.util.HashMap;
 
@@ -97,13 +97,13 @@ public class ServicesManagementView extends ViewImpl implements ServicesManageme
 				public void onFinished(JavaScriptObject jso) {
 					remove.setProcessing(false);
 					grid.removeFromTable(service);
-					Growl.growl("Service " + service.getName() + " was deleted.", GrowlType.SUCCESS);
+					Notify.notify("Service " + service.getName() + " was deleted.", NotifyType.SUCCESS);
 				}
 
 				@Override
 				public void onError(PerunException error) {
 					remove.setProcessing(false);
-					Growl.growl("Service "+service.getName()+" was not deleted - " + error.getMessage() + ".", GrowlType.DANGER);
+					Notify.notify("Service "+service.getName()+" was not deleted - " + error.getMessage() + ".", NotifyType.DANGER);
 				}
 
 				@Override

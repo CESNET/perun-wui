@@ -14,7 +14,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.extras.animate.client.ui.constants.Animation;
-import org.gwtbootstrap3.extras.growl.client.ui.GrowlOptions;
+import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 
 import java.util.*;
 
@@ -31,8 +31,9 @@ public class Utils {
 	public static final String ATTRIBUTE_FRIENDLY_NAME_MATCHER = "^[-a-zA-Z0-9.]+([:][-a-zA-Z0-9.]+)?$";
 	public static final String LOGIN_VALUE_MATCHER = "^[a-zA-Z0-9_][-A-z0-9_.@/]*$";
 
-	public static GrowlOptions getDefaultGrowlOptions() {
-		GrowlOptions options = new GrowlOptions();
+	public static NotifySettings getDefaultNotifyOptions() {
+
+		NotifySettings options = NotifySettings.newSettings();
 		options.setDelay(10000);
 		options.setAllowDismiss(false);
 		options.setOffset(20, 65);

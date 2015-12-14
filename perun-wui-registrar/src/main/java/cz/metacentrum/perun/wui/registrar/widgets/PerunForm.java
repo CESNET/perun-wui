@@ -202,12 +202,6 @@ public class PerunForm extends FieldSet {
 
 							button.setProcessing(false);
 							button.setEnabled(true);
-							/*
-							GrowlOptions go = new GrowlOptions();
-							go.setType(GrowlType.SUCCESS);
-							Growl.growl("Form submitted !!", go);
-							*/
-
 							if (onSubmitEvent != null) onSubmitEvent.onFinished(jso);
 
 						}

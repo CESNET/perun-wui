@@ -1,5 +1,7 @@
 package cz.metacentrum.perun.wui.userprofile.pages;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
@@ -8,8 +10,14 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.managers.UsersManager;
+import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.RichUser;
+import cz.metacentrum.perun.wui.model.beans.User;
 import cz.metacentrum.perun.wui.userprofile.client.UserProfilePlaceTokens;
 
 /**
@@ -23,6 +31,9 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	private PersonalPresenter presenter = this;
 
 	public interface MyView extends View {
+		void setUser(User user);
+		void onLoadingStart();
+		void onError(PerunException ex, JsonEvents retry);
 	}
 
 	@NameToken(UserProfilePlaceTokens.PERSONAL)
@@ -35,54 +46,66 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 
-	/* TODO - we will probably want to fake authz for perun admin to see profiles of others
-
 	@Override
 	public void prepareFromRequest(final PlaceRequest request) {
+
 		super.prepareFromRequest(request);
 
+		GWT.log("called");
+
 		try {
-			final int id = Integer.valueOf(request.getParameter("id", null));
+
+			String userId = request.getParameter("id", null);
+			if (userId == null) {
+				userId = String.valueOf(PerunSession.getInstance().getUser().getId());
+			}
+
+			final int id = Integer.valueOf(userId);
+
 			if (id < 1) {
 				placeManager.revealErrorPlace(request.getNameToken());
 			}
 
-			RegistrarManager.getApplicationById(id, new JsonEvents() {
+			if (PerunSession.getInstance().isSelf(id)) {
 
-				final JsonEvents retry = this;
+				UsersManager.getRichUserWithAttributes(id, new JsonEvents() {
 
-				@Override
-				public void onFinished(JavaScriptObject jso) {
-					Application app  = jso.cast();
-					getView().setApplication(app);
-					getProxy().manualReveal(presenter);
-				}
+					final JsonEvents retry = this;
 
-				@Override
-				public void onError(PerunException error) {
-					if (error.getName().equals("PrivilegeException")) {
-						getProxy().manualRevealFailed();
-						placeManager.revealUnauthorizedPlace(request.getNameToken());
-					} else {
-						getProxy().manualRevealFailed();
-						placeManager.revealErrorPlace(request.getNameToken());
-
-						getView().onErrorApplication(error, retry);
+					@Override
+					public void onFinished(JavaScriptObject jso) {
+						RichUser user = jso.cast();
+						getView().setUser(user);
+						getProxy().manualReveal(presenter);
 					}
-				}
 
-				@Override
-				public void onLoadingStart() {
-					getView().onLoadingStartApplication();
-				}
-			});
+					@Override
+					public void onError(PerunException error) {
+						if (error.getName().equals("PrivilegeException")) {
+							getProxy().manualRevealFailed();
+							placeManager.revealUnauthorizedPlace(request.getNameToken());
+						} else {
+							getProxy().manualRevealFailed();
+							placeManager.revealErrorPlace(request.getNameToken());
+							getView().onError(error, retry);
+						}
+					}
+
+					@Override
+					public void onLoadingStart() {
+						getView().onLoadingStart();
+					}
+				});
+
+			} else {
+				placeManager.revealUnauthorizedPlace(request.getNameToken());
+			}
+
 		} catch( NumberFormatException e ) {
 			getProxy().manualRevealFailed();
 			placeManager.revealErrorPlace(request.getNameToken());
 		}
 
 	}
-
-	*/
 
 }

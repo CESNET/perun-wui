@@ -86,7 +86,7 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 			PerunWuiAdminResources.INSTANCE.gss().ensureInjected();
 
 			// set default for Growl plugin
-			Utils.getDefaultGrowlOptions().makeDefault();
+			Utils.getDefaultNotifyOptions().makeDefault();
 
 		} catch (RuntimeException ex) {
 			handler.onUncaughtException(ex);

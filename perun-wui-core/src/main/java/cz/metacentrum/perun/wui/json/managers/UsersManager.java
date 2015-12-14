@@ -73,4 +73,20 @@ public class UsersManager {
 		return client.call(USERS_MANAGER + "getRichUsersWithoutVoAssigned");
 	}
 
+	/**
+	 * Get RichUser by ID with all filled attributes
+	 *
+	 * @param id Users ID
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getRichUserWithAttributes(int id, JsonEvents events){
+
+		JsonClient client = new JsonClient(events);
+		if (id > 0) client.put("user", id);
+		return client.call(USERS_MANAGER + "getRichUserWithAttributes");
+
+	}
+
 }

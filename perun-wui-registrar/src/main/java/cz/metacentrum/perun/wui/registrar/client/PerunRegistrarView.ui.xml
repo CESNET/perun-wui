@@ -42,7 +42,12 @@
 
 
 		<b.html:Div addStyleNames="{res.gss.footer}">
-			<b.html:Text ui:field="footer"/>
+			<b.html:Div pull="LEFT">
+				<b.html:Span ui:field="footerLeft"/>
+			</b.html:Div>
+			<b.html:Div pull="RIGHT">
+				<b.html:Span ui:field="footerRight"/>
+			</b.html:Div>
 		</b.html:Div>
 
 	</b.html:Div>

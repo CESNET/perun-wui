@@ -16,7 +16,7 @@
 	<!-- support for GWT Bootstrap 3 in IE 8 -->
 	<inherits name="org.gwtbootstrap3.extras.respond.Respond"/>
 	<!-- support for Gwt Bootstrap 3 notifications -->
-	<inherits name="org.gwtbootstrap3.extras.growl.Growl"/>
+	<inherits name="org.gwtbootstrap3.extras.notify.Notify"/>
 	<!-- support for Gwt Bootstrap 3 nice selections -->
 	<inherits name="org.gwtbootstrap3.extras.select.Select"/>
 

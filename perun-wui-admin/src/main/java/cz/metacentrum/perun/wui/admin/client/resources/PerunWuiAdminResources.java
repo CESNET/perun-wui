@@ -28,6 +28,9 @@ public interface PerunWuiAdminResources extends ClientBundle {
 		String menu();
 
 		String header();
+
+		String footer();
+
 	}
 
 	@Source("css/PerunWuiAdmin.gss")
