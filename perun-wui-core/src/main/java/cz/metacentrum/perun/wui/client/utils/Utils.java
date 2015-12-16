@@ -31,6 +31,9 @@ public class Utils {
 	public static final String ATTRIBUTE_FRIENDLY_NAME_MATCHER = "^[-a-zA-Z0-9.]+([:][-a-zA-Z0-9.]+)?$";
 	public static final String LOGIN_VALUE_MATCHER = "^[a-zA-Z0-9_][-A-z0-9_.@/]*$";
 
+	private static final HashMap<String, String> IDP_NAMES = new HashMap<String, String>();
+	private static final HashMap<String, String> KRB_NAMES = new HashMap<String, String>();
+
 	public static NotifySettings getDefaultNotifyOptions() {
 
 		NotifySettings options = NotifySettings.newSettings();
@@ -567,11 +570,11 @@ public class Utils {
 			if (value != null && !value.isEmpty()) {
 				String[] parts = value.split(",");
 
-                Map<String, String> language = new HashMap<>();
-                language.put("code", parts[0]);
-                language.put("nativeName", parts[1]);
-                language.put("englishName", parts[2]);
-                return language;
+				Map<String, String> language = new HashMap<>();
+				language.put("code", parts[0]);
+				language.put("nativeName", parts[1]);
+				language.put("englishName", parts[2]);
+				return language;
 			}
 		}
 		return null;
@@ -1617,63 +1620,75 @@ public class Utils {
 	 */
 	public static String translateIdp(String name) {
 
-		HashMap<String, String> orgs = new HashMap<String, String>();
-		orgs.put("https://idp.upce.cz/idp/shibboleth", "University in Pardubice");
-		orgs.put("https://idp.slu.cz/idp/shibboleth", "University in Opava");
-		orgs.put("https://login.feld.cvut.cz/idp/shibboleth", "Faculty of Electrical Engineering, Czech Technical University In Prague");
-		orgs.put("https://www.vutbr.cz/SSO/saml2/idp", "Brno University of Technology");
-		orgs.put("https://shibboleth.nkp.cz/idp/shibboleth", "The National Library of the Czech Republic");
-		orgs.put("https://idp2.civ.cvut.cz/idp/shibboleth", "Czech Technical University In Prague");
-		orgs.put("https://shibbo.tul.cz/idp/shibboleth", "Technical University of Liberec");
-		orgs.put("https://idp.mendelu.cz/idp/shibboleth", "Mendel University in Brno");
-		orgs.put("https://cas.cuni.cz/idp/shibboleth", "Charles University in Prague");
-		orgs.put("https://wsso.vscht.cz/idp/shibboleth", "Institute of Chemical Technology Prague");
-		orgs.put("https://idp.vsb.cz/idp/shibboleth", "VSB – Technical University of Ostrava");
-		orgs.put("https://whoami.cesnet.cz/idp/shibboleth", "CESNET, z.s.p.o.");
-		orgs.put("https://helium.jcu.cz/idp/shibboleth", "University of South Bohemia");
-		orgs.put("https://idp.ujep.cz/idp/shibboleth", "Jan Evangelista Purkyne University in Usti nad Labem");
-		orgs.put("https://idp.amu.cz/idp/shibboleth", "Academy of Performing Arts in Prague");
-		orgs.put("https://idp.lib.cas.cz/idp/shibboleth", "Academy of Sciences Library");
-		orgs.put("https://shibboleth.mzk.cz/simplesaml/metadata.xml", "Moravian  Library");
-		orgs.put("https://idp2.ics.muni.cz/idp/shibboleth", "Masaryk University");
-		orgs.put("https://idp.upol.cz/idp/shibboleth", "Palacky University, Olomouc");
-		orgs.put("https://idp.fnplzen.cz/idp/shibboleth", "FN Plzen");
-		orgs.put("https://id.vse.cz/idp/shibboleth", "University of Economics, Prague");
-		orgs.put("https://shib.zcu.cz/idp/shibboleth", "University of West Bohemia");
-		orgs.put("https://idptoo.osu.cz/simplesaml/saml2/idp/metadata.php", "University of Ostrava");
-		orgs.put("https://login.ics.muni.cz/idp/shibboleth", "MetaCentrum");
-		orgs.put("https://idp.hostel.eduid.cz/idp/shibboleth", "eduID.cz Hostel");
-		orgs.put("https://shibboleth.techlib.cz/idp/shibboleth", "National Library of Technology");
-		orgs.put("https://eduid.jamu.cz/idp/shibboleth", "Janacek Academy of Music and Performing Arts in Brno");
-		orgs.put("https://marisa.uochb.cas.cz/simplesaml/saml2/idp/metadata.php", "Institute of Organic Chemistry and Biochemistry AS CR");
-		orgs.put("https://shibboleth.utb.cz/idp/shibboleth", "Tomas Bata University in Zlin");
-		orgs.put("https://www.egi.eu/idp/shibboleth", "EGI");
-		orgs.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
+		if (!IDP_NAMES.isEmpty()) {
 
-		// Handle social identities
+			if (IDP_NAMES.get(name) != null) {
+				return IDP_NAMES.get(name);
+			} else {
+				return name;
+			}
 
-		orgs.put("https://extidp.cesnet.cz/idp/shibboleth", "Social");
-		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:google", "Google");
-		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:facebook", "Facebook");
-		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:linkedin", "LinkedIn");
-		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:mojeid", "MojeID");
-		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:orcid", "OrcID");
-		orgs.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:github", "GitHub");
-
-		orgs.put("@google.extidp.cesnet.cz", "Google");
-		orgs.put("@facebook.extidp.cesnet.cz", "Facebook");
-		orgs.put("@mojeid.extidp.cesnet.cz", "MojeID");
-		orgs.put("@linkedin.extidp.cesnet.cz", "LinkedIn");
-		orgs.put("@twitter.extidp.cesnet.cz", "Twitter");
-		orgs.put("@seznam.extidp.cesnet.cz", "Seznam");
-		orgs.put("@elixir-europe.org", "Elixir Europe");
-		orgs.put("@github.extidp.cesnet.cz", "GitHub");
-		orgs.put("@orcid.extidp.cesnet.cz", "OrcID");
-
-		if (orgs.get(name) != null) {
-			return orgs.get(name);
 		} else {
-			return name;
+
+			IDP_NAMES.put("https://idp.upce.cz/idp/shibboleth", "University in Pardubice");
+			IDP_NAMES.put("https://idp.slu.cz/idp/shibboleth", "University in Opava");
+			IDP_NAMES.put("https://login.feld.cvut.cz/idp/shibboleth", "Faculty of Electrical Engineering, Czech Technical University In Prague");
+			IDP_NAMES.put("https://www.vutbr.cz/SSO/saml2/idp", "Brno University of Technology");
+			IDP_NAMES.put("https://shibboleth.nkp.cz/idp/shibboleth", "The National Library of the Czech Republic");
+			IDP_NAMES.put("https://idp2.civ.cvut.cz/idp/shibboleth", "Czech Technical University In Prague");
+			IDP_NAMES.put("https://shibbo.tul.cz/idp/shibboleth", "Technical University of Liberec");
+			IDP_NAMES.put("https://idp.mendelu.cz/idp/shibboleth", "Mendel University in Brno");
+			IDP_NAMES.put("https://cas.cuni.cz/idp/shibboleth", "Charles University in Prague");
+			IDP_NAMES.put("https://wsso.vscht.cz/idp/shibboleth", "Institute of Chemical Technology Prague");
+			IDP_NAMES.put("https://idp.vsb.cz/idp/shibboleth", "VSB – Technical University of Ostrava");
+			IDP_NAMES.put("https://whoami.cesnet.cz/idp/shibboleth", "CESNET, z.s.p.o.");
+			IDP_NAMES.put("https://helium.jcu.cz/idp/shibboleth", "University of South Bohemia");
+			IDP_NAMES.put("https://idp.ujep.cz/idp/shibboleth", "Jan Evangelista Purkyne University in Usti nad Labem");
+			IDP_NAMES.put("https://idp.amu.cz/idp/shibboleth", "Academy of Performing Arts in Prague");
+			IDP_NAMES.put("https://idp.lib.cas.cz/idp/shibboleth", "Academy of Sciences Library");
+			IDP_NAMES.put("https://shibboleth.mzk.cz/simplesaml/metadata.xml", "Moravian  Library");
+			IDP_NAMES.put("https://idp2.ics.muni.cz/idp/shibboleth", "Masaryk University");
+			IDP_NAMES.put("https://idp.upol.cz/idp/shibboleth", "Palacky University, Olomouc");
+			IDP_NAMES.put("https://idp.fnplzen.cz/idp/shibboleth", "FN Plzen");
+			IDP_NAMES.put("https://id.vse.cz/idp/shibboleth", "University of Economics, Prague");
+			IDP_NAMES.put("https://shib.zcu.cz/idp/shibboleth", "University of West Bohemia");
+			IDP_NAMES.put("https://idptoo.osu.cz/simplesaml/saml2/idp/metadata.php", "University of Ostrava");
+			IDP_NAMES.put("https://login.ics.muni.cz/idp/shibboleth", "MetaCentrum");
+			IDP_NAMES.put("https://idp.hostel.eduid.cz/idp/shibboleth", "eduID.cz Hostel");
+			IDP_NAMES.put("https://shibboleth.techlib.cz/idp/shibboleth", "National Library of Technology");
+			IDP_NAMES.put("https://eduid.jamu.cz/idp/shibboleth", "Janacek Academy of Music and Performing Arts in Brno");
+			IDP_NAMES.put("https://marisa.uochb.cas.cz/simplesaml/saml2/idp/metadata.php", "Institute of Organic Chemistry and Biochemistry AS CR");
+			IDP_NAMES.put("https://shibboleth.utb.cz/idp/shibboleth", "Tomas Bata University in Zlin");
+			IDP_NAMES.put("https://www.egi.eu/idp/shibboleth", "EGI");
+			IDP_NAMES.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
+			IDP_NAMES.put("https://idp.fzu.cas.cz/idp/shibboleth", "Institute of Physics AS CR");
+
+			// Handle social identities
+
+			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth", "Social");
+			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:google", "Google");
+			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:facebook", "Facebook");
+			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:linkedin", "LinkedIn");
+			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:mojeid", "MojeID");
+			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:orcid", "OrcID");
+			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:github", "GitHub");
+
+			IDP_NAMES.put("@google.extidp.cesnet.cz", "Google");
+			IDP_NAMES.put("@facebook.extidp.cesnet.cz", "Facebook");
+			IDP_NAMES.put("@mojeid.extidp.cesnet.cz", "MojeID");
+			IDP_NAMES.put("@linkedin.extidp.cesnet.cz", "LinkedIn");
+			IDP_NAMES.put("@twitter.extidp.cesnet.cz", "Twitter");
+			IDP_NAMES.put("@seznam.extidp.cesnet.cz", "Seznam");
+			IDP_NAMES.put("@elixir-europe.org", "Elixir Europe");
+			IDP_NAMES.put("@github.extidp.cesnet.cz", "GitHub");
+			IDP_NAMES.put("@orcid.extidp.cesnet.cz", "OrcID");
+
+			if (IDP_NAMES.get(name) != null) {
+				return IDP_NAMES.get(name);
+			} else {
+				return name;
+			}
+
 		}
 
 	}
@@ -1686,16 +1701,29 @@ public class Utils {
 	 */
 	public static String translateKerberos(String name) {
 
-		HashMap<String, String> orgs = new HashMap<String, String>();
-		orgs.put("META", "MetaCentrum");
-		orgs.put("EINFRA", "CESNET eInfrastructure");
-		orgs.put("SITOLA.FI.MUNI.CZ", "Sitola");
-		orgs.put("ICS.MUNI.CZ", "Masaryk University");
+		if (!KRB_NAMES.isEmpty()) {
 
-		if (orgs.get(name) != null) {
-			return orgs.get(name);
+			if (KRB_NAMES.get(name) != null) {
+				return KRB_NAMES.get(name);
+			} else {
+				return name;
+			}
+
 		} else {
-			return name;
+
+			KRB_NAMES.put("META", "MetaCentrum");
+			KRB_NAMES.put("EINFRA", "CESNET eInfrastructure");
+			KRB_NAMES.put("SITOLA.FI.MUNI.CZ", "Sitola");
+			KRB_NAMES.put("ICS.MUNI.CZ", "Masaryk University");
+			KRB_NAMES.put("SAGRID", "SAGrid");
+
+			if (KRB_NAMES.get(name) != null) {
+				return KRB_NAMES.get(name);
+			} else {
+				return name;
+			}
+
+
 		}
 
 	}
