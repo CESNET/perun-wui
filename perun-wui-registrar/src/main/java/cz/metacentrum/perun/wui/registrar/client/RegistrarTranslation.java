@@ -148,7 +148,7 @@ public interface RegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("<i>HIDDEN</i>")
 	public String isHidden();
 
-	@DefaultMessage("<i>FEDERATION</i>")
+	@DefaultMessage("<i>(Value provided by external source)</i>")
 	String federation();
 
 	@DefaultMessage("UNDEFINED")

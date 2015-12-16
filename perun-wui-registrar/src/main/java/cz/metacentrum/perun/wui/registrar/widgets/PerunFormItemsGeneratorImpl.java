@@ -95,7 +95,7 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 				if (!form.isSeeHiddenItems()) {
 					hidden.setVisible(false);
 				} else {
-					hidden.setStatus(trans.federation() + ", " + trans.isHidden(), ValidationState.NONE);
+					hidden.setStatus(trans.federation(), ValidationState.NONE);
 				}
 				return hidden;
 			case HTML_COMMENT:
