@@ -7,8 +7,23 @@ import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
  */
 public interface UserProfileTranslation extends PerunTranslation {
 
-	@DefaultMessage("Profile")
-	public String profile();
+	@DefaultMessage("User profile")
+	public String appMyProfile();
+
+	@DefaultMessage("My profile")
+	public String menuMyProfile();
+
+	@DefaultMessage("Virtual organizations")
+	public String menuOrganizations();
+
+	@DefaultMessage("My identities")
+	public String menuMyIdentities();
+
+	@DefaultMessage("Logins & Passwords")
+	public String menuLoginsAndPasswords();
+
+	@DefaultMessage("Settings")
+	public String menuSettings();
 
 	@DefaultMessage("Title before")
 	String title();

@@ -231,7 +231,7 @@
                         <!-- Plugin configuration. There are many available options, see
                           gwt-maven-plugin documentation at codehaus.org -->
                         <configuration>
-                            <module>cz.metacentrum.perun.wui.userprofile.userprofile</module>
+                            <module>cz.metacentrum.perun.wui.userprofile.perun-userprofile</module>
                             <runTarget>UserProfile.html</runTarget>
                             <hostedWebapp>${webappDirectory}</hostedWebapp>
                         </configuration>

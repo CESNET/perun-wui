@@ -1,7 +1,8 @@
-package cz.metacentrum.perun.wui.consolidator.model;
+package cz.metacentrum.perun.wui.model.common;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
 import java.util.ArrayList;
@@ -18,6 +19,13 @@ public class FeedEntities extends JavaScriptObject {
 	protected FeedEntities() {
 	}
 
+	public static FeedEntities createNew() {
+
+		FeedEntities object = new JSONObject().getJavaScriptObject().cast();
+		return object;
+
+	}
+
 	/**
 	 * Get data about specific IdP
 	 *
@@ -27,6 +35,16 @@ public class FeedEntities extends JavaScriptObject {
 	public final FeedEntity get(String idpUrl) {
 		return JsUtils.getNativePropertyObject(this, idpUrl).cast();
 	}
+
+	/**
+	 * Set FeedEntity into Entities
+	 *
+	 * @param idpUrl URL/ID of IdP to set
+	 * @param entity IdP Entity to set
+	 */
+	public final native void set(String idpUrl, FeedEntity entity) /*-{
+		this[idpUrl] = entity;
+	}-*/;
 
 	/**
 	 * Get data about all IdPs

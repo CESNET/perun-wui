@@ -44,8 +44,8 @@ public class PerunBootstrapper implements Bootstrapper {
 		final PerunTranslation translation = GWT.create(PerunTranslation.class);
 
 		final PerunLoader loader = new PerunLoader();
-		RootPanel.get().clear();
-		RootPanel.get().add(loader);
+		RootPanel.get("app-content").clear();
+		RootPanel.get("app-content").add(loader);
 
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
 

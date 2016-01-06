@@ -13,9 +13,9 @@ body {
 }
 
 .webContent {
-    position: absolute;
-    height: 100%;
-    width: 100%;
+	position: relative; /* previously absolute - fixes overflow issue, but should be solved otherwise */
+	height: 100%;
+	width: 100%;
 
     display: flex;
     flex-direction: column;
@@ -30,42 +30,51 @@ body {
     padding-right: 15px;
 }
 
-.pageWrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    flex-grow: 1;
-
-    margin: 60px 15px 0px 15px;
-}
-.page {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-
-    flex-grow: 1;
-}
-
 .pageHeader {
 
 }
 
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-grow: 1;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-grow: 1;
+}
+
+.menu {
+	min-width: 250px;
+}
+
+.menuAndPageWrapper {
+	min-height: 600px; /* Ugly hack to fix content display (table size), footer should be pushed down
+	                      by changing layout and not like-this. */
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+	flex-grow: 1;
+	margin: 0px 15px 0px 15px;
+}
+
+.footer {
+	padding: 4px;
+	line-height: 2em;
+	text-align: center;
+}
+
 .grid {
     flex-grow: 1;
-
     margin-bottom: 10px;
     overflow-x: auto;
 }
 .grid > div:last-child {
     min-width: 767px;
-}
-
-
-.footer {
-	padding: 4px;
-	background-color: #F8F8F8;
-	border-top: 1px solid #e7e7e7;
 }
 
 /* HACKS */

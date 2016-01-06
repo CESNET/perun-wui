@@ -22,13 +22,15 @@ import cz.metacentrum.perun.wui.client.utils.Utils;
 import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
+import org.gwtbootstrap3.client.ui.NavbarBrand;
 import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.constants.Pull;
+import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
-import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.List;
 import java.util.Map;
@@ -74,14 +76,12 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	@UiField
 	AnchorListItem logout;
 
-	@UiField
-	static Span footerLeft;
+	@UiField static Span footerSupport;
+	@UiField static Span footerCredits;
+	@UiField static Span footerVersion;
 
-	@UiField
-	static Span footerRight;
-
-	@UiField
-	static NavbarHeader navbarHeader;
+	@UiField static NavbarHeader navbarHeader;
+	@UiField Span brand;
 
 	@UiHandler(value="czech")
 	public void czechClick(ClickEvent event) {
@@ -116,18 +116,19 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 
 	@Override
 	public void onLoadingStartFooter() {
-		footerLeft.setText(translation.loading());
-		footerRight.setHTML(translation.credits(JsUtils.getCurrentYear()) + " | " +  translation.version(PerunWebConstants.INSTANCE.guiVersion()));
+		footerSupport.setHTML(translation.supportAt(translation.loading()));
+		footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
+		footerVersion.setHTML(translation.version(PerunWebConstants.INSTANCE.guiVersion()));
 	}
 
 	@Override
 	public void onFinishedFooter(List<String> contactEmail) {
 		if (contactEmail == null || contactEmail.isEmpty()) {
-			footerLeft.setHTML(translation.supportAt("perun@cesnet.cz"));
+			footerSupport.setHTML(translation.supportAt("perun@cesnet.cz"));
 			return;
 		}
 		String mails = contactEmail.toString();
-		footerLeft.setHTML(translation.supportAt(mails.substring(1, mails.length()-1)));
+		footerSupport.setHTML(translation.supportAt(mails.substring(1, mails.length()-1)));
 	}
 
 	@Override
@@ -153,11 +154,13 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	PerunRegistrarView(final PerunRegistrarViewUiBinder binder) {
 
 		initWidget(binder.createAndBindUi(this));
+		brand.setText(translation.registrarAppName());
 
 		// put logo
 		Image logo = Utils.perunInstanceLogo();
 		logo.setWidth("auto");
 		logo.setHeight("50px");
+		logo.setPull(Pull.LEFT);
 		navbarHeader.insert(logo, 0);
 
 		// FIXME - temporary disabled
@@ -168,6 +171,7 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		myApplications.setText(translation.myApplications());
 		help.setText(translation.help());
 		language.setText(translation.language());
+		language.setDataToggle(Toggle.DROPDOWN); // to fix caret position issue
 		logout.setText(translation.logout());
 
 		if (Utils.getNativeLanguage() != null) {

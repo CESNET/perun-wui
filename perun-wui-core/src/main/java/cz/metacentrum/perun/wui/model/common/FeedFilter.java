@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.consolidator.model;
+package cz.metacentrum.perun.wui.model.common;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;

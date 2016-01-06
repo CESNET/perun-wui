@@ -2,12 +2,14 @@ package cz.metacentrum.perun.wui.registrar.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.gwtplatform.mvp.client.RootPresenter;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import cz.metacentrum.perun.wui.client.PerunPlaceManager;
+import cz.metacentrum.perun.wui.client.PerunRootPresenter;
 import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -26,6 +28,9 @@ public class PerunRegistrar extends AbstractPresenterModule implements EntryPoin
 	protected void configure() {
 
 		install(new DefaultModule.Builder().placeManager(PerunPlaceManager.class).build());
+
+		// make sure app is embedded in a correct DIV
+		bind(RootPresenter.class).to(PerunRootPresenter.class).asEagerSingleton();
 
 		// Main Application must bind generic Presenter or its subclass and custom View !!
 		bindPresenter(PerunRegistrarPresenter.class, PerunRegistrarPresenter.MyView.class, PerunRegistrarView.class, PerunRegistrarPresenter.MyProxy.class);

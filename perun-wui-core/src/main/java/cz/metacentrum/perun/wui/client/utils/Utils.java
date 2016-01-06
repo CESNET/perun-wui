@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.client.utils;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -12,6 +13,7 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.model.common.WayfGroup;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.extras.animate.client.ui.constants.Animation;
 import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
@@ -125,21 +127,7 @@ public class Utils {
 				baseUrl = Window.Location.getProtocol() + "//" + Window.Location.getHost();
 			}
 
-			final String URL_KRB = baseUrl + "/krb/ic/";
-			final String URL_FED = baseUrl + "/fed/ic/";
-			final String URL_CERT = baseUrl + "/cert/ic/";
-			String link = "";
-
-			if ("krb".equalsIgnoreCase(authz)) {
-				link = URL_KRB;
-			} else if ("fed".equalsIgnoreCase(authz)) {
-				link = URL_FED;
-			} else if ("cert".equalsIgnoreCase(authz)) {
-				link = URL_CERT;
-			} else {
-				// KRB AS BACKUP - "default"
-				link = URL_KRB;
-			}
+			String link = baseUrl + "/"+authz+"/ic/";
 
 			if (target) {
 				link += "?target_url=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() +  URL.encodeQueryString(URL.encodeQueryString(Window.Location.getQueryString()));
@@ -290,6 +278,24 @@ public class Utils {
 			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.krbName");
 			if (value != null && !value.isEmpty()) {
 				return value;
+			}
+		}
+
+		return null;
+
+	}
+
+	/**
+	 * Returns list of enabled WAYF groups from local config.
+	 *
+	 * @return List of enabled wayf groups
+	 */
+	public static ArrayList<WayfGroup> getWayfGroups() {
+
+		if (PerunSession.getInstance().getLocalConfig() != null) {
+			JsArray wayfConfig = JsUtils.getNativePropertyArray(PerunSession.getInstance().getLocalConfig(), "wayf_groups");
+			if (wayfConfig != null && wayfConfig.length() != 0) {
+				return JsUtils.jsoAsList(wayfConfig);
 			}
 		}
 

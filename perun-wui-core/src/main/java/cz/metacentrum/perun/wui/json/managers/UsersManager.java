@@ -89,4 +89,22 @@ public class UsersManager {
 
 	}
 
+	/**
+	 * Remove UserExtSource from User
+	 *
+	 * @param userId Users ID
+	 * @param userExtSourceId ID of UserExtSource to remove
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request removeUserExtSource(int userId, int userExtSourceId, JsonEvents events){
+
+		JsonClient client = new JsonClient(events);
+		if (userId > 0) client.put("user", userId);
+		if (userExtSourceId > 0) client.put("userExtSource", userExtSourceId);
+		return client.call(USERS_MANAGER + "removeUserExtSource");
+
+	}
+
 }

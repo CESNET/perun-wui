@@ -9,6 +9,11 @@ import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
  */
 public interface RegistrarTranslation extends PerunTranslation {
 
+	// -------------- APP NAME ------------------------ //
+
+	@DefaultMessage("Registrar")
+	public String registrarAppName();
+
 	// -------------- MAIN PAGE - MENU ------------------------ //
 
 	@DefaultMessage("Form")

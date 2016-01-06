@@ -20,14 +20,14 @@ import cz.metacentrum.perun.wui.model.beans.User;
 import cz.metacentrum.perun.wui.userprofile.client.UserProfilePlaceTokens;
 
 /**
- * Presenter for displaying personal info about user
+ * Presenter for displaying registration detail.
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, PersonalPresenter.MyProxy> {
+public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyView, OrganizationsPresenter.MyProxy> {
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
-	private PersonalPresenter presenter = this;
+	private OrganizationsPresenter presenter = this;
 
 	public interface MyView extends View {
 		void setUser(User user);
@@ -35,13 +35,13 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 		void onError(PerunException ex, JsonEvents retry);
 	}
 
-	@NameToken(UserProfilePlaceTokens.PERSONAL)
+	@NameToken(UserProfilePlaceTokens.ORGANIZATIONS)
 	@ProxyCodeSplit
-	public interface MyProxy extends ProxyPlace<PersonalPresenter> {
+	public interface MyProxy extends ProxyPlace<OrganizationsPresenter> {
 	}
 
 	@Inject
-	public PersonalPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
+	public OrganizationsPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
 		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 

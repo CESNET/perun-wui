@@ -24,13 +24,12 @@ import org.gwtbootstrap3.client.ui.html.Small;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 /**
- * View for displaying VO/Group registration detail.
+ * View for displaying personal info about user
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
 public class PersonalView extends ViewImpl implements PersonalPresenter.MyView {
 
-	PlaceManager placeManager = PerunSession.getPlaceManager();
 	private RichUser user;
 
 	interface PersonalViewUiBinder extends UiBinder<Widget, PersonalView> {

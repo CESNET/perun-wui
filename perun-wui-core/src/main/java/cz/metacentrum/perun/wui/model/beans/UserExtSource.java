@@ -79,6 +79,15 @@ public class UserExtSource extends GeneralObject {
 	}-*/;
 
 	/**
+	 * Get ID of User this UserExtSource belongs.
+	 * *
+	 * @return ID of User this UES belongs to
+	 */
+	public final int getUserId() {
+		return JsUtils.getNativePropertyInt(this, "userId");
+	}
+
+	/**
 	 * Compares to another object
 	 * @param o Object to compare
 	 * @return true, if they are the same

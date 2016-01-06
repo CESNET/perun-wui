@@ -154,13 +154,13 @@ public interface PerunTranslation extends Messages {
 
 	/* ------------ FOOTER ---------------------------- */
 
-	@DefaultMessage("<strong>Support at: <a href=\"mailto:{0}\">{0}</a></strong>")
+	@DefaultMessage("<strong>Support at <a href=\"mailto:{0}\">{0}</a></strong>")
 	public String supportAt(String email);
 
-	@DefaultMessage("<strong>Powered by <a href=\'https://perun.cesnet.cz/web/\'>Perun</a> &copy; {0} <a href=\'https://www.cesnet.cz/\'>CESNET</a> &amp; <a href=\'https://www.cerit-sc.cz/\'>CERIT-SC</a></strong>")
+	@DefaultMessage("Powered by <a href=\'https://perun.cesnet.cz/web/\'>Perun</a> &copy; {0} <a href=\'https://www.cesnet.cz/\'>CESNET</a> &amp; <a href=\'https://www.cerit-sc.cz/\'>CERIT-SC</a>")
 	public String credits(int year);
 
-	@DefaultMessage("<strong>Version: {0}</strong>")
+	@DefaultMessage("Version: {0}")
 	public String version(String version);
 
 

@@ -22,12 +22,15 @@ public interface UserProfileResources extends ClientBundle {
 
 		String pageWrapper();
 
+		String menuAndPageWrapper();
+
 		String grid();
 
 		String header();
 
 		String footer();
 
+		String menu();
 	}
 
 	@Source("css/PerunUserProfile.gss")

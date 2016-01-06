@@ -8,6 +8,7 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.consolidator.widgets.Wayf;
+import cz.metacentrum.perun.wui.consolidator.widgets.Wayf2;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
@@ -34,7 +35,7 @@ public class SelectPage {
 
 	private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
 
-	@UiField(provided = true) Wayf wayf;
+	@UiField(provided = true) Wayf2 wayf;
 
 	@UiField PerunLoader loader;
 	@UiField Heading heading;
@@ -47,7 +48,7 @@ public class SelectPage {
 
 	public Widget draw() {
 
-		wayf = new Wayf(null, redirect);
+		wayf = new Wayf2(null, redirect);
 
 		if (rootElement == null) {
 			rootElement = ourUiBinder.createAndBindUi(this);
@@ -56,23 +57,7 @@ public class SelectPage {
 		heading.setText(translation.currentIdentityIs());
 		joinHeading.setText(translation.joinWith());
 
-		final JsonEvents loadWayfEvent = new JsonEvents() {
-			@Override
-			public void onFinished(JavaScriptObject jso) {
-				loader.onFinished();
-				loader.setVisible(false);
-			}
-
-			@Override
-			public void onError(PerunException error) {
-				loader.onError(error, null);
-			}
-
-			@Override
-			public void onLoadingStart() {
-
-			}
-		};
+		// fixme on error loader.onError(error, null);
 
 		if (token == null || token.isEmpty()) {
 
@@ -130,7 +115,10 @@ public class SelectPage {
 					}
 
 					wayf.setToken(token);
-					wayf.loadWayf(loadWayfEvent);
+					wayf.buildWayfGroups();
+					loader.onFinished();
+					loader.setVisible(false);
+					wayf.setVisible(true);
 
 				}
 
@@ -148,7 +136,10 @@ public class SelectPage {
 
 		} else {
 
-			wayf.loadWayf(loadWayfEvent);
+			wayf.buildWayfGroups();
+			loader.onFinished();
+			loader.setVisible(false);
+			wayf.setVisible(true);
 
 		}
 

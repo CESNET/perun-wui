@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.admin.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.gwtplatform.mvp.client.RootPresenter;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
@@ -17,6 +18,8 @@ import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectView;
+import cz.metacentrum.perun.wui.client.PerunPlaceManager;
+import cz.metacentrum.perun.wui.client.PerunRootPresenter;
 import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
@@ -38,6 +41,9 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 	protected void configure() {
 
 		install(new DefaultModule.Builder().placeManager(PerunWuiPlaceManager.class).build());
+
+		// make sure app is embedded in a correct DIV
+		bind(RootPresenter.class).to(PerunRootPresenter.class).asEagerSingleton();
 
 		// Main Application must bind generic Presenter and custom View !!
 		bindPresenter(PerunWuiPresenter.class, PerunWuiPresenter.MyView.class, PerunWuiView.class, PerunWuiPresenter.MyProxy.class);
@@ -69,7 +75,6 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 		bindSingletonPresenterWidget(LeftMenuPresenter.class, LeftMenuPresenter.MyView.class, LeftMenuView.class);
 		bindSingletonPresenterWidget(VoSelectPresenter.class, VoSelectPresenter.MyView.class, VoSelectView.class);
 		bindSingletonPresenterWidget(OwnerCreatePresenter.class, OwnerCreatePresenter.MyView.class, OwnerCreateView.class);
-
 
 	}
 

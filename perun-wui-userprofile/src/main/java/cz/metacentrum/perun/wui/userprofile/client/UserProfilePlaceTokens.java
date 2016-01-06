@@ -12,6 +12,9 @@ public class UserProfilePlaceTokens extends PlaceTokens {
 	// General Pages
 	public static final String PERSONAL = "personal";
 	public static final String IDENTITIES = "identities";
+	public static final String ORGANIZATIONS = "organizations";
+	public static final String LOGINS = "logins";
+	public static final String SETTINGS = "settings";
 
 
 	public static String getPersonal() {
@@ -20,6 +23,18 @@ public class UserProfilePlaceTokens extends PlaceTokens {
 
 	public static String getIdentities() {
 		return IDENTITIES;
+	}
+
+	public static String getOrganizations() {
+		return ORGANIZATIONS;
+	}
+
+	public static String getLogins() {
+		return LOGINS;
+	}
+
+	public static String getSettings() {
+		return SETTINGS;
 	}
 
 }
