@@ -9,6 +9,11 @@ import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
  */
 public interface ConsolidatorTranslation extends PerunTranslation {
 
+	/* --  GENERIC -- */
+
+	@DefaultMessage("Identity consolidator")
+	public String consolidatorAppName();
+
 	/* --  SELECT PAGE -- */
 
 	@DefaultMessage("Institutional identity")

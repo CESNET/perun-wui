@@ -10,13 +10,17 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.Pull;
 import org.gwtbootstrap3.client.ui.html.Div;
+import org.gwtbootstrap3.client.ui.html.Span;
 
 /**
  * Entry point for Identity Consolidator application
@@ -28,16 +32,21 @@ public class PerunConsolidator implements EntryPoint{
 	interface PerunConsolidatorUiBinder extends UiBinder<Widget, PerunConsolidator>{}
 
 	private static PerunConsolidatorUiBinder uiBinder = GWT.create(PerunConsolidatorUiBinder.class);
+	private static ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
 
 	private static boolean perunLoaded = false;
 	public static boolean perunLoading = false;
 	private PerunConsolidator gui = this;
+	@UiField static NavbarHeader navbarHeader;
 
 	SelectPage page = new SelectPage();
 	JoinPage joinPage = new JoinPage();
 
 	@UiField(provided = true)
 	Div content;
+
+	@UiField
+	Span brand;
 
 	@Override
 	public void onModuleLoad() {
@@ -75,6 +84,15 @@ public class PerunConsolidator implements EntryPoint{
 
 						RootPanel.get("perun-consolidator").clear();
 						RootPanel.get("perun-consolidator").add(uiBinder.createAndBindUi(gui));
+
+						// put logo
+						org.gwtbootstrap3.client.ui.Image logo = Utils.perunInstanceLogo();
+						logo.setWidth("auto");
+						logo.setHeight("50px");
+						logo.setPull(Pull.LEFT);
+						navbarHeader.insert(logo, 0);
+
+						brand.setText(translation.consolidatorAppName());
 
 					}
 

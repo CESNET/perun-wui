@@ -29,6 +29,10 @@
 	<!--<set-configuration-property name="CssResource.conversionMode" value="strict" />
 	<set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true" />-->
 
+	<!-- default locale is EN -->
+	<extend-property name="locale" values="en"/>
+	<set-property-fallback name="locale" value="en"/>
+
 	<!--  Support only these browsers for devel -->
 	<set-property name="user.agent" value="gecko1_8"/>
 	<!-- FF -->
