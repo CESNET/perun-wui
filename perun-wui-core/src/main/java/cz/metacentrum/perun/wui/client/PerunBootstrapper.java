@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.Bootstrapper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -69,8 +70,10 @@ public class PerunBootstrapper implements Bootstrapper {
 					@Override
 					public void onFinished(JavaScriptObject jso) {
 
-						// store configuration
+						// store configuration OLD WAY
 						PerunSession.getInstance().setConfiguration((BasicOverlayObject) jso.cast());
+						// FIXME - use only NEW WAY
+						PerunConfiguration.setPerunConfig((BasicOverlayObject) jso.cast());
 
 						PerunSession.setPerunLoading(false);
 						PerunSession.setPerunLoaded(true);

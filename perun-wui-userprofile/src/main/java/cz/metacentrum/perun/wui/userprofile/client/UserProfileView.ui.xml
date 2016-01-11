@@ -27,22 +27,13 @@
 					<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse">
 
 						<g:FocusPanel ui:field="collapseClickHandler" >
-							<b:NavbarNav>
+							<b:NavbarNav ui:field="topMenu">
 								<b:AnchorListItem ui:field="topMenuMyProfile" active="true" icon="HOME" iconSize="LARGE" targetHistoryToken="{placeTokens.getPersonal}" visibleOn="SM_MD_LG" />
-
 								<b:AnchorListItem visibleOn="XS" ui:field="personalXS" icon="HOME" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >Personal</b:AnchorListItem>
 								<b:AnchorListItem visibleOn="XS" ui:field="organizationsXS" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">My virtual organizations</b:AnchorListItem>
 								<b:AnchorListItem visibleOn="XS" ui:field="identitiesXS" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">My identities</b:AnchorListItem>
 								<b:AnchorListItem visibleOn="XS" ui:field="loginsXS" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" text="Logins &amp; Passwords" />
 								<b:AnchorListItem visibleOn="XS" ui:field="settingsXS" icon="COG" iconFixedWidth="true" targetHistoryToken="{placeTokens.getSettings}" >Settings</b:AnchorListItem>
-
-								<b:ListDropDown>
-									<b:AnchorButton icon="FLAG" iconSize="LARGE" dataToggle="DROPDOWN" ui:field="language">Language</b:AnchorButton>
-									<b:DropDownMenu>
-										<b:AnchorListItem ui:field="english" iconPosition="RIGHT">English</b:AnchorListItem>
-										<b:AnchorListItem ui:field="czech" iconPosition="RIGHT">Czech</b:AnchorListItem>
-									</b:DropDownMenu>
-								</b:ListDropDown>
 								<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>
 							</b:NavbarNav>
 						</g:FocusPanel>

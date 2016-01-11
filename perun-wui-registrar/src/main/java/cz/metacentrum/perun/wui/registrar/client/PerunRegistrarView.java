@@ -2,8 +2,8 @@ package cz.metacentrum.perun.wui.registrar.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.UrlBuilder;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -15,16 +15,16 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
-import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import org.gwtbootstrap3.client.ui.AnchorButton;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
-import org.gwtbootstrap3.client.ui.NavbarBrand;
 import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
+import org.gwtbootstrap3.client.ui.NavbarNav;
 import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.Pull;
@@ -50,19 +50,13 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
 
 	@UiField
+	NavbarNav topMenu;
+
+	@UiField
 	NavbarCollapse collapse;
 
 	@UiField
 	FocusPanel collapseClickHandler;
-
-	@UiField
-	AnchorButton language;
-
-	@UiField
-	AnchorListItem czech;
-
-	@UiField
-	AnchorListItem english;
 
 	@UiField
 	AnchorListItem application;
@@ -82,16 +76,6 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 
 	@UiField static NavbarHeader navbarHeader;
 	@UiField Span brand;
-
-	@UiHandler(value="czech")
-	public void czechClick(ClickEvent event) {
-		setLocale(Utils.getNativeLanguage());
-	}
-
-	@UiHandler(value="english")
-	public void englishClick(ClickEvent event) {
-		setLocale(Utils.ENGLISH_LANGUAGE);
-	}
 
 	@UiHandler(value="application")
 	public void applicationClick(ClickEvent event) {
@@ -136,20 +120,6 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		collapse.hide();
 	}
 
-	/**
-	 * Update localization of whole GUI (reset the app)
-	 *
-	 * @param locale Locale to set. Structure is "code":"val", "nativeName":"val", "englishName":"val"
-	 */
-	public void setLocale(Map<String, String> locale) {
-		if (locale == null) {
-			GWT.log("WARN: Locale is null");
-			return;
-		}
-		UrlBuilder builder = Window.Location.createUrlBuilder().setParameter("locale", locale.get("code"));
-		Window.Location.replace(builder.buildString());
-	}
-
 	@Inject
 	PerunRegistrarView(final PerunRegistrarViewUiBinder binder) {
 
@@ -157,7 +127,7 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		brand.setText(translation.registrarAppName());
 
 		// put logo
-		Image logo = Utils.perunInstanceLogo();
+		Image logo = PerunConfiguration.getBrandLogo();
 		logo.setWidth("auto");
 		logo.setHeight("50px");
 		logo.setPull(Pull.LEFT);
@@ -170,34 +140,22 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		application.setText(translation.application());
 		myApplications.setText(translation.myApplications());
 		help.setText(translation.help());
-		language.setText(translation.language());
-		language.setDataToggle(Toggle.DROPDOWN); // to fix caret position issue
 		logout.setText(translation.logout());
 
-		if (Utils.getNativeLanguage() != null) {
+		for (final String langCode : PerunConfiguration.getSupportedLanguages()) {
 
-			if ("default".equals(LocaleInfo.getCurrentLocale().getLocaleName()) ||
-					"en".equalsIgnoreCase(LocaleInfo.getCurrentLocale().getLocaleName())) {
-				// use english name of native language
-				czech.setText(Utils.getNativeLanguage().get("englishName"));
-				english.setIcon(IconType.CHECK);
-				english.setIconPosition(IconPosition.RIGHT);
-				czech.setIcon(null);
-			} else {
-				// use native name of native language
-				czech.setText(Utils.getNativeLanguage().get("nativeName"));
-				czech.setIcon(IconType.CHECK);
-				czech.setIconPosition(IconPosition.RIGHT);
-				english.setIcon(null);
-			}
-			english.setText(translation.english());
+			AnchorListItem item = new AnchorListItem();
+			item.getElement().insertFirst(PerunConfiguration.getLanguageFlag(langCode).getElement());
+			item.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					UrlBuilder builder = Window.Location.createUrlBuilder().setParameter("locale", langCode);
+					Window.Location.replace(builder.buildString());
+				}
+			});
+			topMenu.insert(item, topMenu.getWidgetCount());
 
-		} else {
-			// no language switching
-			language.setVisible(false);
 		}
-
-		english.setText(translation.english());
 
 	}
 

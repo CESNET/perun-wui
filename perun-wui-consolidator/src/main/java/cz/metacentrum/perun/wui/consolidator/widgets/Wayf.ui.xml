@@ -13,11 +13,7 @@
 	</ui:style>
 
 	<b.html:Span ui:field="mainContent" visible="false">
-		<b:VerticalButtonGroup width="100%">
-			<p:PerunButton ui:field="idpButton" size="LARGE" text="Institutional login" icon="UNIVERSITY" iconFixedWidth="true" visible="false" />
-			<p:PerunButton ui:field="certButton" size="LARGE" text="Personal Certificate" icon="CERTIFICATE" iconFixedWidth="true" visible="false" />
-			<p:PerunButton ui:field="krbButton" size="LARGE" text="Kerberos login" icon="KEY" iconFixedWidth="true" visible="false" />
-			<p:PerunButton ui:field="socialButton" size="LARGE" text="Social identity" icon="GOOGLE" iconFixedWidth="true" visible="false" />
+		<b:VerticalButtonGroup width="100%" ui:field="buttonGroups">
 		</b:VerticalButtonGroup>
 	</b.html:Span>
 

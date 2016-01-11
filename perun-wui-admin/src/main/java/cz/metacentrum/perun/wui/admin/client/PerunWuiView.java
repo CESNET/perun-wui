@@ -8,10 +8,10 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.client.utils.Utils;
 import org.gwtbootstrap3.client.ui.Navbar;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
@@ -61,7 +61,7 @@ public class PerunWuiView extends ViewImpl implements PerunWuiPresenter.MyView {
 		bindSlot(PerunWuiPresenter.SLOT_MAIN_CONTENT, pageContent);
 
 		// TODO - more advanced footer
-		footerLeft.setHTML(translation.supportAt(Utils.perunReportEmailAddress()));
+		footerLeft.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
 		footerRight.setHTML(translation.credits(JsUtils.getCurrentYear()) + " | " +  translation.version(PerunWebConstants.INSTANCE.guiVersion()));
 
 	}

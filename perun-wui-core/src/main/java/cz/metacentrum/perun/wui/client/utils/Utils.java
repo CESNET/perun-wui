@@ -1,8 +1,6 @@
 package cz.metacentrum.perun.wui.client.utils;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.regexp.shared.MatchResult;
@@ -11,9 +9,9 @@ import com.google.gwt.regexp.shared.SplitResult;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.model.common.WayfGroup;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.extras.animate.client.ui.constants.Animation;
 import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
@@ -112,7 +110,7 @@ public class Utils {
 			// try to find alternative hostname for cert, since we want to re-force authz
 			if ("cert".equalsIgnoreCase(authz) && Window.Location.getPath().startsWith("/cert")) {
 
-				for (String hostname : Utils.getCertWayfHostnames()) {
+				for (String hostname : PerunConfiguration.getWayfCertHostnames()) {
 					if (!hostname.equals(Window.Location.getProtocol() + "//" + Window.Location.getHost())) {
 						baseUrl = hostname;
 						otherFound = true;
@@ -163,7 +161,7 @@ public class Utils {
 
 			String baseUrl = Window.Location.getProtocol() + "//" + Window.Location.getHost();
 
-			if (!Utils.isDevel()) {
+			if (!PerunConfiguration.isDevel()) {
 
 				// VALID URL FOR PRODUCTION
 
@@ -203,276 +201,6 @@ public class Utils {
 		}
 	}
 
-	/**
-	 * Returns list of supported namespaces names for password change / reset
-	 *
-	 * @return list of supported namespaces names
-	 */
-	public static ArrayList<String> getSupportedPasswordNamespaces() {
-
-		ArrayList<String> list = new ArrayList<String>();
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "getSupportedPasswordNamespaces");
-			list.addAll(Utils.stringToList(value, ","));
-		}
-		return list;
-
-	}
-
-	/**
-	 * Returns list of all feeds for Identity Consolidator webapp
-	 * (even unsupported).
-	 *
-	 * @return list of all (even not supported) feeds
-	 */
-	public static ArrayList<String> getAllWayfFeeds() {
-
-		ArrayList<String> list = new ArrayList<String>();
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.allFeeds");
-			list.addAll(Utils.stringToList(value, ","));
-		}
-		return list;
-
-	}
-
-	/**
-	 * Returns TRUE if WAYF should support Kerberos authz
-	 *
-	 * @return TRUE if WAYF should support Kerberos authz
-	 */
-	public static boolean isKrbWayfSupported() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "krb")) {
-				return JsUtils.getNativePropertyBoolean(wayfConfig, "krb");
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.krb");
-			if (value != null && !value.isEmpty()) {
-				return Boolean.parseBoolean(value);
-			}
-		}
-		return false;
-
-	}
-
-	/**
-	 * Returns TRUE if WAYF should support Kerberos authz
-	 *
-	 * @return TRUE if WAYF should support Kerberos authz
-	 */
-	public static String getWayfKrbName() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "krbName")) {
-				return JsUtils.getNativePropertyString(wayfConfig, "krbName");
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.krbName");
-			if (value != null && !value.isEmpty()) {
-				return value;
-			}
-		}
-
-		return null;
-
-	}
-
-	/**
-	 * Returns list of enabled WAYF groups from local config.
-	 *
-	 * @return List of enabled wayf groups
-	 */
-	public static ArrayList<WayfGroup> getWayfGroups() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JsArray wayfConfig = JsUtils.getNativePropertyArray(PerunSession.getInstance().getLocalConfig(), "wayf_groups");
-			if (wayfConfig != null && wayfConfig.length() != 0) {
-				return JsUtils.jsoAsList(wayfConfig);
-			}
-		}
-
-		return null;
-
-	}
-
-	/**
-	 * Returns TRUE if WAYF should support cert authz
-	 *
-	 * @see #getCertWayfHostnames()
-	 *
-	 * @return TRUE if WAYF should support cert authz
-	 */
-	public static boolean isCertWayfSupported() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "cert")) {
-				return JsUtils.getNativePropertyBoolean(wayfConfig, "cert");
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.cert");
-			if (value != null && !value.isEmpty()) {
-				return Boolean.parseBoolean(value);
-			}
-		}
-		return false;
-
-	}
-
-	/**
-	 * Returns list of all hostnames supported for Identity Consolidator cert authz.
-	 * Empty if none supported.
-	 *
-	 * @return list of all cert hostnames for IC
-	 */
-	public static ArrayList<String> getCertWayfHostnames() {
-
-		ArrayList<String> result = new ArrayList<String>();
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "certHosts")) {
-				String value = JsUtils.getNativePropertyString(wayfConfig, "certHosts");
-				result.addAll(Utils.stringToList(value, ","));
-				return result;
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.cert.hosts");
-			result.addAll(Utils.stringToList(value, ","));
-		}
-		return result;
-
-	}
-
-	/**
-	 * TRUE if display WAYF as all in one (useful for only fed-authz).
-	 *
-	 * @return TRUE if WAYF should be displayed all in one
-	 */
-	public static boolean wayfShowAllInOne() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "showAllInOne")) {
-				return JsUtils.getNativePropertyBoolean(wayfConfig, "showAllInOne");
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.showAllInOne");
-			if (value != null && !value.isEmpty()) {
-				return Boolean.parseBoolean(value);
-			}
-		}
-		return false;
-
-	}
-
-	/**
-	 * Returns list of feeds for Identity Consolidator webapp
-	 *
-	 * @return list of all supported feeds
-	 */
-	public static ArrayList<String> getWayfFeeds() {
-
-		ArrayList<String> feedNames = new ArrayList<String>();
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "feeds")) {
-				String value = JsUtils.getNativePropertyString(wayfConfig, "feeds");
-				feedNames.addAll(Utils.stringToList(value, ","));
-				return feedNames;
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.feeds");
-			feedNames.addAll(Utils.stringToList(value, ","));
-		}
-
-		return feedNames;
-
-	}
-
-	/**
-	 * Returns URL to feeds for Identity Consolidator webapp
-	 *
-	 * @return URL to feeds
-	 */
-	public static String getWayfFeedUrl() {
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			return JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.feedUrl");
-		}
-		return null;
-	}
-
-	/**
-	 * Returns logout URL from consolidator SP
-	 * If not set, current hostname is used, replacing path with "/Shibboleth.sso/Logout"
-	 *
-	 * @return SP logout URL
-	 */
-	public static String getWayfSpLogoutUrl() {
-
-		String SPlogout = null;
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			SPlogout = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.spLogoutUrl");
-		}
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "spLogoutUrl")) {
-				SPlogout = JsUtils.getNativePropertyString(wayfConfig, "spLogoutUrl");
-			}
-		}
-
-		if (SPlogout == null || SPlogout.isEmpty()) {
-			// backup to current hostname
-			SPlogout = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/Logout";
-		}
-		return SPlogout;
-	}
-
-	/**
-	 * Returns URL to the Discovery service of consolidator SP
-	 * If not set, current hostname is used, replacing path with "/Shibboleth.sso/DS"
-	 *
-	 * @return SP login URL
-	 */
-	public static String getWayfSpDsUrl() {
-		String SPlogin = null;
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			SPlogin = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.spDsUrl");
-		}
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "spDsUrl")) {
-				SPlogin = JsUtils.getNativePropertyString(wayfConfig, "spDsUrl");
-			}
-		}
-
-		if (SPlogin == null || SPlogin.isEmpty()) {
-			// backup to current hostname
-			SPlogin = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/DS";
-		}
-		return SPlogin;
-	}
-
 
 	public static final native String createWayfFeedFilter(String[] allowedFeeds, String[] allowedIdPs, boolean allowHostel, boolean allowHostelRegistration) /*-{
 		var filter = { "allowHostel" : allowHostel ,
@@ -490,6 +218,7 @@ public class Utils {
 	}-*/;
 
 	/**
+<<<<<<< HEAD
 	 * Return list of VO`s short names for which application form should skip CAPTCHA verification.
 	 *
 	 * @return list of VO` short names
@@ -699,6 +428,8 @@ public class Utils {
 	}
 
 	/**
+=======
+>>>>>>> WUI: Updated apps for testing WIP
 	 * Clear all cookies provided by federation IDP in user's browser.
 	 */
 	public static void clearFederationCookies() {

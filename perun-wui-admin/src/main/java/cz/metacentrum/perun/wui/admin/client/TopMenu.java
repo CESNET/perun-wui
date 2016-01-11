@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Image;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -47,7 +48,7 @@ public class TopMenu {
 
 		rootElement = ourUiBinder.createAndBindUi(this);
 
-		Image logo = Utils.perunInstanceLogo();
+		Image logo = PerunConfiguration.getBrandLogo();
 		logo.setWidth("auto");
 		logo.setHeight("50px");
 		navbarHeader.insert(logo, 0);

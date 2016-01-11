@@ -41,8 +41,8 @@ public class JsUtils {
 
 	/**
 	 * Helping method which can be used to access any basic object property.
-	 * Value is returned as "int" if exists, or as null if not present in object
-	 * or it's value is really null.
+	 * Value is returned as "int" if exists, or 0 if not present in object
+	 * or it's value is really 0.
 	 *
 	 * @param jso object to get property from
 	 * @param propertyName object property to get
@@ -157,7 +157,21 @@ public class JsUtils {
 		return jso[propertyName];
 	}-*/;
 
+	/**
+	 * Helping method which can be used to check if object has own property of required name.
+	 *
+	 * TRUE is returned only if passed JSO is not null, type of object and hasOwnProperty of expected name.
+	 * FALSE is returned otherwise.
+	 *
+	 * @param jso object to get check property existence
+	 * @param propertyName object property to check
+	 * @return TRUE if property exists, FALSE otherwise
+	 */
 	public static final native boolean hasOwnProperty(JavaScriptObject jso, String propertyName) /*-{
+		if (!jso) return null;
+		if (typeof jso === 'undefined') return null;
+		if (jso === null) return null;
+		if (typeof jso !== 'object') return null;
 		return (jso.hasOwnProperty(propertyName));
 	}-*/;
 

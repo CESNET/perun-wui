@@ -31,7 +31,7 @@
 
 		<b.html:Div addStyleNames="{style.center2} {style.max}">
 
-			<p.cons:Wayf2 ui:field="wayf" visible="false" width="100%" />
+			<p.cons:Wayf ui:field="wayf" visible="false" width="100%" />
 
 		</b.html:Div>
 

@@ -8,7 +8,6 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.consolidator.widgets.Wayf;
-import cz.metacentrum.perun.wui.consolidator.widgets.Wayf2;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
@@ -35,7 +34,8 @@ public class SelectPage {
 
 	private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
 
-	@UiField(provided = true) Wayf2 wayf;
+	@UiField(provided = true)
+	Wayf wayf;
 
 	@UiField PerunLoader loader;
 	@UiField Heading heading;
@@ -48,7 +48,7 @@ public class SelectPage {
 
 	public Widget draw() {
 
-		wayf = new Wayf2(null, redirect);
+		wayf = new Wayf(null, redirect);
 
 		if (rootElement == null) {
 			rootElement = ourUiBinder.createAndBindUi(this);

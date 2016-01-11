@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -86,7 +87,7 @@ public class PerunConsolidator implements EntryPoint{
 						RootPanel.get("perun-consolidator").add(uiBinder.createAndBindUi(gui));
 
 						// put logo
-						org.gwtbootstrap3.client.ui.Image logo = Utils.perunInstanceLogo();
+						org.gwtbootstrap3.client.ui.Image logo = PerunConfiguration.getBrandLogo();
 						logo.setWidth("auto");
 						logo.setHeight("50px");
 						logo.setPull(Pull.LEFT);

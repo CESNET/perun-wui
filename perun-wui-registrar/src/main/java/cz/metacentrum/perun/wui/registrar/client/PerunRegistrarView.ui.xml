@@ -25,17 +25,10 @@
 
 					<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse">
 						<g:FocusPanel ui:field="collapseClickHandler">
-							<b:NavbarNav>
+							<b:NavbarNav ui:field="topMenu">
 								<b:AnchorListItem icon="FILE_TEXT_O" ui:field="application" targetHistoryToken="{placeTokens.getForm}">Registration form</b:AnchorListItem>
 								<b:AnchorListItem icon="ARCHIVE" ui:field="myApplications" targetHistoryToken="{placeTokens.getMyApps}">My registrations</b:AnchorListItem>
 								<b:AnchorListItem icon="QUESTION_CIRCLE" ui:field="help" targetHistoryToken="{placeTokens.getHelp}">Help</b:AnchorListItem>
-								<b:ListDropDown>
-									<b:AnchorButton icon="FLAG" dataToggle="DROPDOWN" ui:field="language">Language</b:AnchorButton>
-									<b:DropDownMenu>
-										<b:AnchorListItem ui:field="english" iconPosition="RIGHT">English</b:AnchorListItem>
-										<b:AnchorListItem ui:field="czech" iconPosition="RIGHT">Czech</b:AnchorListItem>
-									</b:DropDownMenu>
-								</b:ListDropDown>
 								<b:AnchorListItem icon="SIGN_OUT" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>
 							</b:NavbarNav>
 						</g:FocusPanel>
