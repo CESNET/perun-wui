@@ -134,7 +134,7 @@ public final class PerunConfiguration {
 
 		ArrayList<String> languages = new ArrayList<>();
 		languages.add("en");
-		languages.addAll(Utils.stringToList(getConfigPropertyString("language:supported"),","));
+		languages.addAll(Utils.stringToList(getConfigPropertyString("language.supported"),","));
 		return languages;
 
 	}
@@ -145,7 +145,7 @@ public final class PerunConfiguration {
 	 * @return Flag for language code
 	 */
 	public static Image getLanguageFlag(String langCode) {
-		return new Image(getConfigPropertyString("language:flags:"+langCode));
+		return new Image(getConfigPropertyString("language.flags."+langCode));
 	}
 
 	// ---------------- BRAND ------------------ //
@@ -159,8 +159,8 @@ public final class PerunConfiguration {
 	public static Image getBrandLogo() {
 
 		// logo is encoded as base64
-		String value = getConfigPropertyString("brand:logo:"+getCurrentLocaleName());
-		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand:logo:en");
+		String value = getConfigPropertyString("brand.logo."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand.logo.en");
 		if (value == null || value.isEmpty()) {
 			// generic logo
 			return new Image(PerunResources.INSTANCE.getPerunLogo());
@@ -179,8 +179,8 @@ public final class PerunConfiguration {
 	 */
 	public static String getBrandName() {
 
-		String value = getConfigPropertyString("brand:name:"+getCurrentLocaleName());
-		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand:name:en");
+		String value = getConfigPropertyString("brand.name."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand.name.en");
 		if (value == null || value.isEmpty()) return "Perun";
 		return value;
 
@@ -195,8 +195,8 @@ public final class PerunConfiguration {
 	public static String getBrandSupportMail() {
 
 		// logo is encoded as base64
-		String value = getConfigPropertyString("brand:supportMail:"+getCurrentLocaleName());
-		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand:supportMail:en");
+		String value = getConfigPropertyString("brand.supportMail."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand.supportMail.en");
 		if (value == null || value.isEmpty()) return "perun@cesnet.cz";
 		return value;
 
@@ -211,8 +211,8 @@ public final class PerunConfiguration {
 	public static String getBrandSupportPhone() {
 
 		// logo is encoded as base64
-		String value = getConfigPropertyString("brand:supportPhone:"+getCurrentLocaleName());
-		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand:supportPhone:en");
+		String value = getConfigPropertyString("brand.supportPhone."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand.supportPhone.en");
 		if (value == null || value.isEmpty()) return "";
 		return value;
 
@@ -230,7 +230,7 @@ public final class PerunConfiguration {
 	 * @return Name of RT queue
 	 */
 	public static String getRTDefaultQueueName() {
-		return getConfigPropertyString("rt:defaultQueue");
+		return getConfigPropertyString("rt.defaultQueue");
 	}
 
 	/**
@@ -239,7 +239,7 @@ public final class PerunConfiguration {
 	 * @return Name of RT queue
 	 */
 	public static String getRTDefaultMail() {
-		return getConfigPropertyString("rt:defaultMail");
+		return getConfigPropertyString("rt.defaultMail");
 	}
 
 	/**
@@ -251,7 +251,7 @@ public final class PerunConfiguration {
 	 * @return Re-Captcha public key
 	 */
 	public static String getReCaptchaPublicKey() {
-		return getConfigPropertyString("reCaptcha:publicKey");
+		return getConfigPropertyString("reCaptcha.publicKey");
 	}
 
 	/**
@@ -260,7 +260,7 @@ public final class PerunConfiguration {
 	 * @return list of VOs short names
 	 */
 	public static ArrayList<String> getVosToSkipReCaptchaFor() {
-		return Utils.stringToList(getConfigPropertyString("reCaptcha:skipVos"),",");
+		return Utils.stringToList(getConfigPropertyString("reCaptcha.skipVos"),",");
 	}
 
 	/**
@@ -345,7 +345,7 @@ public final class PerunConfiguration {
 	public static ArrayList<WayfGroup> getWayfGroups() {
 
 		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JsArray wayfConfig = JsUtils.getNativePropertyArray(PerunSession.getInstance().getLocalConfig(), "wayf:groups");
+			JsArray wayfConfig = JsUtils.getNativePropertyArray(PerunSession.getInstance().getLocalConfig(), "wayf.groups");
 			if (wayfConfig != null && wayfConfig.length() != 0) {
 				return JsUtils.jsoAsList(wayfConfig);
 			}
@@ -361,7 +361,7 @@ public final class PerunConfiguration {
 	 * @return URL to feeds
 	 */
 	public static String getWayfFeedUrl() {
-		return getConfigPropertyString("wayf:feedUrl");
+		return getConfigPropertyString("wayf.feedUrl");
 	}
 
 	/**
@@ -371,7 +371,7 @@ public final class PerunConfiguration {
 	 * @return list of all cert hostnames for IC
 	 */
 	public static ArrayList<String> getWayfCertHostnames() {
-		String value = getConfigPropertyString("wayf:cert:hosts");
+		String value = getConfigPropertyString("wayf.cert.hosts");
 		return Utils.stringToList(value, ",");
 	}
 
@@ -383,7 +383,7 @@ public final class PerunConfiguration {
 	 */
 	public static String getWayfSpDsUrl() {
 
-		String SPlogin = getConfigPropertyString("wayf:spDsUrl");
+		String SPlogin = getConfigPropertyString("wayf.spDsUrl");
 		if (SPlogin == null || SPlogin.isEmpty()) {
 			// backup to current hostname
 			SPlogin = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/DS";
@@ -399,7 +399,7 @@ public final class PerunConfiguration {
 	 * @return SP logout URL
 	 */
 	public static String getWayfSpLogoutUrl() {
-		String SPlogout = getConfigPropertyString("wayf:spLogoutUrl");
+		String SPlogout = getConfigPropertyString("wayf.spLogoutUrl");
 		if (SPlogout == null || SPlogout.isEmpty()) {
 			// backup to current hostname
 			SPlogout = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/Logout";
