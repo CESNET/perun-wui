@@ -7,19 +7,22 @@ import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
 import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Focusable;
 import com.google.gwt.user.client.ui.HasEnabled;
 import com.google.gwt.user.client.ui.SuggestOracle;
-import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.view.client.SelectionChangeEvent;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import cz.metacentrum.perun.wui.widgets.SuggestBox;
-import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
+import org.gwtbootstrap3.client.ui.NavbarNav;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 
 import java.util.HashMap;
@@ -297,6 +300,33 @@ public class UiUtils {
 					}
 				}
 			});
+
+		}
+
+	}
+
+	/**
+	 * Add language switcher (buttons with flags) into specified NavbarNav (part of top menu)
+	 *
+	 * @param navbar NavbarNav to put language switcher in
+	 */
+	public static void addLanguageSwitcher(NavbarNav navbar) {
+
+		for (final String langCode : PerunConfiguration.getSupportedLanguages()) {
+
+			AnchorListItem item = new AnchorListItem();
+			item.setTitle(langCode);
+			Anchor anchor = (Anchor)item.getWidget(0);
+			anchor.add(PerunConfiguration.getLanguageFlag(langCode));
+			item.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					UrlBuilder builder = Window.Location.createUrlBuilder().setParameter("locale", langCode);
+					Window.Location.replace(builder.buildString());
+				}
+			});
+
+			navbar.insert(item, (navbar.getWidgetCount() >= 1) ? navbar.getWidgetCount()-1 : 0);
 
 		}
 

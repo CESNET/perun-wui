@@ -1,17 +1,14 @@
 package cz.metacentrum.perun.wui.consolidator.client;
 
 import com.google.gwt.core.client.*;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
@@ -39,9 +36,10 @@ public class PerunConsolidator implements EntryPoint{
 	public static boolean perunLoading = false;
 	private PerunConsolidator gui = this;
 	@UiField static NavbarHeader navbarHeader;
+	@UiField NavbarNav topMenu;
 
-	SelectPage page = new SelectPage();
-	JoinPage joinPage = new JoinPage();
+	SelectPage page;
+	JoinPage joinPage;
 
 	@UiField(provided = true)
 	Div content;
@@ -70,11 +68,14 @@ public class PerunConsolidator implements EntryPoint{
 					public void onFinished(JavaScriptObject jso) {
 
 						// store configuration
-						PerunSession.getInstance().setConfiguration((BasicOverlayObject) jso.cast());
+						PerunConfiguration.setPerunConfig(((BasicOverlayObject) jso.cast()));
 
 						// TRIGGER LOADING DEFAULT TABS
 						perunLoaded = true;
 						perunLoading = false;
+
+						page = new SelectPage();
+						joinPage = new JoinPage();
 
 						String token = Window.Location.getParameter("token");
 						if (token == null || token.isEmpty()) {
@@ -94,6 +95,8 @@ public class PerunConsolidator implements EntryPoint{
 						navbarHeader.insert(logo, 0);
 
 						brand.setText(translation.consolidatorAppName());
+
+						UiUtils.addLanguageSwitcher(topMenu);
 
 					}
 

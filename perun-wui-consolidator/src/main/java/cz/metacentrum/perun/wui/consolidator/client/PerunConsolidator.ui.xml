@@ -18,16 +18,15 @@
 						<b.html:Span ui:field="brand" addStyleNames="navbar-brand" />
 						<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
 					</b:NavbarHeader>
-					<!--
+
 					<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse">
 
 						<g:FocusPanel ui:field="collapseClickHandler" >
-							<b:NavbarNav pull="RIGHT">
-								<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>
+							<b:NavbarNav ui:field="topMenu">
+								<!--<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>-->
 							</b:NavbarNav>
 						</g:FocusPanel>
 					</b:NavbarCollapse>
-					-->
 				</b:Navbar>
 			</b:Column>
 		</b:Row>

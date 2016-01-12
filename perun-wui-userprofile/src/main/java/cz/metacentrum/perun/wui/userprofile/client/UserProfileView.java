@@ -2,13 +2,10 @@ package cz.metacentrum.perun.wui.userprofile.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.http.client.UrlBuilder;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -18,7 +15,7 @@ import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.NavPills;
@@ -107,6 +104,8 @@ public class UserProfileView extends ViewImpl implements UserProfilePresenter.My
 		logo.setPull(Pull.LEFT);
 		navbarHeader.insert(logo, 0);
 
+		UiUtils.addLanguageSwitcher(topMenu);
+
 		topMenuMyProfile.setText(translation.menuMyProfile());
 
 		personal.setText(translation.menuMyProfile());
@@ -128,20 +127,6 @@ public class UserProfileView extends ViewImpl implements UserProfilePresenter.My
 		footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
 		footerVersion.setHTML(translation.version(PerunWebConstants.INSTANCE.guiVersion()));
 
-		for (final String langCode : PerunConfiguration.getSupportedLanguages()) {
-
-			AnchorListItem item = new AnchorListItem();
-			item.getElement().insertFirst(PerunConfiguration.getLanguageFlag(langCode).getElement());
-			item.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-					UrlBuilder builder = Window.Location.createUrlBuilder().setParameter("locale", langCode);
-					Window.Location.replace(builder.buildString());
-				}
-			});
-			topMenu.insert(item, topMenu.getWidgetCount());
-
-		}
 
 	}
 

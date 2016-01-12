@@ -1,5 +1,7 @@
 package cz.metacentrum.perun.wui.client.resources;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
@@ -11,6 +13,8 @@ import cz.metacentrum.perun.wui.model.common.WayfGroup;
 import org.gwtbootstrap3.client.ui.Image;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * This class allows to read configuration of Perun for WUI apps.
@@ -63,6 +67,7 @@ public final class PerunConfiguration {
 
 		// stored locally
 		if (getLocalConfig() != null && JsUtils.hasOwnProperty(getLocalConfig(), name)) {
+			GWT.log("local: " + JsUtils.getNativePropertyString(getLocalConfig(), name));
 			return JsUtils.getNativePropertyString(getLocalConfig(), name);
 		}
 
@@ -112,6 +117,26 @@ public final class PerunConfiguration {
 	}
 
 	/**
+	 * Return array value of property from perun config or null.
+	 *
+	 * @param name property name
+	 * @return property value or NULL if anything fails
+	 */
+	private static <T extends JavaScriptObject> JsArray<T> getConfigPropertyArray(String name) {
+
+		if (name == null || name.isEmpty()) return null;
+
+		// stored locally
+		if (getLocalConfig() != null && JsUtils.hasOwnProperty(getLocalConfig(), name)) {
+			return JsUtils.getNativePropertyArray(getLocalConfig(), name);
+		}
+
+		// can't be stored globally
+		return null;
+
+	}
+
+	/**
 	 * Get code of current user locale in GWT. Wraps "default" locale as "en" (english)
 	 * since we use it as default. This saves us one compilation permutation.
 	 *
@@ -126,16 +151,17 @@ public final class PerunConfiguration {
 	}
 
 	/**
-	 * Return list of supported languages codes, "en" is always supported as default.
+	 * Return set of supported languages codes, "en" is always supported as default.
 	 *
-	 * @return list of supported language codes
+	 * @return set of supported language codes
 	 */
-	public static ArrayList<String> getSupportedLanguages() {
+	public static HashSet<String> getSupportedLanguages() {
 
 		ArrayList<String> languages = new ArrayList<>();
 		languages.add("en");
 		languages.addAll(Utils.stringToList(getConfigPropertyString("language.supported"),","));
-		return languages;
+		Collections.sort(languages);
+		return new HashSet<String>(languages);
 
 	}
 
@@ -343,16 +369,7 @@ public final class PerunConfiguration {
 	 * @return List of enabled wayf groups
 	 */
 	public static ArrayList<WayfGroup> getWayfGroups() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JsArray wayfConfig = JsUtils.getNativePropertyArray(PerunSession.getInstance().getLocalConfig(), "wayf.groups");
-			if (wayfConfig != null && wayfConfig.length() != 0) {
-				return JsUtils.jsoAsList(wayfConfig);
-			}
-		}
-
-		return null;
-
+		return JsUtils.jsoAsList(getConfigPropertyArray("wayf.groups"));
 	}
 
 	/**
