@@ -18,7 +18,7 @@ import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
@@ -108,7 +108,7 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 	private Application app;
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	@Inject
 	public AppDetailView(AppDetailViewUiBinder binder) {

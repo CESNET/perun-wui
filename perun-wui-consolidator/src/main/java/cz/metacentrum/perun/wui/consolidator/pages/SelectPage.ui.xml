@@ -1,0 +1,42 @@
+<ui:UiBinder
+		xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+		xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
+		xmlns:b.gwt="urn:import:org.gwtbootstrap3.client.ui.gwt"
+		xmlns:p.consolidator="urn:import:cz.metacentrum.perun.wui.consolidator.client"
+		xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
+		xmlns:p.cons='urn:import:cz.metacentrum.perun.wui.consolidator.widgets'
+		xmlns:ui='urn:ui:com.google.gwt.uibinder'
+		xmlns:g="urn:import:com.google.gwt.user.client.ui"
+		xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui">
+
+	<ui:style>
+		.center { text-align: center; clear: both; width: 50%; margin:0 auto; margin-top: 20px; float:none; }
+		.center2 { text-align: center; margin:0 auto; float:none; width: 460px; }
+		.max { max-height: 460px; width: 460px; }
+	</ui:style>
+
+	<ui:with field="res" type="cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorResources"/>
+
+	<b.html:Div addStyleNames="{res.gss.page}">
+
+		<b.html:Div addStyleNames="{style.center}">
+			<b:Alert ui:field="alert" visible="false" type="INFO"/>
+		</b.html:Div>
+
+		<b:Heading size="H2" ui:field="heading" alignment="CENTER" visible="false" />
+
+		<b:Heading size="H3" ui:field="identity" alignment="CENTER" visible="false" />
+
+		<b:Heading size="H2" ui:field="joinHeading" alignment="CENTER" visible="false" />
+
+		<p:PerunLoader ui:field="loader" visible="false"/>
+
+		<b.html:Div addStyleNames="{style.center2} {style.max}">
+
+			<p.cons:Wayf ui:field="wayf" visible="false" width="100%" />
+
+		</b.html:Div>
+
+	</b.html:Div>
+
+</ui:UiBinder>

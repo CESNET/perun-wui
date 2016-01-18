@@ -5,6 +5,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -16,12 +18,13 @@ import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.NavbarNav;
-import org.gwtbootstrap3.client.ui.constants.Pull;
+import org.gwtbootstrap3.client.ui.Well;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
 
@@ -39,7 +42,7 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	@UiField
 	Div pageContent;
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	@UiField
 	NavbarNav topMenu;
@@ -57,14 +60,13 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	AnchorListItem myApplications;
 
 	@UiField
-	AnchorListItem help;
-
-	@UiField
 	AnchorListItem logout;
 
 	@UiField static Span footerSupport;
 	@UiField static Span footerCredits;
 	@UiField static Span footerVersion;
+	@UiField Well perunFooter;
+	@UiField Div logoWrapper;
 
 	@UiField static NavbarHeader navbarHeader;
 	@UiField Span brand;
@@ -79,32 +81,43 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		History.newItem("submitted");
 	}
 
-	@UiHandler(value="help")
-	public void helpClick(ClickEvent event) {
-		History.newItem("help");
-	}
-
 	@UiHandler(value="logout")
 	public void logoutClick(ClickEvent event) {
 		History.newItem("logout");
 	}
 
-
 	@Override
 	public void onLoadingStartFooter() {
-		footerSupport.setHTML(translation.supportAt(translation.loading()));
-		footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
-		footerVersion.setHTML(translation.version(PerunWebConstants.INSTANCE.guiVersion()));
+
+		if (PerunConfiguration.isFooterDisabled()) {
+			Element elem = DOM.getElementById("perun-copyright");
+			elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+		} else {
+			footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+			footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
+			footerVersion.setHTML(translation.version(PerunWebConstants.INSTANCE.guiVersion()));
+		}
+
 	}
 
 	@Override
 	public void onFinishedFooter(List<String> contactEmail) {
 		if (contactEmail == null || contactEmail.isEmpty()) {
-			footerSupport.setHTML(translation.supportAt("perun@cesnet.cz"));
-			return;
+			if (!PerunConfiguration.isFooterDisabled()) {
+				footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+			} else {
+				Element elem = DOM.getElementById("perun-copyright");
+				elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+			}
+		} else {
+			String mails = contactEmail.toString();
+			if (!PerunConfiguration.isFooterDisabled()) {
+				footerSupport.setHTML(translation.supportAt(mails.substring(1, mails.length()-1)));
+			} else {
+				Element elem = DOM.getElementById("perun-copyright");
+				elem.setInnerHTML(translation.supportAt(mails.substring(1, mails.length()-1)) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+			}
 		}
-		String mails = contactEmail.toString();
-		footerSupport.setHTML(translation.supportAt(mails.substring(1, mails.length()-1)));
 	}
 
 	@Override
@@ -122,19 +135,18 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		Image logo = PerunConfiguration.getBrandLogo();
 		logo.setWidth("auto");
 		logo.setHeight("50px");
-		logo.setPull(Pull.LEFT);
-		navbarHeader.insert(logo, 0);
+		//logo.setPull(Pull.LEFT);
+		logoWrapper.add(logo);
 
 		UiUtils.addLanguageSwitcher(topMenu);
-
-		// FIXME - temporary disabled
-		help.setVisible(false);
 
 		// init buttons
 		application.setText(translation.application());
 		myApplications.setText(translation.myApplications());
-		help.setText(translation.help());
 		logout.setText(translation.logout());
+
+		// fill perun properties to predefined footer
+		perunFooter.setVisible(!PerunConfiguration.isFooterDisabled());
 
 	}
 

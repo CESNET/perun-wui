@@ -3,12 +3,22 @@ package cz.metacentrum.perun.wui.consolidator.client;
 import com.google.gwt.core.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
+import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorResources;
+import cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorTranslation;
+import cz.metacentrum.perun.wui.consolidator.pages.JoinPage;
+import cz.metacentrum.perun.wui.consolidator.pages.SelectPage;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
@@ -16,7 +26,7 @@ import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.constants.Pull;
+import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
 
@@ -30,103 +40,133 @@ public class PerunConsolidator implements EntryPoint{
 	interface PerunConsolidatorUiBinder extends UiBinder<Widget, PerunConsolidator>{}
 
 	private static PerunConsolidatorUiBinder uiBinder = GWT.create(PerunConsolidatorUiBinder.class);
-	private static ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
+	private static PerunConsolidatorTranslation translation = GWT.create(PerunConsolidatorTranslation.class);
 
 	private static boolean perunLoaded = false;
 	public static boolean perunLoading = false;
 	private PerunConsolidator gui = this;
+	@UiField Div menuWrapper;
+	@UiField Span brand;
+	@UiField Div logoWrapper;
 	@UiField static NavbarHeader navbarHeader;
 	@UiField NavbarNav topMenu;
+	@UiField Well perunFooter;
+	@UiField Span footerSupport;
+	@UiField Span footerCredits;
+	@UiField Span footerVersion;
 
 	SelectPage page;
 	JoinPage joinPage;
 
-	@UiField(provided = true)
-	Div content;
-
-	@UiField
-	Span brand;
+	@UiField Column content;
 
 	@Override
 	public void onModuleLoad() {
 
-		// ensure injecting custom CSS styles of PerunWui
-		PerunResources.INSTANCE.gss().ensureInjected();
+		ExceptionLogger exceptionHandler = new ExceptionLogger();
+		GWT.setUncaughtExceptionHandler(exceptionHandler);
 
-		AuthzManager.getPerunPrincipal(new JsonEvents() {
-			@Override
-			public void onFinished(JavaScriptObject jso) {
+		try {
 
-				PerunPrincipal pp = ((PerunPrincipal) jso);
-				PerunSession.getInstance().setPerunPrincipal(pp);
-				PerunSession.getInstance().setRoles(pp.getRoles());
+			// set default for Growl plugin
+			Utils.getDefaultNotifyOptions().makeDefault();
 
-				PerunSession.getInstance().setExtendedInfoVisible(PerunSession.getInstance().isPerunAdmin());
+			// ensure injecting custom CSS styles of PerunWui
+			PerunResources.INSTANCE.gss().ensureInjected();
 
-				UtilsManager.getGuiConfiguration(new JsonEvents() {
-					@Override
-					public void onFinished(JavaScriptObject jso) {
+			PerunConsolidatorResources.INSTANCE.gss().ensureInjected();
 
-						// store configuration
-						PerunConfiguration.setPerunConfig(((BasicOverlayObject) jso.cast()));
+			AuthzManager.getPerunPrincipal(new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject jso) {
 
-						// TRIGGER LOADING DEFAULT TABS
-						perunLoaded = true;
-						perunLoading = false;
+					PerunPrincipal pp = ((PerunPrincipal) jso);
+					PerunSession.getInstance().setPerunPrincipal(pp);
+					PerunSession.getInstance().setRoles(pp.getRoles());
 
-						page = new SelectPage();
-						joinPage = new JoinPage();
+					PerunSession.getInstance().setExtendedInfoVisible(PerunSession.getInstance().isPerunAdmin());
 
-						String token = Window.Location.getParameter("token");
-						if (token == null || token.isEmpty()) {
-							content = (Div)page.draw();
-						} else {
-							content = (Div)joinPage.draw(token);
+					UtilsManager.getGuiConfiguration(new JsonEvents() {
+						@Override
+						public void onFinished(JavaScriptObject jso) {
+
+							// store configuration
+							PerunConfiguration.setPerunConfig(((BasicOverlayObject) jso.cast()));
+
+							// TRIGGER LOADING DEFAULT TABS
+							perunLoaded = true;
+							perunLoading = false;
+
+							page = new SelectPage();
+							joinPage = new JoinPage();
+
+							RootPanel.get("app-content").clear();
+							RootPanel.get("app-content").add(uiBinder.createAndBindUi(gui));
+
+							String token = Window.Location.getParameter("token");
+							if (token == null || token.isEmpty()) {
+								content.add(page.draw());
+							} else {
+								content.add(joinPage.draw(token));
+							}
+
+							// put logo
+							Image logo = PerunConfiguration.getBrandLogo();
+							logo.setWidth("auto");
+							logo.setHeight("50px");
+							//logo.setPull(Pull.LEFT);
+							logoWrapper.add(logo);
+
+							if (!PerunConfiguration.isLangSwitchingDisabled()) {
+								UiUtils.addLanguageSwitcher(topMenu);
+							}
+
+							brand.setText(translation.appName());
+
+							if (PerunConfiguration.isFooterDisabled()) {
+								// fill perun properties to predefined footer
+								perunFooter.setVisible(!PerunConfiguration.isFooterDisabled());
+								Element elem = DOM.getElementById("perun-copyright");
+								elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+							} else {
+								footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+								footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
+								footerVersion.setHTML(translation.version(PerunWebConstants.INSTANCE.guiVersion()));
+							}
+
 						}
 
-						RootPanel.get("perun-consolidator").clear();
-						RootPanel.get("perun-consolidator").add(uiBinder.createAndBindUi(gui));
+						@Override
+						public void onError(PerunException error) {
+							perunLoaded = false;
+							perunLoading = false;
+						}
 
-						// put logo
-						org.gwtbootstrap3.client.ui.Image logo = PerunConfiguration.getBrandLogo();
-						logo.setWidth("auto");
-						logo.setHeight("50px");
-						logo.setPull(Pull.LEFT);
-						navbarHeader.insert(logo, 0);
+						@Override
+						public void onLoadingStart() {
 
-						brand.setText(translation.consolidatorAppName());
+						}
+					});
 
-						UiUtils.addLanguageSwitcher(topMenu);
+				}
 
-					}
+				@Override
+				public void onError(PerunException error) {
+					perunLoaded = false;
+					perunLoading = false;
+				}
 
-					@Override
-					public void onError(PerunException error) {
-						perunLoaded = false;
-						perunLoading = false;
-					}
+				@Override
+				public void onLoadingStart() {
+					perunLoaded = false;
+					perunLoading = true;
 
-					@Override
-					public void onLoadingStart() {
+				}
+			});
 
-					}
-				});
-
-			}
-
-			@Override
-			public void onError(PerunException error) {
-				perunLoaded = false;
-				perunLoading = false;
-			}
-
-			@Override
-			public void onLoadingStart() {
-				perunLoaded = false;
-				perunLoading = true;
-
-			}
-		});
+		} catch (Exception ex) {
+			exceptionHandler.onUncaughtException(ex);
+		}
 
 	}
 

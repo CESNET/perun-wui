@@ -140,7 +140,7 @@
 					"feed" : "Social",
 					"data" : {
 						"https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:github"
-						: {
+								: {
 							"logo" : "https://ds.eduID.cz/logo/extidp.cesnet.cz.idp.shibboleth.authnContextClassRef.urn.cesnet.extidp.authn.github.png",
 							"label" : {
 								"en" : "GitHub - eduID.cz bridge",
@@ -169,21 +169,88 @@
 	<!-- Load GWT GUI -->
 	<script type="text/javascript" language="javascript" src="./PerunConsolidator/PerunConsolidator.nocache.js"></script>
 
+	<!-- Uncomment for local testing of cesnet linker load bootstrap -->
+	<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+	<style type="text/css" >
+
+		#footer {
+			margin-top: 5em;
+			background-color: #4b4d4a;
+			border-top: 10px solid #dcdcda;
+			clear: both;
+			color: #e1e5e9;
+			font-size: 0.8em;
+			overflow: hidden;
+			padding-top: 20px;
+		}
+		#footer a:link, #footer a:visited {
+			color: #e1e5e9;
+		}
+		#footer a:link, #footer a:visited {
+			text-decoration: underline;
+		}
+		#footer a:link:hover, #footer a:visited:hover, #footer a:link:focus, #footer a:visited:focus, #footer a:link:active, #footer a:visited:active {
+			text-decoration: none;
+		}
+		#footer .col {
+			line-height: 2.1em;
+			margin-bottom: 20px;
+		}
+		#footer .col h2 {
+			border-bottom: 1px solid white;
+			color: #e1e5e9;
+			font-size: 1.05em;
+			margin-bottom: 1em;
+			padding-bottom: 0.8em;
+			text-transform: uppercase;
+			font-weight: bold;
+		}
+		#footer .col ul {
+			padding-left: 0;
+		}
+		#footer .col ul li {
+			background: rgba(0, 0, 0, 0) url("../img/bullet_77797c.png") no-repeat scroll 0 0.5em;
+			list-style-type: none;
+			margin-left: 0;
+			padding-left: 25px;
+		}
+		#footer .col ul li a:link, #footer .col ul li a:visited {
+			text-decoration: none;
+		}
+		#footer .col ul li a:link:hover, #footer .col ul li a:visited:hover, #footer .col ul li a:link:focus, #footer .col ul li a:visited:focus, #footer .col ul li a:link:active, #footer .col ul li a:visited:active {
+			text-decoration: underline;
+		}
+		#footer .copyright {
+			margin-top: 20px;
+		}
+
+		/* Sticky footer */
+
+		.Site {
+			display: flex;
+			min-height: 100vh;
+			flex-direction: column;
+		}
+
+		.Site-content {
+			flex: 1;
+		}
+
+	</style>
+
 </head>
-<body>
+<body class="Site">
 
-<div id="cesnet_linker_placeholder" data-lang="en" data-lang-cs-href="?locale=cs" data-lang-en-href="?locale=en"></div>
+<!-- Uncomment for local testing of cesnet linker-->
+<div id="cesnet_linker_placeholder" data-lang="en"></div> <!-- data-lang-cs-href="?locale=cs" data-lang-en-href="?locale=en"> -->
 
-<div id="perun-consolidator" style="width: 100%; height: 100%;">
+<!--#include virtual="PerunConsolidatorHeader.shtml" -->
+
+<div id="app-content" class="Site-content">
 	<!-- Div we include our webapp too -->
 </div>
 
-<div class="container" style="position: relative; top: 50px; clear: both; width: 100%;">
-	<center>
-		<p>Powered by <a href="http://perun.cesnet.cz"><img src="data:image/png;base64,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" height="25"></a>&nbsp;--&nbsp;&copy;&nbsp;<a href="http://www.cesnet.cz">CESNET</a>, <a href="http://www.cerit-sc.cz">CERIT-SC</a></p>
-		<p>Support at <a href="mailto:perun@cesnet.cz">perun@cesnet.cz</a></p>
-	</center>
-</div>
+<!--#include virtual="PerunConsolidatorFooter.shtml" -->
 
 <!-- OPTIONAL: include this if you want history support -->
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
@@ -196,12 +263,50 @@
 		application to display correctly.</div>
 </noscript>
 
-<!-- Set correct lang to Linker -->
+<!-- Uncomment for local testing of cesnet linker - Set correct lang to Linker -->
 <script type="text/javascript">
 	var elem = document.getElementById("cesnet_linker_placeholder");
 	elem.setAttribute('data-lang', l_lang);
 </script>
 <script type="text/javascript" async src="https://linker2.cesnet.cz/linker.js"></script>
+
+<div id="footer">
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col col-md-3">
+					<div class="logo-wrapper">
+						<a href="http://www.cesnet.cz/">
+							<img alt="cesnet logo" class="img-responsive" src="data:image/png;base64,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" width="263px" >
+						</a>
+					</div>
+					<div class="row">
+						<div id="perun-copyright" class="col col-sm-12 copyright"></div>
+					</div>
+				</div>
+				<div class="col-lg-7 col-lg-push-2 col-md-push-1 col-md-8">
+					<div class="row">
+						<div class="col col-sm-6">
+							<h2>Contact</h2>
+							CESNET, z. s. p. o<br>
+							ZIKOVA 4, 16000 PRAHA <br>
+							TEL : +420 224 352 994<br>
+							FAX : +420 224 320 269<br>
+							<a href="mailto:info@cesnet.cz">info@cesnet.cz</a>
+						</div>
+						<div class="col col-sm-6">
+							<h2>Permanent service</h2>
+							TEL: +420 224 352 994<br>
+							GSM: +420 602 252 531<br>
+							FAX: +420 224 313 211<br>
+							<a href="mailto:support@cesnet.cz">support@cesnet.cz</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+</div>
 
 </body>
 </html>

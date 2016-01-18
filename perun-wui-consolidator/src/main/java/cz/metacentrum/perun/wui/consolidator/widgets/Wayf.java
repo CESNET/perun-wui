@@ -21,7 +21,7 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.consolidator.client.ConsolidatorTranslation;
+import cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorTranslation;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.common.Feed;
 import cz.metacentrum.perun.wui.model.common.FeedEntities;
@@ -49,7 +49,7 @@ import java.util.HashMap;
  */
 public class Wayf extends Composite {
 
-	private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
+	private PerunConsolidatorTranslation translation = GWT.create(PerunConsolidatorTranslation.class);
 
 	private HashMap<String, Integer> callCounter = new HashMap<>();
 	private FeedFilter filter;

@@ -8,7 +8,7 @@ import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
 
 /**
  * Presenter for displaying registration form of VO / Group
@@ -20,7 +20,7 @@ public class FormPresenter extends Presenter<FormPresenter.MyView, FormPresenter
 	public interface MyView extends View {
 	}
 
-	@NameToken(RegistrarPlaceTokens.FORM)
+	@NameToken(PerunRegistrarPlaceTokens.FORM)
 	@ProxyCodeSplit
 	public interface MyProxy extends ProxyPlace<FormPresenter> {
 	}

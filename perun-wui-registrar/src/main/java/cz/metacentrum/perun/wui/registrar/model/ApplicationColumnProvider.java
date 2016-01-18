@@ -6,8 +6,8 @@ import com.google.gwt.user.client.History;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
@@ -28,7 +28,7 @@ import java.util.Set;
  */
 public class ApplicationColumnProvider extends cz.metacentrum.perun.wui.model.columnProviders.ApplicationColumnProvider {
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	private static ArrayList<PerunColumnType> defaultColumns = new ArrayList<>();
 
@@ -215,7 +215,7 @@ public class ApplicationColumnProvider extends cz.metacentrum.perun.wui.model.co
 					}, new FieldUpdater<Application, String>() {
 						@Override
 						public void update(int index, Application object, String value) {
-							History.newItem(RegistrarPlaceTokens.APP_DETAIL+";id="+object.getId());
+							History.newItem(PerunRegistrarPlaceTokens.APP_DETAIL+";id="+object.getId());
 						}
 					}
 			);

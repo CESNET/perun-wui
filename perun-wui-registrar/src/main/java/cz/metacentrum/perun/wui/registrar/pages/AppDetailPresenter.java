@@ -16,7 +16,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
 
 /**
  * Presenter for displaying registration detail.
@@ -34,7 +34,7 @@ public class AppDetailPresenter extends Presenter<AppDetailPresenter.MyView, App
 		void onErrorApplication(PerunException error, JsonEvents retry);
 	}
 
-	@NameToken(RegistrarPlaceTokens.APP_DETAIL)
+	@NameToken(PerunRegistrarPlaceTokens.APP_DETAIL)
 	@ProxyCodeSplit
 	public interface MyProxy extends ProxyPlace<AppDetailPresenter> {
 	}

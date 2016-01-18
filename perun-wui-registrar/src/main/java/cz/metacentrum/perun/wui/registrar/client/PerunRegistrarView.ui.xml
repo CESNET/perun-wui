@@ -4,53 +4,47 @@
              xmlns:g="urn:import:com.google.gwt.user.client.ui"
 >
 
-	<ui:with field="res" type="cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources"/>
+	<ui:with field="res" type="cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources"/>
 
-	<ui:style>
-		/* Ugly hack for row/column since they overlap page when set to 100% */
-		.localFix { padding-right: 0; margin-right: 0; }
-	</ui:style>
-
-	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens"/>
+	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens"/>
 
 	<b.html:Div addStyleNames="{res.gss.webContent}">
 
-		<b:Row addStyleNames="{style.localFix}">
-			<b:Column size="MD_12" addStyleNames="{style.localFix}">
-				<b:Navbar position="DEFAULT">
-					<b:NavbarHeader ui:field="navbarHeader" addStyleNames="{res.gss.header}">
-						<b.html:Span ui:field="brand" addStyleNames="navbar-brand" />
-						<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
-					</b:NavbarHeader>
+		<!-- TOP MENU -->
+		<b.html:Div addStyleNames="{res.gss.navbarWrapper}" ui:field="menuWrapper">
+			<b:Container>
+				<b:Row>
+					<b:Column size="MD_12">
+						<b:Navbar position="DEFAULT" addStyleNames="{res.gss.navbarFix}">
+							<b:NavbarHeader ui:field="navbarHeader">
+								<b.html:Div ui:field="logoWrapper" addStyleNames="{res.gss.logoWrapper}" pull="LEFT"/>
+								<b.html:Span ui:field="brand" addStyleNames="navbar-brand" />
+								<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
+							</b:NavbarHeader>
 
-					<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse">
-						<g:FocusPanel ui:field="collapseClickHandler">
-							<b:NavbarNav ui:field="topMenu">
-								<b:AnchorListItem icon="FILE_TEXT_O" ui:field="application" targetHistoryToken="{placeTokens.getForm}">Registration form</b:AnchorListItem>
-								<b:AnchorListItem icon="ARCHIVE" ui:field="myApplications" targetHistoryToken="{placeTokens.getMyApps}">My registrations</b:AnchorListItem>
-								<b:AnchorListItem icon="QUESTION_CIRCLE" ui:field="help" targetHistoryToken="{placeTokens.getHelp}">Help</b:AnchorListItem>
-								<b:AnchorListItem icon="SIGN_OUT" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>
-							</b:NavbarNav>
-						</g:FocusPanel>
-					</b:NavbarCollapse>
-				</b:Navbar>
-			</b:Column>
-		</b:Row>
+							<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse">
+								<g:FocusPanel ui:field="collapseClickHandler">
+									<b:NavbarNav ui:field="topMenu" pull="RIGHT">
+										<b:AnchorListItem icon="FILE_TEXT_O" ui:field="application" targetHistoryToken="{placeTokens.getForm}">Registration form</b:AnchorListItem>
+										<b:AnchorListItem icon="ARCHIVE" ui:field="myApplications" targetHistoryToken="{placeTokens.getMyApps}">My registrations</b:AnchorListItem>
+										<b:AnchorListItem icon="SIGN_OUT" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>
+									</b:NavbarNav>
+								</g:FocusPanel>
+							</b:NavbarCollapse>
+						</b:Navbar>
+					</b:Column>
+				</b:Row>
+			</b:Container>
+		</b.html:Div>
 
 		<b.html:Div ui:field="pageContent" addStyleNames="{res.gss.pageWrapper}" />
 
-		<b:Container>
-			<b:Row>
-				<b:Column size="MD_12">
-					<b:Well addStyleNames="{res.gss.footer}">
-						<b:Icon type="SUPPORT" paddingRight="5"/>
-						<b.html:Span ui:field="footerSupport" /><b.html:ClearFix />
-						<b.html:Span ui:field="footerCredits"/><b.html:ClearFix />
-						<b.html:Span ui:field="footerVersion"/>
-					</b:Well>
-				</b:Column>
-			</b:Row>
-		</b:Container>
+		<b:Well ui:field="perunFooter" visible="false">
+			<b:Icon type="SUPPORT" paddingRight="5"/>
+			<b.html:Span ui:field="footerSupport" /><b.html:ClearFix />
+			<b.html:Span ui:field="footerCredits"/><b.html:ClearFix />
+			<b.html:Span ui:field="footerVersion"/>
+		</b:Well>
 
 	</b.html:Div>
 

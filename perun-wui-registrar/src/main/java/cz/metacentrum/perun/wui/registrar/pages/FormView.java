@@ -26,7 +26,7 @@ import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Identity;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.client.ExceptionResolver;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.pages.steps.GroupInitStep;
@@ -69,7 +69,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	private FormView formView = this;
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	private Vo vo;
 	private Group group;
@@ -98,7 +98,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		return form;
 	}
 
-	public RegistrarTranslation getTranslation() {
+	public PerunRegistrarTranslation getTranslation() {
 		return translation;
 	}
 

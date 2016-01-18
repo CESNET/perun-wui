@@ -2,7 +2,7 @@ package cz.metacentrum.perun.wui.registrar.widgets.items.validators;
 
 import com.google.gwt.core.client.GWT;
 import cz.metacentrum.perun.wui.json.Events;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
 
 /**
@@ -12,7 +12,7 @@ public abstract class PerunFormItemValidatorImpl<T extends PerunFormItem> implem
 
 	private Result result = Result.NOT_CHECKED;
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	@Override
 	public void validate(T item, Events<Boolean> events) {
@@ -26,7 +26,7 @@ public abstract class PerunFormItemValidatorImpl<T extends PerunFormItem> implem
 		return result;
 	}
 
-	public RegistrarTranslation getTransl() {
+	public PerunRegistrarTranslation getTransl() {
 		return translation;
 	}
 

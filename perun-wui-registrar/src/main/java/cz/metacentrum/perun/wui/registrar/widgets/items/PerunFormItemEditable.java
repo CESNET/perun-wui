@@ -2,7 +2,7 @@ package cz.metacentrum.perun.wui.registrar.widgets.items;
 
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.FormLabel;
@@ -56,7 +56,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		label.addStyleName(PerunForm.LABEL_SIZE.getCssName());
 		widgetWithTexts.addStyleName(PerunForm.WIDGET_WITH_TEXT_SIZE.getCssName());
 
-		status.addStyleName(PerunWuiRegistrarResources.INSTANCE.gss().status());
+		status.addStyleName(PerunRegistrarResources.INSTANCE.gss().status());
 
 
 		widgetWithStatus.add(widget);
@@ -74,7 +74,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 			statusWrap.setVisible(false);
 
 			Widget w = initWidgetOnlyPreview();
-			w.addStyleName(PerunWuiRegistrarResources.INSTANCE.gss().preview());
+			w.addStyleName(PerunRegistrarResources.INSTANCE.gss().preview());
 			widget.add(w);
 
 			setValue(getItemData().getValue());

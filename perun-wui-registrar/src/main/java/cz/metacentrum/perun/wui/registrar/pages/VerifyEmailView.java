@@ -12,7 +12,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
@@ -40,7 +40,7 @@ public class VerifyEmailView extends ViewImpl implements VerifyEmailPresenter.My
 	interface VerifyEmailViewUiBinder extends UiBinder<Widget, VerifyEmailView> {
 	}
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	@Inject
 	public VerifyEmailView(VerifyEmailViewUiBinder binder) {

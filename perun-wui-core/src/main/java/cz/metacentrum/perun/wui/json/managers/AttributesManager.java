@@ -4,6 +4,7 @@ import com.google.gwt.http.client.Request;
 import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -51,6 +52,19 @@ public class AttributesManager {
 			}
 		}
 		return client.call(AUTHZ_MANAGER + "getAttributesDefinitionWithRights");
+
+	}
+
+	/**
+	 * Get all member attributes specified by names
+	 *
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getMemberAttributes(ArrayList<String> attrNames, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		return client.call(AUTHZ_MANAGER + "getAttributesDefinition");
 
 	}
 

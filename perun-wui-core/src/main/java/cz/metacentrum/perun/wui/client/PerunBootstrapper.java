@@ -81,7 +81,7 @@ public class PerunBootstrapper implements Bootstrapper {
 						// OPEN PAGE BASED ON URL
 						placeManager.revealCurrentPlace();
 						PerunSession.setPlaceManager(placeManager);
-						History.fireCurrentHistoryState();
+						//History.fireCurrentHistoryState();
 
 					}
 

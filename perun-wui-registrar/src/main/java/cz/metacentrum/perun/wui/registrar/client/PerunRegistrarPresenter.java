@@ -17,6 +17,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,7 +81,7 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 				if (i != null && m != null) {
 
 					PlaceRequest placeRequest = new PlaceRequest.Builder()
-							.nameToken(RegistrarPlaceTokens.VERIFY)
+							.nameToken(PerunRegistrarPlaceTokens.VERIFY)
 							.with("i", i).with("m", m).build();
 					placeManager.revealPlace(placeRequest, false);
 

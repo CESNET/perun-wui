@@ -1,0 +1,96 @@
+
+@def MIN_WIDTH 320px;
+@def MIN_HEIGHT 320px;
+
+/* MAIN LAYOUT */
+
+body {
+	/*
+    position: absolute;
+    min-width: MIN_WIDTH;
+    min-height: MIN_HEIGHT;
+    width: 100%;*/
+    height: 100%;
+}
+
+.webContent {
+	position: relative; /* previously absolute - fixes overflow issue, but should be solved otherwise */
+	height: 100%;
+	width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* TOP MENU */
+
+.navbarWrapper {
+	width: 100%;
+	background-color: #f8f8f8;
+	border-bottom: 1px solid #e7e7e7;
+}
+
+.navbarFix {
+	margin-bottom: 0;
+	padding-bottom: 0;
+	border: 0;
+}
+
+/* Since we show left-menu on bigger screen, align header too */
+@media screen and (min-width: 768px) {
+	.logoWrapper {
+		text-align: center;
+		min-width: 250px;
+		display: inline-block;
+		margin-left: 15px;
+		/*margin-right: 15px;*/
+	}
+}
+
+/* MAIN CONTENT */
+
+.menuAndPageWrapper {
+	min-height: 100%; /* Ugly hack to fix content display (table size), footer should be pushed down
+	                      by changing layout and not like-this. */
+	display: flex;
+	flex-direction: row;
+	align-items: stretch;
+	flex-grow: 1;
+	margin: 0px 15px 0px 15px;
+}
+
+.pageWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-grow: 1;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    flex-grow: 1;
+}
+
+/* FOOTER
+
+.footer {
+	padding: 4px;
+	line-height: 2em;
+	text-align: center;
+}*/
+
+/* PAGE CONTENT */
+
+.grid {
+    flex-grow: 1;
+    margin-bottom: 10px;
+    overflow-x: auto;
+}
+.grid > div:last-child {
+    min-width: 767px;
+}
+
+/* HACKS */

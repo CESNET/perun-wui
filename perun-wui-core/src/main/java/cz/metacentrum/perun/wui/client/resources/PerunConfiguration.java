@@ -67,7 +67,6 @@ public final class PerunConfiguration {
 
 		// stored locally
 		if (getLocalConfig() != null && JsUtils.hasOwnProperty(getLocalConfig(), name)) {
-			GWT.log("local: " + JsUtils.getNativePropertyString(getLocalConfig(), name));
 			return JsUtils.getNativePropertyString(getLocalConfig(), name);
 		}
 
@@ -88,11 +87,17 @@ public final class PerunConfiguration {
 
 		// stored locally
 		if (getLocalConfig() != null && JsUtils.hasOwnProperty(getLocalConfig(), name)) {
-			return JsUtils.getNativePropertyInt(getLocalConfig(), name);
+			String value = JsUtils.getNativePropertyString(getLocalConfig(), name);
+			return (value != null) ? Integer.parseInt(value) : 0;
 		}
 
 		// stored globally
-		return (perunConfig != null) ? JsUtils.getNativePropertyInt(perunConfig, name) : 0;
+		if (perunConfig != null) {
+			String value = JsUtils.getNativePropertyString(perunConfig, name);
+			return (value != null) ? Integer.parseInt(value) : 0;
+		}
+
+		return 0;
 
 	}
 
@@ -108,11 +113,17 @@ public final class PerunConfiguration {
 
 		// stored locally
 		if (getLocalConfig() != null && JsUtils.hasOwnProperty(getLocalConfig(), name)) {
-			return JsUtils.getNativePropertyBoolean(getLocalConfig(), name);
+			String value = JsUtils.getNativePropertyString(getLocalConfig(), name);
+			return (value != null) && Boolean.parseBoolean(value);
 		}
 
 		// stored globally
-		return (perunConfig != null) && JsUtils.getNativePropertyBoolean(perunConfig, name);
+		if (perunConfig != null) {
+			String value = JsUtils.getNativePropertyString(perunConfig, name);
+			return (value != null) && Boolean.parseBoolean(value);
+		}
+
+		return false;
 
 	}
 
@@ -172,6 +183,16 @@ public final class PerunConfiguration {
 	 */
 	public static Image getLanguageFlag(String langCode) {
 		return new Image(getConfigPropertyString("language.flags."+langCode));
+	}
+
+	/**
+	 * Return TRUE if language switching should be disabled.
+	 * Return FALSE when to allow display of language switcher.
+	 *
+	 * @return TRUE when language switching should be disabled, FALSE otherwise.
+	 */
+	public static boolean isLangSwitchingDisabled() {
+		return getConfigPropertyBoolean("language.switch.disabled");
 	}
 
 	// ---------------- BRAND ------------------ //
@@ -247,6 +268,28 @@ public final class PerunConfiguration {
 	// TODO - header (show/hide, available langs to switch)
 	// TODO - footer (show/hide, maybe fill data ?)
 	// TODO - handle app-wide plugs
+
+	// ---------------- BRAND ------------------ //
+
+	/**
+	 * Return TRUE if default footer should be disabled (brand is using own).
+	 * Return FALSE when to use default footer.
+	 *
+	 * @return TRUE when brand uses own footer, FALSE otherwise.
+	 */
+	public static boolean isFooterDisabled() {
+		return getConfigPropertyBoolean("footer.disabled");
+	}
+
+	/**
+	 * Return TRUE if default header should be disabled (brand is using own).
+	 * Return FALSE when to use default header.
+	 *
+	 * @return TRUE when brand uses own header, FALSE otherwise.
+	 */
+	public static boolean isHeaderDisabled() {
+		return getConfigPropertyBoolean("header.disabled");
+	}
 
 	// --------------------------- TECHNICAL ---------------------------- //
 

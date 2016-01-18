@@ -17,7 +17,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
 
 /**
  * Presenter for displaying mail verification result
@@ -35,7 +35,7 @@ public class VerifyEmailPresenter extends Presenter<VerifyEmailPresenter.MyView,
 		void onError(PerunException error, JsonEvents retry);
 	}
 
-	@NameToken(RegistrarPlaceTokens.VERIFY)
+	@NameToken(PerunRegistrarPlaceTokens.VERIFY)
 	@ProxyCodeSplit
 	public interface MyProxy extends ProxyPlace<VerifyEmailPresenter> {
 	}

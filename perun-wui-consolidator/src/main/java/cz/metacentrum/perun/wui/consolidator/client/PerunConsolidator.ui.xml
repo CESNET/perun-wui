@@ -4,38 +4,51 @@
              xmlns:p.client="urn:import:cz.metacentrum.perun.wui.consolidator.client"
              xmlns:g="urn:import:com.google.gwt.user.client.ui">
 
-	<ui:style>
-		/* Ugly hack for row/column since they overlap page when set to 100% */
-		.localFix { padding-right: 0; margin-right: 0; }
-	</ui:style>
+	<ui:with field="res" type="cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorResources"/>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.webContent}">
 		<!-- TOP MENU -->
-		<b:Row addStyleNames="{style.localFix}">
-			<b:Column size="MD_12" addStyleNames="{style.localFix}">
-				<b:Navbar position="DEFAULT">
-					<b:NavbarHeader ui:field="navbarHeader" > <!-- addStyleNames="{res.gss.header}"> -->
-						<b.html:Span ui:field="brand" addStyleNames="navbar-brand" />
-						<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
-					</b:NavbarHeader>
+		<b.html:Div addStyleNames="{res.gss.navbarWrapper}" ui:field="menuWrapper">
+			<b:Container>
+				<b:Row>
+					<b:Column size="MD_12">
+						<b:Navbar position="DEFAULT" addStyleNames="{res.gss.navbarFix}">
+							<b:NavbarHeader ui:field="navbarHeader" >
+								<b.html:Div ui:field="logoWrapper" addStyleNames="{res.gss.logoWrapper}" pull="LEFT"/>
+								<b.html:Span ui:field="brand" addStyleNames="navbar-brand" />
+								<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
+							</b:NavbarHeader>
 
-					<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse">
+							<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse">
 
-						<g:FocusPanel ui:field="collapseClickHandler" >
-							<b:NavbarNav ui:field="topMenu">
-								<!--<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>-->
-							</b:NavbarNav>
-						</g:FocusPanel>
-					</b:NavbarCollapse>
-				</b:Navbar>
-			</b:Column>
-		</b:Row>
+								<g:FocusPanel ui:field="collapseClickHandler" >
+									<b:NavbarNav ui:field="topMenu" pull="RIGHT">
+										<!--<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>-->
+									</b:NavbarNav>
+								</g:FocusPanel>
+							</b:NavbarCollapse>
+						</b:Navbar>
+					</b:Column>
+				</b:Row>
+			</b:Container>
+		</b.html:Div>
 
-		<b:Container fluid="true">
-
-			<b.html:Div ui:field="content"/>
-
+		<b:Container>
+			<b:Row>
+				<b:Column size="MD_12" addStyleNames="{res.gss.menuAndPageWrapper}">
+					<!-- PAGE CONTENT -->
+					<b:Column size="MD_12" ui:field="content" addStyleNames="{res.gss.pageWrapper}" />
+				</b:Column>
+			</b:Row>
 		</b:Container>
+
+		<!-- FOOTER -->
+		<b:Well ui:field="perunFooter">
+			<b:Icon type="SUPPORT" paddingRight="5"/>
+			<b.html:Span ui:field="footerSupport" /><b.html:ClearFix />
+			<b.html:Span ui:field="footerCredits"/><b.html:ClearFix />
+			<b.html:Span ui:field="footerVersion"/>
+		</b:Well>
 
 	</b.html:Div>
 

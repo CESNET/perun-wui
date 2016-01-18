@@ -3,7 +3,7 @@ package cz.metacentrum.perun.wui.registrar.widgets;
 import com.google.gwt.core.client.GWT;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Checkbox;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Combobox;
 import cz.metacentrum.perun.wui.registrar.widgets.items.FromFederation;
@@ -31,7 +31,7 @@ import java.util.List;
 public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 
 	private final PerunForm form;
-	private RegistrarTranslation trans = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation trans = GWT.create(PerunRegistrarTranslation.class);
 
 	public PerunFormItemsGeneratorImpl(PerunForm form) {
 		this.form = form;
