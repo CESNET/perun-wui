@@ -87,11 +87,13 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 
 		int count = menuPills.getWidgetCount();
 		for (int i=0; i < count; i++) {
-			AnchorListItem item = (AnchorListItem)menuPills.getWidget(i);
-			if (Objects.equals(anchor, item.getTargetHistoryToken())) {
-				item.setActive(true);
-			} else {
-				item.setActive(false);
+			if (menuPills.getWidget(i) instanceof AnchorListItem) {
+				AnchorListItem item = (AnchorListItem)menuPills.getWidget(i);
+				if (Objects.equals(anchor, item.getTargetHistoryToken())) {
+					item.setActive(true);
+				} else {
+					item.setActive(false);
+				}
 			}
 		}
 

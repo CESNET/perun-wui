@@ -7,10 +7,11 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Image;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
-import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.html.Div;
+import org.gwtbootstrap3.client.ui.html.Span;
 
 /**
  * Perun Wui's top menu navigation with logo
@@ -23,6 +24,8 @@ public class TopMenu {
 	}
 
 	private static TopMenuUiBinder ourUiBinder = GWT.create(TopMenuUiBinder.class);
+
+	private PerunTranslation translation = GWT.create(PerunTranslation.class);
 
 	private Navbar rootElement;
 
@@ -44,6 +47,10 @@ public class TopMenu {
 	@UiField
 	AnchorListItem user;
 
+	@UiField Div logoWrapper;
+
+	@UiField Span brand;
+
 	public TopMenu() {
 
 		rootElement = ourUiBinder.createAndBindUi(this);
@@ -51,12 +58,15 @@ public class TopMenu {
 		Image logo = PerunConfiguration.getBrandLogo();
 		logo.setWidth("auto");
 		logo.setHeight("50px");
-		navbarHeader.insert(logo, 0);
+		logoWrapper.add(logo);
+
+		brand.setText("Perun admin");
 
 		user.setText(PerunSession.getInstance().getUser().getFullName());
 
 		settings.setTargetHistoryToken("settings");
 		signout.setTargetHistoryToken("logout");
+		signout.setText(translation.logout());
 
 	}
 

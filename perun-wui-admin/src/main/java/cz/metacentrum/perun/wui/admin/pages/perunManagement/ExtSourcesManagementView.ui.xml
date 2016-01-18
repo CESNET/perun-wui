@@ -6,7 +6,7 @@
 			 xmlns:g="urn:import:com.google.gwt.user.client.ui"
 		>
 
-	<ui:with field="res" type="cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources"/>
+	<ui:with field="res" type="cz.metacentrum.perun.wui.admin.client.resources.PerunAdminResources"/>
 
 	<b.html:Div addStyleNames="{res.gss.page}">
 

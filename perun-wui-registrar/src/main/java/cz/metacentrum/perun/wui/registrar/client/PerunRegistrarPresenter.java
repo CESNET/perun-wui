@@ -43,6 +43,9 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 		void onFinishedFooter(List<String> contactEmail);
 
 		void hideNavbar();
+
+		void setActiveMenuItem(String anchor);
+
 	}
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
@@ -100,11 +103,10 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 			}
 		});
 
-
-
 	}
 
 	private int resets = 0;
+
 	@Override
 	protected void onReset() {
 		super.onReset();
@@ -114,6 +116,11 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 		if (resets > 2) {
 			getView().hideNavbar();
 		}
+
+		String token = placeManager.getCurrentPlaceRequest().getNameToken();
+		if (token == null || token.isEmpty()) token = PerunRegistrarPlaceTokens.getForm();
+		getView().setActiveMenuItem(token);
+
 	}
 
 	private void loadVoAttributes(final Events<List<Attribute>> callback) {

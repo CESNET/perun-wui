@@ -119,7 +119,7 @@
                   gwt-maven-plugin documentation at codehaus.org -->
                 <configuration>
 	                <module>cz.metacentrum.perun.wui.admin.perun-wui-admin-dev</module>
-                    <runTarget>PerunWuiKrb.html</runTarget>
+                    <runTarget>PerunWui.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <!-- skip code optimization for devel not necessary -->
                     <draftCompile>true</draftCompile>
@@ -231,7 +231,7 @@
                           gwt-maven-plugin documentation at codehaus.org -->
                         <configuration>
                             <module>cz.metacentrum.perun.wui.admin.perun-wui-admin</module>
-                            <runTarget>PerunWuiKrb.html</runTarget>
+                            <runTarget>PerunWui.html</runTarget>
                             <hostedWebapp>${webappDirectory}</hostedWebapp>
                         </configuration>
                     </plugin>

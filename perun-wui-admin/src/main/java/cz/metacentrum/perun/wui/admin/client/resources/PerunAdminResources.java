@@ -5,11 +5,14 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
 /**
- * Created by ondrej on 15.7.15.
+ * Resources for Perun Admin WUI app.
+ *
+ * @author Ondřej Velíšek
+ * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public interface PerunWuiAdminResources extends ClientBundle {
+public interface PerunAdminResources extends ClientBundle {
 
-	PerunWuiAdminResources INSTANCE = GWT.create(PerunWuiAdminResources.class);
+	PerunAdminResources INSTANCE = GWT.create(PerunAdminResources.class);
 
 	interface PerunWuiAdminCss extends CssResource {
 
@@ -33,7 +36,7 @@ public interface PerunWuiAdminResources extends ClientBundle {
 
 	}
 
-	@Source("css/PerunWuiAdmin.gss")
+	@Source("css/PerunAdmin.gss")
 	PerunWuiAdminCss gss();
 
 }

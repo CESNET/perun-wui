@@ -29,6 +29,7 @@ import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Main View for Perun WUI Registrar.
@@ -147,6 +148,23 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 
 		// fill perun properties to predefined footer
 		perunFooter.setVisible(!PerunConfiguration.isFooterDisabled());
+
+	}
+
+	@Override
+	public void setActiveMenuItem(String anchor) {
+
+		int count = topMenu.getWidgetCount();
+		for (int i=0; i < count; i++) {
+			if (topMenu.getWidget(i) instanceof AnchorListItem) {
+				AnchorListItem item = (AnchorListItem)topMenu.getWidget(i);
+				if (Objects.equals(anchor, item.getTargetHistoryToken())) {
+					item.setActive(true);
+				} else {
+					item.setActive(false);
+				}
+			}
+		}
 
 	}
 

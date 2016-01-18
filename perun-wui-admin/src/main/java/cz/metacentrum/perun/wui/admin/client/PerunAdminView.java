@@ -22,9 +22,14 @@ import org.gwtbootstrap3.client.ui.html.Span;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunWuiView extends ViewImpl implements PerunWuiPresenter.MyView {
+public class PerunAdminView extends ViewImpl implements PerunAdminPresenter.MyView {
 
-	interface PerunWuiViewUiBinder extends UiBinder<Widget, PerunWuiView> {}
+	@Override
+	public void setActiveMenuItem(String token) {
+		if (leftMenu != null) leftMenu.setActiveMenuItem(token);
+	}
+
+	interface PerunWuiViewUiBinder extends UiBinder<Widget, PerunAdminView> {}
 
 	PerunTranslation translation = GWT.create(PerunTranslation.class);
 
@@ -47,7 +52,7 @@ public class PerunWuiView extends ViewImpl implements PerunWuiPresenter.MyView {
 	LeftMenuPresenter leftMenu;
 
 	@Inject
-	PerunWuiView(final PerunWuiViewUiBinder binder, LeftMenuPresenter leftMenu) {
+	PerunAdminView(final PerunWuiViewUiBinder binder, LeftMenuPresenter leftMenu) {
 
 		// CREATE LAYOUT
 		topMenu = new TopMenu();
@@ -57,8 +62,8 @@ public class PerunWuiView extends ViewImpl implements PerunWuiPresenter.MyView {
 		menu.clear();
 		menu.add(leftMenu.asWidget());
 
-		bindSlot(PerunWuiPresenter.SLOT_LEFT_MENU, menu);
-		bindSlot(PerunWuiPresenter.SLOT_MAIN_CONTENT, pageContent);
+		bindSlot(PerunAdminPresenter.SLOT_LEFT_MENU, menu);
+		bindSlot(PerunAdminPresenter.SLOT_MAIN_CONTENT, pageContent);
 
 		// TODO - more advanced footer
 		footerLeft.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));

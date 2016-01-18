@@ -8,7 +8,7 @@ import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
-import cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources;
+import cz.metacentrum.perun.wui.admin.client.resources.PerunAdminResources;
 import cz.metacentrum.perun.wui.admin.pages.perunManagement.*;
 import cz.metacentrum.perun.wui.admin.pages.servicesManagement.ServiceDetailPresenter;
 import cz.metacentrum.perun.wui.admin.pages.servicesManagement.ServiceDetailView;
@@ -18,7 +18,6 @@ import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoDetailView;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectPresenter;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectView;
-import cz.metacentrum.perun.wui.client.PerunPlaceManager;
 import cz.metacentrum.perun.wui.client.PerunRootPresenter;
 import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
@@ -33,20 +32,20 @@ import cz.metacentrum.perun.wui.pages.*;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunWui extends AbstractPresenterModule implements EntryPoint {
+public class PerunAdmin extends AbstractPresenterModule implements EntryPoint {
 
 	//private static PerunLoader loader = new PerunLoader();
 
 	@Override
 	protected void configure() {
 
-		install(new DefaultModule.Builder().placeManager(PerunWuiPlaceManager.class).build());
+		install(new DefaultModule.Builder().placeManager(PerunAdminPlaceManager.class).build());
 
 		// make sure app is embedded in a correct DIV
 		bind(RootPresenter.class).to(PerunRootPresenter.class).asEagerSingleton();
 
 		// Main Application must bind generic Presenter and custom View !!
-		bindPresenter(PerunWuiPresenter.class, PerunWuiPresenter.MyView.class, PerunWuiView.class, PerunWuiPresenter.MyProxy.class);
+		bindPresenter(PerunAdminPresenter.class, PerunAdminPresenter.MyView.class, PerunAdminView.class, PerunAdminPresenter.MyProxy.class);
 
 		// pre-defined places
 		bindConstant().annotatedWith(DefaultPlace.class).to(PlaceTokens.VOS);
@@ -88,7 +87,7 @@ public class PerunWui extends AbstractPresenterModule implements EntryPoint {
 			// ensure injecting custom CSS styles of PerunWui
 			PerunResources.INSTANCE.gss().ensureInjected();
 
-			PerunWuiAdminResources.INSTANCE.gss().ensureInjected();
+			PerunAdminResources.INSTANCE.gss().ensureInjected();
 
 			// set default for Growl plugin
 			Utils.getDefaultNotifyOptions().makeDefault();

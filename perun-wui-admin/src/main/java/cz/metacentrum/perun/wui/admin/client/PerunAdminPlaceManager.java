@@ -13,12 +13,12 @@ import cz.metacentrum.perun.wui.client.PerunPlaceManager;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunWuiPlaceManager extends PerunPlaceManager {
+public class PerunAdminPlaceManager extends PerunPlaceManager {
 
 	private final PlaceRequest defaultPlaceRequest;
 
 	@Inject
-	PerunWuiPlaceManager(EventBus eventBus, TokenFormatter tokenFormatter, @DefaultPlace String defaultPlaceNameToken) {
+	PerunAdminPlaceManager(EventBus eventBus, TokenFormatter tokenFormatter, @DefaultPlace String defaultPlaceNameToken) {
 		super(eventBus, tokenFormatter, defaultPlaceNameToken);
 		this.defaultPlaceRequest = new PlaceRequest.Builder().nameToken(defaultPlaceNameToken).build();
 	}

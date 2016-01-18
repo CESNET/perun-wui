@@ -24,7 +24,7 @@
 				<b:PanelCollapse b:id="collapseOne" ui:field="perunManagerMenu">
 					<b:PanelBody addStyleNames="{style.top}">
 
-						<b:NavPills stacked="true" ui:field="menu">
+						<b:NavPills stacked="true" ui:field="perunAdminMenuPills">
 							<b:AnchorListItem ui:field="perunVos" icon="BUILDING" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPerunVos}">Virtual organizations
 							</b:AnchorListItem>
 							<b:AnchorListItem ui:field="perunFacs" icon="DATABASE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPerunFacilities}">Facilities
@@ -62,7 +62,7 @@
 				<b:PanelCollapse b:id="collapseTwo" ui:field="voManagerMenu">
 					<b:PanelBody addStyleNames="{style.top}">
 
-						<b:NavPills stacked="true" addStyleNames="{style.top}">
+						<b:NavPills stacked="true" addStyleNames="{style.top}" ui:field="voManagerMenuPills">
 
 							<b:AnchorListItem icon="BUILDING" ui:field="selectVo">Select VO
 							</b:AnchorListItem>
@@ -114,7 +114,7 @@
 				<b:PanelCollapse b:id="collapseThree" ui:field="groupManagerMenu">
 					<b:PanelBody addStyleNames="{style.top}">
 
-						<b:NavPills stacked="true" addStyleNames="{style.top}">
+						<b:NavPills stacked="true" addStyleNames="{style.top}" ui:field="groupManagerMenuPills">
 
 							<b:ListDropDown>
 								<b:AnchorButton dataToggle="DROPDOWN" icon="GROUP">Select group
@@ -163,7 +163,7 @@
 				<b:PanelCollapse b:id="collapseFour" ui:field="facilityManagerMenu">
 					<b:PanelBody addStyleNames="{style.top}">
 
-						<b:NavPills stacked="true" addStyleNames="{style.top}">
+						<b:NavPills stacked="true" addStyleNames="{style.top}" ui:field="facilityManagerMenuPills">
 
 							<b:ListDropDown>
 								<b:AnchorButton dataToggle="DROPDOWN" icon="DATABASE">Select facility

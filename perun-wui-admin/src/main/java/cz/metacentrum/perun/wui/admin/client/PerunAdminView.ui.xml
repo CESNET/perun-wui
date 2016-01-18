@@ -5,7 +5,7 @@
              xmlns:p.client='urn:import:cz.metacentrum.perun.wui.admin.client'
              xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui">
 
-	<ui:with field="res" type="cz.metacentrum.perun.wui.admin.client.resources.PerunWuiAdminResources"/>
+	<ui:with field="res" type="cz.metacentrum.perun.wui.admin.client.resources.PerunAdminResources"/>
 
 	<ui:style>
 

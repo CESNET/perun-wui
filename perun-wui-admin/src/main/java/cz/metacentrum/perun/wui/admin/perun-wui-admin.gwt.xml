@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<module rename-to='PerunWuiAdmin'>
+<module rename-to='PerunAdmin'>
 
 	<!-- inherits base wui module  -->
 	<inherits name="cz.metacentrum.perun.wui.perun-wui-core"/>
@@ -14,12 +14,12 @@
 	<inherits name="com.google.gwt.inject.Inject"/>
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
 	<!-- define gin module injector -->
-	<set-configuration-property name="gin.ginjector.modules" value="cz.metacentrum.perun.wui.admin.client.PerunWui"/>
+	<set-configuration-property name="gin.ginjector.modules" value="cz.metacentrum.perun.wui.admin.client.PerunAdmin"/>
 	<!-- bootstrap app before loading page -->
 	<set-configuration-property name="gwtp.bootstrapper" value="cz.metacentrum.perun.wui.client.PerunBootstrapper"/>
 
 	<!-- Specify the app entry point class. -->
-	<entry-point class='cz.metacentrum.perun.wui.admin.client.PerunWui'/>
+	<entry-point class='cz.metacentrum.perun.wui.admin.client.PerunAdmin'/>
 
 	<!--  Support only these browsers for devel -->
 	<set-property name="user.agent" value="gecko1_8"/>
