@@ -1,15 +1,11 @@
 package cz.metacentrum.perun.wui.admin.client;
 
-import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.PresenterWidget;
 import com.gwtplatform.mvp.client.View;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import cz.metacentrum.perun.wui.admin.pages.vosManagement.VoSelectPresenter;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
 
 /**
  * @author Pavel Zlámal <zlamal@cesnet.cz>

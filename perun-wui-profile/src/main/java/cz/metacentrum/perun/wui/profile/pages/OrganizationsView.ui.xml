@@ -24,7 +24,6 @@
 		</b.html:Div>
 
 		<!--
-
 		<g:ResizeLayoutPanel addStyleNames="{res.gss.grid}">
 
 			<p:PerunDataGrid condensed="true" striped="true" hover="true" width="100%" ui:field="grid" />

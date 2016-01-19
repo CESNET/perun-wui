@@ -31,7 +31,7 @@
 								<g:FocusPanel ui:field="collapseClickHandler" >
 									<b:NavbarNav ui:field="topMenu" pull="RIGHT">
 										<b:AnchorListItem ui:field="topMenuMyProfile" active="true" icon="HOME" iconSize="LARGE" targetHistoryToken="{placeTokens.getPersonal}" visible="false"/><!--visibleOn="SM_MD_LG"-->
-										<b:AnchorListItem visibleOn="XS" ui:field="personalXS" icon="HOME" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >Personal</b:AnchorListItem>
+										<b:AnchorListItem visibleOn="XS" ui:field="personalXS" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >Personal</b:AnchorListItem>
 										<b:AnchorListItem visibleOn="XS" ui:field="organizationsXS" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">My virtual organizations</b:AnchorListItem>
 										<b:AnchorListItem visibleOn="XS" ui:field="identitiesXS" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">My identities</b:AnchorListItem>
 										<b:AnchorListItem visibleOn="XS" ui:field="loginsXS" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" text="Logins &amp; Passwords" />
@@ -57,13 +57,13 @@
 						<b:Panel>
 							<b:PanelHeader>
 								<b:Heading size="H3">
-									<b:Icon type="HOME" fixedWidth="true" />
+									<!--<b:Icon type="HOME" fixedWidth="true" />-->
 									<b.html:Text text="MENU" />
 								</b:Heading>
 							</b:PanelHeader>
 							<b:PanelBody>
 								<b:NavPills stacked="true" ui:field="menuPills">
-									<b:AnchorListItem ui:field="personal" icon="HOME" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >Personal</b:AnchorListItem>
+									<b:AnchorListItem ui:field="personal" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >Personal</b:AnchorListItem>
 									<b:AnchorListItem ui:field="organizations" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">My virtual organizations</b:AnchorListItem>
 									<b:AnchorListItem ui:field="identities" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">My identities</b:AnchorListItem>
 									<b:AnchorListItem ui:field="logins" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" text="Logins &amp; Passwords" />
