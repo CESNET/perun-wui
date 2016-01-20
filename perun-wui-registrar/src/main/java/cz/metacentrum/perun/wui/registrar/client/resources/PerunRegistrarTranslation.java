@@ -153,7 +153,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("<i>HIDDEN</i>")
 	public String isHidden();
 
-	@DefaultMessage("<i>(Value provided by external source)</i>")
+	@DefaultMessage("<i>value verified by Identity provider</i>")
 	String federation();
 
 	@DefaultMessage("UNDEFINED")
@@ -185,6 +185,17 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Show")
 	public String showDetail();
+
+	@DefaultMessage("Please check inbox of <b>{0}</b> for mail verification message. If you didn't receive any, check your SPAM folder or use button below to re-send.")
+	public String mailVerificationText(String mailAddress);
+
+	@DefaultMessage("Re-send mail verification message")
+	public String reSendMailVerificationButton();
+
+
+	@DefaultMessage("Mail verification message sent to <b>{}</b>")
+	public String mailVerificationRequestSent(String mailAddress);
+
 
 
 	// -------------- APP DETAIL PAGE ------------------------ //

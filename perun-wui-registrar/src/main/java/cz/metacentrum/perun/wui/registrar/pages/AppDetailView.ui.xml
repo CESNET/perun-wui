@@ -29,15 +29,14 @@
 						<b:DescriptionTitle ui:field="stateTitle"></b:DescriptionTitle>
 						<b:DescriptionData ui:field="stateText"></b:DescriptionData>
 					</b:Description>
-					<!--
-					<b.html:Strong text="" ui:field="subTitle"/>
-					<b.html:Italic text="" ui:field="subData"/>
-					<b.html:ClearFix/>
-					<b.html:Strong text="" ui:field="stateTitle"/>
-					<b.html:Italic text="" ui:field="stateText"/>
-					-->
 				</b:Alert>
 
+				<b:Alert type="WARNING" visible="false" ui:field="mailVerificationAlert">
+					<b.html:Paragraph ui:field="mailVerificationText" marginBottom="10"/>
+					<p:PerunToolbar>
+						<p:PerunButton ui:field="resendNotification" type="WARNING" iconFixedWidth="true" icon="ENVELOPE"/>
+					</p:PerunToolbar>
+				</b:Alert>
 
 				<b:Form type="HORIZONTAL" ui:field="formWrapper">
 

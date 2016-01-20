@@ -20,6 +20,8 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.Timezone;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Undefined;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Username;
 import cz.metacentrum.perun.wui.registrar.widgets.items.ValidatedEmail;
+import org.gwtbootstrap3.client.ui.Icon;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
 
 import java.util.ArrayList;
@@ -93,7 +95,7 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 				if (!form.isSeeHiddenItems()) {
 					hidden.setVisible(false);
 				} else {
-					hidden.setStatus(trans.federation(), ValidationState.NONE);
+					hidden.setStatus(new Icon(IconType.EYE_SLASH) + "  " + trans.federation(), ValidationState.NONE);
 				}
 				return hidden;
 			case HTML_COMMENT:
