@@ -162,7 +162,6 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("none of the above")
 	String clearRadiobox();
 
-
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
 	@DefaultMessage("Submitted registrations")
@@ -186,14 +185,14 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Show")
 	public String showDetail();
 
-	@DefaultMessage("Please check inbox of <b>{0}</b> for mail verification message. If you didn't receive any, check your SPAM folder or use button below to re-send.")
+	@DefaultMessage("Please check inbox of <b>{0}</b> for mail verification message. If you didn`t receive any, check your SPAM folder or use button below to re-send.")
 	public String mailVerificationText(String mailAddress);
 
 	@DefaultMessage("Re-send mail verification message")
 	public String reSendMailVerificationButton();
 
 
-	@DefaultMessage("Mail verification message sent to <b>{}</b>")
+	@DefaultMessage("Mail verification message sent to <b>{0}</b>")
 	public String mailVerificationRequestSent(String mailAddress);
 
 
