@@ -22,7 +22,8 @@ public class WayfGroup extends JavaScriptObject {
 	 */
 	public final String getName() {
 		JavaScriptObject jso = JsUtils.getNativePropertyObject(this, "name");
-		return JsUtils.getNativePropertyString(jso, "en");
+		if (jso != null) return JsUtils.getNativePropertyString(jso, "en");
+		return null;
 	}
 
 	/**
@@ -32,7 +33,32 @@ public class WayfGroup extends JavaScriptObject {
 	 * @return Name of Wayf Group in specified lang
 	 */
 	public final String getName(String lang) {
-		return JsUtils.getNativePropertyString(JsUtils.getNativePropertyObject(this, "name"), lang);
+		JavaScriptObject jso = JsUtils.getNativePropertyObject(this, "name");
+		if (jso != null) return JsUtils.getNativePropertyString(jso, lang);
+		return null;
+	}
+
+	/**
+	 * Get base (English) description of a Wayf Group
+	 *
+	 * @return Description of Wayf Group
+	 */
+	public final String getDescription() {
+		JavaScriptObject jso = JsUtils.getNativePropertyObject(this, "description");
+		if (jso != null) return JsUtils.getNativePropertyString(jso, "en");
+		return null;
+	}
+
+	/**
+	 * Get custom lang description of a Wayf Group or NULL if not present
+	 *
+	 * @param lang Language code to get name in
+	 * @return Description of Wayf Group in specified lang
+	 */
+	public final String getDescription(String lang) {
+		JavaScriptObject jso = JsUtils.getNativePropertyObject(this, "description");
+		if (jso != null) return JsUtils.getNativePropertyString(jso, lang);
+		return null;
 	}
 
 	/**

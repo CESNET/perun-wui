@@ -5,6 +5,7 @@ import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 
 /**
+ * Resources for Perun Consolidator WUI app.
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
@@ -42,6 +43,7 @@ public interface PerunConsolidatorResources extends ClientBundle {
 
 		String grid();
 
+		String wayfGroup();
 	}
 
 	@Source("css/PerunConsolidator.gss")

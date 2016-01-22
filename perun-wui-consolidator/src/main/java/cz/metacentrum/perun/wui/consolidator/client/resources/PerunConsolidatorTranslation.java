@@ -16,11 +16,11 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 
 	/* --  SELECT PAGE -- */
 
-	@DefaultMessage("Select your identity provider")
+	@DefaultMessage("Select your organization")
 	public String selectIdP();
 
-	@DefaultMessage("Type to search...")
-	public String typeToSearch();
+	@DefaultMessage("Search your organization name...")
+	public String searchYouOrganization();
 
 	@DefaultMessage("Your identity is not registered yet. In a next step please select registered identity.")
 	public String notRegistered();

@@ -10,9 +10,21 @@
 		xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui">
 
 	<ui:style>
+		.minHeight {
+			min-height: 50px;
+			font-size: 1.2em;
+		}
 	</ui:style>
 
-	<b.html:Span ui:field="mainContent" visible="false">
-	</b.html:Span>
+	<ui:with field="res" type="cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorResources"/>
+
+	<b:Panel addStyleNames="{res.gss.wayfGroup}">
+		<b:PanelBody ui:field="panelBody">
+
+		</b:PanelBody>
+		<b:PanelFooter ui:field="panelFooter">
+			<b.html:Paragraph ui:field="description" addStyleNames="{style.minHeight}"/>
+		</b:PanelFooter>
+	</b:Panel>
 
 </ui:UiBinder>

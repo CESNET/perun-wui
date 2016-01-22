@@ -74,6 +74,23 @@ body {
     flex-grow: 1;
 }
 
+.wayfGroup {
+	cursor: pointer;
+}
+/* Match responsive image size */
+@media screen and (max-width: 991px) {
+	.wayfGroup img {
+		height: 50px;
+		max-width: 251px;
+	}
+}
+@media screen and (min-width: 992px) {
+	.wayfGroup img {
+		height: 50px;
+		max-width: 231px;
+	}
+}
+
 /* FOOTER
 
 .footer {

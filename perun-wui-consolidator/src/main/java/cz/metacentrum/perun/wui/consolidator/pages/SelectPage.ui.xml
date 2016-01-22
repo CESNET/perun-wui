@@ -11,8 +11,7 @@
 
 	<ui:style>
 		.center { text-align: center; clear: both; width: 50%; margin:0 auto; margin-top: 20px; float:none; }
-		.center2 { text-align: center; margin:0 auto; float:none; width: 460px; }
-		.max { max-height: 460px; width: 460px; }
+		.center2 { text-align: center; margin: 0 auto; float:none; }
 	</ui:style>
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorResources"/>
@@ -31,7 +30,7 @@
 
 		<p:PerunLoader ui:field="loader" visible="false"/>
 
-		<b.html:Div addStyleNames="{style.center2} {style.max}">
+		<b.html:Div addStyleNames="{style.center2}">
 
 			<p.cons:Wayf ui:field="wayf" visible="false" width="100%" />
 
