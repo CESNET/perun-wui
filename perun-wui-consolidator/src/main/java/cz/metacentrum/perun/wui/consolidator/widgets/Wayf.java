@@ -289,7 +289,6 @@ public class Wayf extends Composite {
 							}
 							String consolidatorUrl = Utils.getIdentityConsolidatorLink(group.getUrl(), false) + URL.encodeQueryString("?token=" + token + target);
 							final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + consolidatorUrl;
-							Window.alert(redirectUrl + "\n" + group.getUrl());
 							Window.Location.replace(redirectUrl);
 						}
 					});

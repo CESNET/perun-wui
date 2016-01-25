@@ -25,10 +25,10 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Your identity is not registered yet. In a next step please select registered identity.")
 	public String notRegistered();
 
-	@DefaultMessage("Your current identity is")
+	@DefaultMessage("Your are signed in as")
 	public String currentIdentityIs();
 
-	@DefaultMessage("Join with")
+	@DefaultMessage("Add new way of signing in...")
 	public String joinWith();
 
 	@DefaultMessage("at")
