@@ -18,7 +18,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorResources"/>
 
-	<b:Panel addStyleNames="{res.gss.wayfGroup}">
+	<b:Panel addStyleNames="{res.gss.wayfGroup} btn-default">
 		<b:PanelBody ui:field="panelBody">
 
 		</b:PanelBody>

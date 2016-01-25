@@ -7,6 +7,8 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.http.client.Request;
 import com.google.gwt.http.client.RequestBuilder;
 import com.google.gwt.http.client.RequestCallback;
@@ -15,6 +17,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
@@ -31,8 +34,10 @@ import cz.metacentrum.perun.wui.json.JsonUtils;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.WayfGroup;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
+import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Pull;
@@ -153,7 +158,7 @@ public class Wayf extends Composite {
 							inputGroupAddonSearch.setIcon(IconType.SEARCH);
 							inputGroupAddonSearch.setIconFixedWidth(true);
 
-							final TextBox idpFilterBox = new TextBox();
+							final ExtendedTextBox idpFilterBox = new ExtendedTextBox();
 							final Modal idpModal = new Modal();
 
 							inputGroup.add(inputGroupAddonSearch);
@@ -166,11 +171,11 @@ public class Wayf extends Composite {
 							idpGroup.add(btngrp);
 
 							final PerunLoader loader = new PerunLoader();
-							loader.onLoading("Loading organizations");
+							loader.onLoading(translation.loadingOrganizations());
 							btngrp.add(loader);
 
 							// build filter
-							buildFilterBox(idpFilterBox, idpButtons);
+							buildFilterBox(idpFilterBox, idpButtons, btngrp);
 
 							idpFilterBox.setPlaceholder(translation.searchYouOrganization());
 							idpFilterBox.setEnabled(false);
@@ -194,13 +199,11 @@ public class Wayf extends Composite {
 							// load feed data from IdP/SP federation
 							getFeeds(group, new Events<FeedEntities>() {
 
-								final Events<FeedEntities> jsonEvent = this;
-
 								@Override
 								public void onFinished(FeedEntities result) {
 
 									loader.onFinished();
-									btngrp.clear();
+									loader.removeFromParent();
 
 									idpFilterBox.setEnabled(true);
 									idpFilterBox.setFocus(true);
@@ -219,9 +222,9 @@ public class Wayf extends Composite {
 											img.setPull(Pull.RIGHT);
 											button.getElement().insertFirst(img.getElement());
 
-											String label = result.get(key).getLabel("cs");
+											String label = result.get(key).getLabel(PerunConfiguration.getCurrentLocaleName());
+											if (label == null || label.isEmpty()) result.get(key).getLabel("en");
 											if (label != null && !label.isEmpty()) {
-												//oracle.add(label);
 												button.setText(label);
 											}
 											button.getElement().insertFirst(img.getElement());
@@ -248,8 +251,12 @@ public class Wayf extends Composite {
 
 										if (idpButtons.size() > 7) {
 											inputGroup.setVisible(true);
+										} else if (idpButtons.size() > 0){
+											inputGroup.setVisible(false);
 										} else {
 											inputGroup.setVisible(false);
+											Heading notFound = new Heading(HeadingSize.H4, translation.noOrganizationFound());
+											btngrp.add(notFound);
 										}
 
 									}
@@ -332,31 +339,88 @@ public class Wayf extends Composite {
 	 *
 	 * @param textBox TexBox to assign action
 	 * @param buttons Buttons to filter through
+	 * @param btngrp Buttons group wrapper
 	 */
-	private void buildFilterBox(final TextBox textBox, final ArrayList<Button> buttons) {
+	private void buildFilterBox(final ExtendedTextBox textBox, final ArrayList<Button> buttons, final VerticalButtonGroup btngrp) {
 
+		// Timer for delayed search on type
+		final Timer timer = new Timer() {
+			@Override
+			public void run() {
+				ValueChangeEvent.fire(textBox, textBox.getValue());
+			}
+		};
+		timer.schedule(500);
+
+		// typing triggers search
 		textBox.addKeyUpHandler(new KeyUpHandler() {
+
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
 
-				if (KeyCodes.KEY_ENTER != event.getNativeKeyCode()) return;
+				if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()) {
+					// trigger now
+					timer.run();
+				} else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode() ||
+						KeyCodes.KEY_LEFT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_UP == event.getNativeKeyCode() ||
+						KeyCodes.KEY_RIGHT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_DOWN == event.getNativeKeyCode() ||
+						KeyCodes.KEY_SHIFT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_CTRL == event.getNativeKeyCode() ||
+						KeyCodes.KEY_ALT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_CAPS_LOCK == event.getNativeKeyCode() ||
+						KeyCodes.KEY_SHIFT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_IME == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_KEY == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_KEY_FF_LINUX == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_KEY_LEFT_META == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_KEY_RIGHT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_CONTEXT_MENU == event.getNativeKeyCode()) {
+					return;
+					// skip timer
+				} else {
+					// delay timer
+					timer.schedule(500);
+				}
+
+			}
+		});
+
+		final Heading notFound = new Heading(HeadingSize.H4, translation.noOrganizationFound());
+
+		// search on value change (called manually also by typing and timer)
+		textBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
 
 				if (textBox.getValue() != null && !textBox.getValue().isEmpty() && textBox.getValue().length() < 2) return;
+
+				boolean found = false;
 
 				for (Button butt : buttons) {
 
 					if (textBox.getValue() == null || textBox.getValue().isEmpty()) {
 						butt.setVisible(true);
+						found = true;
 						continue;
 					}
 
 					if (Utils.unAccent(butt.getText().replaceAll(" ", "").toLowerCase()).contains(Utils.unAccent(textBox.getValue().toLowerCase()))) {
 						butt.setVisible(true);
+						found = true;
 					} else {
 						butt.setVisible(false);
 					}
 
 				}
+
+				if (!found) {
+					btngrp.add(notFound);
+				} else {
+					notFound.removeFromParent();
+				}
+
 			}
 		});
 

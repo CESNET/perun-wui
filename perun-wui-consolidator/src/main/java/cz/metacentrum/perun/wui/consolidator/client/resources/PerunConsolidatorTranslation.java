@@ -34,6 +34,12 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("at")
 	public String at();
 
+	@DefaultMessage("Loading organizations")
+	public String loadingOrganizations();
+
+	@DefaultMessage("No organization found")
+	public String noOrganizationFound();
+
 	/* --  JOIN PAGE -- */
 
 	@DefaultMessage("Continue")
