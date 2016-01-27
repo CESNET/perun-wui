@@ -93,7 +93,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Incorrect input format!")
 	public String incorrectFormat();
 
-	@DefaultMessage("Value can`t be empty!")
+	@DefaultMessage("Field can`t be empty!")
 	public String cantBeEmpty();
 
 	@DefaultMessage("You must select at least one option!")
