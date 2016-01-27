@@ -102,6 +102,8 @@ public class Selectionbox extends PerunFormItemEditable {
 				validateLocal();
 			}
 		});
+		// Selectpicker widget has to have proper form class too
+		getSelect().getElement().getNextSiblingElement().getFirstChildElement().addClassName("form-control");
 	}
 
 	@Override

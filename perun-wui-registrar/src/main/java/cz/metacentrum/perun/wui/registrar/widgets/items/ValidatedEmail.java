@@ -198,6 +198,9 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 		widget.add(dropdown);
 
+		// Select must have proper class too ! Must be set after widget is appended
+		emailSelect.getElement().getNextSiblingElement().getFirstChildElement().addClassName("form-control");
+
 	}
 
 	public ExtendedTextBox getTextBox() {

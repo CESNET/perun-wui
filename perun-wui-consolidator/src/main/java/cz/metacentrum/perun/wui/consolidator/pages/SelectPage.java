@@ -16,7 +16,6 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ExtSource;
 import cz.metacentrum.perun.wui.widgets.*;
 import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.constants.IconType;
 
 /**
  * Single page used by consolidator to display it's state
