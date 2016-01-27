@@ -22,7 +22,7 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Search your organization name...")
 	public String searchYouOrganization();
 
-	@DefaultMessage("Your identity is not registered yet. In a next step please select registered identity.")
+	@DefaultMessage("Your current identity is not registered. Now please select already registered identity (previously used to access Perun).")
 	public String notRegistered();
 
 	@DefaultMessage("Your are signed in as")
@@ -48,7 +48,7 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Leave")
 	public String finishButtonLeave();
 
-	@DefaultMessage("Join another identity")
+	@DefaultMessage("Add another way of signing in")
 	public String backButton();
 
 	@DefaultMessage("Your identities were successfully joined.")
@@ -68,10 +68,10 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("You tried to join identity ({0}) with itself. Please go back and select different identity to join with.")
 	public String identityIsSameException(String identity);
 
-	@DefaultMessage("You already have both identities joined.")
+	@DefaultMessage("You already had both identities joined.")
 	public String identitiesAlreadyJoinedException();
 
-	@DefaultMessage("Your identities are split between two user accounts. If you wish to merge them, contact user support at: perun@cesnet.cz")
-	public String identityAlreadyInUseException();
+	@DefaultMessage("Your identities are split between two user accounts. If you wish to merge them, contact user support at: {0}")
+	public String identityAlreadyInUseException(String userSupportMail);
 
 }

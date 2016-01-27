@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -148,7 +149,7 @@ public class JoinPage {
 				} else if (error.getName().equals("IdentityAlreadyInUseException")) {
 					alert.setType(AlertType.WARNING);
 					// TODO translate message
-					alert.setText(translation.identityAlreadyInUseException());
+					alert.setText(translation.identityAlreadyInUseException(PerunConfiguration.getBrandSupportMail()));
 					alert.setVisible(true);
 					loader.setVisible(false);
 				} else {

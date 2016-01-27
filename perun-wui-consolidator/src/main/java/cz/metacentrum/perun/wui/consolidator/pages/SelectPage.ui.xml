@@ -10,7 +10,7 @@
 		xmlns:select="urn:import:org.gwtbootstrap3.extras.select.client.ui">
 
 	<ui:style>
-		.center { text-align: center; clear: both; width: 50%; margin:0 auto; margin-top: 20px; float:none; }
+		.center { text-align: center; clear: both; margin:0 auto; float:none; }
 		.center2 { text-align: center; margin: 10px auto; float:none; }
 	</ui:style>
 
@@ -18,17 +18,19 @@
 
 	<b.html:Div addStyleNames="{res.gss.page}">
 
+		<b:Heading size="H3" ui:field="heading" alignment="CENTER" visible="false" />
+
+		<b:Heading size="H4" ui:field="identity" alignment="CENTER" visible="false" />
+
+		<b:Heading size="H5" ui:field="login" alignment="CENTER" visible="false" />
+
+		<b:Heading size="H3" ui:field="joinHeading" alignment="CENTER" visible="false" marginTop="10" />
+
+		<p:PerunLoader ui:field="loader" visible="false"/>
+
 		<b.html:Div addStyleNames="{style.center}">
 			<b:Alert ui:field="alert" visible="false" type="INFO"/>
 		</b.html:Div>
-
-		<b:Heading size="H2" ui:field="heading" alignment="CENTER" visible="false" />
-
-		<b:Heading size="H3" ui:field="identity" alignment="CENTER" visible="false" />
-
-		<b:Heading size="H2" ui:field="joinHeading" alignment="CENTER" visible="false" />
-
-		<p:PerunLoader ui:field="loader" visible="false"/>
 
 		<b.html:Div addStyleNames="{style.center2}">
 

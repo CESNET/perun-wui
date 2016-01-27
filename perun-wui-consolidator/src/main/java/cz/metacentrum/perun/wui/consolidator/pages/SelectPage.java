@@ -16,6 +16,7 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ExtSource;
 import cz.metacentrum.perun.wui.widgets.*;
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 
 /**
  * Single page used by consolidator to display it's state
@@ -42,6 +43,7 @@ public class SelectPage {
 	@UiField Heading heading;
 	@UiField Heading joinHeading;
 	@UiField Heading identity;
+	@UiField Heading login;
 	@UiField Alert alert;
 
 	public SelectPage() {
@@ -109,6 +111,12 @@ public class SelectPage {
 					identity.setSubText(" " + translation.at() + " " + translatedExtSourceName);
 					identity.setVisible(true);
 					joinHeading.setVisible(true);
+
+					// show real user-name if actor was translated
+					if (!translatedActor.equals(PerunSession.getInstance().getPerunPrincipal().getActor())) {
+						login.setText("( " + PerunSession.getInstance().getPerunPrincipal().getActor() + " )");
+						login.setVisible(true);
+					}
 
 					if (PerunSession.getInstance().getUser() == null) {
 						alert.setVisible(true);
