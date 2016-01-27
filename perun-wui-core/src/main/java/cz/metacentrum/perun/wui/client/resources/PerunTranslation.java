@@ -23,13 +23,13 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("You are not authorized to view requested content. Please check your URL.")
 	public String notAuthorizedPageText();
 
-	@DefaultMessage("You have been logged out.")
+	@DefaultMessage("You have been signed out.")
 	public String logoutPageTitle();
 
 	@DefaultMessage("Please close the browser window.")
 	public String logoutPageSubTitle();
 
-	@DefaultMessage("Log me back")
+	@DefaultMessage("Sign me back")
 	public String logoutPageButton();
 
 	@DefaultMessage("Form has no form items.")
@@ -141,7 +141,7 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Continue")
 	public String continue_();  //continue is a keyword
 
-	@DefaultMessage("Logout")
+	@DefaultMessage("Sign out")
 	public String logout();
 
 	/* ------------ LANGUAGE SWITCHING ---------------- */
