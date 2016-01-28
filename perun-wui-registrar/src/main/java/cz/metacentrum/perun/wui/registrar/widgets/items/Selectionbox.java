@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
+import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.user.client.ui.Widget;
@@ -30,6 +31,16 @@ public class Selectionbox extends PerunFormItemEditable {
 	public Selectionbox(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang, onlyPreview);
 		this.validator = new SelectionboxValidator();
+	}
+
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		// Selectpicker widget has to have proper form class too, make sure it's not null
+		if (getSelect().getElement().getNextSiblingElement() != null &&
+				getSelect().getElement().getNextSiblingElement().getFirstChildElement() != null) {
+			getSelect().getElement().getNextSiblingElement().getFirstChildElement().addClassName("form-control");
+		}
 	}
 
 	@Override
@@ -102,8 +113,6 @@ public class Selectionbox extends PerunFormItemEditable {
 				validateLocal();
 			}
 		});
-		// Selectpicker widget has to have proper form class too
-		getSelect().getElement().getNextSiblingElement().getFirstChildElement().addClassName("form-control");
 	}
 
 	@Override

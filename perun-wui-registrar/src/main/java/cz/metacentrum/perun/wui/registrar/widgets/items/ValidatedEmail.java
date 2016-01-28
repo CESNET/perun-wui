@@ -198,9 +198,17 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 		widget.add(dropdown);
 
-		// Select must have proper class too ! Must be set after widget is appended
-		emailSelect.getElement().getNextSiblingElement().getFirstChildElement().addClassName("form-control");
+	}
 
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		// Selectpicker widget has to have proper form class too, make sure it's not null
+		if (getSelect() != null &&
+				getSelect().getElement().getNextSiblingElement() != null &&
+				getSelect().getElement().getNextSiblingElement().getFirstChildElement() != null) {
+			getSelect().getElement().getNextSiblingElement().getFirstChildElement().addClassName("form-control");
+		}
 	}
 
 	public ExtendedTextBox getTextBox() {
