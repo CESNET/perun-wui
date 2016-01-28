@@ -11,8 +11,8 @@
 	<inherits name="com.google.gwt.resources.Resources"/>
 	<inherits name="com.gwtplatform.mvp.Mvp"/>
 
-	<!-- support GWT Bootstrap 3 with Bootstrap2 look-alike theme -->
-	<inherits name="org.gwtbootstrap3.GwtBootstrap3"/>
+	<!-- support GWT Bootstrap 3 (load JS from CDN !!) -->
+	<inherits name="org.gwtbootstrap3.GwtBootstrap3CDN"/>
 	<!-- support for GWT Bootstrap 3 in IE 8 -->
 	<inherits name="org.gwtbootstrap3.extras.respond.Respond"/>
 	<!-- support for Gwt Bootstrap 3 notifications -->

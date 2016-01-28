@@ -64,6 +64,11 @@
     <!-- Title -->
     <title>Perun Registrar</title>
 
+	<!-- CDN -->
+	<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-7s5uDGW3AHqw6xtJmNNtr+OBRJUlgkNJEo78P4b0yRw= sha512-nNo+yCHEyn0smMxSswnf/OnX6/KwJuZTlNZBjauKhTK0c+zT+q5JOCx0UFhXQ6rJR9jg6Es8gPuD2uZcYDLqSw==" crossorigin="anonymous">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-2e8qq0ETcfWRI4HJBzQiA3UoyFk6tbNyG+qSaIBZLyW9Xf3sWZHN/lxe9fTh1U45DpPf07yj94KsUHHWe4Yk1A==" crossorigin="anonymous"></script>
+
     <!--  RPC definition -->
     <script type="text/javascript" language="javascript" >
 
@@ -75,13 +80,61 @@
 	        alert("Unsupported browser. Please use either: Internet Explorer 8+, Firefox, Chrome, Opera or Safari");
         }
 
+	    $(document).ready(function() {
+		    // Methods which check if the Perun connection is OK, run only on startup
+		    executeQuery();
+	    });
+
+	    function reloadMsg() {
+
+		    if (l_lang == "en" || l_lang == "default") {
+			    alert("Data connection lost. Server is probably being restarted or URL \"/"+RPC_SERVER+"/rpc/\" is not valid. Click OK to reload the page.");
+		    } else if (l_lang == "cs") {
+			    alert("Aplikace ztratila spojení. Server se pravděpodobně právě restartuje nebo URL \"/"+RPC_SERVER+"/rpc/\" není platná. Klikněte na OK pro obnovení stránky.");
+		    }
+
+		    window.location.reload(true);
+	    }
+
+	    function executeQuery() {
+		    $.ajax({
+			    url: "/"+RPC_SERVER+"/rpc/",
+			    success: function(data) {
+				    if (!(data.indexOf("OK!") == 0)) {
+					    reloadMsg();
+				    }
+			    },
+			    statusCode: {
+				    404: function() {
+					    reloadMsg();
+				    },
+				    401: function() {
+					    reloadMsg();
+				    },
+				    302: function() {
+					    window.location.reload(true);
+				    },
+				    0: function() {
+					    window.location.reload(true);
+				    }
+			    },
+			    error: function(jqXHR, textStatus, errorThrown) {
+				    if (jqXHR.status == 0) {
+					    window.location.reload(true);
+				    } else if (jqXHR.status == 302) {
+					    window.location.reload(true);
+				    } else {
+					    reloadMsg();
+				    }
+			    }
+		    });
+	    }
+
     </script>
 
     <!-- Load GWT GUI -->
     <script type="text/javascript" language="javascript" src="./PerunRegistrar/PerunRegistrar.nocache.js"></script>
 
-	<!-- Uncomment for local testing of cesnet linker load bootstrap -->
-	<link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 	<style type="text/css" >
 
 		#footer {
@@ -116,21 +169,6 @@
 			text-transform: uppercase;
 			font-weight: bold;
 		}
-		#footer .col ul {
-			padding-left: 0;
-		}
-		#footer .col ul li {
-			background: rgba(0, 0, 0, 0) url("../img/bullet_77797c.png") no-repeat scroll 0 0.5em;
-			list-style-type: none;
-			margin-left: 0;
-			padding-left: 25px;
-		}
-		#footer .col ul li a:link, #footer .col ul li a:visited {
-			text-decoration: none;
-		}
-		#footer .col ul li a:link:hover, #footer .col ul li a:visited:hover, #footer .col ul li a:link:focus, #footer .col ul li a:visited:focus, #footer .col ul li a:link:active, #footer .col ul li a:visited:active {
-			text-decoration: underline;
-		}
 		#footer .copyright {
 			margin-top: 20px;
 			font-size: 1.05em;
@@ -164,16 +202,11 @@
         application to display correctly.</div>
 </noscript>
 
-<!--#include virtual="PerunRegistrarHeader.shtml" -->
-
-<!-- Uncomment for local testing of cesnet linker -->
-<div id="cesnet_linker_placeholder" data-lang="en"></div> <!-- data-lang-cs-href="?locale=cs" data-lang-en-href="?locale=en"></div> -->
+<div id="cesnet_linker_placeholder" data-lang="en"></div>
 
 <div id="app-content" class="Site-content">
-
+	<!-- Div we include our webapp too -->
 </div>
-
-<!--#include virtual="PerunRegistrarFooter.shtml" -->
 
 <!-- Uncomment for local testing of cesnet linker - Set correct lang to Linker -->
 <script type="text/javascript">
