@@ -111,8 +111,8 @@ public class SelectPage {
 					identity.setVisible(true);
 					joinHeading.setVisible(true);
 
-					// show real user-name if actor was translated
-					if (!translatedActor.equals(PerunSession.getInstance().getPerunPrincipal().getActor())) {
+					// show real user-name if actor was translated or it's not IdP
+					if (!translatedActor.equals(PerunSession.getInstance().getPerunPrincipal().getActor()) || !extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
 						login.setText("( " + PerunSession.getInstance().getPerunPrincipal().getActor() + " )");
 						login.setVisible(true);
 					}

@@ -21,6 +21,8 @@
 
 		<b:Heading size="H4" ui:field="identity" alignment="CENTER" visible="false" />
 
+		<b:Heading size="H5" ui:field="login" alignment="CENTER" visible="false" />
+
 		<b.html:Div addStyleNames="{style.center}">
 			<b:Alert ui:field="alert" visible="false" type="SUCCESS"/>
 		</b.html:Div>

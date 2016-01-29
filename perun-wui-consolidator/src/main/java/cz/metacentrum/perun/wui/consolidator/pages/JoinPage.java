@@ -54,6 +54,7 @@ public class JoinPage {
 	@UiField Heading heading;
 	@UiField Heading identity;
 	@UiField Heading myidents;
+	@UiField Heading login;
 	@UiField Alert alert;
 
 	@UiHandler("finishButton")
@@ -215,6 +216,12 @@ public class JoinPage {
 				identity.setSubText(" " + translation.at() + " " + translatedExtSourceName);
 				heading.setVisible(true);
 				identity.setVisible(true);
+
+				// show real user-name if actor was translated or it's not IdP
+				if (!translatedActor.equals(PerunSession.getInstance().getPerunPrincipal().getActor()) || !extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
+					login.setText("( " + PerunSession.getInstance().getPerunPrincipal().getActor() + " )");
+					login.setVisible(true);
+				}
 
 			}
 		});
