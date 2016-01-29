@@ -48,6 +48,8 @@ public class PerunBootstrapper implements Bootstrapper {
 		RootPanel.get("app-content").clear();
 		RootPanel.get("app-content").add(loader);
 
+		PerunSession.setPlaceManager(placeManager);
+
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
 
 			final JsonEvents retry = this;
@@ -80,7 +82,6 @@ public class PerunBootstrapper implements Bootstrapper {
 
 						// OPEN PAGE BASED ON URL
 						placeManager.revealCurrentPlace();
-						PerunSession.setPlaceManager(placeManager);
 						//History.fireCurrentHistoryState();
 
 					}
