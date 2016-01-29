@@ -78,18 +78,6 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 
 				getView().onFinishedFooter(contactEmails);
 
-				String i = Window.Location.getParameter("i");
-				String m = Window.Location.getParameter("m");
-
-				if (i != null && m != null) {
-
-					PlaceRequest placeRequest = new PlaceRequest.Builder()
-							.nameToken(PerunRegistrarPlaceTokens.VERIFY)
-							.with("i", i).with("m", m).build();
-					placeManager.revealPlace(placeRequest, false);
-
-				}
-
 			}
 
 			@Override
