@@ -5,7 +5,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
-import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
@@ -21,7 +20,6 @@ public class FormPresenter extends Presenter<FormPresenter.MyView, FormPresenter
 	}
 
 	@NameToken(PerunRegistrarPlaceTokens.FORM)
-	@ProxyCodeSplit
 	public interface MyProxy extends ProxyPlace<FormPresenter> {
 	}
 

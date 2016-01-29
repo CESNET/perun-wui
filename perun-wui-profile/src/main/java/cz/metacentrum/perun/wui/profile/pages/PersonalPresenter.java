@@ -6,7 +6,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
-import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
@@ -36,7 +35,6 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	}
 
 	@NameToken(PerunProfilePlaceTokens.PERSONAL)
-	@ProxyCodeSplit
 	public interface MyProxy extends ProxyPlace<PersonalPresenter> {
 	}
 

@@ -7,7 +7,6 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
-import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
@@ -37,7 +36,6 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 	}
 
 	@NameToken(PerunProfilePlaceTokens.ORGANIZATIONS)
-	@ProxyCodeSplit
 	public interface MyProxy extends ProxyPlace<OrganizationsPresenter> {
 	}
 
@@ -45,7 +43,6 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 	public OrganizationsPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
 		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
-
 
 	@Override
 	public void prepareFromRequest(final PlaceRequest request) {
