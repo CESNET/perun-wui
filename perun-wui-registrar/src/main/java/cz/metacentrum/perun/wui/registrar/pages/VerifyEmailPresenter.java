@@ -7,6 +7,7 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
+import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
@@ -35,6 +36,7 @@ public class VerifyEmailPresenter extends Presenter<VerifyEmailPresenter.MyView,
 	}
 
 	@NameToken(PerunRegistrarPlaceTokens.VERIFY)
+	@ProxyStandard
 	public interface MyProxy extends ProxyPlace<VerifyEmailPresenter> {
 	}
 
