@@ -14,6 +14,13 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Registrar")
 	public String registrarAppName();
 
+	@DefaultMessage("Please solve question below to continue")
+	public String pleaseVerifyCaptcha();
+
+	@DefaultMessage("Type text from the image...")
+	public String captchaAnswer();
+
+
 	// -------------- MAIN PAGE - MENU ------------------------ //
 
 	@DefaultMessage("Form")

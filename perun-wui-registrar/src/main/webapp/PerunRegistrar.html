@@ -80,6 +80,10 @@
 	        // Is IE < 8
 	        alert("Unsupported browser. Please use either: Internet Explorer 8+, Firefox, Chrome, Opera or Safari");
         }
+	    var isOperaBefore15 = (window.opera && navigator.userAgent.indexOf(' OPR/') == -1);
+	    if (isOperaBefore15) {
+		    alert("Unsupported browser. Please use either: Internet Explorer 8+, Firefox, Chrome, Opera 15+ or Safari");
+	    }
 
 	    $(document).ready(function() {
 		    // Methods which check if the Perun connection is OK, run only on startup
@@ -137,6 +141,18 @@
     <script type="text/javascript" language="javascript" src="./PerunRegistrar/PerunRegistrar.nocache.js"></script>
 
 	<style type="text/css" >
+
+		/* HIDE RE-CAPTCHA INPUT FIELD - we use or own TextBox */
+		.recaptcha_input_area {
+			display: none !important;
+		}
+		.recaptchatable, .recaptcha_theme_clean {
+			border: none !important;
+		}
+		#recaptcha_response_field {
+			visibility:hidden !important;
+			background:blue !important;
+		}
 
 		#footer {
 			margin-top: 3em;

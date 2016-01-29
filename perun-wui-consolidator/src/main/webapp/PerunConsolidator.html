@@ -39,6 +39,10 @@
 			// Is IE < 8
 			alert("Unsupported browser. Please use either: Internet Explorer 8+, Firefox, Chrome, Opera or Safari");
 		}
+		var isOperaBefore15 = (window.opera && navigator.userAgent.indexOf(' OPR/') == -1);
+		if (isOperaBefore15) {
+			alert("Unsupported browser. Please use either: Internet Explorer 8+, Firefox, Chrome, Opera 15+ or Safari");
+		}
 
 		// get URL param function
 		function getURLParameter(name) {
