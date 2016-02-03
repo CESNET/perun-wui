@@ -92,7 +92,9 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 
 		if (PerunConfiguration.isFooterDisabled()) {
 			Element elem = DOM.getElementById("perun-copyright");
-			elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+			if (elem != null) {
+				elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+			}
 		} else {
 			footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
 			footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
@@ -108,7 +110,9 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 				footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
 			} else {
 				Element elem = DOM.getElementById("perun-copyright");
-				elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+				if (elem != null) {
+					elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+				}
 			}
 		} else {
 			String mails = contactEmail.toString();
@@ -116,7 +120,9 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 				footerSupport.setHTML(translation.supportAt(mails.substring(1, mails.length()-1)));
 			} else {
 				Element elem = DOM.getElementById("perun-copyright");
-				elem.setInnerHTML(translation.supportAt(mails.substring(1, mails.length()-1)) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+				if (elem != null) {
+					elem.setInnerHTML(translation.supportAt(mails.substring(1, mails.length() - 1)) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+				}
 			}
 		}
 	}

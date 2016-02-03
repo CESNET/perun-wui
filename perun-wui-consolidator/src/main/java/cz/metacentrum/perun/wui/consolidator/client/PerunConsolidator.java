@@ -127,7 +127,9 @@ public class PerunConsolidator implements EntryPoint{
 								// fill perun properties to predefined footer
 								perunFooter.setVisible(!PerunConfiguration.isFooterDisabled());
 								Element elem = DOM.getElementById("perun-copyright");
-								elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+								if (elem != null) {
+									elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
+								}
 							} else {
 								footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
 								footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
