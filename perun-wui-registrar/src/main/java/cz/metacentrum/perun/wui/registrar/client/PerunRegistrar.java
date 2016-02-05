@@ -2,17 +2,20 @@ package cz.metacentrum.perun.wui.registrar.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.gwtplatform.mvp.client.RootPresenter;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
 import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
 import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import cz.metacentrum.perun.wui.client.PerunPlaceManager;
+import cz.metacentrum.perun.wui.client.PerunRootPresenter;
 import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.pages.*;
-import cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
 import cz.metacentrum.perun.wui.registrar.pages.*;
 
 /**
@@ -27,6 +30,9 @@ public class PerunRegistrar extends AbstractPresenterModule implements EntryPoin
 
 		install(new DefaultModule.Builder().placeManager(PerunPlaceManager.class).build());
 
+		// make sure app is embedded in a correct DIV
+		bind(RootPresenter.class).to(PerunRootPresenter.class).asEagerSingleton();
+
 		// Main Application must bind generic Presenter or its subclass and custom View !!
 		bindPresenter(PerunRegistrarPresenter.class, PerunRegistrarPresenter.MyView.class, PerunRegistrarView.class, PerunRegistrarPresenter.MyProxy.class);
 
@@ -37,9 +43,9 @@ public class PerunRegistrar extends AbstractPresenterModule implements EntryPoin
 		bindPresenter(VerifyEmailPresenter.class, VerifyEmailPresenter.MyView.class, VerifyEmailView.class, VerifyEmailPresenter.MyProxy.class);
 
 		// pre-defined places
-		bindConstant().annotatedWith(DefaultPlace.class).to(RegistrarPlaceTokens.FORM);
-		bindConstant().annotatedWith(ErrorPlace.class).to(RegistrarPlaceTokens.NOT_FOUND);
-		bindConstant().annotatedWith(UnauthorizedPlace.class).to(RegistrarPlaceTokens.UNAUTHORIZED);
+		bindConstant().annotatedWith(DefaultPlace.class).to(PerunRegistrarPlaceTokens.FORM);
+		bindConstant().annotatedWith(ErrorPlace.class).to(PerunRegistrarPlaceTokens.NOT_FOUND);
+		bindConstant().annotatedWith(UnauthorizedPlace.class).to(PerunRegistrarPlaceTokens.UNAUTHORIZED);
 
 		// generic pages
 		bindPresenter(NotAuthorizedPresenter.class, NotAuthorizedPresenter.MyView.class, NotAuthorizedView.class, NotAuthorizedPresenter.MyProxy.class);
@@ -62,7 +68,7 @@ public class PerunRegistrar extends AbstractPresenterModule implements EntryPoin
 			// ensure injecting custom CSS styles of PerunWui
 			PerunResources.INSTANCE.gss().ensureInjected();
 
-			PerunWuiRegistrarResources.INSTANCE.gss().ensureInjected();
+			PerunRegistrarResources.INSTANCE.gss().ensureInjected();
 
 		} catch (Exception ex) {
 			exceptionHandler.onUncaughtException(ex);

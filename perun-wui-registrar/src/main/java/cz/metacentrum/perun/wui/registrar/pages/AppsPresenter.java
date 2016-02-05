@@ -5,10 +5,10 @@ import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
-import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
 
 /**
  * Presenter for list of submitted applications
@@ -20,8 +20,8 @@ public class AppsPresenter extends Presenter<AppsPresenter.MyView, AppsPresenter
 	public interface MyView extends View {
 	}
 
-	@NameToken(RegistrarPlaceTokens.MY_APPS)
-	@ProxyCodeSplit
+	@NameToken(PerunRegistrarPlaceTokens.MY_APPS)
+	@ProxyStandard
 	public interface MyProxy extends ProxyPlace<AppsPresenter> {
 	}
 

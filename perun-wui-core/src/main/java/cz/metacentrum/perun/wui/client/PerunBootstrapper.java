@@ -4,11 +4,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.Bootstrapper;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -44,8 +44,10 @@ public class PerunBootstrapper implements Bootstrapper {
 		final PerunTranslation translation = GWT.create(PerunTranslation.class);
 
 		final PerunLoader loader = new PerunLoader();
-		RootPanel.get().clear();
-		RootPanel.get().add(loader);
+		RootPanel.get("app-content").clear();
+		RootPanel.get("app-content").add(loader);
+
+		PerunSession.setPlaceManager(placeManager);
 
 		AuthzManager.getPerunPrincipal(new JsonEvents() {
 
@@ -69,16 +71,17 @@ public class PerunBootstrapper implements Bootstrapper {
 					@Override
 					public void onFinished(JavaScriptObject jso) {
 
-						// store configuration
+						// store configuration OLD WAY
 						PerunSession.getInstance().setConfiguration((BasicOverlayObject) jso.cast());
+						// FIXME - use only NEW WAY
+						PerunConfiguration.setPerunConfig((BasicOverlayObject) jso.cast());
 
 						PerunSession.setPerunLoading(false);
 						PerunSession.setPerunLoaded(true);
 
 						// OPEN PAGE BASED ON URL
 						placeManager.revealCurrentPlace();
-						PerunSession.setPlaceManager(placeManager);
-						History.fireCurrentHistoryState();
+						//History.fireCurrentHistoryState();
 
 					}
 

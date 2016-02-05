@@ -1,18 +1,14 @@
 package cz.metacentrum.perun.wui.client.utils;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.ErrorEvent;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
-import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import cz.metacentrum.perun.wui.client.resources.PerunResources;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.extras.animate.client.ui.constants.Animation;
 import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 
@@ -31,8 +27,624 @@ public class Utils {
 	public static final String ATTRIBUTE_FRIENDLY_NAME_MATCHER = "^[-a-zA-Z0-9.]+([:][-a-zA-Z0-9.]+)?$";
 	public static final String LOGIN_VALUE_MATCHER = "^[a-zA-Z0-9_][-A-z0-9_.@/]*$";
 
-	private static final HashMap<String, String> IDP_NAMES = new HashMap<String, String>();
-	private static final HashMap<String, String> KRB_NAMES = new HashMap<String, String>();
+	private static final HashMap<String, String> organizationsTranslation = new HashMap<String, String>();
+
+	static {
+
+		organizationsTranslation.put("https://idp.upce.cz/idp/shibboleth", "University in Pardubice");
+		organizationsTranslation.put("https://idp.slu.cz/idp/shibboleth", "University in Opava");
+		organizationsTranslation.put("https://login.feld.cvut.cz/idp/shibboleth", "Faculty of Electrical Engineering, Czech Technical University In Prague");
+		organizationsTranslation.put("https://www.vutbr.cz/SSO/saml2/idp", "Brno University of Technology");
+		organizationsTranslation.put("https://shibboleth.nkp.cz/idp/shibboleth", "The National Library of the Czech Republic");
+		organizationsTranslation.put("https://idp2.civ.cvut.cz/idp/shibboleth", "Czech Technical University In Prague");
+		organizationsTranslation.put("https://shibbo.tul.cz/idp/shibboleth", "Technical University of Liberec");
+		organizationsTranslation.put("https://idp.mendelu.cz/idp/shibboleth", "Mendel University in Brno");
+		organizationsTranslation.put("https://cas.cuni.cz/idp/shibboleth", "Charles University in Prague");
+		organizationsTranslation.put("https://wsso.vscht.cz/idp/shibboleth", "Institute of Chemical Technology Prague");
+		organizationsTranslation.put("https://idp.vsb.cz/idp/shibboleth", "VSB – Technical University of Ostrava");
+		organizationsTranslation.put("https://whoami.cesnet.cz/idp/shibboleth", "CESNET, z.s.p.o.");
+		organizationsTranslation.put("https://helium.jcu.cz/idp/shibboleth", "University of South Bohemia");
+		organizationsTranslation.put("https://idp.ujep.cz/idp/shibboleth", "Jan Evangelista Purkyne University in Usti nad Labem");
+		organizationsTranslation.put("https://idp.amu.cz/idp/shibboleth", "Academy of Performing Arts in Prague");
+		organizationsTranslation.put("https://idp.lib.cas.cz/idp/shibboleth", "Academy of Sciences Library");
+		organizationsTranslation.put("https://shibboleth.mzk.cz/simplesaml/metadata.xml", "Moravian  Library");
+		organizationsTranslation.put("https://idp2.ics.muni.cz/idp/shibboleth", "Masaryk University");
+		organizationsTranslation.put("https://idp.upol.cz/idp/shibboleth", "Palacky University, Olomouc");
+		organizationsTranslation.put("https://idp.fnplzen.cz/idp/shibboleth", "FN Plzen");
+		organizationsTranslation.put("https://id.vse.cz/idp/shibboleth", "University of Economics, Prague");
+		organizationsTranslation.put("https://shib.zcu.cz/idp/shibboleth", "University of West Bohemia");
+		organizationsTranslation.put("https://idptoo.osu.cz/simplesaml/saml2/idp/metadata.php", "University of Ostrava");
+		organizationsTranslation.put("https://login.ics.muni.cz/idp/shibboleth", "MetaCentrum");
+		organizationsTranslation.put("https://idp.hostel.eduid.cz/idp/shibboleth", "eduID.cz Hostel");
+		organizationsTranslation.put("https://shibboleth.techlib.cz/idp/shibboleth", "National Library of Technology");
+		organizationsTranslation.put("https://eduid.jamu.cz/idp/shibboleth", "Janacek Academy of Music and Performing Arts in Brno");
+		organizationsTranslation.put("https://marisa.uochb.cas.cz/simplesaml/saml2/idp/metadata.php", "Institute of Organic Chemistry and Biochemistry AS CR");
+		organizationsTranslation.put("https://shibboleth.utb.cz/idp/shibboleth", "Tomas Bata University in Zlin");
+		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI");
+		organizationsTranslation.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
+
+		// Handle social identities
+
+		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth", "Social");
+		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:google", "Google");
+		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:facebook", "Facebook");
+		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:linkedin", "LinkedIn");
+		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:mojeid", "MojeID");
+		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:orcid", "OrcID");
+		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:github", "GitHub");
+
+		organizationsTranslation.put("@google.extidp.cesnet.cz", "Google");
+		organizationsTranslation.put("@facebook.extidp.cesnet.cz", "Facebook");
+		organizationsTranslation.put("@mojeid.extidp.cesnet.cz", "MojeID");
+		organizationsTranslation.put("@linkedin.extidp.cesnet.cz", "LinkedIn");
+		organizationsTranslation.put("@twitter.extidp.cesnet.cz", "Twitter");
+		organizationsTranslation.put("@seznam.extidp.cesnet.cz", "Seznam");
+		organizationsTranslation.put("@elixir-europe.org", "Elixir Europe");
+		organizationsTranslation.put("@github.extidp.cesnet.cz", "GitHub");
+		organizationsTranslation.put("@orcid.extidp.cesnet.cz", "OrcID");
+
+		// kerberos
+		organizationsTranslation.put("META", "MetaCentrum");
+		organizationsTranslation.put("EINFRA", "CESNET eInfrastructure");
+		organizationsTranslation.put("SITOLA.FI.MUNI.CZ", "Sitola");
+		organizationsTranslation.put("ICS.MUNI.CZ", "Masaryk University");
+		organizationsTranslation.put("SAGRID", "SAGrid");
+
+	}
+
+	/*
+	 * Database of timezones from http://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
+	 */
+	final static ArrayList<String> timezones = new ArrayList<String>(Arrays.asList(
+			"Africa/Abidjan",
+			"Africa/Accra",
+			"Africa/Addis_Ababa",
+			"Africa/Algiers",
+			"Africa/Asmara",
+			"Africa/Asmera",
+			"Africa/Bamako",
+			"Africa/Bangui",
+			"Africa/Banjul",
+			"Africa/Bissau",
+			"Africa/Blantyre",
+			"Africa/Brazzaville",
+			"Africa/Bujumbura",
+			"Africa/Cairo",
+			"Africa/Casablanca",
+			"Africa/Ceuta",
+			"Africa/Conakry",
+			"Africa/Dakar",
+			"Africa/Dar_es_Salaam",
+			"Africa/Djibouti",
+			"Africa/Douala",
+			"Africa/El_Aaiun",
+			"Africa/Freetown",
+			"Africa/Gaborone",
+			"Africa/Harare",
+			"Africa/Johannesburg",
+			"Africa/Juba",
+			"Africa/Kampala",
+			"Africa/Khartoum",
+			"Africa/Kigali",
+			"Africa/Kinshasa",
+			"Africa/Lagos",
+			"Africa/Libreville",
+			"Africa/Lome",
+			"Africa/Luanda",
+			"Africa/Lubumbashi",
+			"Africa/Lusaka",
+			"Africa/Malabo",
+			"Africa/Maputo",
+			"Africa/Maseru",
+			"Africa/Mbabane",
+			"Africa/Mogadishu",
+			"Africa/Monrovia",
+			"Africa/Nairobi",
+			"Africa/Ndjamena",
+			"Africa/Niamey",
+			"Africa/Nouakchott",
+			"Africa/Ouagadougou",
+			"Africa/Porto-Novo",
+			"Africa/Sao_Tome",
+			"Africa/Timbuktu",
+			"Africa/Tripoli",
+			"Africa/Tunis",
+			"Africa/Windhoek",
+			"AKST9AKDT",
+			"America/Adak",
+			"America/Anchorage",
+			"America/Anguilla",
+			"America/Antigua",
+			"America/Araguaina",
+			"America/Argentina/Buenos_Aires",
+			"America/Argentina/Catamarca",
+			"America/Argentina/ComodRivadavia",
+			"America/Argentina/Cordoba",
+			"America/Argentina/Jujuy",
+			"America/Argentina/La_Rioja",
+			"America/Argentina/Mendoza",
+			"America/Argentina/Rio_Gallegos",
+			"America/Argentina/Salta",
+			"America/Argentina/San_Juan",
+			"America/Argentina/San_Luis",
+			"America/Argentina/Tucuman",
+			"America/Argentina/Ushuaia",
+			"America/Aruba",
+			"America/Asuncion",
+			"America/Atikokan",
+			"America/Atka",
+			"America/Bahia",
+			"America/Bahia_Banderas",
+			"America/Barbados",
+			"America/Belem",
+			"America/Belize",
+			"America/Blanc-Sablon",
+			"America/Boa_Vista",
+			"America/Bogota",
+			"America/Boise",
+			"America/Buenos_Aires",
+			"America/Cambridge_Bay",
+			"America/Campo_Grande",
+			"America/Cancun",
+			"America/Caracas",
+			"America/Catamarca",
+			"America/Cayenne",
+			"America/Cayman",
+			"America/Chicago",
+			"America/Chihuahua",
+			"America/Coral_Harbour",
+			"America/Cordoba",
+			"America/Costa_Rica",
+			"America/Creston",
+			"America/Cuiaba",
+			"America/Curacao",
+			"America/Danmarkshavn",
+			"America/Dawson",
+			"America/Dawson_Creek",
+			"America/Denver",
+			"America/Detroit",
+			"America/Dominica",
+			"America/Edmonton",
+			"America/Eirunepe",
+			"America/El_Salvador",
+			"America/Ensenada",
+			"America/Fort_Wayne",
+			"America/Fortaleza",
+			"America/Glace_Bay",
+			"America/Godthab",
+			"America/Goose_Bay",
+			"America/Grand_Turk",
+			"America/Grenada",
+			"America/Guadeloupe",
+			"America/Guatemala",
+			"America/Guayaquil",
+			"America/Guyana",
+			"America/Halifax",
+			"America/Havana",
+			"America/Hermosillo",
+			"America/Indiana/Indianapolis",
+			"America/Indiana/Knox",
+			"America/Indiana/Marengo",
+			"America/Indiana/Petersburg",
+			"America/Indiana/Tell_City",
+			"America/Indiana/Vevay",
+			"America/Indiana/Vincennes",
+			"America/Indiana/Winamac",
+			"America/Indianapolis",
+			"America/Inuvik",
+			"America/Iqaluit",
+			"America/Jamaica",
+			"America/Jujuy",
+			"America/Juneau",
+			"America/Kentucky/Louisville",
+			"America/Kentucky/Monticello",
+			"America/Knox_IN",
+			"America/Kralendijk",
+			"America/La_Paz",
+			"America/Lima",
+			"America/Los_Angeles",
+			"America/Louisville",
+			"America/Lower_Princes",
+			"America/Maceio",
+			"America/Managua",
+			"America/Manaus",
+			"America/Marigot",
+			"America/Martinique",
+			"America/Matamoros",
+			"America/Mazatlan",
+			"America/Mendoza",
+			"America/Menominee",
+			"America/Merida",
+			"America/Metlakatla",
+			"America/Mexico_City",
+			"America/Miquelon",
+			"America/Moncton",
+			"America/Monterrey",
+			"America/Montevideo",
+			"America/Montreal",
+			"America/Montserrat",
+			"America/Nassau",
+			"America/New_York",
+			"America/Nipigon",
+			"America/Nome",
+			"America/Noronha",
+			"America/North_Dakota/Beulah",
+			"America/North_Dakota/Center",
+			"America/North_Dakota/New_Salem",
+			"America/Ojinaga",
+			"America/Panama",
+			"America/Pangnirtung",
+			"America/Paramaribo",
+			"America/Phoenix",
+			"America/Port_of_Spain",
+			"America/Port-au-Prince",
+			"America/Porto_Acre",
+			"America/Porto_Velho",
+			"America/Puerto_Rico",
+			"America/Rainy_River",
+			"America/Rankin_Inlet",
+			"America/Recife",
+			"America/Regina",
+			"America/Resolute",
+			"America/Rio_Branco",
+			"America/Rosario",
+			"America/Santa_Isabel",
+			"America/Santarem",
+			"America/Santiago",
+			"America/Santo_Domingo",
+			"America/Sao_Paulo",
+			"America/Scoresbysund",
+			"America/Shiprock",
+			"America/Sitka",
+			"America/St_Barthelemy",
+			"America/St_Johns",
+			"America/St_Kitts",
+			"America/St_Lucia",
+			"America/St_Thomas",
+			"America/St_Vincent",
+			"America/Swift_Current",
+			"America/Tegucigalpa",
+			"America/Thule",
+			"America/Thunder_Bay",
+			"America/Tijuana",
+			"America/Toronto",
+			"America/Tortola",
+			"America/Vancouver",
+			"America/Virgin",
+			"America/Whitehorse",
+			"America/Winnipeg",
+			"America/Yakutat",
+			"America/Yellowknife",
+			"Antarctica/Casey",
+			"Antarctica/Davis",
+			"Antarctica/DumontDUrville",
+			"Antarctica/Macquarie",
+			"Antarctica/Mawson",
+			"Antarctica/McMurdo",
+			"Antarctica/Palmer",
+			"Antarctica/Rothera",
+			"Antarctica/South_Pole",
+			"Antarctica/Syowa",
+			"Antarctica/Vostok",
+			"Arctic/Longyearbyen",
+			"Asia/Aden",
+			"Asia/Almaty",
+			"Asia/Amman",
+			"Asia/Anadyr",
+			"Asia/Aqtau",
+			"Asia/Aqtobe",
+			"Asia/Ashgabat",
+			"Asia/Ashkhabad",
+			"Asia/Baghdad",
+			"Asia/Bahrain",
+			"Asia/Baku",
+			"Asia/Bangkok",
+			"Asia/Beirut",
+			"Asia/Bishkek",
+			"Asia/Brunei",
+			"Asia/Calcutta",
+			"Asia/Choibalsan",
+			"Asia/Chongqing",
+			"Asia/Chungking",
+			"Asia/Colombo",
+			"Asia/Dacca",
+			"Asia/Damascus",
+			"Asia/Dhaka",
+			"Asia/Dili",
+			"Asia/Dubai",
+			"Asia/Dushanbe",
+			"Asia/Gaza",
+			"Asia/Harbin",
+			"Asia/Hebron",
+			"Asia/Ho_Chi_Minh",
+			"Asia/Hong_Kong",
+			"Asia/Hovd",
+			"Asia/Irkutsk",
+			"Asia/Istanbul",
+			"Asia/Jakarta",
+			"Asia/Jayapura",
+			"Asia/Jerusalem",
+			"Asia/Kabul",
+			"Asia/Kamchatka",
+			"Asia/Karachi",
+			"Asia/Kashgar",
+			"Asia/Kathmandu",
+			"Asia/Katmandu",
+			"Asia/Kolkata",
+			"Asia/Krasnoyarsk",
+			"Asia/Kuala_Lumpur",
+			"Asia/Kuching",
+			"Asia/Kuwait",
+			"Asia/Macao",
+			"Asia/Macau",
+			"Asia/Magadan",
+			"Asia/Makassar",
+			"Asia/Manila",
+			"Asia/Muscat",
+			"Asia/Nicosia",
+			"Asia/Novokuznetsk",
+			"Asia/Novosibirsk",
+			"Asia/Omsk",
+			"Asia/Oral",
+			"Asia/Phnom_Penh",
+			"Asia/Pontianak",
+			"Asia/Pyongyang",
+			"Asia/Qatar",
+			"Asia/Qyzylorda",
+			"Asia/Rangoon",
+			"Asia/Riyadh",
+			"Asia/Saigon",
+			"Asia/Sakhalin",
+			"Asia/Samarkand",
+			"Asia/Seoul",
+			"Asia/Shanghai",
+			"Asia/Singapore",
+			"Asia/Taipei",
+			"Asia/Tashkent",
+			"Asia/Tbilisi",
+			"Asia/Tehran",
+			"Asia/Tel_Aviv",
+			"Asia/Thimbu",
+			"Asia/Thimphu",
+			"Asia/Tokyo",
+			"Asia/Ujung_Pandang",
+			"Asia/Ulaanbaatar",
+			"Asia/Ulan_Bator",
+			"Asia/Urumqi",
+			"Asia/Vientiane",
+			"Asia/Vladivostok",
+			"Asia/Yakutsk",
+			"Asia/Yekaterinburg",
+			"Asia/Yerevan",
+			"Atlantic/Azores",
+			"Atlantic/Bermuda",
+			"Atlantic/Canary",
+			"Atlantic/Cape_Verde",
+			"Atlantic/Faeroe",
+			"Atlantic/Faroe",
+			"Atlantic/Jan_Mayen",
+			"Atlantic/Madeira",
+			"Atlantic/Reykjavik",
+			"Atlantic/South_Georgia",
+			"Atlantic/St_Helena",
+			"Atlantic/Stanley",
+			"Australia/ACT",
+			"Australia/Adelaide",
+			"Australia/Brisbane",
+			"Australia/Broken_Hill",
+			"Australia/Canberra",
+			"Australia/Currie",
+			"Australia/Darwin",
+			"Australia/Eucla",
+			"Australia/Hobart",
+			"Australia/LHI",
+			"Australia/Lindeman",
+			"Australia/Lord_Howe",
+			"Australia/Melbourne",
+			"Australia/North",
+			"Australia/NSW",
+			"Australia/Perth",
+			"Australia/Queensland",
+			"Australia/South",
+			"Australia/Sydney",
+			"Australia/Tasmania",
+			"Australia/Victoria",
+			"Australia/West",
+			"Australia/Yancowinna",
+			"Brazil/Acre",
+			"Brazil/DeNoronha",
+			"Brazil/East",
+			"Brazil/West",
+			"Canada/Atlantic",
+			"Canada/Central",
+			"Canada/Eastern",
+			"Canada/East-Saskatchewan",
+			"Canada/Mountain",
+			"Canada/Newfoundland",
+			"Canada/Pacific",
+			"Canada/Saskatchewan",
+			"Canada/Yukon",
+			"CET",
+			"Chile/Continental",
+			"Chile/EasterIsland",
+			"CST6CDT",
+			"Cuba",
+			"EET",
+			"Egypt",
+			"Eire",
+			"EST",
+			"EST5EDT",
+			"Etc/GMT",
+			"Etc/GMT+0",
+			"Etc/UCT",
+			"Etc/Universal",
+			"Etc/UTC",
+			"Etc/Zulu",
+			"Europe/Amsterdam",
+			"Europe/Andorra",
+			"Europe/Athens",
+			"Europe/Belfast",
+			"Europe/Belgrade",
+			"Europe/Berlin",
+			"Europe/Bratislava",
+			"Europe/Brussels",
+			"Europe/Bucharest",
+			"Europe/Budapest",
+			"Europe/Chisinau",
+			"Europe/Copenhagen",
+			"Europe/Dublin",
+			"Europe/Gibraltar",
+			"Europe/Guernsey",
+			"Europe/Helsinki",
+			"Europe/Isle_of_Man",
+			"Europe/Istanbul",
+			"Europe/Jersey",
+			"Europe/Kaliningrad",
+			"Europe/Kiev",
+			"Europe/Lisbon",
+			"Europe/Ljubljana",
+			"Europe/London",
+			"Europe/Luxembourg",
+			"Europe/Madrid",
+			"Europe/Malta",
+			"Europe/Mariehamn",
+			"Europe/Minsk",
+			"Europe/Monaco",
+			"Europe/Moscow",
+			"Europe/Nicosia",
+			"Europe/Oslo",
+			"Europe/Paris",
+			"Europe/Podgorica",
+			"Europe/Prague",
+			"Europe/Riga",
+			"Europe/Rome",
+			"Europe/Samara",
+			"Europe/San_Marino",
+			"Europe/Sarajevo",
+			"Europe/Simferopol",
+			"Europe/Skopje",
+			"Europe/Sofia",
+			"Europe/Stockholm",
+			"Europe/Tallinn",
+			"Europe/Tirane",
+			"Europe/Tiraspol",
+			"Europe/Uzhgorod",
+			"Europe/Vaduz",
+			"Europe/Vatican",
+			"Europe/Vienna",
+			"Europe/Vilnius",
+			"Europe/Volgograd",
+			"Europe/Warsaw",
+			"Europe/Zagreb",
+			"Europe/Zaporozhye",
+			"Europe/Zurich",
+			"GB",
+			"GB-Eire",
+			"GMT",
+			"GMT+0",
+			"GMT0",
+			"GMT-0",
+			"Greenwich",
+			"Hongkong",
+			"HST",
+			"Iceland",
+			"Indian/Antananarivo",
+			"Indian/Chagos",
+			"Indian/Christmas",
+			"Indian/Cocos",
+			"Indian/Comoro",
+			"Indian/Kerguelen",
+			"Indian/Mahe",
+			"Indian/Maldives",
+			"Indian/Mauritius",
+			"Indian/Mayotte",
+			"Indian/Reunion",
+			"Iran",
+			"Israel",
+			"Jamaica",
+			"Japan",
+			"JST-9",
+			"Kwajalein",
+			"Libya",
+			"MET",
+			"Mexico/BajaNorte",
+			"Mexico/BajaSur",
+			"Mexico/General",
+			"MST",
+			"MST7MDT",
+			"Navajo",
+			"NZ",
+			"NZ-CHAT",
+			"Pacific/Apia",
+			"Pacific/Auckland",
+			"Pacific/Chatham",
+			"Pacific/Chuuk",
+			"Pacific/Easter",
+			"Pacific/Efate",
+			"Pacific/Enderbury",
+			"Pacific/Fakaofo",
+			"Pacific/Fiji",
+			"Pacific/Funafuti",
+			"Pacific/Galapagos",
+			"Pacific/Gambier",
+			"Pacific/Guadalcanal",
+			"Pacific/Guam",
+			"Pacific/Honolulu",
+			"Pacific/Johnston",
+			"Pacific/Kiritimati",
+			"Pacific/Kosrae",
+			"Pacific/Kwajalein",
+			"Pacific/Majuro",
+			"Pacific/Marquesas",
+			"Pacific/Midway",
+			"Pacific/Nauru",
+			"Pacific/Niue",
+			"Pacific/Norfolk",
+			"Pacific/Noumea",
+			"Pacific/Pago_Pago",
+			"Pacific/Palau",
+			"Pacific/Pitcairn",
+			"Pacific/Pohnpei",
+			"Pacific/Ponape",
+			"Pacific/Port_Moresby",
+			"Pacific/Rarotonga",
+			"Pacific/Saipan",
+			"Pacific/Samoa",
+			"Pacific/Tahiti",
+			"Pacific/Tarawa",
+			"Pacific/Tongatapu",
+			"Pacific/Truk",
+			"Pacific/Wake",
+			"Pacific/Wallis",
+			"Pacific/Yap",
+			"Poland",
+			"Portugal",
+			"PRC",
+			"PST8PDT",
+			"ROC",
+			"ROK",
+			"Singapore",
+			"Turkey",
+			"UCT",
+			"Universal",
+			"US/Alaska",
+			"US/Aleutian",
+			"US/Arizona",
+			"US/Central",
+			"US/Eastern",
+			"US/East-Indiana",
+			"US/Hawaii",
+			"US/Indiana-Starke",
+			"US/Michigan",
+			"US/Mountain",
+			"US/Pacific",
+			"US/Pacific-New",
+			"US/Samoa",
+			"UTC",
+			"WET",
+			"W-SU",
+			"Zulu"
+	));
 
 	public static NotifySettings getDefaultNotifyOptions() {
 
@@ -110,7 +722,7 @@ public class Utils {
 			// try to find alternative hostname for cert, since we want to re-force authz
 			if ("cert".equalsIgnoreCase(authz) && Window.Location.getPath().startsWith("/cert")) {
 
-				for (String hostname : Utils.getCertWayfHostnames()) {
+				for (String hostname : PerunConfiguration.getWayfCertHostnames()) {
 					if (!hostname.equals(Window.Location.getProtocol() + "//" + Window.Location.getHost())) {
 						baseUrl = hostname;
 						otherFound = true;
@@ -125,21 +737,7 @@ public class Utils {
 				baseUrl = Window.Location.getProtocol() + "//" + Window.Location.getHost();
 			}
 
-			final String URL_KRB = baseUrl + "/krb/ic/";
-			final String URL_FED = baseUrl + "/fed/ic/";
-			final String URL_CERT = baseUrl + "/cert/ic/";
-			String link = "";
-
-			if ("krb".equalsIgnoreCase(authz)) {
-				link = URL_KRB;
-			} else if ("fed".equalsIgnoreCase(authz)) {
-				link = URL_FED;
-			} else if ("cert".equalsIgnoreCase(authz)) {
-				link = URL_CERT;
-			} else {
-				// KRB AS BACKUP - "default"
-				link = URL_KRB;
-			}
+			String link = baseUrl + "/"+authz+"/ic/";
 
 			if (target) {
 				link += "?target_url=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() +  URL.encodeQueryString(URL.encodeQueryString(Window.Location.getQueryString()));
@@ -175,7 +773,7 @@ public class Utils {
 
 			String baseUrl = Window.Location.getProtocol() + "//" + Window.Location.getHost();
 
-			if (!Utils.isDevel()) {
+			if (!PerunConfiguration.isDevel()) {
 
 				// VALID URL FOR PRODUCTION
 
@@ -215,258 +813,6 @@ public class Utils {
 		}
 	}
 
-	/**
-	 * Returns list of supported namespaces names for password change / reset
-	 *
-	 * @return list of supported namespaces names
-	 */
-	public static ArrayList<String> getSupportedPasswordNamespaces() {
-
-		ArrayList<String> list = new ArrayList<String>();
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "getSupportedPasswordNamespaces");
-			list.addAll(Utils.stringToList(value, ","));
-		}
-		return list;
-
-	}
-
-	/**
-	 * Returns list of all feeds for Identity Consolidator webapp
-	 * (even unsupported).
-	 *
-	 * @return list of all (even not supported) feeds
-	 */
-	public static ArrayList<String> getAllWayfFeeds() {
-
-		ArrayList<String> list = new ArrayList<String>();
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.allFeeds");
-			list.addAll(Utils.stringToList(value, ","));
-		}
-		return list;
-
-	}
-
-	/**
-	 * Returns TRUE if WAYF should support Kerberos authz
-	 *
-	 * @return TRUE if WAYF should support Kerberos authz
-	 */
-	public static boolean isKrbWayfSupported() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "krb")) {
-				return JsUtils.getNativePropertyBoolean(wayfConfig, "krb");
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.krb");
-			if (value != null && !value.isEmpty()) {
-				return Boolean.parseBoolean(value);
-			}
-		}
-		return false;
-
-	}
-
-	/**
-	 * Returns TRUE if WAYF should support Kerberos authz
-	 *
-	 * @return TRUE if WAYF should support Kerberos authz
-	 */
-	public static String getWayfKrbName() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "krbName")) {
-				return JsUtils.getNativePropertyString(wayfConfig, "krbName");
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.krbName");
-			if (value != null && !value.isEmpty()) {
-				return value;
-			}
-		}
-
-		return null;
-
-	}
-
-	/**
-	 * Returns TRUE if WAYF should support cert authz
-	 *
-	 * @see #getCertWayfHostnames()
-	 *
-	 * @return TRUE if WAYF should support cert authz
-	 */
-	public static boolean isCertWayfSupported() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "cert")) {
-				return JsUtils.getNativePropertyBoolean(wayfConfig, "cert");
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.cert");
-			if (value != null && !value.isEmpty()) {
-				return Boolean.parseBoolean(value);
-			}
-		}
-		return false;
-
-	}
-
-	/**
-	 * Returns list of all hostnames supported for Identity Consolidator cert authz.
-	 * Empty if none supported.
-	 *
-	 * @return list of all cert hostnames for IC
-	 */
-	public static ArrayList<String> getCertWayfHostnames() {
-
-		ArrayList<String> result = new ArrayList<String>();
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "certHosts")) {
-				String value = JsUtils.getNativePropertyString(wayfConfig, "certHosts");
-				result.addAll(Utils.stringToList(value, ","));
-				return result;
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.cert.hosts");
-			result.addAll(Utils.stringToList(value, ","));
-		}
-		return result;
-
-	}
-
-	/**
-	 * TRUE if display WAYF as all in one (useful for only fed-authz).
-	 *
-	 * @return TRUE if WAYF should be displayed all in one
-	 */
-	public static boolean wayfShowAllInOne() {
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "showAllInOne")) {
-				return JsUtils.getNativePropertyBoolean(wayfConfig, "showAllInOne");
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.showAllInOne");
-			if (value != null && !value.isEmpty()) {
-				return Boolean.parseBoolean(value);
-			}
-		}
-		return false;
-
-	}
-
-	/**
-	 * Returns list of feeds for Identity Consolidator webapp
-	 *
-	 * @return list of all supported feeds
-	 */
-	public static ArrayList<String> getWayfFeeds() {
-
-		ArrayList<String> feedNames = new ArrayList<String>();
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "feeds")) {
-				String value = JsUtils.getNativePropertyString(wayfConfig, "feeds");
-				feedNames.addAll(Utils.stringToList(value, ","));
-				return feedNames;
-			}
-		}
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.feeds");
-			feedNames.addAll(Utils.stringToList(value, ","));
-		}
-
-		return feedNames;
-
-	}
-
-	/**
-	 * Returns URL to feeds for Identity Consolidator webapp
-	 *
-	 * @return URL to feeds
-	 */
-	public static String getWayfFeedUrl() {
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			return JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.feedUrl");
-		}
-		return null;
-	}
-
-	/**
-	 * Returns logout URL from consolidator SP
-	 * If not set, current hostname is used, replacing path with "/Shibboleth.sso/Logout"
-	 *
-	 * @return SP logout URL
-	 */
-	public static String getWayfSpLogoutUrl() {
-
-		String SPlogout = null;
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			SPlogout = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.spLogoutUrl");
-		}
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "spLogoutUrl")) {
-				SPlogout = JsUtils.getNativePropertyString(wayfConfig, "spLogoutUrl");
-			}
-		}
-
-		if (SPlogout == null || SPlogout.isEmpty()) {
-			// backup to current hostname
-			SPlogout = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/Logout";
-		}
-		return SPlogout;
-	}
-
-	/**
-	 * Returns URL to the Discovery service of consolidator SP
-	 * If not set, current hostname is used, replacing path with "/Shibboleth.sso/DS"
-	 *
-	 * @return SP login URL
-	 */
-	public static String getWayfSpDsUrl() {
-		String SPlogin = null;
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			SPlogin = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "wayf.spDsUrl");
-		}
-
-		if (PerunSession.getInstance().getLocalConfig() != null) {
-			JavaScriptObject wayfConfig = JsUtils.getNativePropertyObject(PerunSession.getInstance().getLocalConfig(), "wayf");
-			if (wayfConfig != null && JsUtils.hasOwnProperty(wayfConfig, "spDsUrl")) {
-				SPlogin = JsUtils.getNativePropertyString(wayfConfig, "spDsUrl");
-			}
-		}
-
-		if (SPlogin == null || SPlogin.isEmpty()) {
-			// backup to current hostname
-			SPlogin = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/DS";
-		}
-		return SPlogin;
-	}
-
 
 	public static final native String createWayfFeedFilter(String[] allowedFeeds, String[] allowedIdPs, boolean allowHostel, boolean allowHostelRegistration) /*-{
 		var filter = { "allowHostel" : allowHostel ,
@@ -482,215 +828,6 @@ public class Utils {
 
 		return btoa(JSON.stringify(filter));
 	}-*/;
-
-	/**
-	 * Return list of VO`s short names for which application form should skip CAPTCHA verification.
-	 *
-	 * @return list of VO` short names
-	 */
-	public static ArrayList<String> getVosToSkipCaptchaFor() {
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "vosToSkipCaptchaFor");
-			return new ArrayList<String>(Utils.stringToList(value, ","));
-		}
-		return new ArrayList<String>();
-	}
-
-	/**
-	 * Return list of unix group name namespaces in which is allowed to set preferences in group names.
-	 *
-	 * Used to set attribute: urn:perun:user:attribute-def:def:preferredUnixGroupName-namespace:[namespace]
-	 *
-	 * @return list of supported namespaces
-	 */
-	public static ArrayList<String> getNamespacesForPreferredGroupNames() {
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "namespacesForPreferredGroupNames");
-			return new ArrayList<String>(Utils.stringToList(value, ","));
-		}
-		return new ArrayList<String>();
-	}
-
-	/**
-	 * Returns public key part of Re-Captcha widgetsWrapper (by GOOGLE)
-	 * which is used for anonymous access to application form.
-	 * <p/>
-	 * If public key is not present, return null
-	 *
-	 * @return Re-Captcha public key
-	 */
-	public static String getReCaptchaPublicKey() {
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "getReCaptchaPublicKey");
-			if (value != null && !value.isEmpty()) {
-				return value;
-			}
-		}
-		return null;
-
-	}
-
-	/**
-	 * Returns TRUE if logged to Devel instance of Perun
-	 *
-	 * @return TRUE if instance of Perun is Devel / FALSE otherwise
-	 */
-	public static boolean isDevel() {
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "isDevel");
-			if (value != null && !value.isEmpty()) {
-				return Boolean.parseBoolean(value);
-			}
-		}
-		return false;
-
-	}
-
-	public static final Map<String, String> ENGLISH_LANGUAGE;
-	static
-	{
-		ENGLISH_LANGUAGE = new HashMap<>();
-		ENGLISH_LANGUAGE.put("code", "en");
-		ENGLISH_LANGUAGE.put("nativeName", "English");
-		ENGLISH_LANGUAGE.put("englishName", "English");
-	}
-	/**
-	 * Returns Map of Strings representing native language with keys "code","nativeName","englishName"
-	 *
-	 * e,g. "code":"cs", "nativeName":"Česky", "englishName":"Czech" for Czech language.
-	 *
-	 * @return map of strings representing native language. If language is not set, return null.
-	 */
-	public static Map<String,String> getNativeLanguage() {
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "nativeLanguage");
-			if (value != null && !value.isEmpty()) {
-				String[] parts = value.split(",");
-
-				Map<String, String> language = new HashMap<>();
-				language.put("code", parts[0]);
-				language.put("nativeName", parts[1]);
-				language.put("englishName", parts[2]);
-				return language;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Returns address to perun support
-	 *
-	 * @return support email as string
-	 */
-	public static String perunReportEmailAddress() {
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "perunReportEmailAddress");
-			if (value != null && !value.isEmpty()) {
-				return value;
-			}
-		}
-		return "";
-
-	}
-
-	/**
-	 * Returns name of Perun Instance if present in config or "UNKNOWN INSTANCE" if not present.
-	 *
-	 * @return name of Perun Instance as string
-	 */
-	public static String perunInstanceName() {
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "perunInstanceName");
-			if (value != null && !value.isEmpty()) {
-				return value;
-			}
-		}
-		return "UNKNOWN INSTANCE";
-
-	}
-
-	/**
-	 * Returns Image of Perun`s instance logo
-	 *
-	 * if not set, use default: "perunDefaultLogoResource()"
-	 *
-	 * @return URL of Perun`s logo
-	 */
-	public static Image perunInstanceLogo() {
-
-		final Image image = new Image();
-
-		image.addErrorHandler(new com.google.gwt.event.dom.client.ErrorHandler() {
-			public void onError(ErrorEvent event) {
-				if (perunDefaultLogoResource() != null) {
-					image.setResource(perunDefaultLogoResource());
-				}
-			}
-		});
-
-		if (PerunSession.getInstance().getConfiguration() == null) {
-			return new Image(perunDefaultLogoResource());
-		}
-
-		String url = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "logoUrl");
-
-		if (url == null || url.isEmpty()) {
-			return new Image(perunDefaultLogoResource());
-		}
-
-		image.setUrl(url);
-
-		return image;
-	}
-	/**
-	 * Returns Perun`s logo resource
-	 *
-	 * @return Image of Perun`s logo
-	 */
-	public static ImageResource perunDefaultLogoResource() {
-
-		return PerunResources.INSTANCE.getPerunLogo();
-
-	}
-
-	/**
-	 * Returns default RT queue for errors reporting
-	 *
-	 * @return default RT queue for errors reporting as string
-	 */
-	public static String defaultRtQueue() {
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "defaultRtQueue");
-			if (value != null && !value.isEmpty()) {
-				return value;
-			}
-		}
-		return "";
-
-	}
-
-	/**
-	 * Returns name of core groups (only "members" for now)
-	 *
-	 * @return name of core group
-	 */
-	public static String vosManagerMembersGroup() {
-
-		if (PerunSession.getInstance().getConfiguration() != null) {
-			String value = JsUtils.getNativePropertyString(PerunSession.getInstance().getConfiguration(), "vosManagerMembersGroup");
-			if (value != null && !value.isEmpty()) {
-				return value;
-			}
-		}
-		return "";
-
-	}
 
 	/**
 	 * Clear all cookies provided by federation IDP in user's browser.
@@ -925,560 +1062,6 @@ public class Utils {
 
 	public static ArrayList<String> getTimezones() {
 
-	/*
-	 * Database of timezones from http://en.wikipedia.org/wiki/List_of_tz_database_time_zones.
-	 */
-		final ArrayList<String> timezones = new ArrayList<String>(Arrays.asList(
-				"Africa/Abidjan",
-				"Africa/Accra",
-				"Africa/Addis_Ababa",
-				"Africa/Algiers",
-				"Africa/Asmara",
-				"Africa/Asmera",
-				"Africa/Bamako",
-				"Africa/Bangui",
-				"Africa/Banjul",
-				"Africa/Bissau",
-				"Africa/Blantyre",
-				"Africa/Brazzaville",
-				"Africa/Bujumbura",
-				"Africa/Cairo",
-				"Africa/Casablanca",
-				"Africa/Ceuta",
-				"Africa/Conakry",
-				"Africa/Dakar",
-				"Africa/Dar_es_Salaam",
-				"Africa/Djibouti",
-				"Africa/Douala",
-				"Africa/El_Aaiun",
-				"Africa/Freetown",
-				"Africa/Gaborone",
-				"Africa/Harare",
-				"Africa/Johannesburg",
-				"Africa/Juba",
-				"Africa/Kampala",
-				"Africa/Khartoum",
-				"Africa/Kigali",
-				"Africa/Kinshasa",
-				"Africa/Lagos",
-				"Africa/Libreville",
-				"Africa/Lome",
-				"Africa/Luanda",
-				"Africa/Lubumbashi",
-				"Africa/Lusaka",
-				"Africa/Malabo",
-				"Africa/Maputo",
-				"Africa/Maseru",
-				"Africa/Mbabane",
-				"Africa/Mogadishu",
-				"Africa/Monrovia",
-				"Africa/Nairobi",
-				"Africa/Ndjamena",
-				"Africa/Niamey",
-				"Africa/Nouakchott",
-				"Africa/Ouagadougou",
-				"Africa/Porto-Novo",
-				"Africa/Sao_Tome",
-				"Africa/Timbuktu",
-				"Africa/Tripoli",
-				"Africa/Tunis",
-				"Africa/Windhoek",
-				"AKST9AKDT",
-				"America/Adak",
-				"America/Anchorage",
-				"America/Anguilla",
-				"America/Antigua",
-				"America/Araguaina",
-				"America/Argentina/Buenos_Aires",
-				"America/Argentina/Catamarca",
-				"America/Argentina/ComodRivadavia",
-				"America/Argentina/Cordoba",
-				"America/Argentina/Jujuy",
-				"America/Argentina/La_Rioja",
-				"America/Argentina/Mendoza",
-				"America/Argentina/Rio_Gallegos",
-				"America/Argentina/Salta",
-				"America/Argentina/San_Juan",
-				"America/Argentina/San_Luis",
-				"America/Argentina/Tucuman",
-				"America/Argentina/Ushuaia",
-				"America/Aruba",
-				"America/Asuncion",
-				"America/Atikokan",
-				"America/Atka",
-				"America/Bahia",
-				"America/Bahia_Banderas",
-				"America/Barbados",
-				"America/Belem",
-				"America/Belize",
-				"America/Blanc-Sablon",
-				"America/Boa_Vista",
-				"America/Bogota",
-				"America/Boise",
-				"America/Buenos_Aires",
-				"America/Cambridge_Bay",
-				"America/Campo_Grande",
-				"America/Cancun",
-				"America/Caracas",
-				"America/Catamarca",
-				"America/Cayenne",
-				"America/Cayman",
-				"America/Chicago",
-				"America/Chihuahua",
-				"America/Coral_Harbour",
-				"America/Cordoba",
-				"America/Costa_Rica",
-				"America/Creston",
-				"America/Cuiaba",
-				"America/Curacao",
-				"America/Danmarkshavn",
-				"America/Dawson",
-				"America/Dawson_Creek",
-				"America/Denver",
-				"America/Detroit",
-				"America/Dominica",
-				"America/Edmonton",
-				"America/Eirunepe",
-				"America/El_Salvador",
-				"America/Ensenada",
-				"America/Fort_Wayne",
-				"America/Fortaleza",
-				"America/Glace_Bay",
-				"America/Godthab",
-				"America/Goose_Bay",
-				"America/Grand_Turk",
-				"America/Grenada",
-				"America/Guadeloupe",
-				"America/Guatemala",
-				"America/Guayaquil",
-				"America/Guyana",
-				"America/Halifax",
-				"America/Havana",
-				"America/Hermosillo",
-				"America/Indiana/Indianapolis",
-				"America/Indiana/Knox",
-				"America/Indiana/Marengo",
-				"America/Indiana/Petersburg",
-				"America/Indiana/Tell_City",
-				"America/Indiana/Vevay",
-				"America/Indiana/Vincennes",
-				"America/Indiana/Winamac",
-				"America/Indianapolis",
-				"America/Inuvik",
-				"America/Iqaluit",
-				"America/Jamaica",
-				"America/Jujuy",
-				"America/Juneau",
-				"America/Kentucky/Louisville",
-				"America/Kentucky/Monticello",
-				"America/Knox_IN",
-				"America/Kralendijk",
-				"America/La_Paz",
-				"America/Lima",
-				"America/Los_Angeles",
-				"America/Louisville",
-				"America/Lower_Princes",
-				"America/Maceio",
-				"America/Managua",
-				"America/Manaus",
-				"America/Marigot",
-				"America/Martinique",
-				"America/Matamoros",
-				"America/Mazatlan",
-				"America/Mendoza",
-				"America/Menominee",
-				"America/Merida",
-				"America/Metlakatla",
-				"America/Mexico_City",
-				"America/Miquelon",
-				"America/Moncton",
-				"America/Monterrey",
-				"America/Montevideo",
-				"America/Montreal",
-				"America/Montserrat",
-				"America/Nassau",
-				"America/New_York",
-				"America/Nipigon",
-				"America/Nome",
-				"America/Noronha",
-				"America/North_Dakota/Beulah",
-				"America/North_Dakota/Center",
-				"America/North_Dakota/New_Salem",
-				"America/Ojinaga",
-				"America/Panama",
-				"America/Pangnirtung",
-				"America/Paramaribo",
-				"America/Phoenix",
-				"America/Port_of_Spain",
-				"America/Port-au-Prince",
-				"America/Porto_Acre",
-				"America/Porto_Velho",
-				"America/Puerto_Rico",
-				"America/Rainy_River",
-				"America/Rankin_Inlet",
-				"America/Recife",
-				"America/Regina",
-				"America/Resolute",
-				"America/Rio_Branco",
-				"America/Rosario",
-				"America/Santa_Isabel",
-				"America/Santarem",
-				"America/Santiago",
-				"America/Santo_Domingo",
-				"America/Sao_Paulo",
-				"America/Scoresbysund",
-				"America/Shiprock",
-				"America/Sitka",
-				"America/St_Barthelemy",
-				"America/St_Johns",
-				"America/St_Kitts",
-				"America/St_Lucia",
-				"America/St_Thomas",
-				"America/St_Vincent",
-				"America/Swift_Current",
-				"America/Tegucigalpa",
-				"America/Thule",
-				"America/Thunder_Bay",
-				"America/Tijuana",
-				"America/Toronto",
-				"America/Tortola",
-				"America/Vancouver",
-				"America/Virgin",
-				"America/Whitehorse",
-				"America/Winnipeg",
-				"America/Yakutat",
-				"America/Yellowknife",
-				"Antarctica/Casey",
-				"Antarctica/Davis",
-				"Antarctica/DumontDUrville",
-				"Antarctica/Macquarie",
-				"Antarctica/Mawson",
-				"Antarctica/McMurdo",
-				"Antarctica/Palmer",
-				"Antarctica/Rothera",
-				"Antarctica/South_Pole",
-				"Antarctica/Syowa",
-				"Antarctica/Vostok",
-				"Arctic/Longyearbyen",
-				"Asia/Aden",
-				"Asia/Almaty",
-				"Asia/Amman",
-				"Asia/Anadyr",
-				"Asia/Aqtau",
-				"Asia/Aqtobe",
-				"Asia/Ashgabat",
-				"Asia/Ashkhabad",
-				"Asia/Baghdad",
-				"Asia/Bahrain",
-				"Asia/Baku",
-				"Asia/Bangkok",
-				"Asia/Beirut",
-				"Asia/Bishkek",
-				"Asia/Brunei",
-				"Asia/Calcutta",
-				"Asia/Choibalsan",
-				"Asia/Chongqing",
-				"Asia/Chungking",
-				"Asia/Colombo",
-				"Asia/Dacca",
-				"Asia/Damascus",
-				"Asia/Dhaka",
-				"Asia/Dili",
-				"Asia/Dubai",
-				"Asia/Dushanbe",
-				"Asia/Gaza",
-				"Asia/Harbin",
-				"Asia/Hebron",
-				"Asia/Ho_Chi_Minh",
-				"Asia/Hong_Kong",
-				"Asia/Hovd",
-				"Asia/Irkutsk",
-				"Asia/Istanbul",
-				"Asia/Jakarta",
-				"Asia/Jayapura",
-				"Asia/Jerusalem",
-				"Asia/Kabul",
-				"Asia/Kamchatka",
-				"Asia/Karachi",
-				"Asia/Kashgar",
-				"Asia/Kathmandu",
-				"Asia/Katmandu",
-				"Asia/Kolkata",
-				"Asia/Krasnoyarsk",
-				"Asia/Kuala_Lumpur",
-				"Asia/Kuching",
-				"Asia/Kuwait",
-				"Asia/Macao",
-				"Asia/Macau",
-				"Asia/Magadan",
-				"Asia/Makassar",
-				"Asia/Manila",
-				"Asia/Muscat",
-				"Asia/Nicosia",
-				"Asia/Novokuznetsk",
-				"Asia/Novosibirsk",
-				"Asia/Omsk",
-				"Asia/Oral",
-				"Asia/Phnom_Penh",
-				"Asia/Pontianak",
-				"Asia/Pyongyang",
-				"Asia/Qatar",
-				"Asia/Qyzylorda",
-				"Asia/Rangoon",
-				"Asia/Riyadh",
-				"Asia/Saigon",
-				"Asia/Sakhalin",
-				"Asia/Samarkand",
-				"Asia/Seoul",
-				"Asia/Shanghai",
-				"Asia/Singapore",
-				"Asia/Taipei",
-				"Asia/Tashkent",
-				"Asia/Tbilisi",
-				"Asia/Tehran",
-				"Asia/Tel_Aviv",
-				"Asia/Thimbu",
-				"Asia/Thimphu",
-				"Asia/Tokyo",
-				"Asia/Ujung_Pandang",
-				"Asia/Ulaanbaatar",
-				"Asia/Ulan_Bator",
-				"Asia/Urumqi",
-				"Asia/Vientiane",
-				"Asia/Vladivostok",
-				"Asia/Yakutsk",
-				"Asia/Yekaterinburg",
-				"Asia/Yerevan",
-				"Atlantic/Azores",
-				"Atlantic/Bermuda",
-				"Atlantic/Canary",
-				"Atlantic/Cape_Verde",
-				"Atlantic/Faeroe",
-				"Atlantic/Faroe",
-				"Atlantic/Jan_Mayen",
-				"Atlantic/Madeira",
-				"Atlantic/Reykjavik",
-				"Atlantic/South_Georgia",
-				"Atlantic/St_Helena",
-				"Atlantic/Stanley",
-				"Australia/ACT",
-				"Australia/Adelaide",
-				"Australia/Brisbane",
-				"Australia/Broken_Hill",
-				"Australia/Canberra",
-				"Australia/Currie",
-				"Australia/Darwin",
-				"Australia/Eucla",
-				"Australia/Hobart",
-				"Australia/LHI",
-				"Australia/Lindeman",
-				"Australia/Lord_Howe",
-				"Australia/Melbourne",
-				"Australia/North",
-				"Australia/NSW",
-				"Australia/Perth",
-				"Australia/Queensland",
-				"Australia/South",
-				"Australia/Sydney",
-				"Australia/Tasmania",
-				"Australia/Victoria",
-				"Australia/West",
-				"Australia/Yancowinna",
-				"Brazil/Acre",
-				"Brazil/DeNoronha",
-				"Brazil/East",
-				"Brazil/West",
-				"Canada/Atlantic",
-				"Canada/Central",
-				"Canada/Eastern",
-				"Canada/East-Saskatchewan",
-				"Canada/Mountain",
-				"Canada/Newfoundland",
-				"Canada/Pacific",
-				"Canada/Saskatchewan",
-				"Canada/Yukon",
-				"CET",
-				"Chile/Continental",
-				"Chile/EasterIsland",
-				"CST6CDT",
-				"Cuba",
-				"EET",
-				"Egypt",
-				"Eire",
-				"EST",
-				"EST5EDT",
-				"Etc/GMT",
-				"Etc/GMT+0",
-				"Etc/UCT",
-				"Etc/Universal",
-				"Etc/UTC",
-				"Etc/Zulu",
-				"Europe/Amsterdam",
-				"Europe/Andorra",
-				"Europe/Athens",
-				"Europe/Belfast",
-				"Europe/Belgrade",
-				"Europe/Berlin",
-				"Europe/Bratislava",
-				"Europe/Brussels",
-				"Europe/Bucharest",
-				"Europe/Budapest",
-				"Europe/Chisinau",
-				"Europe/Copenhagen",
-				"Europe/Dublin",
-				"Europe/Gibraltar",
-				"Europe/Guernsey",
-				"Europe/Helsinki",
-				"Europe/Isle_of_Man",
-				"Europe/Istanbul",
-				"Europe/Jersey",
-				"Europe/Kaliningrad",
-				"Europe/Kiev",
-				"Europe/Lisbon",
-				"Europe/Ljubljana",
-				"Europe/London",
-				"Europe/Luxembourg",
-				"Europe/Madrid",
-				"Europe/Malta",
-				"Europe/Mariehamn",
-				"Europe/Minsk",
-				"Europe/Monaco",
-				"Europe/Moscow",
-				"Europe/Nicosia",
-				"Europe/Oslo",
-				"Europe/Paris",
-				"Europe/Podgorica",
-				"Europe/Prague",
-				"Europe/Riga",
-				"Europe/Rome",
-				"Europe/Samara",
-				"Europe/San_Marino",
-				"Europe/Sarajevo",
-				"Europe/Simferopol",
-				"Europe/Skopje",
-				"Europe/Sofia",
-				"Europe/Stockholm",
-				"Europe/Tallinn",
-				"Europe/Tirane",
-				"Europe/Tiraspol",
-				"Europe/Uzhgorod",
-				"Europe/Vaduz",
-				"Europe/Vatican",
-				"Europe/Vienna",
-				"Europe/Vilnius",
-				"Europe/Volgograd",
-				"Europe/Warsaw",
-				"Europe/Zagreb",
-				"Europe/Zaporozhye",
-				"Europe/Zurich",
-				"GB",
-				"GB-Eire",
-				"GMT",
-				"GMT+0",
-				"GMT0",
-				"GMT-0",
-				"Greenwich",
-				"Hongkong",
-				"HST",
-				"Iceland",
-				"Indian/Antananarivo",
-				"Indian/Chagos",
-				"Indian/Christmas",
-				"Indian/Cocos",
-				"Indian/Comoro",
-				"Indian/Kerguelen",
-				"Indian/Mahe",
-				"Indian/Maldives",
-				"Indian/Mauritius",
-				"Indian/Mayotte",
-				"Indian/Reunion",
-				"Iran",
-				"Israel",
-				"Jamaica",
-				"Japan",
-				"JST-9",
-				"Kwajalein",
-				"Libya",
-				"MET",
-				"Mexico/BajaNorte",
-				"Mexico/BajaSur",
-				"Mexico/General",
-				"MST",
-				"MST7MDT",
-				"Navajo",
-				"NZ",
-				"NZ-CHAT",
-				"Pacific/Apia",
-				"Pacific/Auckland",
-				"Pacific/Chatham",
-				"Pacific/Chuuk",
-				"Pacific/Easter",
-				"Pacific/Efate",
-				"Pacific/Enderbury",
-				"Pacific/Fakaofo",
-				"Pacific/Fiji",
-				"Pacific/Funafuti",
-				"Pacific/Galapagos",
-				"Pacific/Gambier",
-				"Pacific/Guadalcanal",
-				"Pacific/Guam",
-				"Pacific/Honolulu",
-				"Pacific/Johnston",
-				"Pacific/Kiritimati",
-				"Pacific/Kosrae",
-				"Pacific/Kwajalein",
-				"Pacific/Majuro",
-				"Pacific/Marquesas",
-				"Pacific/Midway",
-				"Pacific/Nauru",
-				"Pacific/Niue",
-				"Pacific/Norfolk",
-				"Pacific/Noumea",
-				"Pacific/Pago_Pago",
-				"Pacific/Palau",
-				"Pacific/Pitcairn",
-				"Pacific/Pohnpei",
-				"Pacific/Ponape",
-				"Pacific/Port_Moresby",
-				"Pacific/Rarotonga",
-				"Pacific/Saipan",
-				"Pacific/Samoa",
-				"Pacific/Tahiti",
-				"Pacific/Tarawa",
-				"Pacific/Tongatapu",
-				"Pacific/Truk",
-				"Pacific/Wake",
-				"Pacific/Wallis",
-				"Pacific/Yap",
-				"Poland",
-				"Portugal",
-				"PRC",
-				"PST8PDT",
-				"ROC",
-				"ROK",
-				"Singapore",
-				"Turkey",
-				"UCT",
-				"Universal",
-				"US/Alaska",
-				"US/Aleutian",
-				"US/Arizona",
-				"US/Central",
-				"US/Eastern",
-				"US/East-Indiana",
-				"US/Hawaii",
-				"US/Indiana-Starke",
-				"US/Michigan",
-				"US/Mountain",
-				"US/Pacific",
-				"US/Pacific-New",
-				"US/Samoa",
-				"UTC",
-				"WET",
-				"W-SU",
-				"Zulu"
-		));
-
 		return timezones;
 
 	}
@@ -1620,76 +1203,11 @@ public class Utils {
 	 */
 	public static String translateIdp(String name) {
 
-		if (!IDP_NAMES.isEmpty()) {
-
-			if (IDP_NAMES.get(name) != null) {
-				return IDP_NAMES.get(name);
-			} else {
-				return name;
-			}
-
-		} else {
-
-			IDP_NAMES.put("https://idp.upce.cz/idp/shibboleth", "University in Pardubice");
-			IDP_NAMES.put("https://idp.slu.cz/idp/shibboleth", "University in Opava");
-			IDP_NAMES.put("https://login.feld.cvut.cz/idp/shibboleth", "Faculty of Electrical Engineering, Czech Technical University In Prague");
-			IDP_NAMES.put("https://www.vutbr.cz/SSO/saml2/idp", "Brno University of Technology");
-			IDP_NAMES.put("https://shibboleth.nkp.cz/idp/shibboleth", "The National Library of the Czech Republic");
-			IDP_NAMES.put("https://idp2.civ.cvut.cz/idp/shibboleth", "Czech Technical University In Prague");
-			IDP_NAMES.put("https://shibbo.tul.cz/idp/shibboleth", "Technical University of Liberec");
-			IDP_NAMES.put("https://idp.mendelu.cz/idp/shibboleth", "Mendel University in Brno");
-			IDP_NAMES.put("https://cas.cuni.cz/idp/shibboleth", "Charles University in Prague");
-			IDP_NAMES.put("https://wsso.vscht.cz/idp/shibboleth", "Institute of Chemical Technology Prague");
-			IDP_NAMES.put("https://idp.vsb.cz/idp/shibboleth", "VSB – Technical University of Ostrava");
-			IDP_NAMES.put("https://whoami.cesnet.cz/idp/shibboleth", "CESNET, z.s.p.o.");
-			IDP_NAMES.put("https://helium.jcu.cz/idp/shibboleth", "University of South Bohemia");
-			IDP_NAMES.put("https://idp.ujep.cz/idp/shibboleth", "Jan Evangelista Purkyne University in Usti nad Labem");
-			IDP_NAMES.put("https://idp.amu.cz/idp/shibboleth", "Academy of Performing Arts in Prague");
-			IDP_NAMES.put("https://idp.lib.cas.cz/idp/shibboleth", "Academy of Sciences Library");
-			IDP_NAMES.put("https://shibboleth.mzk.cz/simplesaml/metadata.xml", "Moravian  Library");
-			IDP_NAMES.put("https://idp2.ics.muni.cz/idp/shibboleth", "Masaryk University");
-			IDP_NAMES.put("https://idp.upol.cz/idp/shibboleth", "Palacky University, Olomouc");
-			IDP_NAMES.put("https://idp.fnplzen.cz/idp/shibboleth", "FN Plzen");
-			IDP_NAMES.put("https://id.vse.cz/idp/shibboleth", "University of Economics, Prague");
-			IDP_NAMES.put("https://shib.zcu.cz/idp/shibboleth", "University of West Bohemia");
-			IDP_NAMES.put("https://idptoo.osu.cz/simplesaml/saml2/idp/metadata.php", "University of Ostrava");
-			IDP_NAMES.put("https://login.ics.muni.cz/idp/shibboleth", "MetaCentrum");
-			IDP_NAMES.put("https://idp.hostel.eduid.cz/idp/shibboleth", "eduID.cz Hostel");
-			IDP_NAMES.put("https://shibboleth.techlib.cz/idp/shibboleth", "National Library of Technology");
-			IDP_NAMES.put("https://eduid.jamu.cz/idp/shibboleth", "Janacek Academy of Music and Performing Arts in Brno");
-			IDP_NAMES.put("https://marisa.uochb.cas.cz/simplesaml/saml2/idp/metadata.php", "Institute of Organic Chemistry and Biochemistry AS CR");
-			IDP_NAMES.put("https://shibboleth.utb.cz/idp/shibboleth", "Tomas Bata University in Zlin");
-			IDP_NAMES.put("https://www.egi.eu/idp/shibboleth", "EGI");
-			IDP_NAMES.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
-			IDP_NAMES.put("https://idp.fzu.cas.cz/idp/shibboleth", "Institute of Physics AS CR");
-
-			// Handle social identities
-
-			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth", "Social");
-			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:google", "Google");
-			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:facebook", "Facebook");
-			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:linkedin", "LinkedIn");
-			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:mojeid", "MojeID");
-			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:orcid", "OrcID");
-			IDP_NAMES.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:github", "GitHub");
-
-			IDP_NAMES.put("@google.extidp.cesnet.cz", "Google");
-			IDP_NAMES.put("@facebook.extidp.cesnet.cz", "Facebook");
-			IDP_NAMES.put("@mojeid.extidp.cesnet.cz", "MojeID");
-			IDP_NAMES.put("@linkedin.extidp.cesnet.cz", "LinkedIn");
-			IDP_NAMES.put("@twitter.extidp.cesnet.cz", "Twitter");
-			IDP_NAMES.put("@seznam.extidp.cesnet.cz", "Seznam");
-			IDP_NAMES.put("@elixir-europe.org", "Elixir Europe");
-			IDP_NAMES.put("@github.extidp.cesnet.cz", "GitHub");
-			IDP_NAMES.put("@orcid.extidp.cesnet.cz", "OrcID");
-
-			if (IDP_NAMES.get(name) != null) {
-				return IDP_NAMES.get(name);
-			} else {
-				return name;
-			}
-
+		if (organizationsTranslation.get(name) != null) {
+			return organizationsTranslation.get(name);
 		}
+
+		return name;
 
 	}
 
@@ -1701,30 +1219,11 @@ public class Utils {
 	 */
 	public static String translateKerberos(String name) {
 
-		if (!KRB_NAMES.isEmpty()) {
-
-			if (KRB_NAMES.get(name) != null) {
-				return KRB_NAMES.get(name);
-			} else {
-				return name;
-			}
-
-		} else {
-
-			KRB_NAMES.put("META", "MetaCentrum");
-			KRB_NAMES.put("EINFRA", "CESNET eInfrastructure");
-			KRB_NAMES.put("SITOLA.FI.MUNI.CZ", "Sitola");
-			KRB_NAMES.put("ICS.MUNI.CZ", "Masaryk University");
-			KRB_NAMES.put("SAGRID", "SAGrid");
-
-			if (KRB_NAMES.get(name) != null) {
-				return KRB_NAMES.get(name);
-			} else {
-				return name;
-			}
-
-
+		if (organizationsTranslation.get(name) != null) {
+			return organizationsTranslation.get(name);
 		}
+
+		return name;
 
 	}
 

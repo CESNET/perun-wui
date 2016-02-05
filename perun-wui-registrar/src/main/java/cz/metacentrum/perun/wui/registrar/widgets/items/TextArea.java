@@ -69,7 +69,7 @@ public class TextArea extends PerunFormItemEditable {
 	protected Widget initWidgetOnlyPreview() {
 		widget = new Paragraph();
 		getPreview().addStyleName("form-control");
-		getPreview().setSize("auto", "102px");
+		getPreview().setSize("auto", "auto");
 		return widget;
 	}
 

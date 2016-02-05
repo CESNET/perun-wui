@@ -13,6 +13,7 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -25,7 +26,7 @@ import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Identity;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.client.ExceptionResolver;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.pages.steps.GroupInitStep;
@@ -68,7 +69,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	private FormView formView = this;
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	private Vo vo;
 	private Group group;
@@ -97,7 +98,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		return form;
 	}
 
-	public RegistrarTranslation getTranslation() {
+	public PerunRegistrarTranslation getTranslation() {
 		return translation;
 	}
 
@@ -407,7 +408,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 									// FINAL URL must logout from SP, login to SP using specified IdP, redirect to IC and after that return to application form
 									String token = ((BasicOverlayObject) jso).getString();
 									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true)+URL.encodeQueryString("&token="+token);
-									String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + source.getName()+"&target="+consolidatorUrl);
+									String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + source.getName()+"&target="+consolidatorUrl);
 									Window.Location.replace(redirectUrl);
 								}
 

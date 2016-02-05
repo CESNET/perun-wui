@@ -23,13 +23,13 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("You are not authorized to view requested content. Please check your URL.")
 	public String notAuthorizedPageText();
 
-	@DefaultMessage("You have been logged out.")
+	@DefaultMessage("You have been signed out.")
 	public String logoutPageTitle();
 
 	@DefaultMessage("Please close the browser window.")
 	public String logoutPageSubTitle();
 
-	@DefaultMessage("Log me back")
+	@DefaultMessage("Sign me back")
 	public String logoutPageButton();
 
 	@DefaultMessage("Form has no form items.")
@@ -141,7 +141,7 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Continue")
 	public String continue_();  //continue is a keyword
 
-	@DefaultMessage("Logout")
+	@DefaultMessage("Sign out")
 	public String logout();
 
 	/* ------------ LANGUAGE SWITCHING ---------------- */
@@ -154,13 +154,16 @@ public interface PerunTranslation extends Messages {
 
 	/* ------------ FOOTER ---------------------------- */
 
-	@DefaultMessage("<strong>Support at: <a href=\"mailto:{0}\">{0}</a></strong>")
+	@DefaultMessage("<i class=\"fa fa-support\">&nbsp;</i>Support at <a href=\"mailto:{0}\">{0}</a>")
 	public String supportAt(String email);
 
-	@DefaultMessage("<strong>Powered by <a href=\'https://perun.cesnet.cz/web/\'>Perun</a> &copy; {0} <a href=\'https://www.cesnet.cz/\'>CESNET</a> &amp; <a href=\'https://www.cerit-sc.cz/\'>CERIT-SC</a></strong>")
+	@DefaultMessage("<i class=\"fa fa-support\">&nbsp;</i>Support at&nbsp;")
+	public String supportAtMails();
+
+	@DefaultMessage("Powered by <a href=\'https://perun.cesnet.cz/web/\'>Perun</a> &copy; {0} <a href=\'https://www.cesnet.cz/\'>CESNET</a> &amp; <a href=\'https://www.cerit-sc.cz/\'>CERIT-SC</a>")
 	public String credits(int year);
 
-	@DefaultMessage("<strong>Version: {0}</strong>")
+	@DefaultMessage("Version: {0}")
 	public String version(String version);
 
 

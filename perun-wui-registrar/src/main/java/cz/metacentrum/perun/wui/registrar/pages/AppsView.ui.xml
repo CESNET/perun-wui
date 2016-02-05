@@ -5,7 +5,7 @@
              xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
 		>
 
-	<ui:with field="res" type="cz.metacentrum.perun.wui.registrar.client.resources.PerunWuiRegistrarResources"/>
+	<ui:with field="res" type="cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources"/>
 
 	<ui:style>
 	</ui:style>

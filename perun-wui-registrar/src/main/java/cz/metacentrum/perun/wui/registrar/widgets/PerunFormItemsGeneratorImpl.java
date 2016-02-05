@@ -1,8 +1,9 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
 import com.google.gwt.core.client.GWT;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Checkbox;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Combobox;
 import cz.metacentrum.perun.wui.registrar.widgets.items.FromFederation;
@@ -19,6 +20,8 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.Timezone;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Undefined;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Username;
 import cz.metacentrum.perun.wui.registrar.widgets.items.ValidatedEmail;
+import org.gwtbootstrap3.client.ui.Icon;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
 
 import java.util.ArrayList;
@@ -30,12 +33,11 @@ import java.util.List;
 public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 
 	private final PerunForm form;
-	private RegistrarTranslation trans = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation trans = GWT.create(PerunRegistrarTranslation.class);
 
 	public PerunFormItemsGeneratorImpl(PerunForm form) {
 		this.form = form;
 	}
-
 
 	@Override
 	public List<PerunFormItem> generatePerunFormItems(List<ApplicationFormItemData> items) {
@@ -56,10 +58,8 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 
 	private PerunFormItem generatePerunFormItem(ApplicationFormItemData data) {
 
-		String lang = form.getLang();
+		String lang = PerunConfiguration.getCurrentLocaleName();
 		boolean onlyPreview = form.isOnlyPreview();
-
-
 
 		switch (data.getFormItem().getType()) {
 			case HEADING:
@@ -95,7 +95,7 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 				if (!form.isSeeHiddenItems()) {
 					hidden.setVisible(false);
 				} else {
-					hidden.setStatus(trans.federation(), ValidationState.NONE);
+					hidden.setStatus(new Icon(IconType.EYE_SLASH) + "  " + trans.federation(), ValidationState.NONE);
 				}
 				return hidden;
 			case HTML_COMMENT:

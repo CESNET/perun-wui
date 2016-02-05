@@ -2,10 +2,10 @@
 
 <!--
 	<public path="resource">
-		<include name="css/PerunWuiAdmin.gss"/>
+		<include name="css/PerunAdmin.gss"/>
 	</public>
 
-	<stylesheet src="css/PerunWuiAdmin.gss"/>
+	<stylesheet src="css/PerunAdmin.gss"/>
 -->
 
 </module>

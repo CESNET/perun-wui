@@ -292,4 +292,43 @@ public class RegistrarManager {
 
 	}
 
+	/**
+	 * Verify Google ReCaptcha challenge-response
+	 *
+	 * @param challenge ReCaptcha challenge value
+	 * @param response Users response to ReCaptcha challenge
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request verifyCaptcha(String challenge, String response, JsonEvents events) {
+
+		JsonClient client = new JsonClient(true, events);
+		if (challenge != null) client.put("challenge", challenge);
+		if (response != null) client.put("response", response);
+		return client.call(REGISTRAR_MANAGER + "verifyCaptcha");
+
+	}
+
+	/**
+	 * Send registrar notification message. Type and related
+	 *
+	 * @param applicationId Id of application send message to
+	 * @param mailType Type of mail notification
+	 * @param reason Optional reason of action provided by VO/Group manager
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	// FIXME - String MailType to ENUM
+	public static Request sendMessage(int applicationId, String mailType, String reason, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (applicationId > 0) client.put("appId", applicationId);
+		if (mailType != null) client.put("mailType", mailType);
+		if (reason != null) client.put("reason", reason);
+		return client.call(REGISTRAR_MANAGER + "sendMessage");
+
+	}
+
 }

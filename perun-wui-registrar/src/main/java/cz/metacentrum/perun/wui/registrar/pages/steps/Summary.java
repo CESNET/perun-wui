@@ -1,13 +1,12 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
@@ -31,7 +30,7 @@ public class Summary implements Step {
 	private Application.ApplicationType voApplication;
 	private Application.ApplicationType groupApplication;
 	private FormView formView;
-	private RegistrarTranslation translation;
+	private PerunRegistrarTranslation translation;
 
 	public Summary(FormView formView, Application.ApplicationType voApplication, Application.ApplicationType groupApplication) {
 		this.formView = formView;

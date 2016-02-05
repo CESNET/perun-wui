@@ -17,14 +17,19 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Text;
+import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
+import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -106,9 +111,17 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 	@UiField
 	PerunLoader loader;
 
+	@UiField
+	PerunButton resendNotification;
+
+	@UiField
+	Paragraph mailVerificationText;
+
+	@UiField Alert mailVerificationAlert;
+
 	private Application app;
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	@Inject
 	public AppDetailView(AppDetailViewUiBinder binder) {
@@ -193,6 +206,50 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 						}
 					}
 				});
+
+				// find unverified mail
+				boolean found = false;
+				for (final ApplicationFormItemData item : list) {
+					if (item.getFormItem() != null &&
+							item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL) &&
+							!item.getAssuranceLevel().equals("1")) {
+						found = true;
+
+						mailVerificationText.setHTML(translation.mailVerificationText(item.getValue()));
+						resendNotification.setText(translation.reSendMailVerificationButton());
+						resendNotification.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+
+								RegistrarManager.sendMessage(app.getId(), "MAIL_VALIDATION", null, new JsonEvents() {
+									@Override
+									public void onFinished(JavaScriptObject result) {
+										resendNotification.setProcessing(false);
+										Notify.notify(translation.mailVerificationRequestSent(item.getValue()), NotifyType.SUCCESS);
+									}
+
+									@Override
+									public void onError(PerunException error) {
+										resendNotification.setProcessing(false);
+										NotifySettings settings = NotifySettings.newSettings();
+										settings.setDelay(0);
+										settings.setType(NotifyType.DANGER);
+										Notify.notify(error.getMessage(), settings);
+									}
+
+									@Override
+									public void onLoadingStart() {
+										resendNotification.setProcessing(true);
+									}
+								});
+
+							}
+						});
+					}
+				}
+
+				mailVerificationAlert.setVisible(found);
+
 				form.setFormItems(list);
 			}
 

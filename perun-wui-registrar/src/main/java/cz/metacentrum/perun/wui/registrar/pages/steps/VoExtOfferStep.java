@@ -3,7 +3,7 @@ package cz.metacentrum.perun.wui.registrar.pages.steps;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import org.gwtbootstrap3.client.ui.Button;
@@ -28,7 +28,7 @@ public class VoExtOfferStep extends OfferStep {
 	@Override
 	public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
 
-		RegistrarTranslation translation = formView.getTranslation();
+		PerunRegistrarTranslation translation = formView.getTranslation();
 
 		final Modal modal = new Modal();
 		modal.setTitle(translation.offerMembershipExtensionTitle());

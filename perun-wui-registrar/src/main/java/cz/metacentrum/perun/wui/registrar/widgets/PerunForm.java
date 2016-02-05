@@ -5,6 +5,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.Events;
@@ -374,17 +375,4 @@ public class PerunForm extends FieldSet {
 
 	}
 
-	/**
-	 * @return code of current language.
-     */
-	public String getLang() {
-		// always EN if no native language is defined in Perun.
-		if (Utils.getNativeLanguage() == null) {
-			return "en";
-		}
-		if (LocaleInfo.getCurrentLocale().getLocaleName().equals("default")) {
-			return "en";
-		}
-		return  LocaleInfo.getCurrentLocale().getLocaleName();
-	}
 }

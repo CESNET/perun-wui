@@ -15,7 +15,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.ApplicationColumnProvider;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import org.gwtbootstrap3.client.ui.html.Text;
@@ -36,7 +36,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 	@UiField
 	Text text;
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	@Inject
 	public AppsView(AppsViewUiBinder binder) {

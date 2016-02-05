@@ -9,13 +9,17 @@ This project aims to deliver rich user graphical interface for Perun components.
 * [GWT Platform (GWTP)](https://www.arcbees.com/#!/products/gwtp)
 * [GwtBootstrap3](https://github.com/gwtbootstrap3/gwtbootstrap3)
 
-See http://perun.cesnet.cz/web/ for more details about the base project.
+See https://perun.cesnet.cz/ for more details about the base project.
 
-### Perun licence ###
+### Related projects ###
 
-> Where applicable it's FreeBSD license, yet we use components under different licenses, e.g. Apache, GNU, CC.
+* [Perun](https://github.com/CESNET/perun) - main Perun repository
+* [Perun services](https://github.com/CESNET/perun-services) - connectors Perun uses to manage services
+* [Google Group connector](https://github.com/CESNET/google-group-connector) - allow provisioning of Google groups on your domain
 
-Copyright (c) 2014, CESNET, CERIT-SC. All rights reserved.
+### License ###
+
+&copy; 2010-2016 [CESNET](https://www.cesnet.cz/?lang=en) and [CERIT-SC](https://www.cerit-sc.cz/en/index.html), all rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

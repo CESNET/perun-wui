@@ -15,6 +15,7 @@ public class LeftMenuPresenter extends PresenterWidget<LeftMenuPresenter.MyView>
 	private VoSelectPresenter voSelectPresenter;
 
 	public interface MyView extends View, HasUiHandlers<LeftMenuUiHandlers> {
+		void setActiveMenuItem(String token);
 	}
 
 	@Inject
@@ -27,6 +28,10 @@ public class LeftMenuPresenter extends PresenterWidget<LeftMenuPresenter.MyView>
 	@Override
 	public void selectVo() {
 		voSelectPresenter.getView().show();
+	}
+
+	public void setActiveMenuItem(String token) {
+		getView().setActiveMenuItem(token);
 	}
 
 }

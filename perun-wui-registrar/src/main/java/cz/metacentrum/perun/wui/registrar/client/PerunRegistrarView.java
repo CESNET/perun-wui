@@ -2,36 +2,34 @@ package cz.metacentrum.perun.wui.registrar.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.http.client.UrlBuilder;
-import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
-import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
-import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.client.utils.Utils;
-import org.gwtbootstrap3.client.ui.AnchorButton;
+import cz.metacentrum.perun.wui.client.utils.UiUtils;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
-import org.gwtbootstrap3.client.ui.constants.IconPosition;
-import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.NavbarNav;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
-import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 
 /**
  * Main View for Perun WUI Registrar.
@@ -45,7 +43,10 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	@UiField
 	Div pageContent;
 
-	private RegistrarTranslation translation = GWT.create(RegistrarTranslation.class);
+	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
+
+	@UiField
+	NavbarNav topMenu;
 
 	@UiField
 	NavbarCollapse collapse;
@@ -54,44 +55,18 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	FocusPanel collapseClickHandler;
 
 	@UiField
-	AnchorButton language;
-
-	@UiField
-	AnchorListItem czech;
-
-	@UiField
-	AnchorListItem english;
-
-	@UiField
 	AnchorListItem application;
 
 	@UiField
 	AnchorListItem myApplications;
 
 	@UiField
-	AnchorListItem help;
-
-	@UiField
 	AnchorListItem logout;
 
-	@UiField
-	static Span footerLeft;
+	@UiField Div logoWrapper;
 
-	@UiField
-	static Span footerRight;
-
-	@UiField
-	static NavbarHeader navbarHeader;
-
-	@UiHandler(value="czech")
-	public void czechClick(ClickEvent event) {
-		setLocale(Utils.getNativeLanguage());
-	}
-
-	@UiHandler(value="english")
-	public void englishClick(ClickEvent event) {
-		setLocale(Utils.ENGLISH_LANGUAGE);
-	}
+	@UiField static NavbarHeader navbarHeader;
+	@UiField Span brand;
 
 	@UiHandler(value="application")
 	public void applicationClick(ClickEvent event) {
@@ -103,31 +78,59 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		History.newItem("submitted");
 	}
 
-	@UiHandler(value="help")
-	public void helpClick(ClickEvent event) {
-		History.newItem("help");
-	}
-
 	@UiHandler(value="logout")
 	public void logoutClick(ClickEvent event) {
 		History.newItem("logout");
 	}
 
-
 	@Override
 	public void onLoadingStartFooter() {
-		footerLeft.setText(translation.loading());
-		footerRight.setHTML(translation.credits(JsUtils.getCurrentYear()) + " | " +  translation.version(PerunWebConstants.INSTANCE.guiVersion()));
+
+		Element elem = DOM.getElementById("perun-help");
+		if (elem != null) {
+			elem.setInnerHTML(" "+translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+		}
+		Element elem2 = DOM.getElementById("perun-credits");
+		if (elem2 != null) {
+			elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
+		}
+
+		//translation.version(PerunWebConstants.INSTANCE.guiVersion();
+
 	}
 
 	@Override
 	public void onFinishedFooter(List<String> contactEmail) {
 		if (contactEmail == null || contactEmail.isEmpty()) {
-			footerLeft.setHTML(translation.supportAt("perun@cesnet.cz"));
-			return;
+
+			Element elem = DOM.getElementById("perun-help");
+			if (elem != null) {
+				elem.setInnerHTML(" "+translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+			}
+			Element elem2 = DOM.getElementById("perun-credits");
+			if (elem2 != null) {
+				elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
+			}
+
+		} else {
+
+			Element elem = DOM.getElementById("perun-help");
+			if (elem != null) {
+				elem.setInnerHTML(translation.supportAtMails());
+				for (String mail : contactEmail) {
+					Anchor mailto = new Anchor();
+					mailto.setText(mail+" ");
+					mailto.setHref("mailto:"+mail);
+					elem.appendChild(mailto.getElement());
+				}
+			}
+
+			Element elem2 = DOM.getElementById("perun-credits");
+			if (elem2 != null) {
+				elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
+			}
+
 		}
-		String mails = contactEmail.toString();
-		footerLeft.setHTML(translation.supportAt(mails.substring(1, mails.length()-1)));
 	}
 
 	@Override
@@ -135,65 +138,42 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		collapse.hide();
 	}
 
-	/**
-	 * Update localization of whole GUI (reset the app)
-	 *
-	 * @param locale Locale to set. Structure is "code":"val", "nativeName":"val", "englishName":"val"
-	 */
-	public void setLocale(Map<String, String> locale) {
-		if (locale == null) {
-			GWT.log("WARN: Locale is null");
-			return;
-		}
-		UrlBuilder builder = Window.Location.createUrlBuilder().setParameter("locale", locale.get("code"));
-		Window.Location.replace(builder.buildString());
-	}
-
 	@Inject
 	PerunRegistrarView(final PerunRegistrarViewUiBinder binder) {
 
 		initWidget(binder.createAndBindUi(this));
+		brand.setText(translation.registrarAppName());
 
 		// put logo
-		Image logo = Utils.perunInstanceLogo();
+		Image logo = PerunConfiguration.getBrandLogo();
 		logo.setWidth("auto");
 		logo.setHeight("50px");
-		navbarHeader.insert(logo, 0);
+		//logo.setPull(Pull.LEFT);
+		logoWrapper.add(logo);
 
-		// FIXME - temporary disabled
-		help.setVisible(false);
+		UiUtils.addLanguageSwitcher(topMenu);
 
 		// init buttons
 		application.setText(translation.application());
 		myApplications.setText(translation.myApplications());
-		help.setText(translation.help());
-		language.setText(translation.language());
 		logout.setText(translation.logout());
 
-		if (Utils.getNativeLanguage() != null) {
+	}
 
-			if ("default".equals(LocaleInfo.getCurrentLocale().getLocaleName()) ||
-					"en".equalsIgnoreCase(LocaleInfo.getCurrentLocale().getLocaleName())) {
-				// use english name of native language
-				czech.setText(Utils.getNativeLanguage().get("englishName"));
-				english.setIcon(IconType.CHECK);
-				english.setIconPosition(IconPosition.RIGHT);
-				czech.setIcon(null);
-			} else {
-				// use native name of native language
-				czech.setText(Utils.getNativeLanguage().get("nativeName"));
-				czech.setIcon(IconType.CHECK);
-				czech.setIconPosition(IconPosition.RIGHT);
-				english.setIcon(null);
+	@Override
+	public void setActiveMenuItem(String anchor) {
+
+		int count = topMenu.getWidgetCount();
+		for (int i=0; i < count; i++) {
+			if (topMenu.getWidget(i) instanceof AnchorListItem) {
+				AnchorListItem item = (AnchorListItem)topMenu.getWidget(i);
+				if (Objects.equals(anchor, item.getTargetHistoryToken())) {
+					item.setActive(true);
+				} else {
+					item.setActive(false);
+				}
 			}
-			english.setText(translation.english());
-
-		} else {
-			// no language switching
-			language.setVisible(false);
 		}
-
-		english.setText(translation.english());
 
 	}
 

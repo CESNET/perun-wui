@@ -396,7 +396,7 @@ public class JsonClient {
 							error.setMessage("Can't contact remote server, connection was lost.");
 
 							// force reload page if it's first GUI call, otherwise keep it to alert box
-							if (runningRequests.get(requestUrl).getManager().equals("authzResolver") &&
+							if (runningRequests.get(requestUrl) != null && runningRequests.get(requestUrl).getManager().equals("authzResolver") &&
 									runningRequests.get(requestUrl).getMethod().equals("getPerunPrincipal")) {
 								Window.Location.reload();
 							}

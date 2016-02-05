@@ -9,10 +9,13 @@
 		.bottom { border-radius: 0px !important; }
 		.head img { padding-left: 15px; }
 		.minWidthTop { min-width: 1200px; margin-bottom: 0px !important; }
+		.brand { position: absolute; left: 240px; }
 	</ui:style>
 
 	<b:Navbar ui:field="navbar" addStyleNames="{style.bottom} {style.minWidthTop}">
 		<b:NavbarHeader ui:field="navbarHeader" addStyleNames="{style.head}">
+			<b.html:Div ui:field="logoWrapper" pull="LEFT"/>
+			<b.html:Span ui:field="brand" addStyleNames="navbar-brand {style.brand}"/>
 			<b:NavbarCollapseButton dataTarget="#navbar-collapse" />
 		</b:NavbarHeader>
 

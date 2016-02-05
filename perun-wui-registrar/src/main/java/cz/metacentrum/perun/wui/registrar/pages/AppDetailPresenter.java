@@ -7,6 +7,7 @@ import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
 import com.gwtplatform.mvp.client.annotations.NameToken;
 import com.gwtplatform.mvp.client.annotations.ProxyCodeSplit;
+import com.gwtplatform.mvp.client.annotations.ProxyStandard;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
@@ -16,7 +17,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
-import cz.metacentrum.perun.wui.registrar.client.RegistrarPlaceTokens;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
 
 /**
  * Presenter for displaying registration detail.
@@ -34,8 +35,8 @@ public class AppDetailPresenter extends Presenter<AppDetailPresenter.MyView, App
 		void onErrorApplication(PerunException error, JsonEvents retry);
 	}
 
-	@NameToken(RegistrarPlaceTokens.APP_DETAIL)
-	@ProxyCodeSplit
+	@NameToken(PerunRegistrarPlaceTokens.APP_DETAIL)
+	@ProxyStandard
 	public interface MyProxy extends ProxyPlace<AppDetailPresenter> {
 	}
 

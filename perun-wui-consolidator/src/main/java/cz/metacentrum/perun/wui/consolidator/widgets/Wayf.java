@@ -2,30 +2,43 @@ package cz.metacentrum.perun.wui.consolidator.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
-import com.google.gwt.http.client.*;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
+import com.google.gwt.http.client.Request;
+import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestCallback;
+import com.google.gwt.http.client.RequestException;
+import com.google.gwt.http.client.Response;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.Widget;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.consolidator.client.ConsolidatorTranslation;
-import cz.metacentrum.perun.wui.consolidator.model.Feed;
-import cz.metacentrum.perun.wui.consolidator.model.FeedFilter;
-import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorTranslation;
+import cz.metacentrum.perun.wui.json.Events;
+import cz.metacentrum.perun.wui.model.common.Feed;
+import cz.metacentrum.perun.wui.model.common.FeedEntities;
+import cz.metacentrum.perun.wui.model.common.FeedFilter;
 import cz.metacentrum.perun.wui.json.JsonUtils;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.widgets.PerunButton;
+import cz.metacentrum.perun.wui.model.common.WayfGroup;
+import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.ColumnSize;
+import org.gwtbootstrap3.client.ui.constants.HeadingSize;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Pull;
 import org.gwtbootstrap3.client.ui.html.Span;
@@ -40,32 +53,14 @@ import java.util.HashMap;
  */
 public class Wayf extends Composite {
 
-	private ConsolidatorTranslation translation = GWT.create(ConsolidatorTranslation.class);
+	private PerunConsolidatorTranslation translation = GWT.create(PerunConsolidatorTranslation.class);
 
-	private int callCounter = 0;
-	private HashMap<String, Feed> feeds = new HashMap<>();
+	private HashMap<String, Integer> callCounter = new HashMap<>();
 	private FeedFilter filter;
 	private String redirect;
 	private String token;
 
-	final ArrayList<Button> idpButtons = new ArrayList<Button>();
-	final ArrayList<Button> socialButtons = new ArrayList<Button>();
-
-	ScrollPanel idpGroup = new ScrollPanel();
-	ScrollPanel socialGroup = new ScrollPanel();
-
-	TextBox socialFilterBox = new TextBox();
-	Modal socialModal = new Modal();
-
-	TextBox idpFilterBox = new TextBox();
-	Modal idpModal = new Modal();
-
 	Wayf wayf = this;
-
-	@UiField PerunButton idpButton;
-	@UiField PerunButton certButton;
-	@UiField PerunButton krbButton;
-	@UiField PerunButton socialButton;
 
 	@UiField Span mainContent;
 
@@ -79,21 +74,235 @@ public class Wayf extends Composite {
 	}
 
 	public Wayf(String filter, String redirect) {
+
 		initWidget(ourUiBinder.createAndBindUi(this));
+
 		if (filter != null && !filter.isEmpty()) {
 			setFilter(filter);
 		}
-		idpButton.setText(translation.idpButton());
-		certButton.setText(translation.certButton());
-		String krbName = Utils.getWayfKrbName();
-		if (krbName == null) {
-			krbButton.setText(translation.krbButton());
-		} else {
-			krbButton.setText(krbName);
-		}
-		socialButton.setText(translation.socialButton());
+
 		this.redirect = redirect;
-		initModals();
+
+	}
+
+	public void buildWayfGroups() {
+
+		ArrayList<WayfGroup> wayfGroups = PerunConfiguration.getWayfGroups();
+		Row row = new Row();
+		mainContent.add(row);
+
+		for (final WayfGroup group : wayfGroups) {
+
+			// If IdP is allowed, build button
+			final WayfGroupButton groupButton = new WayfGroupButton(group);
+
+			if (group.getAuthzType().equals("krb")) {
+
+				groupButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent clickEvent) {
+						String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/"+group.getUrl()+"/ic/?token=" + token;
+						if (redirect != null && !redirect.isEmpty()) {
+							url = url + "&target_url=" + URL.encodeQueryString(redirect);
+						}
+						Window.Location.replace(url);
+					}
+				});
+
+			} else if (group.getAuthzType().equals("cert")) {
+
+				groupButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent clickEvent) {
+						// if we are on cert already, change hostname
+						if (Window.Location.getPath().startsWith("/"+group.getUrl()+"/")) {
+							for (String hostname : PerunConfiguration.getWayfCertHostnames()) {
+								if (!hostname.equals(Window.Location.getProtocol() + "//" + Window.Location.getHost())) {
+
+									String url = hostname + "/"+group.getUrl()+"/ic/?token=" + token;
+									if (redirect != null && !redirect.isEmpty()) {
+										url = url + "&target_url=" + URL.encodeQueryString(redirect);
+									}
+									Window.Location.replace(url);
+									return;
+								}
+							}
+						}
+
+						// We use the same hostname
+						String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/"+group.getUrl()+"/ic/?token=" + token;
+						if (redirect != null && !redirect.isEmpty()) {
+							url = url + "&target_url=" + URL.encodeQueryString(redirect);
+						}
+						Window.Location.replace(url);
+					}
+				});
+
+			} else if (group.getAuthzType().equals("fed")) {
+
+				// load external feed data
+				if (group.getFeeds() != null && !group.getFeeds().isEmpty()) {
+
+					// wait to load feeds
+
+					groupButton.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent clickEvent) {
+
+							// Build widgets
+							final ArrayList<Button> idpButtons = new ArrayList<Button>();
+
+							final InputGroup inputGroup = new InputGroup();
+							InputGroupAddon inputGroupAddonSearch = new InputGroupAddon();
+
+							inputGroupAddonSearch.setIcon(IconType.SEARCH);
+							inputGroupAddonSearch.setIconFixedWidth(true);
+
+							final ExtendedTextBox idpFilterBox = new ExtendedTextBox();
+							final Modal idpModal = new Modal();
+
+							inputGroup.add(inputGroupAddonSearch);
+							inputGroup.add(idpFilterBox);
+
+							ScrollPanel idpGroup = new ScrollPanel();
+							final VerticalButtonGroup btngrp = new VerticalButtonGroup();
+							//btngrp.setWidth("100%");
+							btngrp.getElement().setAttribute("style", "margin-top: 5px; width: 100%");
+							idpGroup.add(btngrp);
+
+							final PerunLoader loader = new PerunLoader();
+							loader.onLoading(translation.loadingOrganizations());
+							btngrp.add(loader);
+
+							// build filter
+							buildFilterBox(idpFilterBox, idpButtons, btngrp);
+
+							idpFilterBox.setPlaceholder(translation.searchYouOrganization());
+							idpFilterBox.setEnabled(false);
+
+							idpGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
+							idpGroup.setWidth("460px");
+
+							idpModal.setTitle(translation.selectIdP());
+							idpModal.setWidth("492px");
+							idpModal.setDataBackdrop(ModalBackdrop.STATIC);
+
+							ModalBody body = new ModalBody();
+							body.add(inputGroup);
+							body.add(idpGroup);
+
+							idpModal.add(body);
+
+							idpModal.show();
+							idpFilterBox.setFocus(true);
+
+							// load feed data from IdP/SP federation
+							getFeeds(group, new Events<FeedEntities>() {
+
+								@Override
+								public void onFinished(FeedEntities result) {
+
+									loader.onFinished();
+									loader.removeFromParent();
+
+									idpFilterBox.setEnabled(true);
+									idpFilterBox.setFocus(true);
+
+									// get sorted idp keys
+									for (final String key : result.getKeys()) {
+
+										if (wayf.getFilter() == null || wayf.getFilter().isIdPAllowed(key)) {
+
+											// If IdP is allowed, build button
+											Button button = new Button();
+											button.setBlock(true);
+											button.getElement().setAttribute("style", "text-align: left; vertical-align: middle; overflow-x: auto; word-wrap: break-word; white-space:normal !important; border-radius: 0px;");
+
+											Image img = new Image(result.get(key).getLogoUrl());
+											img.setPull(Pull.RIGHT);
+											button.getElement().insertFirst(img.getElement());
+
+											String label = result.get(key).getLabel(PerunConfiguration.getCurrentLocaleName());
+											if (label == null || label.isEmpty()) result.get(key).getLabel("en");
+											if (label != null && !label.isEmpty()) {
+												button.setText(label);
+											}
+											button.getElement().insertFirst(img.getElement());
+
+											btngrp.add(button);
+											idpButtons.add(button);
+
+											button.addClickHandler(new ClickHandler() {
+												@Override
+												public void onClick(ClickEvent event) {
+													// hack to make extIdp feature to work
+													String usedKey = key.replace("&amp;", "&");
+													String target = "";
+													if (redirect != null && !redirect.isEmpty()) {
+														target = "&target_url=" + redirect;
+													}
+													String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
+													final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + usedKey + "&target=" + consolidatorUrl);
+													Window.Location.replace(redirectUrl);
+												}
+											});
+
+										}
+
+										if (idpButtons.size() > 7) {
+											inputGroup.setVisible(true);
+										} else if (idpButtons.size() > 0){
+											inputGroup.setVisible(false);
+										} else {
+											inputGroup.setVisible(false);
+											Heading notFound = new Heading(HeadingSize.H4, translation.noOrganizationFound());
+											btngrp.add(notFound);
+										}
+
+									}
+
+								}
+
+								@Override
+								public void onError(PerunException error) {
+									// We can never get perun exception here since we load custom URL JSON data
+								}
+
+								@Override
+								public void onLoadingStart() {
+									//
+								}
+							});
+
+						}
+					});
+
+				} else {
+
+					// group is single item IdP
+					groupButton.addClickHandler(new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent clickEvent) {
+							String target = "";
+							if (redirect != null && !redirect.isEmpty()) {
+								target = "&target_url=" + redirect;
+							}
+							String consolidatorUrl = Utils.getIdentityConsolidatorLink(group.getUrl(), false) + URL.encodeQueryString("?token=" + token + target);
+							final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + consolidatorUrl;
+							Window.Location.replace(redirectUrl);
+						}
+					});
+
+				}
+
+			}
+
+			Column col = new Column(ColumnSize.MD_4, ColumnSize.LG_4, ColumnSize.SM_6, ColumnSize.XS_12);
+			col.add(groupButton.getWidget());
+			row.add(col);
+
+		}
+
 	}
 
 	/**
@@ -115,15 +324,6 @@ public class Wayf extends Composite {
 	}
 
 	/**
-	 * Get all Feed data loaded to WAYF
-	 *
-	 * @return all Feed data
-	 */
-	public HashMap<String, Feed> getFeeds() {
-		return feeds;
-	}
-
-	/**
 	 * Set token for joining identities which will be used as a part
 	 * of redirect URL when button clicked.
 	 *
@@ -133,353 +333,95 @@ public class Wayf extends Composite {
 		this.token = token;
 	}
 
-	@UiHandler("idpButton")
-	public void clickIdp(ClickEvent event) {
-		idpModal.show();
-		idpFilterBox.setFocus(true);
-	}
-
-	@UiHandler("socialButton")
-	public void clickSocial(ClickEvent event) {
-
-		socialModal.show();
-		socialFilterBox.setFocus(true);
-
-	}
-
-	@UiHandler("certButton")
-	public void certCert(ClickEvent event) {
-
-		// if we are on cert already, change hostname
-		if (Window.Location.getPath().startsWith("/cert/")) {
-			for (String hostname : Utils.getCertWayfHostnames()) {
-				if (!hostname.equals(Window.Location.getProtocol() + "//" + Window.Location.getHost())) {
-
-					String url = hostname + "/cert/ic/?token=" + token;
-					if (redirect != null && !redirect.isEmpty()) {
-						url = url + "&target_url=" + URL.encodeQueryString(redirect);
-					}
-					Window.Location.replace(url);
-					return;
-				}
-			}
-		}
-
-		// We use the same hostname
-		String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/cert/ic/?token=" + token;
-		if (redirect != null && !redirect.isEmpty()) {
-			url = url + "&target_url=" + URL.encodeQueryString(redirect);
-		}
-		Window.Location.replace(url);
-
-	}
-
-	@UiHandler("krbButton")
-	public void clickKrb(ClickEvent event) {
-
-		String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/krb/ic/?token=" + token;
-		if (redirect != null && !redirect.isEmpty()) {
-			url = url + "&target_url=" + URL.encodeQueryString(redirect);
-		}
-		Window.Location.replace(url);
-
-	}
-
-	/**
-	 * Load all WAYF data and display identity provider selection.
-	 *
-	 * @param extEvents Events done on callback
-	 */
-	public void loadWayf(final JsonEvents extEvents) {
-
-		wayf.getFeeds(new JsonEvents() {
-			@Override
-			public void onFinished(JavaScriptObject jso) {
-
-				extEvents.onFinished(jso);
-
-				if (Utils.wayfShowAllInOne()) {
-					buildAllInOne();
-					return;
-				}
-
-				if (Utils.isCertWayfSupported()) {
-					certButton.setVisible(true);
-				}
-				if (Utils.isKrbWayfSupported()) {
-					krbButton.setVisible(true);
-				}
-
-				// prepare button groups
-
-				VerticalButtonGroup btngrp = new VerticalButtonGroup();
-				btngrp.setWidth("100%");
-				idpGroup.add(btngrp);
-
-				VerticalButtonGroup btngrp2 = new VerticalButtonGroup();
-				btngrp2.setWidth("100%");
-				socialGroup.add(btngrp2);
-
-				// build filter
-				buildFilterBox(idpFilterBox, idpButtons);
-				buildFilterBox(socialFilterBox, socialButtons);
-
-				// fill buttons
-				ArrayList<String> fds = new ArrayList<String>();
-				if (wayf.getFilter() == null || wayf.getFilter().getAllowedFeeds().isEmpty()) {
-					fds = Utils.getWayfFeeds();
-				} else {
-					fds = wayf.getFilter().getAllowedFeeds();
-				}
-
-				for (String feedId : fds) {
-
-					Feed feed = wayf.getFeeds().get(feedId);
-					for (final String key : feed.getEntities().getKeys()) {
-
-						if (wayf.getFilter() == null || wayf.getFilter().isIdPAllowed(key)) {
-
-							Button button = new Button();
-							button.setBlock(true);
-							button.getElement().setAttribute("style", "text-align: left; vertical-align: middle; overflow-x: auto; word-wrap: break-word; white-space:normal !important; border-radius: 0px;");
-
-							Image img = new Image(feed.getEntities().get(key).getLogoUrl());
-							img.setPull(Pull.RIGHT);
-							button.getElement().insertFirst(img.getElement());
-
-							String label = feed.getEntities().get(key).getLabel("cs");
-							if (label != null && !label.isEmpty()) {
-								//oracle.add(label);
-								button.setText(label);
-							}
-							button.getElement().insertFirst(img.getElement());
-
-							if (feedId.equals("Social")) {
-								btngrp2.add(button);
-								socialButton.setVisible(true);
-								socialButtons.add(button);
-
-								GWT.log(key);
-
-							} else {
-								idpButton.setVisible(true);
-								btngrp.add(button);
-								idpButtons.add(button);
-							}
-
-							button.addClickHandler(new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									// hack to make extIdp feature to work
-									String usedKey = key.replace("&amp;", "&");
-									String target = "";
-									if (redirect != null && !redirect.isEmpty()) {
-										target = "&target_url=" + redirect;
-									}
-									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
-									final String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + usedKey + "&target=" + consolidatorUrl);
-									Window.Location.replace(redirectUrl);
-								}
-							});
-
-						}
-
-					}
-
-				}
-
-				if (idpButtons.size() > 7) {
-					idpFilterBox.setVisible(true);
-				} else {
-					idpFilterBox.setVisible(false);
-				}
-
-				if (socialButtons.size() > 7) {
-					socialFilterBox.setVisible(true);
-				} else {
-					socialFilterBox.setVisible(false);
-				}
-
-				wayf.setVisible(true);
-
-			}
-
-			@Override
-			public void onError(PerunException error) {
-
-			}
-
-			@Override
-			public void onLoadingStart() {
-
-			}
-		});
-
-	}
-
-	/**
-	 * Init modal dialogs for IdP selection.
-	 */
-	private void initModals() {
-
-		idpFilterBox.setWidth("450px");
-		idpFilterBox.getElement().setAttribute("style", "margin: 5px 0px;");
-		idpFilterBox.setPlaceholder(translation.typeToSearch());
-
-		idpGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
-		idpGroup.setWidth("460px");
-
-		idpModal.setTitle(translation.selectIdP());
-		idpModal.setWidth("492px");
-		idpModal.setDataBackdrop(ModalBackdrop.STATIC);
-
-		ModalBody body = new ModalBody();
-		body.add(idpFilterBox);
-		body.add(idpGroup);
-
-		idpModal.add(body);
-
-		socialFilterBox.setWidth("450px");
-		socialFilterBox.getElement().setAttribute("style", "margin: 5px 0px;");
-		socialFilterBox.setPlaceholder(translation.typeToSearch());
-
-		socialGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
-		socialGroup.setWidth("460px");
-
-		socialModal.setTitle(translation.selectIdP());
-		socialModal.setWidth("492px");
-		socialModal.setDataBackdrop(ModalBackdrop.STATIC);
-
-		ModalBody body2 = new ModalBody();
-		body2.add(socialFilterBox);
-		body2.add(socialGroup);
-
-		socialModal.add(body2);
-
-	}
-
 	/**
 	 * Assign search action above buttons to text box.
 	 *
 	 * @param textBox TexBox to assign action
 	 * @param buttons Buttons to filter through
+	 * @param btngrp Buttons group wrapper
 	 */
-	private void buildFilterBox(final TextBox textBox, final ArrayList<Button> buttons) {
+	private void buildFilterBox(final ExtendedTextBox textBox, final ArrayList<Button> buttons, final VerticalButtonGroup btngrp) {
 
+		// Timer for delayed search on type
+		final Timer timer = new Timer() {
+			@Override
+			public void run() {
+				ValueChangeEvent.fire(textBox, textBox.getValue());
+			}
+		};
+		timer.schedule(500);
+
+		// typing triggers search
 		textBox.addKeyUpHandler(new KeyUpHandler() {
+
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
+
+				if (KeyCodes.KEY_ENTER == event.getNativeKeyCode()) {
+					// trigger now
+					timer.run();
+				} else if (KeyCodes.KEY_ESCAPE == event.getNativeKeyCode() ||
+						KeyCodes.KEY_LEFT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_UP == event.getNativeKeyCode() ||
+						KeyCodes.KEY_RIGHT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_DOWN == event.getNativeKeyCode() ||
+						KeyCodes.KEY_SHIFT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_CTRL == event.getNativeKeyCode() ||
+						KeyCodes.KEY_ALT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_CAPS_LOCK == event.getNativeKeyCode() ||
+						KeyCodes.KEY_SHIFT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_IME == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_KEY == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_KEY_FF_LINUX == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_KEY_LEFT_META == event.getNativeKeyCode() ||
+						KeyCodes.KEY_WIN_KEY_RIGHT == event.getNativeKeyCode() ||
+						KeyCodes.KEY_CONTEXT_MENU == event.getNativeKeyCode()) {
+					return;
+					// skip timer
+				} else {
+					// delay timer
+					timer.schedule(500);
+				}
+
+			}
+		});
+
+		final Heading notFound = new Heading(HeadingSize.H4, translation.noOrganizationFound());
+
+		// search on value change (called manually also by typing and timer)
+		textBox.addValueChangeHandler(new ValueChangeHandler<String>() {
+			@Override
+			public void onValueChange(ValueChangeEvent<String> event) {
+
+				if (textBox.getValue() != null && !textBox.getValue().isEmpty() && textBox.getValue().length() < 2) return;
+
+				boolean found = false;
+
 				for (Button butt : buttons) {
 
 					if (textBox.getValue() == null || textBox.getValue().isEmpty()) {
 						butt.setVisible(true);
+						found = true;
 						continue;
 					}
 
 					if (Utils.unAccent(butt.getText().replaceAll(" ", "").toLowerCase()).contains(Utils.unAccent(textBox.getValue().toLowerCase()))) {
 						butt.setVisible(true);
+						found = true;
 					} else {
 						butt.setVisible(false);
 					}
 
 				}
-			}
-		});
 
-	}
-
-	/**
-	 * Build WAYF as all in one (usefull for only-fed authz)
-	 */
-	private void buildAllInOne() {
-
-		mainContent.clear();
-
-		idpFilterBox.setWidth("450px");
-		idpFilterBox.getElement().setAttribute("style", "margin: 5px 0px;");
-		idpFilterBox.setPlaceholder(translation.typeToSearch());
-
-		idpGroup.getElement().setAttribute("style", "margin-top: 10px; max-height: 460px;" + idpGroup.getElement().getAttribute("style"));
-		idpGroup.setWidth("460px");
-
-		VerticalButtonGroup btngrp = new VerticalButtonGroup();
-		btngrp.setWidth("100%");
-		idpGroup.add(btngrp);
-
-		buildFilterBox(idpFilterBox, idpButtons);
-
-		// fill buttons
-		ArrayList<String> fds = new ArrayList<String>();
-		if (wayf.getFilter() == null || wayf.getFilter().getAllowedFeeds().isEmpty()) {
-			fds = Utils.getWayfFeeds();
-		} else {
-			fds = wayf.getFilter().getAllowedFeeds();
-		}
-
-		for (String feedId : fds) {
-
-			Feed feed = wayf.getFeeds().get(feedId);
-			for (final String key : feed.getEntities().getKeys()) {
-
-				if (wayf.getFilter() == null || wayf.getFilter().isIdPAllowed(key)) {
-
-					Button button = new Button();
-					button.setBlock(true);
-					button.getElement().setAttribute("style", "text-align: left; vertical-align: middle; overflow-x: auto; word-wrap: break-word; white-space:normal !important; border-radius: 0px;");
-
-					Image img = new Image(feed.getEntities().get(key).getLogoUrl());
-					img.setPull(Pull.RIGHT);
-					button.getElement().insertFirst(img.getElement());
-
-					String label = feed.getEntities().get(key).getLabel("cs");
-					if (label != null && !label.isEmpty()) {
-						//oracle.add(label);
-						button.setText(label);
-					}
-					button.getElement().insertFirst(img.getElement());
-
-					idpButton.setVisible(true);
-					btngrp.add(button);
-					idpButtons.add(button);
-
-					button.addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
-							// hack to make extIdp feature to work
-							String usedKey = key.replace("&amp;", "&");
-							String target = "";
-							if (redirect != null && !redirect.isEmpty()) {
-								target = "&target_url=" + redirect;
-							}
-							String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
-							final String redirectUrl = Utils.getWayfSpLogoutUrl() + "?return=" + Utils.getWayfSpDsUrl() + URL.encodeQueryString("?entityID=" + usedKey + "&target=" + consolidatorUrl);
-							Window.Location.replace(redirectUrl);
-						}
-					});
-
+				if (!found) {
+					btngrp.add(notFound);
+				} else {
+					notFound.removeFromParent();
 				}
 
 			}
-
-		}
-
-		if (idpButtons.size() > 7) {
-			idpFilterBox.setVisible(true);
-		} else {
-			idpFilterBox.setVisible(false);
-		}
-
-		mainContent.add(idpFilterBox);
-		mainContent.add(idpGroup);
-
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				idpFilterBox.setFocus(true);
-			}
 		});
-
-		wayf.setVisible(true);
 
 	}
 
@@ -488,35 +430,48 @@ public class Wayf extends Composite {
 	 *
 	 * @param events Events done on callback results
 	 */
-	private void getFeeds(final JsonEvents events) {
+	private void getFeeds(final WayfGroup group, final Events<FeedEntities> events) {
 
+		final FeedEntities entities = FeedEntities.createNew();
+		final String groupName = group.getName();
+		callCounter.put(groupName, 0);
+
+		// decide feeds
 		ArrayList<String> fds = new ArrayList<String>();
-
-		if (filter == null || filter.getAllowedFeeds().isEmpty()) {
-			fds.addAll(Utils.getWayfFeeds());
+		if (wayf.getFilter() == null || wayf.getFilter().getAllowedFeeds().isEmpty()) {
+			fds = Utils.stringToList(group.getFeeds(), ",");
 		} else {
-			fds.addAll(filter.getAllowedFeeds());
+			// keep only allowed
+			fds = Utils.stringToList(group.getFeeds(), ",");
+			fds.retainAll(wayf.getFilter().getAllowedFeeds());
 		}
 
 		for (final String feed : fds) {
 
-			RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, Utils.getWayfFeedUrl() + feed + ".js");
-			callCounter++;
+			RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, PerunConfiguration.getWayfFeedUrl() + feed + ".js");
+			callCounter.put(groupName, callCounter.get(groupName)+1);
 			try {
 				builder.sendRequest(null, new RequestCallback() {
 							@Override
 							public void onResponseReceived(Request request, Response response) {
-								feeds.put(feed, (Feed)convertFeed(response.getText()));
-								callCounter--;
-								if (callCounter == 0) {
-									events.onFinished(null);
+								Feed feed = (Feed)convertFeed(response.getText());
+								for (String key :feed.getEntities().getKeys()) {
+									entities.set(key, feed.getEntities().get(key));
+								}
+								callCounter.put(groupName, callCounter.get(groupName)-1);
+								if (callCounter.get(groupName) == 0) {
+									// append local data
+									for (String key : group.getFeedData().getKeys()) {
+										entities.set(key, group.getFeedData().get(key));
+									}
+									events.onFinished(entities);
 								}
 							}
 
 							@Override
 							public void onError(Request request, Throwable exception) {
-								callCounter--;
-								if (callCounter == 0) {
+								callCounter.put(groupName, callCounter.get(groupName)-1);
+								if (callCounter.get(groupName) == 0) {
 									events.onError(null);
 								}
 							}
@@ -529,7 +484,8 @@ public class Wayf extends Composite {
 
 		// load wayf without FED feeds
 		if (fds.isEmpty()) {
-			events.onFinished(null);
+			// load only local data
+			events.onFinished(group.getFeedData());
 		}
 
 	}

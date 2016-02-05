@@ -200,6 +200,19 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 	}
 
+	@Override
+	protected void onAttach() {
+		super.onAttach();
+		if (!isOnlyPreview()) {
+			// Selectpicker widget has to have proper form class too, make sure it's not null
+			if (getSelect() != null &&
+					getSelect().getElement().getNextSiblingElement() != null &&
+					getSelect().getElement().getNextSiblingElement().getFirstChildElement() != null) {
+				getSelect().getElement().getNextSiblingElement().getFirstChildElement().addClassName("form-control");
+			}
+		}
+	}
+
 	public ExtendedTextBox getTextBox() {
 		for (Widget box : getWidget()) {
 			if (box instanceof ExtendedTextBox) {

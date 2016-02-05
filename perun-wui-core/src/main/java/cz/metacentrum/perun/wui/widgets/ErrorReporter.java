@@ -9,6 +9,7 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -138,7 +139,7 @@ public class ErrorReporter {
 		text += "Technical details: \n\n";
 		text += ex.getErrorId() + " - " + ex.getName() + "\n";
 		text += ex.getMessage() + "\n\n";
-		text += "Perun instance: " + Utils.perunInstanceName()+ "\n";
+		text += "Perun instance: " + PerunConfiguration.perunInstanceName()+ "\n";
 		text += "Request: " + ex.getRequestURL() + "\n";
 		if (postObject != null) text += "Post data: " + postObject.toString() + "\n";
 		text += "Application state: #" + PerunSession.getPlaceManager().getCurrentPlaceRequest().getNameToken() + "\n\n";
