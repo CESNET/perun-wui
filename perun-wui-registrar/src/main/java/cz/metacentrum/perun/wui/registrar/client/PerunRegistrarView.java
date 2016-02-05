@@ -15,7 +15,6 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
-import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
@@ -24,7 +23,6 @@ import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.NavbarNav;
-import org.gwtbootstrap3.client.ui.Well;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
 
@@ -63,10 +61,6 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	@UiField
 	AnchorListItem logout;
 
-	@UiField static Span footerSupport;
-	@UiField static Span footerCredits;
-	@UiField static Span footerVersion;
-	@UiField Well perunFooter;
 	@UiField Div logoWrapper;
 
 	@UiField static NavbarHeader navbarHeader;
@@ -90,40 +84,45 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	@Override
 	public void onLoadingStartFooter() {
 
-		if (PerunConfiguration.isFooterDisabled()) {
-			Element elem = DOM.getElementById("perun-copyright");
-			if (elem != null) {
-				elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
-			}
-		} else {
-			footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
-			footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
-			footerVersion.setHTML(translation.version(PerunWebConstants.INSTANCE.guiVersion()));
+		Element elem = DOM.getElementById("perun-help");
+		if (elem != null) {
+			elem.setInnerHTML(" "+translation.supportAt(PerunConfiguration.getBrandSupportMail()));
 		}
+		Element elem2 = DOM.getElementById("perun-credits");
+		if (elem2 != null) {
+			elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
+		}
+
+		//translation.version(PerunWebConstants.INSTANCE.guiVersion();
 
 	}
 
 	@Override
 	public void onFinishedFooter(List<String> contactEmail) {
 		if (contactEmail == null || contactEmail.isEmpty()) {
-			if (!PerunConfiguration.isFooterDisabled()) {
-				footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
-			} else {
-				Element elem = DOM.getElementById("perun-copyright");
-				if (elem != null) {
-					elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
-				}
+
+			Element elem = DOM.getElementById("perun-help");
+			if (elem != null) {
+				elem.setInnerHTML(" "+translation.supportAt(PerunConfiguration.getBrandSupportMail()));
 			}
+			Element elem2 = DOM.getElementById("perun-credits");
+			if (elem2 != null) {
+				elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
+			}
+
 		} else {
+
 			String mails = contactEmail.toString();
-			if (!PerunConfiguration.isFooterDisabled()) {
-				footerSupport.setHTML(translation.supportAt(mails.substring(1, mails.length()-1)));
-			} else {
-				Element elem = DOM.getElementById("perun-copyright");
-				if (elem != null) {
-					elem.setInnerHTML(translation.supportAt(mails.substring(1, mails.length() - 1)) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
-				}
+
+			Element elem = DOM.getElementById("perun-help");
+			if (elem != null) {
+				elem.setInnerHTML(" "+translation.supportAt(mails.substring(1, mails.length()-1)));
 			}
+			Element elem2 = DOM.getElementById("perun-credits");
+			if (elem2 != null) {
+				elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
+			}
+
 		}
 	}
 
@@ -151,9 +150,6 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		application.setText(translation.application());
 		myApplications.setText(translation.myApplications());
 		logout.setText(translation.logout());
-
-		// fill perun properties to predefined footer
-		perunFooter.setVisible(!PerunConfiguration.isFooterDisabled());
 
 	}
 

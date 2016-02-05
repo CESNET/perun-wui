@@ -257,7 +257,6 @@
 			]
 		}
 
-
 	</script>
 
 	<!-- Load GWT GUI -->
@@ -266,7 +265,6 @@
 	<style type="text/css" >
 
 		#footer {
-			margin-top: 3em;
 			background-color: #4b4d4a;
 			border-top: 10px solid #dcdcda;
 			clear: both;
@@ -297,10 +295,6 @@
 			text-transform: uppercase;
 			font-weight: bold;
 		}
-		#footer .copyright {
-			margin-top: 20px;
-			font-size: 1.05em;
-		}
 
 		/* Sticky footer */
 
@@ -314,7 +308,15 @@
 			flex: 1;
 			/*border-top: 12px solid #005b99;*/
 		}
-		#perun-copyright {
+
+		#perun-footer {
+			margin-top: 3em;
+			background-color: #f8f8f8;
+			border-top: 1px solid #e7e7e7;
+			padding-top: 1em;
+			padding-bottom: 1em;
+		}
+		#perun-credits {
 			text-align: right;
 		}
 
@@ -347,6 +349,14 @@
 </script>
 <script type="text/javascript" async src="https://linker2.cesnet.cz/linker.js"></script>
 
+<div id="perun-footer">
+	<div class="container">
+		<div class="row">
+			<span id="perun-help" class="col col-sm-6"></span>
+			<span id="perun-credits" class="col col-sm-6"></span>
+		</div>
+	</div>
+</div>
 <div id="footer">
 	<footer>
 		<div class="container">
@@ -382,9 +392,6 @@
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div id="perun-copyright" class="col col-sm-12 copyright"></div>
 			</div>
 		</div>
 	</footer>

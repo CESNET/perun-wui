@@ -42,14 +42,6 @@
 			</b:Row>
 		</b:Container>
 
-		<!-- FOOTER -->
-		<b:Well ui:field="perunFooter">
-			<b:Icon type="SUPPORT" paddingRight="5"/>
-			<b.html:Span ui:field="footerSupport" /><b.html:ClearFix />
-			<b.html:Span ui:field="footerCredits"/><b.html:ClearFix />
-			<b.html:Span ui:field="footerVersion"/>
-		</b:Well>
-
 	</b.html:Div>
 
 </ui:UiBinder>

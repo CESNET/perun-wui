@@ -15,7 +15,6 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
-import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
@@ -25,7 +24,6 @@ import org.gwtbootstrap3.client.ui.NavPills;
 import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.NavbarNav;
-import org.gwtbootstrap3.client.ui.Well;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
@@ -71,11 +69,6 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 	@UiField AnchorListItem logout;
 
 	@UiField NavPills menuPills;
-
-	@UiField Well perunFooter;
-	@UiField Span footerSupport;
-	@UiField Span footerCredits;
-	@UiField Span footerVersion;
 
 	@UiHandler(value="logout")
 	public void logoutClick(ClickEvent event) {
@@ -138,17 +131,13 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 		// We must set data toggle when text is changed otherwise its wrongly ordered
 		topMenuMyProfile.setDataToggle(Toggle.DROPDOWN);
 
-		if (PerunConfiguration.isFooterDisabled()) {
-			// fill perun properties to predefined footer
-			perunFooter.setVisible(!PerunConfiguration.isFooterDisabled());
-			Element elem = DOM.getElementById("perun-copyright");
-			if (elem != null) {
-				elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
-			}
-		} else {
-			footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
-			footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
-			footerVersion.setHTML(translation.version(PerunWebConstants.INSTANCE.guiVersion()));
+		Element elem = DOM.getElementById("perun-help");
+		if (elem != null) {
+			elem.setInnerHTML(" "+translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+		}
+		Element elem2 = DOM.getElementById("perun-credits");
+		if (elem2 != null) {
+			elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
 		}
 
 	}

@@ -11,7 +11,6 @@ import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -50,10 +49,6 @@ public class PerunConsolidator implements EntryPoint{
 	@UiField Div logoWrapper;
 	@UiField static NavbarHeader navbarHeader;
 	@UiField NavbarNav topMenu;
-	@UiField Well perunFooter;
-	@UiField Span footerSupport;
-	@UiField Span footerCredits;
-	@UiField Span footerVersion;
 
 	SelectPage page;
 	JoinPage joinPage;
@@ -123,17 +118,13 @@ public class PerunConsolidator implements EntryPoint{
 
 							brand.setText(translation.appName());
 
-							if (PerunConfiguration.isFooterDisabled()) {
-								// fill perun properties to predefined footer
-								perunFooter.setVisible(!PerunConfiguration.isFooterDisabled());
-								Element elem = DOM.getElementById("perun-copyright");
-								if (elem != null) {
-									elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()) + "<br />" + translation.credits(JsUtils.getCurrentYear()));
-								}
-							} else {
-								footerSupport.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
-								footerCredits.setHTML(translation.credits(JsUtils.getCurrentYear()));
-								footerVersion.setHTML(translation.version(PerunWebConstants.INSTANCE.guiVersion()));
+							Element elem = DOM.getElementById("perun-help");
+							if (elem != null) {
+								elem.setInnerHTML(" "+translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+							}
+							Element elem2 = DOM.getElementById("perun-credits");
+							if (elem2 != null) {
+								elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
 							}
 
 						}
