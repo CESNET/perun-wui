@@ -9,6 +9,7 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -18,6 +19,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.NavbarCollapse;
@@ -112,12 +114,17 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 
 		} else {
 
-			String mails = contactEmail.toString();
-
 			Element elem = DOM.getElementById("perun-help");
 			if (elem != null) {
-				elem.setInnerHTML(" "+translation.supportAt(mails.substring(1, mails.length()-1)));
+				elem.setInnerHTML(translation.supportAtMails());
+				for (String mail : contactEmail) {
+					Anchor mailto = new Anchor();
+					mailto.setText(mail+" ");
+					mailto.setHref("mailto:"+mail);
+					elem.appendChild(mailto.getElement());
+				}
 			}
+
 			Element elem2 = DOM.getElementById("perun-credits");
 			if (elem2 != null) {
 				elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
