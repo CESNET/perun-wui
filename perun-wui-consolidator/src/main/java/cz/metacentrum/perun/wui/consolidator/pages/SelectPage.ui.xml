@@ -11,7 +11,7 @@
 
 	<ui:style>
 		.center { text-align: center; clear: both; margin:0 auto; float:none; }
-		.center2 { text-align: center; margin: 10px auto; float:none; }
+		.center2 { text-align: center; margin: 10px auto; float:none; width: 100%; }
 	</ui:style>
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorResources"/>
