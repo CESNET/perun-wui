@@ -36,6 +36,7 @@ import cz.metacentrum.perun.wui.model.common.WayfGroup;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
@@ -92,6 +93,8 @@ public class Wayf extends Composite {
 		mainContent.add(row);
 
 		for (final WayfGroup group : wayfGroups) {
+
+			int size = wayfGroups.size();
 
 			// If IdP is allowed, build button
 			final WayfGroupButton groupButton = new WayfGroupButton(group);
@@ -297,9 +300,17 @@ public class Wayf extends Composite {
 
 			}
 
-			Column col = new Column(ColumnSize.MD_4, ColumnSize.LG_4, ColumnSize.SM_6, ColumnSize.XS_12);
-			col.add(groupButton.getWidget());
-			row.add(col);
+			// nice align when less then 3 columns
+			if (size >= 3) {
+				Column col = new Column(ColumnSize.MD_4, ColumnSize.LG_4, ColumnSize.SM_6, ColumnSize.XS_12);
+				col.add(groupButton.getWidget());
+				row.add(col);
+			} else {
+				Column col = new Column(ColumnSize.MD_4, ColumnSize.LG_4, ColumnSize.SM_6, ColumnSize.XS_12);
+				col.setOffset(ColumnOffset.MD_4, ColumnOffset.LG_4, ColumnOffset.SM_3);
+				col.add(groupButton.getWidget());
+				row.add(col);
+			}
 
 		}
 
