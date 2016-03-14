@@ -9,7 +9,6 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
@@ -51,7 +50,8 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 
 	public void draw() {
 
-		RegistrarManager.getApplicationsForUser(PerunSession.getInstance().getUserId(), new JsonEvents() {
+		// make sure we search by identity and user session info
+		RegistrarManager.getApplicationsForUser(0, new JsonEvents() {
 
 			JsonEvents retry = this;
 
@@ -65,7 +65,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 				grid.getLoaderWidget().onError(error, new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						RegistrarManager.getApplicationsForUser(PerunSession.getInstance().getUser().getId(), retry);
+						RegistrarManager.getApplicationsForUser(0, retry);
 					}
 				});
 			}
