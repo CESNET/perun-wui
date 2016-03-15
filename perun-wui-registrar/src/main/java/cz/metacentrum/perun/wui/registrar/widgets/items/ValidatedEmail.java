@@ -254,7 +254,8 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	}
 
 	private boolean isCustomSelected() {
-		return getSelect().getSelectedValue().equals(CUSTOM_ID);
+		if (getSelect() != null) getSelect().getSelectedValue().equals(CUSTOM_ID);
+		return false;
 	}
 
 }
