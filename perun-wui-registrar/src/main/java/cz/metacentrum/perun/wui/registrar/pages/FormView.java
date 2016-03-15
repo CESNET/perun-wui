@@ -324,6 +324,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		if (!exceptionResolver.isSoft()) {
 			notice.setReportInfo(ex);
 			notice.setType(AlertType.DANGER);
+		} else {
+			notice.setReportInfo(null);
+			notice.setType(AlertType.WARNING);
 		}
 		return exceptionResolver.isSoft();
 	}
