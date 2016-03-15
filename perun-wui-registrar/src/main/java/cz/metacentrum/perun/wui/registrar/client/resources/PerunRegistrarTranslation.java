@@ -53,9 +53,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	// MESSAGES
 
-	@DefaultMessage("Please check your mailbox and verify your e-mail address. " +
+	@DefaultMessage("Please check your mailbox {0} and verify your e-mail address. " +
 			"Without verification it is not possible to approve your application.")
-	public String verifyMail();
+	public String verifyMail(String mail);
 
 	@DefaultMessage("Please wait till administrator of {0} will accept your application.")
 	public String waitForAcceptation(String voOrGroupName);
@@ -271,13 +271,17 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Registration form is not created. Please contact administrator.")
 	public String formNotExist();
 
+	@DefaultMessage("Registration form is wrongly formed. Probably you won`t be able to submit it. Please contact administrator.")
+	public String formWrongFormed();
+
 	@DefaultMessage("Application couldn`t been created. Probably your login can`t be reserved.")
+	public String applicationNotCreatedBecauseLogin();
+
+	@DefaultMessage("Application couldn`t been created.")
 	public String applicationNotCreated();
 
-	@DefaultMessage("Your application has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
-	public String registrarException();
-
-
+	@DefaultMessage("Your application to {0} has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
+	public String registrarException(String voOrGroupName);
 
 	/* ------------ LOADER MESSAGES ---------------- */
 

@@ -1,174 +1,62 @@
 package cz.metacentrum.perun.wui.registrar.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.model.beans.Group;
-import cz.metacentrum.perun.wui.model.beans.Vo;
-import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
-import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
-import org.gwtbootstrap3.client.ui.constants.AlertType;
 
 /**
+ * Provides info about exception which can be shown to user.
+ *
  * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
-public class ExceptionResolver {
-
-	private Vo vo;
-	private Group group;
-	private PerunException exception;
-	private AlertErrorReporter notice;
-	private ClickHandler handler;
-	private boolean isSoft;
-	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
-
+public interface ExceptionResolver {
 
 	/**
-	 * resolve means display proper info in notice widget, optionally show option to report bug or try call again.
-	 * return if exception is soft or hard. Soft means application process should continue.
-	 * Hard means process cant continue (usually user should have option to report bug).
+	 * resolve means fill this object with especially texts for for user for exception.
+	 * All resolved info about exception is accessible through other method.
+	 * This method SHOULD be called before other methods. Otherwise they will return null or info about previous exception.
 	 *
 	 * @param exception Investigating exception
-	 * @param notice
-	 * @param vo related vo
-	 * @param group related group
-	 * @param handler
-	 * @return TRUE if exception is soft
+	 * @param perunBean related bean
 	 */
-	public boolean resolve(PerunException exception, AlertErrorReporter notice, Vo vo, Group group, ClickHandler handler) {
-		this.handler = handler;
-		return resolve(exception, notice, vo, group);
-	}
-	public boolean resolve(PerunException exception, AlertErrorReporter notice, Vo vo, Group group) {
-		this.exception = exception;
-		this.group = group;
-		this.vo = vo;
-		this.notice = notice;
-		this.isSoft = true;
-		return resolve();
-	}
+	void resolve(PerunException exception, GeneralObject perunBean);
 
+	/**
+	 * Main text info about exception for user.
+	 * You SHOULD call {@link #resolve(PerunException, GeneralObject)} method before. Otherwise this will return null.
+	 *
+	 * @return Main info about exception
+	 */
+	String getText();
 
-	private boolean resolve() {
-		if (exception == null) {
-			return false;
-		}
-		if (notice == null) {
-			return false;
-		}
+	/**
+	 * Some exceptions can fill also some additional text info or null otherwise.
+	 * You SHOULD call {@link #resolve(PerunException, GeneralObject)} method before. Otherwise this will return null.
+	 *
+	 * @return additional info about exception
+	 */
+	String getSubtext();
 
+	/**
+	 * Some exceptions can fill also some additional text info or null otherwise.
+	 * You SHOULD call {@link #resolve(PerunException, GeneralObject)} method before. Otherwise this will return null.
+	 *
+	 * @return Text and subtext as html.
+	 */
+	String getHTML();
 
-		if (exception.getName().equalsIgnoreCase("ExtendMembershipException")) {
+	/**
+	 * Exception can be mark as hard or soft. Soft is default and means registration process can continue.
+	 * Hard means that It is not worth to continue in process.
+	 * You SHOULD call {@link #resolve(PerunException, GeneralObject)} method before. Otherwise this will return null.
+	 *
+	 * @return true if exception is soft.
+	 */
+	Boolean isSoft();
 
-			resolveExtendMembershipException(exception, notice, vo, group);
-
-		} else if (exception.getName().equalsIgnoreCase("AlreadyRegisteredException")) {
-
-			notice.setHTML("<h4>" + translation.alreadyRegistered((group != null) ? group.getShortName() : vo.getName()) + "</h4>");
-
-		} else if (exception.getName().equalsIgnoreCase("DuplicateRegistrationAttemptException")) {
-
-			notice.setHTML("<h4>" + translation.alreadySubmitted(((group != null) ? group.getShortName() : vo.getName())) +
-					"</h4><p>" + translation.visitSubmitted(Window.Location.getHref().split("#")[0], translation.submittedTitle()));
-
-		} else if (exception.getName().equalsIgnoreCase("DuplicateExtensionAttemptException")) {
-
-			notice.getElement().setInnerHTML("<h4>" + translation.alreadySubmittedExtension((vo.getName())) +
-					"</h4><p>" + translation.visitSubmitted(Window.Location.getHref().split("#")[0], translation.submittedTitle()));
-
-		} else if (exception.getName().equalsIgnoreCase("MissingRequiredDataException")) {
-
-			resolveMissingRequiredDataException(exception, notice, vo, group);
-
-		} else if (exception.getName().equalsIgnoreCase("VoNotExistsException")) {
-
-			notice.setHTML("<h4>" + translation.voNotExistsException(Window.Location.getParameter("vo")) + "</h4>");
-
-		} else if (exception.getName().equalsIgnoreCase("GroupNotExistsException")) {
-
-			notice.setHTML("<h4>" + translation.groupNotExistsException(Window.Location.getParameter("group")) + "</h4>");
-
-		} else if (exception.getName().equalsIgnoreCase("WrongURL")) {
-
-			notice.setHTML("<h4>" + translation.missingVoInURL() + "</h4>");
-
-		} else if (exception.getName().equalsIgnoreCase("FormNotExistsException")) {
-
-			notice.setHTML("<h4>" + translation.formNotExist() + "</h4>");
-
-		} else if (exception.getName().equalsIgnoreCase("ApplicationNotCreatedException")) {
-
-			notice.setHTML("<h4>" + translation.applicationNotCreated() + "</h4>");
-			notice.setReportInfo(exception);
-			notice.setType(AlertType.DANGER);
-			isSoft = false;
-
-		} else  if (exception.getName().equalsIgnoreCase("RpcException")) {
-
-			notice.setHTML("<h4>" + translation.applicationNotCreated() + "</h4>");
-			notice.setReportInfo(exception);
-			notice.setType(AlertType.DANGER);
-			isSoft = false;
-
-		} else  if (exception.getName().equalsIgnoreCase("RegistrarException")) {
-
-			notice.setHTML("<h4>" + translation.registrarException() + "</h4>");
-
-		} else {
-
-			notice.setHTML("<h4>" + translation.registrarException() + "</h4>");
-
-		}
-
-
-		if (handler != null) {
-			notice.setRetryHandler(handler);
-		}
-
-		notice.setVisible(true);
-		return isSoft;
-	}
-
-
-	private void resolveMissingRequiredDataException(PerunException exception, AlertErrorReporter notice, Vo vo, Group group) {
-
-		String missingItems = "<p><ul>";
-		if (!exception.getFormItems().isEmpty()) {
-			for (ApplicationFormItemData item : exception.getFormItems()) {
-				missingItems += "<li>" + translation.missingAttribute(item.getFormItem().getFederationAttribute());
-			}
-		}
-		missingItems += "<ul/>";
-
-		notice.setHTML(translation.missingRequiredData(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())) + missingItems);
-	}
-
-
-	private void resolveExtendMembershipException(PerunException exception, AlertErrorReporter notice, Vo vo, Group group) {
-
-		if (exception.getReason().equals("OUTSIDEEXTENSIONPERIOD")) {
-
-			String exceptionText = "<i>unlimited</i>";
-			if (exception.getExpirationDate() != null) exceptionText = exception.getExpirationDate().split(" ")[0];
-			notice.setHTML("<h4>" + translation.cantExtendMembership() + "</h4><p>" + translation.cantExtendMembershipOutside(exceptionText));
-
-		} else if (exception.getReason().equals("NOUSERLOA")) {
-
-			notice.setHTML("<h4>" + translation.cantBecomeMember((group != null) ? group.getShortName() : vo.getName()) + "</h4><p>" + translation.cantBecomeMemberLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-
-		} else if (exception.getReason().equals("INSUFFICIENTLOA")) {
-
-			notice.setHTML("<h4>" + translation.cantBecomeMember((group != null) ? group.getShortName() : vo.getName()) + "</h4><p>" + translation.cantBecomeMemberInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-
-		} else if (exception.getReason().equals("INSUFFICIENTLOAFOREXTENSION")) {
-
-			notice.setHTML("<h4>" + translation.cantExtendMembership() + "</h4><p>" + translation.cantExtendMembershipInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-
-		}
-	}
-
+	/**
+	 * You SHOULD call {@link #resolve(PerunException, GeneralObject)} method before. Otherwise this will return null.
+	 *
+	 * @return related bean to exception if any. Null otherwise.
+     */
+	GeneralObject getBean();
 }

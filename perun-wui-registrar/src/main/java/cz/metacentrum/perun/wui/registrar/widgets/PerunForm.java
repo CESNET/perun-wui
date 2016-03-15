@@ -176,6 +176,18 @@ public class PerunForm extends FieldSet {
 	}
 
 	/**
+	 * @return true if contains at least one submit button so it can be submitted.
+	 */
+	public boolean containsSubmitButton() {
+		for (PerunFormItem item : items) {
+			if (item instanceof SubmitButton) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Submits the form if all form items are in SUCCESS validation state.
 	 *
 	 * @param button submitting the form

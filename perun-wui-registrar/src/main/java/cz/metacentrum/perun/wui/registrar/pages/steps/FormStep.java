@@ -1,7 +1,11 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
+import com.google.gwt.core.client.JavaScriptObject;
+import cz.metacentrum.perun.wui.json.Events;
+import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
-import cz.metacentrum.perun.wui.registrar.pages.FormView;
+import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
 import cz.metacentrum.perun.wui.registrar.widgets.items.ValidatedEmail;
@@ -14,25 +18,33 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItem
  */
 public abstract class FormStep implements Step {
 
-	protected FormView formView;
+	protected RegistrarObject registrar;
 	protected PerunForm form;
-	protected Step next;
+	protected Result result;
 
-	public FormStep(FormView formView, Step next) {
-		this.formView = formView;
-		this.next = next;
-		this.form = formView.getForm();
+	enum Type {
+		GROUP, VO_INIT, VO_EXT;
 	}
 
-	protected boolean mustRevalidateMail() {
+	public FormStep(RegistrarObject registrar, PerunForm form) {
+		this.form = form;
+		this.registrar = registrar;
+	}
+
+	@Override
+	public Result getResult() {
+		return result;
+	}
+
+	protected String getUnknownMail() {
 		for (PerunFormItem item : form.getPerunFormItems()) {
 			if (item instanceof ValidatedEmail) {
 				if (item.getLastValidationResult().equals(PerunFormItemValidator.Result.MUST_VALIDATE_EMAIL)) {
-					return true;
+					return item.getValue();
 				}
 			}
 		}
-		return false;
+		return null;
 	}
 
 	protected String getFedInfo(PerunPrincipal pp) {
@@ -40,5 +52,29 @@ public abstract class FormStep implements Step {
 				+ " givenName=\"" + pp.getAdditionInformation("givenName")+"\"" + " sureName=\"" + pp.getAdditionInformation("sn")+"\""
 				+ " loa=\"" + pp.getAdditionInformation("loa")+"\"" + " mail=\"" + pp.getAdditionInformation("mail")+"\""
 				+ " organization=\"" + pp.getAdditionInformation("o")+"\"" + " }";
+	}
+
+	protected JsonEvents getOnSubmitEvent(final Events<Result> events) {
+		return new JsonEvents() {
+
+			@Override
+			public void onFinished(JavaScriptObject jso) {
+				String unknownMail = getUnknownMail();
+				if (unknownMail != null) {
+					result.setRegisteredMail(unknownMail);
+				}
+				events.onFinished(result);
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				result.setException(error);
+				events.onError(error);
+			}
+
+			@Override
+			public void onLoadingStart() {
+			}
+		};
 	}
 }
