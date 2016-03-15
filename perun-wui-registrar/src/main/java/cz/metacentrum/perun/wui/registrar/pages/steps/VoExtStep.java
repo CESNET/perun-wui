@@ -1,57 +1,51 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
-import com.google.gwt.core.client.JavaScriptObject;
-import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
-import cz.metacentrum.perun.wui.registrar.pages.FormView;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 
 /**
- * Represents VO initial application form step.
+ * Represents VO extension application form step.
  *
  * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
 public class VoExtStep extends FormStep {
 
-	public VoExtStep(FormView formView, Step next) {
-		super(formView, next);
+	public VoExtStep(RegistrarObject registrar, PerunForm form) {
+		super(registrar, form);
+		this.result = new Result(Type.VO_EXT, registrar.getVo(), registrar.hasVoFormAutoApprovalExtension());
 	}
 
 	@Override
-	public void call(final PerunPrincipal pp, final RegistrarObject registrar) {
+	public void call(final PerunPrincipal pp, Summary summary, final Events<Result> events) {
 
-		formView.getNotice().setVisible(false);
-		form.clear();
+		events.onLoadingStart();
+
+		if (registrar.getVoFormExtensionException() != null) {
+			result.setException(registrar.getVoFormExtensionException());
+			events.onFinished(getResult());
+			return;
+		}
+
 		form.setFormItems(registrar.getVoFormExtension());
+
+		if (!form.containsSubmitButton()) {
+			PerunException ex = PerunException.createNew("0", "FormWrongFormedException", "Extension form is wrong formed.");
+			result.setException(ex);
+			events.onError(ex);
+			return;
+		}
+
 		form.setApp(Application.createNew(registrar.getVo(), null, Application.ApplicationType.EXTENSION,
 				getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa(), pp.getUser()));
-		form.setOnSubmitEvent(new JsonEvents() {
 
-			@Override
-			public void onFinished(JavaScriptObject jso) {
-				if (mustRevalidateMail()) {
-					formView.setRegisteredUnknownMail();
-				}
-				formView.getNotice().setVisible(false);
-				next.call(pp, registrar);
-			}
-
-			@Override
-			public void onError(PerunException error) {
-				if (formView.resolveException(error)) {
-					next.call(pp, registrar);
-				}
-			}
-
-			@Override
-			public void onLoadingStart() {
-
-			}
-		});
+		form.setOnSubmitEvent(getOnSubmitEvent(events));
 
 		form.performAutoSubmit();
 
 	}
+
 }

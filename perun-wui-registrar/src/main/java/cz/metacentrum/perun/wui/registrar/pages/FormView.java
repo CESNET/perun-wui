@@ -19,6 +19,7 @@ import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
+import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.ExtSource;
@@ -26,11 +27,16 @@ import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Identity;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
-import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.client.ExceptionResolver;
+import cz.metacentrum.perun.wui.registrar.client.ExceptionResolverImpl;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
+import cz.metacentrum.perun.wui.registrar.pages.steps.FormStepManager;
 import cz.metacentrum.perun.wui.registrar.pages.steps.GroupInitStep;
+import cz.metacentrum.perun.wui.registrar.pages.steps.StepManager;
 import cz.metacentrum.perun.wui.registrar.pages.steps.Summary;
+import cz.metacentrum.perun.wui.registrar.pages.steps.SummaryImpl;
+import cz.metacentrum.perun.wui.registrar.pages.steps.SummaryStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.VoExtOfferStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.VoExtStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.VoInitStep;
@@ -45,6 +51,7 @@ import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.ModalFooter;
+import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
@@ -54,8 +61,6 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-
-import static cz.metacentrum.perun.wui.model.beans.Application.ApplicationType;
 
 /**
  * View for displaying registration form of VO / Group
@@ -73,7 +78,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	private Vo vo;
 	private Group group;
-	private boolean registeredUnknownMail;
 	private ExceptionResolver exceptionResolver;
 
 	@UiField
@@ -90,7 +94,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	@Inject
 	public FormView(FormViewUiBinder binder) {
 		initWidget(binder.createAndBindUi(this));
-		exceptionResolver = new ExceptionResolver();
+		exceptionResolver = new ExceptionResolverImpl();
 		draw();
 	}
 
@@ -102,15 +106,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		return translation;
 	}
 
-	public void setRegisteredUnknownMail() {
-		registeredUnknownMail = true;
-	}
-
-	public boolean getRegisteredUnknownMail() {
-		return registeredUnknownMail;
-	}
-
-
 
 	public void draw() {
 
@@ -118,17 +113,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		final String groupName = Window.Location.getParameter("group");
 		final PerunPrincipal pp = PerunSession.getInstance().getPerunPrincipal();
 
-		// TODO - why it is here???
-		/*Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				loader.getWidget().getElement().getFirstChildElement().setAttribute("style", "height: "+ (Window.getClientHeight()-100)+"px;");
-			}
-		});*/
-
 		if (voName == null || voName.isEmpty()) {
 			this.displayedException = PerunException.createNew("0", "WrongURL", "Missing parameters in URL.");
-			resolveException(displayedException);
+			displayException(displayedException, null);
 			return;
 		}
 
@@ -170,7 +157,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 							loader.onFinished();
 							loader.removeFromParent();
 						}
-						resolveException(registrar.getException());
+						displayException(registrar.getException(), (group != null ? group : vo));
 
 						return;
 					}
@@ -188,55 +175,34 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					loader.onFinished();
 					loader.removeFromParent();
 
+					Summary summary = new SummaryImpl(registrar);
+					StepManager stepManager = new FormStepManager(pp, formView, summary);
+
+					//////// This block of code should represent (guess) WHAT USER WANT to do. /////////
 					if (isApplyingToGroup(registrar)) {
 
-						if (groupFormExists(registrar)) {
+						if (voInitialFormExists(registrar)) {
 
-							if (voInitialFormExists(registrar)) {
+							stepManager.addStep(new VoInitStep(registrar, form));
+							stepManager.addStep(new GroupInitStep(registrar, form));
+							stepManager.addStep(new SummaryStep(formView));
+							stepManager.begin();
 
-								(new VoInitStep(formView,
-										new GroupInitStep(formView,
-												new Summary(formView, ApplicationType.INITIAL, ApplicationType.INITIAL)
-										))).call(pp, registrar);
+						} else if (voExtensionFormExists(registrar)) {
 
-							} else if (voExtensionFormExists(registrar)) {
-
-								(new VoExtOfferStep(formView,
-										new VoExtStep(formView,
-												new GroupInitStep(formView,
-														new Summary(formView, ApplicationType.EXTENSION, ApplicationType.INITIAL))),
-										new GroupInitStep(formView,
-												new Summary(formView, null, ApplicationType.INITIAL)
-										))).call(pp, registrar);
-
-							} else {
-
-								(new GroupInitStep(formView,
-										new Summary(formView, null, ApplicationType.INITIAL)
-								)).call(pp, registrar);
-
-							}
+							stepManager.addStep(new GroupInitStep(registrar, form));
+							stepManager.addStep(new VoExtOfferStep(registrar, form));
+							stepManager.addStep(new SummaryStep(formView));
+							stepManager.begin();
 
 						} else {
 
-							if (voInitialFormExists(registrar)) {
-
-								(new VoInitStep(formView,
-										new Summary(formView, ApplicationType.INITIAL, null)
-								)).call(pp, registrar);
-
-							} else if (voExtensionFormExists(registrar)) {
-
-								(new VoExtOfferStep(formView,
-										new VoExtStep(formView,
-												new Summary(formView, ApplicationType.EXTENSION, null)),
-										new Summary(formView, null, null))).call(pp, registrar);
-
-							} else {
-
-								(new Summary(formView, null, null)).call(pp, registrar);
-
-							}
+							// Because vo initial form can be empty (admin did not create it).
+							if (!isMemberOfVo(registrar) && !appliedToVo(registrar))
+								stepManager.addStep(new VoInitStep(registrar, form));
+							stepManager.addStep(new GroupInitStep(registrar, form));
+							stepManager.addStep(new SummaryStep(formView));
+							stepManager.begin();
 
 						}
 
@@ -244,19 +210,26 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 						if (voInitialFormExists(registrar)) {
 
-							(new VoInitStep(formView,
-									new Summary(formView, ApplicationType.INITIAL, null)
-							)).call(pp, registrar);
+							stepManager.addStep(new VoInitStep(registrar, form));
+							stepManager.addStep(new SummaryStep(formView));
+							stepManager.begin();
 
 						} else if (voExtensionFormExists(registrar)) {
 
-							(new VoExtStep(formView,
-									new Summary(formView, ApplicationType.EXTENSION, null)
-							)).call(pp, registrar);
+							stepManager.addStep(new VoExtStep(registrar, form));
+							stepManager.addStep(new SummaryStep(formView));
+							stepManager.begin();
 
 						} else {
 
-							(new Summary(formView, null, null)).call(pp, registrar);
+							// However form does not exist user still want to do something here.
+							if (isMemberOfVo(registrar)) {
+								stepManager.addStep(new VoExtStep(registrar, form));
+							} else {
+								stepManager.addStep(new VoInitStep(registrar, form));
+							}
+							stepManager.addStep(new SummaryStep(formView));
+							stepManager.begin();
 
 						}
 
@@ -303,24 +276,61 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		return !ro.getGroupFormInitial().isEmpty();
 	}
 
+	private boolean isMemberOfVo(RegistrarObject ro) {
+		if (ro.getVoFormInitialException() == null) {
+			return false;
+		}
+		if (ro.getVoFormInitialException().getName().equals("AlreadyRegisteredException")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	private boolean appliedToVo(RegistrarObject ro) {
+		if (ro.getVoFormInitialException() == null) {
+			return false;
+		}
+		if (ro.getVoFormInitialException().getName().equals("DuplicateRegistrationAttemptException")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	private boolean appliedForExtension(RegistrarObject ro) {
+		if (ro.getVoFormExtensionException() == null) {
+			return false;
+		}
+		if (ro.getVoFormExtensionException().getName().equals("DuplicateRegistrationAttemptException")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private boolean isApplyingToGroup(RegistrarObject ro) {
 		return (group != null);
 	}
 
-
-
-	public boolean resolveException(PerunException ex) {
+	/**
+	 * @param ex exception to be displayed.
+	 * @param bean Perun bean related to exception (Vo or Group)
+	 * @return return if exception is soft. see {@link ExceptionResolver} for more info.
+	 */
+	public boolean displayException(PerunException ex, GeneralObject bean) {
 		Window.scrollTo(0, 0);
-		return exceptionResolver.resolve(ex, notice, vo, group);
+		exceptionResolver.resolve(ex, bean);
+		notice.setHTML(exceptionResolver.getHTML());
+		notice.setVisible(true);
+		if (!exceptionResolver.isSoft()) {
+			notice.setReportInfo(ex);
+			notice.setType(AlertType.DANGER);
+		}
+		return exceptionResolver.isSoft();
 	}
 
-	public ExceptionResolver getExceptionResolver() {
-		return exceptionResolver;
-	}
 
-
-	public AlertErrorReporter getNotice() {
-		return notice;
+	public void hideNotice() {
+		notice.setVisible(false);
 	}
 
 
