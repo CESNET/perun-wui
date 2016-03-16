@@ -137,7 +137,7 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 		}
 		missingItems += "</ul>";
 
-		setInfo(trans.missingRequiredData(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())), missingItems);
+		setInfo(trans.missingRequiredData(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())), missingItems, false);
 	}
 
 

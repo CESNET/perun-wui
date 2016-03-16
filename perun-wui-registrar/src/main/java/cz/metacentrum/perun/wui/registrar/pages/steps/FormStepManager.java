@@ -4,6 +4,8 @@ import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
+import cz.metacentrum.perun.wui.registrar.client.ExceptionResolver;
+import cz.metacentrum.perun.wui.registrar.client.ExceptionResolverImpl;
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
 
 import java.util.LinkedList;
@@ -19,12 +21,14 @@ public class FormStepManager implements StepManager {
 
     private Queue<Step> steps;
     private Summary summary;
+    private ExceptionResolver exceptionResolver;
 
     public FormStepManager(PerunPrincipal pp, FormView formView, Summary summary) {
         this.pp = pp;
         this.formView = formView;
         this.steps = new LinkedList<>();
         this.summary = summary;
+        this.exceptionResolver = new ExceptionResolverImpl();
     }
 
     @Override
@@ -46,6 +50,13 @@ public class FormStepManager implements StepManager {
             @Override
             public void onFinished(Result result) {
                 if (result != null) {
+                    if (result.getException() != null) {
+                        exceptionResolver.resolve(result.getException(), result.getBean());
+                        if (!exceptionResolver.isSoft()) {
+                            // if exception is hard. show it and stay on form (do nothing).
+                            return;
+                        }
+                    }
                     summary.addResult(result);
                 }
                 formView.hideNotice();
@@ -59,13 +70,19 @@ public class FormStepManager implements StepManager {
                 if (result != null) {
                     bean = current.getResult().getBean();
                 }
-                // if exception is soft we can continue in process
-                if (formView.displayException(error, bean)) {
+
+                exceptionResolver.resolve(result.getException(), result.getBean());
+                if (exceptionResolver.isSoft()) {
+                    // if exception is soft we show it and continue in process
+                    formView.displayException(error, bean);
                     if (result != null) {
                         summary.addResult(result);
                     }
                     formView.getForm().clear();
                     (new SubStep(formView.getForm())).call(pp, summary, this);
+                } else {
+                    // if exception is hard we show it and stay on form (do nothing).
+                    formView.displayException(error, bean);
                 }
             }
 
