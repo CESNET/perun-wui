@@ -142,6 +142,19 @@
 
 	<style type="text/css" >
 
+		/* Sticky footer */
+		body {
+			height: 100vh; /* Not use min-height because of IE 10/11 bug */
+			display: flex;
+			flex-direction: column;
+		}
+		body > * {
+			flex-shrink: 0; /* because items used to shrink when content is too long */
+		}
+		#app-content {
+			flex: 1 0 auto;
+		}
+
 		/* HIDE RE-CAPTCHA INPUT FIELD - we use or own TextBox */
 		.recaptcha_input_area {
 			display: none !important;
@@ -165,23 +178,10 @@
 			text-align: right;
 		}
 
-		/* Sticky footer */
-
-		.Site {
-			display: flex;
-			min-height: 100vh;
-			flex-direction: column;
-		}
-
-		.Site-content {
-			flex: 1;
-			/*border-top: 12px solid #005b99;*/
-		}
-
 	</style>
 
 </head>
-<body class="Site">
+<body>
 
 <!-- OPTIONAL: include this if you want history support -->
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
@@ -233,7 +233,7 @@
 </div>
 <!--  /ELIXIR HEADER (end copying)  -->
 
-<div id="app-content" class="Site-content">
+<div id="app-content">
 	<!-- Div we include our webapp too -->
 </div>
 

@@ -10,7 +10,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
-	<b.html:Div addStyleNames="{res.gss.page}">
+	<b.html:Div>
 
 				<b:Heading size="H2" ui:field="pageTitle">
 					<b:Icon ui:field="icon" type="USER" fixedWidth="true" />

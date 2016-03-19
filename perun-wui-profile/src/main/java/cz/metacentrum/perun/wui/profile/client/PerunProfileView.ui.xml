@@ -7,52 +7,71 @@
 	<!-- Import CSS / GSS -->
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
+	<!-- Import Translation -->
+	<ui:with field='trans' type='cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation'/>
+
 	<!-- Import place tokens -->
 	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens"/>
 
 
 	<!-- MAIN LAYOUT -->
-	<b.html:Div addStyleNames="{res.gss.webContent}">
+	<b.html:Div addStyleNames="{res.gss.app}">
 
 		<!-- TOP MENU -->
-		<b.html:Div addStyleNames="{res.gss.navbarWrapper}" ui:field="menuWrapper">
+		<b:Navbar position="DEFAULT" ui:field="menuWrapper">
 			<b:Container>
 				<b:Row>
 					<b:Column size="MD_12">
-						<b:Navbar position="DEFAULT" addStyleNames="{res.gss.navbarFix}">
-							<b:NavbarHeader ui:field="navbarHeader">
-								<b.html:Div ui:field="logoWrapper" addStyleNames="{res.gss.logoWrapper}" pull="LEFT"/>
-								<b.html:Span ui:field="brand" addStyleNames="navbar-brand" />
-								<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
-							</b:NavbarHeader>
 
-							<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse">
+						<b:NavbarHeader ui:field="navbarHeader">
+							<b.html:Div ui:field="logoWrapper" addStyleNames="{res.gss.logoWrapper}" pull="LEFT"/>
+							<b.html:Span ui:field="brand" addStyleNames="navbar-brand" ><ui:text from='{trans.appName}'/></b.html:Span>
+							<b:NavbarCollapseButton dataTarget="#navbar-collapse"/>
+						</b:NavbarHeader>
 
-								<g:FocusPanel ui:field="collapseClickHandler" >
-									<b:NavbarNav ui:field="topMenu" pull="RIGHT">
-										<b:AnchorListItem ui:field="topMenuMyProfile" active="true" icon="HOME" iconSize="LARGE" targetHistoryToken="{placeTokens.getPersonal}" visible="false"/><!--visibleOn="SM_MD_LG"-->
-										<b:AnchorListItem visibleOn="XS" ui:field="personalXS" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >Personal</b:AnchorListItem>
-										<b:AnchorListItem visibleOn="XS" ui:field="organizationsXS" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">My virtual organizations</b:AnchorListItem>
-										<b:AnchorListItem visibleOn="XS" ui:field="identitiesXS" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">My identities</b:AnchorListItem>
-										<b:AnchorListItem visibleOn="XS" ui:field="loginsXS" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" text="Logins &amp; Passwords" />
-										<b:AnchorListItem visibleOn="XS" ui:field="settingsXS" icon="COG" iconFixedWidth="true" targetHistoryToken="{placeTokens.getSettings}" >Settings</b:AnchorListItem>
-										<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">Logout</b:AnchorListItem>
-									</b:NavbarNav>
-								</g:FocusPanel>
-							</b:NavbarCollapse>
-						</b:Navbar>
+						<b:NavbarCollapse b:id="navbar-collapse" ui:field="collapse">
+
+							<g:FocusPanel ui:field="collapseClickHandler" >
+								<b:NavbarNav ui:field="topMenu" pull="RIGHT">
+									<b:AnchorListItem ui:field="topMenuMyProfile" active="true" icon="HOME" iconSize="LARGE" targetHistoryToken="{placeTokens.getPersonal}" visible="false">
+										<ui:text from='{trans.menuMyProfile}'/>
+									</b:AnchorListItem><!--visibleOn="SM_MD_LG"-->
+									<b:AnchorListItem visibleOn="XS" ui:field="personalXS" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >
+										<ui:text from='{trans.menuMyProfile}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem visibleOn="XS" ui:field="organizationsXS" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">
+										<ui:text from='{trans.menuOrganizations}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem visibleOn="XS" ui:field="identitiesXS" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">
+										<ui:text from='{trans.menuMyIdentities}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem visibleOn="XS" ui:field="loginsXS" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" >
+										<ui:text from='{trans.menuLoginsAndPasswords}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem visibleOn="XS" ui:field="settingsXS" icon="COG" iconFixedWidth="true" targetHistoryToken="{placeTokens.getSettings}" >
+										<ui:text from='{trans.menuSettings}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">
+										<ui:text from='{trans.logout}'/>
+									</b:AnchorListItem>
+								</b:NavbarNav>
+							</g:FocusPanel>
+						</b:NavbarCollapse>
+
 					</b:Column>
 				</b:Row>
 			</b:Container>
-		</b.html:Div>
+		</b:Navbar>
 
 		<!-- MAIN CONTENT -->
 		<b:Container>
 			<b:Row>
-				<b:Column size="MD_12" addStyleNames="{res.gss.menuAndPageWrapper}">
+
+				<!-- SIDE MENU -->
+				<b:Column size="SM_4">
 
 					<!-- LEFT MENU -->
-					<b.html:Div ui:field="menu" width="250px" marginTop="15" visibleOn="SM_MD_LG" addStyleNames="{res.gss.leftMenu}">
+					<b.html:Div ui:field="menu" visibleOn="SM_MD_LG">
 
 						<b:Panel>
 							<b:PanelHeader>
@@ -63,21 +82,32 @@
 							</b:PanelHeader>
 							<b:PanelBody>
 								<b:NavPills stacked="true" ui:field="menuPills">
-									<b:AnchorListItem ui:field="personal" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >Personal</b:AnchorListItem>
-									<b:AnchorListItem ui:field="organizations" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">My virtual organizations</b:AnchorListItem>
-									<b:AnchorListItem ui:field="identities" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">My identities</b:AnchorListItem>
-									<b:AnchorListItem ui:field="logins" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" text="Logins &amp; Passwords" />
-									<b:AnchorListItem ui:field="settings" icon="COG" iconFixedWidth="true" targetHistoryToken="{placeTokens.getSettings}">Settings</b:AnchorListItem>
+									<b:AnchorListItem ui:field="personal" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >
+										<ui:text from='{trans.menuMyProfile}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem ui:field="organizations" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">
+										<ui:text from='{trans.menuOrganizations}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem ui:field="identities" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">
+										<ui:text from='{trans.menuMyIdentities}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem ui:field="logins" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" >
+										<ui:text from='{trans.menuLoginsAndPasswords}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem ui:field="settings" icon="COG" iconFixedWidth="true" targetHistoryToken="{placeTokens.getSettings}">
+										<ui:text from='{trans.menuSettings}'/>
+									</b:AnchorListItem>
 								</b:NavPills>
 							</b:PanelBody>
 						</b:Panel>
 
 					</b.html:Div>
 
-					<!-- PAGE CONTENT -->
-					<b:Column size="MD_12" ui:field="pageContent" addStyleNames="{res.gss.pageWrapper}" />
-
 				</b:Column>
+
+				<!-- PAGE CONTENT -->
+				<b:Column size="SM_8" ui:field="pageContent"/>
+
 			</b:Row>
 
 		</b:Container>

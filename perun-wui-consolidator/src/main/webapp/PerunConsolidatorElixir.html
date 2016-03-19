@@ -158,22 +158,22 @@
 	<style type="text/css" >
 
 		/* Sticky footer */
-
-		.Site {
+		body {
+			height: 100vh; /* Not use min-height because of IE 10/11 bug */
 			display: flex;
-			min-height: 100vh;
 			flex-direction: column;
 		}
-
-		.Site-content {
-			flex: 1;
-			/*border-top: 12px solid #005b99;*/
+		body > * {
+			flex-shrink: 0; /* because items used to shrink when content is too long */
+		}
+		#app-content {
+			flex: 1 0 auto;
 		}
 
 	</style>
 
 </head>
-<body class="Site">
+<body>
 
 <!-- ELIXIR HEADER (copy from here)  -->
 <div style="background-color: #333; margin: 0; padding: 0;border-bottom: 1px solid #e3e3e3;">
@@ -214,7 +214,7 @@
 </div>
 <!--  /ELIXIR HEADER (end copying)  -->
 
-<div id="app-content" class="Site-content">
+<div id="app-content">
 	<!-- Div we include our webapp too -->
 </div>
 
