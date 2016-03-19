@@ -7,7 +7,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
-	<b.html:Div addStyleNames="{res.gss.page}">
+	<b.html:Div addStyleNames="{res.gss.flexWindowCol}">
 
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="BUILDING_O" fixedWidth="true" />
@@ -19,7 +19,7 @@
 
 		<b:Alert text="You are member of following virtual organizations. Click to name to see details." ui:field="paragraph" type="INFO" dismissable="true"/>
 
-		<b.html:Div ui:field="page">
+		<b.html:Div ui:field="page" addStyleNames="{res.gss.flexWindowCol}">
 
 		</b.html:Div>
 

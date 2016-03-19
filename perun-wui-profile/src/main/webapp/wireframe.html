@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<!-- vanilla single layout file how flexboxes works in profile app -->
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Wireframe</title>
+
+    <!-- Bootstrap - Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          crossorigin="anonymous">
+
+    <!-- Bootstrap - Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+          crossorigin="anonymous">
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Bootstrap - Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+
+    <style>
+
+        /* MAIN LAYOUT */
+
+        body {
+            background-color: rgb(150, 150, 150);
+        }
+
+        * {
+            outline: rgba(0, 0, 0, 0.1) solid 1px;
+            background-color: rgba(250, 250, 250, 0.3);
+        }
+
+        .big-footer {
+            height: 300px;
+
+        }
+
+        @media (min-width: 768px) {
+            .flex-root {
+                height: 100vh;
+                width: 100%;
+            }
+
+            /* Because footer (maybe other elements) used to shrink when content was too long.
+               Has to be before flex definition (will be overridden) */
+            .flex-window-row > *, .flex-window-col > * {
+                flex-shrink: 0;
+            }
+            .flex-window-row {
+                display: flex;
+                flex-direction: row;
+                flex: 1 1 auto;
+                overflow: auto;
+            }
+            .flex-window-col {
+                display: flex;
+                flex-direction: column;
+                flex: 1 1 auto;
+                overflow: auto;
+            }
+        }
+
+
+    </style>
+</head>
+<body class="flex-root flex-window-col">
+
+    <div>linker</div>
+
+    <div class="flex-window-col">
+
+        <div class="flex-window-col">
+
+            <nav class="navbar navbar-static-top">
+                <div class="container">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                                data-target="#bs-example-navbar-collapse-1">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">navbar</a>
+                    </div>
+
+                    <div class="visible-xs-block">
+                        <div class="navbar-collapse collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav">
+                                <li><a href="#">Home</a></li>
+                                <li><a href="#">Office</a></li>
+                                <li><a href="#">School</a></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </nav>
+
+            <div class="container flex-window-col">
+
+                <div class="row flex-window-row">
+
+                    <div class="col-sm-4 hidden-xs">
+
+                        <ul class="nav nav-pills nav-stacked">
+                            <li><a href="#">Home</a></li>
+                            <li><a href="#">Office</a></li>
+                            <li><a href="#">School</a></li>
+                        </ul>
+
+                    </div>
+
+                    <div class="col-sm-8 flex-window-col">
+
+                        <div>
+                            <h2>Grid header</h2>
+                        </div>
+
+                        <div class="flex-window-col">
+
+                            <div class="panel">
+                                <div class="panel-heading" role="tab" id="headingOne">
+                                    <h4 class="panel-title">
+                                        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne"
+                                           aria-expanded="true" aria-controls="collapseOne">
+                                            Collapsible Group Item #1
+                                        </a>
+                                    </h4>
+                                </div>
+                                <div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                                    <div class="panel-body">
+                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid.
+                                        3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt
+                                        laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin
+                                        coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes
+                                        anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings
+                                        occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't
+                                        heard of them accusamus labore sustainable VHS.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <table class="table">
+                                <script>
+                                    var rows = 30, cols = 5;
+                                    for(var i = 0; i < rows; i++) {
+                                        $('table').append('<tr></tr>');
+                                        for(var j = 0; j < cols; j++) {
+                                            $('table').find('tr').eq(i).append('<td></td>');
+                                            $('table').find('tr').eq(i).find('td').eq(j).text(i+' / '+j);
+                                        }
+                                    }
+                                </script>
+                            </table>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="big-footer flex-bar">footer</div>
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
