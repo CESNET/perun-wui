@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.model.common;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
 /**
@@ -17,7 +18,11 @@ public class FeedEntity extends JavaScriptObject {
 	 * @return URL of IdP logo
 	 */
 	public final String getLogoUrl() {
-		return JsUtils.getNativePropertyString(this, "logo");
+		String url = JsUtils.getNativePropertyString(this, "logo");
+		if (url != null && !url.startsWith("http://") && !url.startsWith("https://")) {
+			return PerunConfiguration.getWayfFeedImagesUrl()+"/"+url;
+		}
+		return url;
 	}
 
 	/**
