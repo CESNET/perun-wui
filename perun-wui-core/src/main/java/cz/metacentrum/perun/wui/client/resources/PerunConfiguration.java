@@ -424,6 +424,15 @@ public final class PerunConfiguration {
 	}
 
 	/**
+	 * Returns URL to feed images for Identity Consolidator webapp
+	 *
+	 * @return URL to feed images
+	 */
+	public static String getWayfFeedImagesUrl() {
+		return getConfigPropertyString("wayf.feedImagesUrl");
+	}
+
+	/**
 	 * Returns list of all hostnames supported for Identity Consolidator using cert authz.
 	 * Empty if none supported.
 	 *
