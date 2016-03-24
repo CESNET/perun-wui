@@ -15,35 +15,15 @@ public interface PerunProfileResources extends ClientBundle {
 
 	interface PerunProfileCss extends CssResource {
 
-		// MAIN LAYOUT
+		String app();
 
-		String webContent();
+		// FLEX LAYOUT
 
-		// TOP MENU
+		String flexWindowRow();
 
-		String navbarWrapper();
-
-		String navbarFix();
+		String flexWindowCol();
 
 		String logoWrapper();
-
-		// MAIN CONTENT
-
-		String menuAndPageWrapper();
-
-		String leftMenu();
-
-		String pageWrapper();
-
-		String page();
-
-		// FOOTER
-
-		//String footer();
-
-		// PAGE CONTENT
-
-		String grid();
 
 	}
 

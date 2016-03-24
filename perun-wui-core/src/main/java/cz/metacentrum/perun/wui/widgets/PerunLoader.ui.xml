@@ -9,28 +9,27 @@
 			max-width: 400px;
 			margin: 0px auto;
 		}
-		.marginTop {
+		.outWrapper {
 			margin-top: 120px;
+			flex: 1 1 auto;
 		}
 		.progress {
 			margin-bottom: 10px;
 		}
 	</ui:style>
 
-	<b:Container fluid="true">
-		<b:Row addStyleNames="{style.marginTop}">
-			<b.html:Div addStyleNames="{style.wrapper}">
+	<b.html:Div addStyleNames="{style.outWrapper}">
+		<b.html:Div addStyleNames="{style.wrapper}">
 
-				<b:Progress active="true" type="STRIPED" addStyleNames="{style.progress}" ui:field="progress" visible="false">
-					<b:ProgressBar ui:field="bar" />
-				</b:Progress>
+			<b:Progress active="true" type="STRIPED" addStyleNames="{style.progress}" ui:field="progress" visible="false">
+				<b:ProgressBar ui:field="bar" />
+			</b:Progress>
 
-				<p:AlertErrorReporter ui:field="alert" type="DANGER"/>
+			<p:AlertErrorReporter ui:field="alert" type="DANGER"/>
 
-				<b:Alert dismissable="false" ui:field="message" type="INFO" visible="false" />
+			<b:Alert dismissable="false" ui:field="message" type="INFO" visible="false" />
 
-			</b.html:Div>
-		</b:Row>
-	</b:Container>
+		</b.html:Div>
+	</b.html:Div>
 
 </ui:UiBinder>
