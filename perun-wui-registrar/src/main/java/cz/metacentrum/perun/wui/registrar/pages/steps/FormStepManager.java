@@ -54,6 +54,7 @@ public class FormStepManager implements StepManager {
                         exceptionResolver.resolve(result.getException(), result.getBean());
                         if (!exceptionResolver.isSoft()) {
                             // if exception is hard. show it and stay on form (do nothing).
+                            formView.displayException(result.getException(), result.getBean());
                             return;
                         }
                     }
