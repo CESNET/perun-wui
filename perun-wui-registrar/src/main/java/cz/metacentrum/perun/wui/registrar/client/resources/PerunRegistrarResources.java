@@ -16,12 +16,6 @@ public interface PerunRegistrarResources extends ClientBundle {
 
 	interface PerunRegistrarCss extends CssResource {
 
-		String page();
-
-		String pageHeader();
-
-		String webContent();
-
 		String pageWrapper();
 
 		String grid();

@@ -21,6 +21,7 @@ import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.NavPills;
+import org.gwtbootstrap3.client.ui.Navbar;
 import org.gwtbootstrap3.client.ui.NavbarCollapse;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
 import org.gwtbootstrap3.client.ui.NavbarNav;
@@ -47,7 +48,7 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 
 	@UiField FocusPanel collapseClickHandler;
 
-	@UiField Div menuWrapper;
+	@UiField Navbar menuWrapper;
 	@UiField Span brand;
 	@UiField Div logoWrapper;
 	@UiField static NavbarHeader navbarHeader;
@@ -101,8 +102,6 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 			menuWrapper.setVisible(false);
 		}
 
-		brand.setText(translation.appName());
-
 		// put logo
 		Image logo = PerunConfiguration.getBrandLogo();
 		logo.setWidth("auto");
@@ -113,20 +112,6 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 		if (!PerunConfiguration.isLangSwitchingDisabled()) {
 			UiUtils.addLanguageSwitcher(topMenu);
 		}
-
-		topMenuMyProfile.setText(translation.menuMyProfile());
-
-		personal.setText(translation.menuMyProfile());
-		personalXS.setText(translation.menuMyProfile());
-		organizations.setText(translation.menuOrganizations());
-		organizationsXS.setText(translation.menuOrganizations());
-		identities.setText(translation.menuMyIdentities());
-		identitiesXS.setText(translation.menuMyIdentities());
-		logins.setText(translation.menuLoginsAndPasswords());
-		loginsXS.setText(translation.menuLoginsAndPasswords());
-		settings.setText(translation.menuSettings());
-		settingsXS.setText(translation.menuSettings());
-		logout.setText(translation.logout());
 
 		// We must set data toggle when text is changed otherwise its wrongly ordered
 		topMenuMyProfile.setDataToggle(Toggle.DROPDOWN);

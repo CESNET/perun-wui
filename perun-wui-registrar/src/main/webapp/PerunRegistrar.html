@@ -96,6 +96,8 @@
 				alert("Data connection lost. Server is probably being restarted or URL \"/"+RPC_SERVER+"/rpc/\" is not valid. Click OK to reload the page.");
 			} else if (l_lang == "cs") {
 				alert("Aplikace ztratila spojení. Server se pravděpodobně právě restartuje nebo URL \"/"+RPC_SERVER+"/rpc/\" není platná. Klikněte na OK pro obnovení stránky.");
+			} else {
+				alert("Data connection lost. Server is probably being restarted or URL \"/"+RPC_SERVER+"/rpc/\" is not valid. Click OK to reload the page.");
 			}
 
 			window.location.reload(true);
@@ -142,6 +144,19 @@
 
 	<style type="text/css" >
 
+		/* Sticky footer */
+		body {
+			height: 100vh; /* Not use min-height because of IE 10/11 bug */
+			display: flex;
+			flex-direction: column;
+		}
+		body > * {
+			flex-shrink: 0; /* because items used to shrink when content is too long */
+		}
+		#app-content {
+			flex: 1 0 auto;
+		}
+
 		/* HIDE RE-CAPTCHA INPUT FIELD - we use or own TextBox */
 		.recaptcha_input_area {
 			display: none !important;
@@ -186,19 +201,6 @@
 			font-weight: bold;
 		}
 
-		/* Sticky footer */
-
-		.Site {
-			display: flex;
-			min-height: 100vh;
-			flex-direction: column;
-		}
-
-		.Site-content {
-			flex: 1;
-			/*border-top: 12px solid #005b99;*/
-		}
-
 		#perun-footer {
 			margin-top: 3em;
 			background-color: #f8f8f8;
@@ -213,7 +215,7 @@
 	</style>
 
 </head>
-<body class="Site">
+<body>
 
 <!-- OPTIONAL: include this if you want history support -->
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
@@ -228,7 +230,7 @@
 
 <div id="cesnet_linker_placeholder" data-lang="en"></div>
 
-<div id="app-content" class="Site-content">
+<div id="app-content">
 	<!-- Div we include our webapp too -->
 </div>
 
