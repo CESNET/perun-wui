@@ -33,7 +33,7 @@
 		<!-- Project wide GWT version -->
 		<gwtVersion>2.7.0</gwtVersion>
 		<gwtPluginVersion>2.7.0</gwtPluginVersion>
-		<gwtp.version>1.5.2</gwtp.version>
+		<gwtp.version>1.5.3</gwtp.version>
 		<gin.version>2.1.2</gin.version>
 
 	</properties>
