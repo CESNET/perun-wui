@@ -449,12 +449,13 @@ public final class PerunConfiguration {
 	 *
 	 * @return SP login URL
 	 */
-	public static String getWayfSpDsUrl() {
+	public static String getWayfSpLoginUrl() {
 
+		// TODO - rename property in a config too
 		String SPlogin = getConfigPropertyString("wayf.spDsUrl");
 		if (SPlogin == null || SPlogin.isEmpty()) {
 			// backup to current hostname
-			SPlogin = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/DS";
+			SPlogin = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/Login";
 		}
 		return SPlogin;
 

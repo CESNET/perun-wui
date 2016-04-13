@@ -780,22 +780,10 @@ public class Utils {
 				String rpc = "";
 				if (PerunSession.getInstance().getRpcServer() != null) {
 					rpc = PerunSession.getInstance().getRpcServer();
-				}
-
-				if (rpc.equalsIgnoreCase("krb")) {
-					baseUrl += "/krb";
-				} else if (rpc.equalsIgnoreCase("fed")) {
-					baseUrl += "/fed";
-				} else if (rpc.equalsIgnoreCase("cert")) {
-					baseUrl += "/cert";
-				} else if (rpc.equalsIgnoreCase("einfra")) {
-					baseUrl += "/krb-einfra";
+					baseUrl += "/" + rpc + "/pwd-reset/";
 				} else {
-					// KRB AS BACKUP - "default"
-					baseUrl += "/krb";
+					baseUrl += "/pwd-reset/";
 				}
-
-				baseUrl += "/pwd-reset/";
 
 			} else {
 
