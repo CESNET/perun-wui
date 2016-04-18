@@ -123,4 +123,70 @@ public class UsersManager {
 
 	}
 
+	/**
+	 * Change password in selected namespace
+	 *
+	 * @param userId Users ID
+	 * @param loginNamespace Login namespace in a which user wants to change password
+	 * @param oldPass Old password used by the user
+	 * @param newPass New password set for the user
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request changePassword(int userId, String loginNamespace, String oldPass, String newPass, JsonEvents events){
+
+		JsonClient client = new JsonClient(events);
+		if (userId > 0) client.put("user", userId);
+		if (loginNamespace != null && !loginNamespace.isEmpty()) client.put("loginNamespace", loginNamespace);
+		if (oldPass != null && !oldPass.isEmpty()) client.put("oldPassword", oldPass);
+		if (newPass!= null && !newPass.isEmpty()) client.put("newPassword", newPass);
+		client.put("checkOldPassword", 1);
+		return client.call(USERS_MANAGER + "changePassword");
+
+	}
+
+	/**
+	 * Reset users password in selected namespace
+	 *
+	 * @param userId Users ID
+	 * @param loginNamespace Login namespace in a which user wants to reset password
+	 * @param newPass New password set for the user
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request resetPassword(int userId, String loginNamespace, String newPass, JsonEvents events){
+
+		JsonClient client = new JsonClient(events);
+		client.put("oldPassword", "");
+		client.put("checkOldPassword", 0);
+
+		if (userId > 0) client.put("user", userId);
+		if (loginNamespace != null && !loginNamespace.isEmpty()) client.put("loginNamespace", loginNamespace);
+		if (newPass!= null && !newPass.isEmpty()) client.put("newPassword", newPass);
+		return client.call(USERS_MANAGER + "changePassword");
+
+	}
+
+	/**
+	 * Reset users password in selected namespace by non-authz call using secret token
+	 *
+	 * @param i Token param i
+	 * @param m Token param m
+	 * @param newPass New password set for the user
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request resetNonAuthzPassword(String i, String m, String newPass, JsonEvents events){
+
+		JsonClient client = new JsonClient(events);
+		if (i != null && !i.isEmpty()) client.put("i", i);
+		if (m != null && !m.isEmpty()) client.put("m", m);
+		if (newPass!= null && !newPass.isEmpty()) client.put("password", newPass);
+		return client.call(USERS_MANAGER + "changeNonAuthzPassword");
+
+	}
+
 }

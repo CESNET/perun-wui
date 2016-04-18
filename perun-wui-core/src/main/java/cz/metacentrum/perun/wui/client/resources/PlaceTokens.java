@@ -12,6 +12,7 @@ public class PlaceTokens {
 	public static final String HOME = "home";
 	public static final String NOT_FOUND = "notfound"; // also error page
 	public static final String UNAUTHORIZED = "unauthorized";
+	public static final String NOT_USER = "notuser";
 	public static final String LOGOUT = "logout";
 	public static final String HELP = "help";
 
@@ -62,6 +63,10 @@ public class PlaceTokens {
 
 	public static String getUnauthorized() {
 		return UNAUTHORIZED;
+	}
+
+	public static String getNotUser() {
+		return NOT_USER;
 	}
 
 	public static String getLogout() {

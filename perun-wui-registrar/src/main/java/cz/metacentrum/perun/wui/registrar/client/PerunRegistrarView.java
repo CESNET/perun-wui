@@ -9,7 +9,6 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -151,7 +150,9 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		//logo.setPull(Pull.LEFT);
 		logoWrapper.add(logo);
 
-		UiUtils.addLanguageSwitcher(topMenu);
+		if (!PerunConfiguration.isLangSwitchingDisabled()) {
+			UiUtils.addLanguageSwitcher(topMenu);
+		}
 
 		// init buttons
 		application.setText(translation.application());

@@ -1,0 +1,57 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+             xmlns:g='urn:import:com.google.gwt.user.client.ui'
+             xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+             xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
+             xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
+             xmlns:p.boxes='urn:import:cz.metacentrum.perun.wui.widgets.boxes'
+>
+
+	<ui:with field="res" type="cz.metacentrum.perun.wui.pwdreset.client.resources.PerunPwdResetResources"/>
+
+	<ui:style>
+	</ui:style>
+
+	<b.html:Div>
+
+		<b:Container>
+			<b:Row>
+				<b:Column size="MD_12">
+
+					<b:Heading size="H2" ui:field="pageTitle">
+						<b:Icon ui:field="icon" type="KEY" fixedWidth="true" />
+						<b.html:Text text="Password reset" ui:field="text"/>
+						<b.html:Small text=""/>
+					</b:Heading>
+
+					<p:PerunLoader ui:field="loader" visible="true" />
+
+					<p:AlertErrorReporter ui:field="alert" visible="false" />
+
+					<b:Form ui:field="form" visible="false" addStyleNames="col-md-4">
+						<b:FieldSet marginTop="50" marginBottom="50">
+
+							<b:FormLabel text="Nové heslo" showRequiredIndicator="true" ui:field="passLabel"/>
+
+							<b:FormGroup ui:field="passItem">
+								<b:InputGroup>
+									<b:InputGroupAddon icon="KEY" iconFixedWidth="true" />
+									<p.boxes:ExtendedPasswordTextBox addStyleNames="passwordFormItemFirst" ui:field="passwordTextBox" />
+									<p.boxes:ExtendedPasswordTextBox addStyleNames="passwordFormItemLast" ui:field="passwordTextBox2" />
+								</b:InputGroup>
+								<b:HelpBlock ui:field="itemStatus" />
+							</b:FormGroup>
+
+							<b:FormGroup>
+								<p:PerunButton icon="CHEVRON_RIGHT" iconFixedWidth="true" type="SUCCESS" ui:field="submit" text="Password reset" />
+							</b:FormGroup>
+
+						</b:FieldSet>
+					</b:Form>
+
+				</b:Column>
+			</b:Row>
+		</b:Container>
+
+	</b.html:Div>
+
+</ui:UiBinder>

@@ -35,6 +35,15 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Form has no form items.")
 	public String formHasNoFormItems();
 
+	@DefaultMessage("You are not registered user")
+	public String notUserPageTitle();
+
+	@DefaultMessage("In order to use this application you need to be registered user, but you were not recognized by identity you used to sign-in: {0} at {1}.")
+	public String notUserText(String login, String from);
+
+	@DefaultMessage("In order to use this application you need to be registered user, but you used anonymous access without any secret token to prove your identity.")
+	public String notUserTextNon();
+
 	/* ========= OBJECT TRANSLATION ============ */
 
 	@DefaultMessage("Approved")
