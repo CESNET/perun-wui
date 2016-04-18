@@ -35,7 +35,7 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("Passwords doesn`t match!")
 	public String passwordsDoesnMatch();
 
-	@DefaultMessage("Password can't be empty!")
+	@DefaultMessage("Password can`t be empty!")
 	public String passwordCantBeEmpty();
 
 	@DefaultMessage("Enter new password twice")

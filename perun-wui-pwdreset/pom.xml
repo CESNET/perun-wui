@@ -118,7 +118,7 @@
                 <!-- Plugin configuration. There are many available options, see
                   gwt-maven-plugin documentation at codehaus.org -->
                 <configuration>
-                    <module>cz.metacentrum.perun.wui.registrar.perun-wui-pwdreset-dev</module>
+                    <module>cz.metacentrum.perun.wui.pwdreset.perun-wui-pwdreset-dev</module>
                     <runTarget>PerunPwdReset.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
                     <!-- skip code optimization for devel not necessary -->
@@ -231,7 +231,7 @@
                         <!-- Plugin configuration. There are many available options, see
                           gwt-maven-plugin documentation at codehaus.org -->
                         <configuration>
-                            <module>cz.metacentrum.perun.wui.registrar.perun-wui-pwdreset</module>
+                            <module>cz.metacentrum.perun.wui.pwdreset.perun-wui-pwdreset</module>
                             <runTarget>PerunPwdReset.html</runTarget>
                             <hostedWebapp>${webappDirectory}</hostedWebapp>
                         </configuration>

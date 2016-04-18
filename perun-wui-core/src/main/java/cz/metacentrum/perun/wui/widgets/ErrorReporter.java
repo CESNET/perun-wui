@@ -9,10 +9,10 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
-import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.JsonUtils;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
@@ -142,7 +142,7 @@ public class ErrorReporter {
 		text += "Perun instance: " + PerunConfiguration.perunInstanceName()+ "\n";
 		text += "Request: " + ex.getRequestURL() + "\n";
 		if (postObject != null) text += "Post data: " + postObject.toString() + "\n";
-		text += "Application state: #" + PerunSession.getPlaceManager().getCurrentPlaceRequest().getNameToken() + "\n\n";
+		text += "Application state: " + Window.Location.createUrlBuilder().buildString() + "\n\n";
 		text += "Authz: " + PerunSession.getInstance().getRolesString() + "\n\n";
 
 		if (PerunSession.getInstance().getUser() == null) {
