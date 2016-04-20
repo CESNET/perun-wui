@@ -56,6 +56,7 @@ public class PerunAdmin extends AbstractPresenterModule implements EntryPoint {
 		bindPresenter(NotAuthorizedPresenter.class, NotAuthorizedPresenter.MyView.class, NotAuthorizedView.class, NotAuthorizedPresenter.MyProxy.class);
 		bindPresenter(NotFoundPresenter.class, NotFoundPresenter.MyView.class, NotFoundView.class, NotFoundPresenter.MyProxy.class);
 		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class, LogoutView.class, LogoutPresenter.MyProxy.class);
+		bindPresenter(NotUserPresenter.class, NotUserPresenter.MyView.class, NotUserView.class, NotUserPresenter.MyProxy.class);
 
 		// Perun Admin WUI specific pages
 		bindPresenter(VosManagementPresenter.class, VosManagementPresenter.MyView.class, VosManagementView.class, VosManagementPresenter.MyProxy.class);

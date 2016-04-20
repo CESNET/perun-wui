@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public class AttributesManager {
 
-	private static final String AUTHZ_MANAGER = "attributesManager/";
+	private static final String ATTRIBUTES_MANAGER = "attributesManager/";
 
 	/**
 	 * Get all attributes definitions without authz info.
@@ -28,7 +28,7 @@ public class AttributesManager {
 	public static Request getAttributesDefinitions(JsonEvents events) {
 
 		JsonClient client = new JsonClient(events);
-		return client.call(AUTHZ_MANAGER + "getAttributesDefinition");
+		return client.call(ATTRIBUTES_MANAGER + "getAttributesDefinition");
 
 	}
 
@@ -51,7 +51,7 @@ public class AttributesManager {
 				client.put(key, ids.get(key));
 			}
 		}
-		return client.call(AUTHZ_MANAGER + "getAttributesDefinitionWithRights");
+		return client.call(ATTRIBUTES_MANAGER + "getAttributesDefinitionWithRights");
 
 	}
 
@@ -64,7 +64,24 @@ public class AttributesManager {
 	public static Request getMemberAttributes(ArrayList<String> attrNames, JsonEvents events) {
 
 		JsonClient client = new JsonClient(events);
-		return client.call(AUTHZ_MANAGER + "getAttributesDefinition");
+		return client.call(ATTRIBUTES_MANAGER + "getAttributesDefinition");
+
+	}
+
+	/**
+	 * Get all user logins (from all namespaces) as attributes
+	 *
+	 * @param userId ID of User to get logins for
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getLogins(int userId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (userId > 0) {
+			client.put("user", userId);
+		}
+		return client.call(ATTRIBUTES_MANAGER + "getLogins");
 
 	}
 

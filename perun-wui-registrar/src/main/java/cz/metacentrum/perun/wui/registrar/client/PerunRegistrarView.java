@@ -9,13 +9,13 @@ import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.ui.FocusPanel;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
@@ -151,12 +151,19 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		//logo.setPull(Pull.LEFT);
 		logoWrapper.add(logo);
 
-		UiUtils.addLanguageSwitcher(topMenu);
+		if (!PerunConfiguration.isLangSwitchingDisabled()) {
+			UiUtils.addLanguageSwitcher(topMenu);
+		}
 
 		// init buttons
 		application.setText(translation.application());
 		myApplications.setText(translation.myApplications());
 		logout.setText(translation.logout());
+
+		// hide if not signed-in
+		if (PerunSession.getInstance().getRpcServer().equals("non")) {
+			logout.setVisible(false);
+		}
 
 	}
 

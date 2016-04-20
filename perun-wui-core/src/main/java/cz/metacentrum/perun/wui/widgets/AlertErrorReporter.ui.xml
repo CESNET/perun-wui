@@ -12,7 +12,7 @@
 
 	<b:Alert dismissable="false" ui:field="alert" type="DANGER" >
 		<g:HTML ui:field="html" />
-		<b:ButtonToolBar addStyleNames="{style.top}" visible="false">
+		<b:ButtonToolBar addStyleNames="{style.top}" visible="false" ui:field="toolbar">
 			<p:PerunButton ui:field="retry"  icon="REFRESH" pull="LEFT"  visible="false">Try again</p:PerunButton>
 			<p:PerunButton ui:field="report" icon="BUG"     pull="RIGHT" visible="false" type="DANGER">Report error</p:PerunButton>
 		</b:ButtonToolBar>

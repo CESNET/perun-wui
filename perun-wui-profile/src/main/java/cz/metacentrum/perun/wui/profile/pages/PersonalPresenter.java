@@ -54,7 +54,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 
 			String userId = request.getParameter("id", null);
 			if (userId == null) {
-				userId = String.valueOf(PerunSession.getInstance().getUser().getId());
+				userId = String.valueOf(PerunSession.getInstance().getUserId());
 			}
 
 			final int id = Integer.valueOf(userId);
