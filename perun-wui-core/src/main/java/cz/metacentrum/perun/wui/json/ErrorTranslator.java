@@ -1,7 +1,7 @@
 package cz.metacentrum.perun.wui.json;
 
 import com.google.gwt.core.client.GWT;
-import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
+import cz.metacentrum.perun.wui.client.resources.PerunErrorTranslation;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -16,21 +16,21 @@ import cz.metacentrum.perun.wui.model.beans.Group;
  */
 public class ErrorTranslator {
 
-	private static PerunTranslation translation = GWT.create(PerunTranslation.class);
+	private static PerunErrorTranslation translation = GWT.create(PerunErrorTranslation.class);
 
 	public static String getTranslatedMessage(PerunException error) {
 
 		String errorName = error.getName();
 
-		String pleaseRefresh = "<p>Try to <strong>refresh the browser</strong> window and retry.<br />If problem persist, please report it.";
+		String pleaseRefresh = translation.pleaseRefresh();
 
 		// RPC ERRORS
 		if ("RpcException".equalsIgnoreCase(errorName)) {
 
 			if ("UNCATCHED_EXCEPTION".equalsIgnoreCase(error.getType())) {
-				return "Unknown error occurred. Please report it.";
+				return translation.uncatchedException();
 			} else {
-				return "Error in communication with server. " + pleaseRefresh;
+				return translation.rpcException() + " " + pleaseRefresh;
 			}
 
 		} else if ("PrivilegeException".equalsIgnoreCase(errorName)) {
@@ -386,7 +386,7 @@ public class ErrorTranslator {
 		} else if ("InternalErrorException".equalsIgnoreCase(errorName)) {
 
 			// FIXME - is this generic error ??
-			return "Your operation can't be completed. Internal error occurred. Please report this error.";
+			return translation.internalErrorException();
 
 		} else if ("LoginNotExistsException".equalsIgnoreCase(errorName)) {
 
@@ -681,9 +681,7 @@ public class ErrorTranslator {
 
 		} else if ("RequestTimeout".equalsIgnoreCase(errorName)) {
 
-			String result = "Your operation is still processing on server. Please refresh your view (table) to see, if it ended up successfully before trying again.";
-
-			return result;
+			return translation.requestTimeout();
 
 		}
 

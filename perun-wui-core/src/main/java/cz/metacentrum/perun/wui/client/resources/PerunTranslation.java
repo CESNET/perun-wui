@@ -42,9 +42,6 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("In order to use this application you need to be registered user, but you used anonymous access without any secret token to prove your identity.")
 	public String notUserTextNon();
 
-	@DefaultMessage("You are not authorized to perform this action.")
-	public String notAuthorizedCallback();
-
 	/* ========= OBJECT TRANSLATION ============ */
 
 	@DefaultMessage("Approved")
