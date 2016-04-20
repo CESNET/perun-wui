@@ -154,6 +154,9 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Sign out")
 	public String logout();
 
+	@DefaultMessage("Close")
+	public String close();
+
 	/* ------------ LANGUAGE SWITCHING ---------------- */
 
 	@DefaultMessage("Language")
@@ -190,6 +193,9 @@ public interface PerunTranslation extends Messages {
 
 	@DefaultMessage("You can attach custom message describing what you tried to do.")
 	public String reportErrorMessagePlaceholder();
+
+	@DefaultMessage("Error report was successfully sent with ID: <b>{0}</b>.")
+	public String reportErrorSuccessNoMail(int ticketNumber);
 
 	@DefaultMessage("Error report was successfully sent with ID: <b>{0}</b>. You should receive a notification on your mail: <b>{1}</b>")
 	public String reportErrorSuccess(int ticketNumber, String reporterMail);

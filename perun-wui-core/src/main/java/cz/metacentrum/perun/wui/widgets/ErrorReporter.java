@@ -11,8 +11,8 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.resources.PerunErrorTranslation;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.JsonUtils;
@@ -47,7 +47,7 @@ public class ErrorReporter {
 
 	private static PerunErrorReportUiBinder ourUiBinder = GWT.create(PerunErrorReportUiBinder.class);
 
-	private static PerunTranslation translation = GWT.create(PerunTranslation.class);
+	private static PerunErrorTranslation translation = GWT.create(PerunErrorTranslation.class);
 
 	@UiField PerunButton sendButton;
 	@UiField PerunButton cancelButton;
@@ -59,7 +59,7 @@ public class ErrorReporter {
 	@UiField Text heading;
 	private Modal widget;
 
-	public ErrorReporter(final PerunException ex) {
+	public ErrorReporter(final PerunException ex, final PerunButton originalReportButton) {
 
 		widget = ourUiBinder.createAndBindUi(this);
 
@@ -93,7 +93,7 @@ public class ErrorReporter {
 					@Override
 					public void onFinished(JavaScriptObject jso) {
 						sendButton.setProcessing(false);
-						showSuccess((RTMessage) jso);
+						showSuccess((RTMessage) jso, originalReportButton);
 					}
 
 					@Override
@@ -172,17 +172,26 @@ public class ErrorReporter {
 		return text;
 	}
 
-	private void showSuccess(RTMessage message) {
+	private void showSuccess(RTMessage message, PerunButton originalReportButton) {
 
 		modalBody.clear();
 		Alert alert = new Alert();
 		alert.setType(AlertType.SUCCESS);
 		alert.setDismissable(false);
-		alert.getElement().setInnerHTML(translation.reportErrorSuccess(message.getTicketNumber(), message.getMemberPreferredEmail()));
+
+		if (message.getMemberPreferredEmail() != null) {
+			alert.getElement().setInnerHTML(translation.reportErrorSuccess(message.getTicketNumber(), message.getMemberPreferredEmail()));
+		} else {
+			alert.getElement().setInnerHTML(translation.reportErrorSuccessNoMail(message.getTicketNumber()));
+		}
+
 		modalBody.add(alert);
 
 		sendButton.setVisible(false);
-		cancelButton.setText("Close");
+		cancelButton.setText(translation.close());
+
+		originalReportButton.setEnabled(false);
+		originalReportButton.setText(translation.reportErrorEnd());
 
 	}
 
@@ -198,7 +207,7 @@ public class ErrorReporter {
 		message.setText(text);
 		modalBody.add(message);
 		sendButton.setVisible(false);
-		cancelButton.setText("Close");
+		cancelButton.setText(translation.close());
 
 	}
 

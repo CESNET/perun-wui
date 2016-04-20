@@ -7,6 +7,9 @@ package cz.metacentrum.perun.wui.client.resources;
  */
 public interface PerunErrorTranslation extends PerunTranslation {
 
+	@DefaultMessage("Error was reported")
+	public String reportErrorEnd();
+
 	@DefaultMessage("Internal error occurred, your operation can`t be completed. Please report this error.")
 	public String internalErrorException();
 
