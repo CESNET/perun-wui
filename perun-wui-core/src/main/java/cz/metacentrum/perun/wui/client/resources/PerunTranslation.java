@@ -1,8 +1,6 @@
 package cz.metacentrum.perun.wui.client.resources;
 
 import com.google.gwt.i18n.client.Messages;
-import org.gwtbootstrap3.client.ui.constants.ButtonType;
-import org.gwtbootstrap3.client.ui.constants.IconType;
 
 /**
  * Global UI translations
@@ -43,6 +41,9 @@ public interface PerunTranslation extends Messages {
 
 	@DefaultMessage("In order to use this application you need to be registered user, but you used anonymous access without any secret token to prove your identity.")
 	public String notUserTextNon();
+
+	@DefaultMessage("You are not authorized to perform this action.")
+	public String notAuthorizedCallback();
 
 	/* ========= OBJECT TRANSLATION ============ */
 
@@ -123,6 +124,9 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Refresh")
 	public String refresh();
 
+	@DefaultMessage("Try again")
+	public String retry();
+
 	@DefaultMessage("Report error")
 	public String reportError();
 
@@ -175,5 +179,25 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Version: {0}")
 	public String version(String version);
 
+
+	/* ------------ ERROR REPORT ---------------------------- */
+
+	@DefaultMessage("Report error")
+	public String reportErrorHeading();
+
+	@DefaultMessage("Subject")
+	public String reportErrorSubjectLabel();
+
+	@DefaultMessage("Message")
+	public String reportErrorMessageLabel();
+
+	@DefaultMessage("You can attach custom message describing what you tried to do.")
+	public String reportErrorMessagePlaceholder();
+
+	@DefaultMessage("Error report was successfully sent with ID: <b>{0}</b>. You should receive a notification on your mail: <b>{1}</b>")
+	public String reportErrorSuccess(int ticketNumber, String reporterMail);
+
+	@DefaultMessage("Automatic error reporting is not working at the moment. Please send following message to <b>{0}</b> by mail. Thank you.")
+	public String reportErrorFail(String supportMail);
 
 }

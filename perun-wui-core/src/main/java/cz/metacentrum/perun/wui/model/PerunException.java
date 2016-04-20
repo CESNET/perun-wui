@@ -3,7 +3,7 @@ package cz.metacentrum.perun.wui.model;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.model.beans.*;
 
 import java.util.ArrayList;
 
@@ -145,8 +145,6 @@ public class PerunException extends JavaScriptObject {
 		return JsUtils.getNativePropertyString(this, "postData");
 	}
 
-	;
-
 	/**
 	 * Set content of original request if it was POST.
 	 * <p/>
@@ -186,6 +184,70 @@ public class PerunException extends JavaScriptObject {
 	 */
 	public final boolean equals(PerunException o) {
 		return o.getErrorId().equals(this.getErrorId());
+	}
+
+	public final Attribute getAttribute() {
+		return JsUtils.getNativePropertyObject(this, "attribute").cast();
+	}
+
+	public final Attribute getReferenceAttribute() {
+		return JsUtils.getNativePropertyObject(this, "referenceAttribute").cast();
+	}
+
+	public final Vo getVo() {
+		return JsUtils.getNativePropertyObject(this, "vo").cast();
+	}
+
+	public final Facility getFacility() {
+		return JsUtils.getNativePropertyObject(this, "facility").cast();
+	}
+
+	public final Group getGroup() {
+		return JsUtils.getNativePropertyObject(this, "group").cast();
+	}
+
+	/* FIXME - add SecurityTeam bean
+	public final SecurityTeam getSecurityTeam() {
+		return JsUtils.getNativePropertyObject(this, "securityTeam").cast();
+	}
+	*/
+
+	public final User getUser() {
+		return JsUtils.getNativePropertyObject(this, "user").cast();
+	}
+
+	public final GeneralObject getAttributeHolder() {
+		return JsUtils.getNativePropertyObject(this, "attributeHolder").cast();
+	}
+
+	public final GeneralObject getAttributeHolderSecondary() {
+		return JsUtils.getNativePropertyObject(this, "attributeHolderSecondary").cast();
+	}
+
+	public final Member getMember() {
+		return JsUtils.getNativePropertyObject(this, "member").cast();
+	}
+
+	public final String getLogin() {
+		return JsUtils.getNativePropertyString(this, "login");
+	}
+
+	public final String getNamespace() {
+		return JsUtils.getNativePropertyString(this, "namespace");
+	}
+
+	/* FIXME - add Destination bean
+	public final Destination getDestination() {
+		return JsUtils.getNativePropertyObject(this, "destination").cast();
+	}
+	*/
+
+	public final ExtSource getExtSource() {
+		return JsUtils.getNativePropertyObject(this, "extSource").cast();
+	}
+
+	public final Service getService() {
+		return JsUtils.getNativePropertyObject(this, "service").cast();
 	}
 
 }

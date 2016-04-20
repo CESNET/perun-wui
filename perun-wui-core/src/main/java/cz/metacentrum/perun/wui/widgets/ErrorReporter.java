@@ -12,6 +12,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.JsonUtils;
@@ -25,9 +26,11 @@ import org.gwtbootstrap3.client.shared.event.ModalHiddenHandler;
 import org.gwtbootstrap3.client.shared.event.ModalShownEvent;
 import org.gwtbootstrap3.client.shared.event.ModalShownHandler;
 import org.gwtbootstrap3.client.ui.Alert;
+import org.gwtbootstrap3.client.ui.FormLabel;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
+import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.Set;
 
@@ -44,18 +47,31 @@ public class ErrorReporter {
 
 	private static PerunErrorReportUiBinder ourUiBinder = GWT.create(PerunErrorReportUiBinder.class);
 
+	private static PerunTranslation translation = GWT.create(PerunTranslation.class);
+
 	@UiField PerunButton sendButton;
 	@UiField PerunButton cancelButton;
 	@UiField ExtendedTextArea message;
 	@UiField ExtendedTextBox subject;
 	@UiField ModalBody modalBody;
+	@UiField FormLabel subjectLabel;
+	@UiField FormLabel messageLabel;
+	@UiField Text heading;
 	private Modal widget;
 
 	public ErrorReporter(final PerunException ex) {
 
 		widget = ourUiBinder.createAndBindUi(this);
+
 		subject.setText("Reported error: " + ex.getRequestURL() + " (" +ex.getErrorId() + ")");
 		message.setHeight("100px");
+
+		heading.setText(translation.reportErrorHeading());
+		subjectLabel.setText(translation.reportErrorSubjectLabel());
+		messageLabel.setText(translation.reportErrorMessageLabel());
+		message.setPlaceholder(translation.reportErrorMessagePlaceholder());
+		sendButton.setText(translation.reportError());
+		cancelButton.setText(translation.cancel());
 
 		widget.addShownHandler(new ModalShownHandler() {
 			@Override
@@ -162,7 +178,7 @@ public class ErrorReporter {
 		Alert alert = new Alert();
 		alert.setType(AlertType.SUCCESS);
 		alert.setDismissable(false);
-		alert.getElement().setInnerHTML("Error report was successfully sent with ID: <b>" + message.getTicketNumber() + "</b>. You should receive a notification on your mail: <b>" + message.getMemberPreferredEmail() + "</b>");
+		alert.getElement().setInnerHTML(translation.reportErrorSuccess(message.getTicketNumber(), message.getMemberPreferredEmail()));
 		modalBody.add(alert);
 
 		sendButton.setVisible(false);
@@ -177,7 +193,7 @@ public class ErrorReporter {
 		Alert alert = new Alert();
 		alert.setType(AlertType.DANGER);
 		alert.setDismissable(false);
-		alert.getElement().setInnerHTML("Automatic error reporting is not working at the moment. Please send following message to <b>perun@cesnet.cz</b> by mail. Thank you.");
+		alert.getElement().setInnerHTML(translation.reportErrorFail(PerunConfiguration.getBrandSupportMail()));
 		modalBody.add(alert);
 		message.setText(text);
 		modalBody.add(message);

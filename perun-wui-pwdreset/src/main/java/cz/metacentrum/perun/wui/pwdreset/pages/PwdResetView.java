@@ -6,6 +6,8 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -15,6 +17,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
@@ -52,6 +55,13 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	private ArrayList<Attribute> logins;
 	private String namespace = "";
 
+	private PerunButton continueButton = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
+		@Override
+		public void onClick(ClickEvent event) {
+			Window.Location.replace(Window.Location.getParameter("target_url"));
+		}
+	});
+
 	@UiField Form form;
 	@UiField PerunLoader loader;
 	@UiField Text text;
@@ -67,11 +77,6 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	public PwdResetView(PwdResetUiBinder binder) {
 
 		initWidget(binder.createAndBindUi(this));
-		draw();
-
-	}
-
-	public void draw() {
 
 		text.setText(translation.pwdresetAppName());
 		submit.setText(translation.submitPwdResetButton());
@@ -89,14 +94,150 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 				validate();
 			}
 		});
+		passwordTextBox.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				validate();
+			}
+		});
+		passwordTextBox2.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				validate();
+			}
+		});
+
+		continueButton.setVisible(false);
+		alert.getToolbar().add(continueButton);
 
 		if (Window.Location.getParameterMap().keySet().contains("m") &&
 				Window.Location.getParameterMap().keySet().contains("i") &&
 				PerunSession.getInstance().getRpcServer().equals("non")) {
-			drawNonAuthz(Window.Location.getParameter("i"), Window.Location.getParameter("m"));
-			return;
 
+			final String i = Window.Location.getParameter("i");
+			final String m = Window.Location.getParameter("m");
+
+			drawNonAuthz();
+
+			submit.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+
+					if (validate()) {
+
+						UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), new JsonEvents() {
+
+							final JsonEvents events = this;
+
+							@Override
+							public void onFinished(JavaScriptObject result) {
+								submit.setProcessing(false);
+								form.setVisible(false);
+								alert.setType(AlertType.SUCCESS);
+								alert.setText(translation.resetSuccess());
+								alert.setVisible(true);
+								if (Window.Location.getParameterMap().containsKey("target_url")) {
+									alert.getToolbar().setVisible(true);
+									continueButton.setType(ButtonType.SUCCESS);
+									continueButton.setVisible(true);
+								}
+
+							}
+
+							@Override
+							public void onError(PerunException error) {
+								submit.setProcessing(false);
+								form.setVisible(false);
+								alert.setVisible(true);
+								alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
+								alert.setReportInfo(error);
+								alert.setRetryHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										drawNonAuthz();
+										//UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), events);
+									}
+								});
+								if (Window.Location.getParameterMap().containsKey("target_url")) {
+									continueButton.setVisible(true);
+								}
+							}
+
+							@Override
+							public void onLoadingStart() {
+								submit.setProcessing(true);
+							}
+						});
+
+					}
+
+				}
+			});
+
+		} else {
+
+			draw();
+
+			submit.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+
+					if (validate()) {
+
+						UsersManager.resetPassword(PerunSession.getInstance().getUserId(), namespace, passwordTextBox.getValue(), new JsonEvents() {
+
+							final JsonEvents events = this;
+
+							@Override
+							public void onFinished(JavaScriptObject result) {
+								submit.setProcessing(false);
+								form.setVisible(false);
+								alert.setType(AlertType.SUCCESS);
+								alert.setText(translation.resetSuccess());
+								alert.setVisible(true);
+								if (Window.Location.getParameterMap().containsKey("target_url")) {
+									alert.getToolbar().setVisible(true);
+									continueButton.setType(ButtonType.SUCCESS);
+									continueButton.setVisible(true);
+								}
+							}
+
+							@Override
+							public void onError(PerunException error) {
+								submit.setProcessing(false);
+								form.setVisible(false);
+								alert.setVisible(true);
+								alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
+								alert.setReportInfo(error);
+								alert.setRetryHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										draw();
+										//UsersManager.resetPassword(PerunSession.getInstance().getUserId(), namespace, passwordTextBox.getValue(), events);
+									}
+								});
+								if (Window.Location.getParameterMap().containsKey("target_url")) {
+									continueButton.setVisible(true);
+								}
+							}
+
+							@Override
+							public void onLoadingStart() {
+								submit.setProcessing(true);
+							}
+						});
+
+					}
+
+				}
+			});
 		}
+
+	}
+
+	public void draw() {
+
+		alert.setVisible(false);
 
 		if (Window.Location.getParameter("login-namespace") != null && !Window.Location.getParameter("login-namespace").isEmpty()) {
 			namespace = Window.Location.getParameter("login-namespace");
@@ -139,7 +280,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 						alert.setVisible(true);
 						alert.setHTML(translation.namespaceNotSupported(namespace));
 					} else {
-						// dont have login
+						// doesn't have login
 						alert.setVisible(true);
 						alert.setHTML(translation.dontHaveLogin(namespace));
 					}
@@ -167,59 +308,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 		});
 
-		submit.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
 
-				if (validate()) {
-
-					UsersManager.resetPassword(PerunSession.getInstance().getUserId(), namespace, passwordTextBox.getValue(), new JsonEvents() {
-
-						final JsonEvents events = this;
-
-						@Override
-						public void onFinished(JavaScriptObject result) {
-							submit.setProcessing(false);
-							form.setVisible(false);
-							alert.setType(AlertType.SUCCESS);
-							alert.setText(translation.resetSuccess());
-							alert.setVisible(true);
-							if (Window.Location.getParameterMap().containsKey("target_url")) {
-								PerunButton button = PerunButton.getButton(PerunButtonType.CONTINUE, ButtonType.SUCCESS, new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										Window.Location.replace(Window.Location.getParameter("target_url"));
-									}
-								});
-								alert.add(button);
-							}
-						}
-
-						@Override
-						public void onError(PerunException error) {
-							submit.setProcessing(false);
-							form.setVisible(false);
-							alert.setVisible(true);
-							alert.setText(error.getName() + ": " + error.getMessage());
-							alert.setReportInfo(error);
-							alert.setRetryHandler(new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									UsersManager.resetPassword(PerunSession.getInstance().getUserId(), namespace, passwordTextBox.getValue(), events);
-								}
-							});
-						}
-
-						@Override
-						public void onLoadingStart() {
-							submit.setProcessing(true);
-						}
-					});
-
-				}
-
-			}
-		});
 
 	}
 
@@ -249,67 +338,12 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 	}
 
-	public void drawNonAuthz(final String i, final String m) {
+	public void drawNonAuthz() {
 
 		loader.setVisible(false);
 		loader.onFinished();
+		alert.setVisible(false);
 		form.setVisible(true);
-
-		submit.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-
-				if (validate()) {
-
-					UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), new JsonEvents() {
-
-						final JsonEvents events = this;
-
-						@Override
-						public void onFinished(JavaScriptObject result) {
-							submit.setProcessing(false);
-							form.setVisible(false);
-							alert.setType(AlertType.SUCCESS);
-							alert.setText(translation.resetSuccess());
-							alert.setVisible(true);
-
-							if (Window.Location.getParameterMap().containsKey("target_url")) {
-								PerunButton button = PerunButton.getButton(PerunButtonType.CONTINUE, ButtonType.SUCCESS, new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										Window.Location.replace(Window.Location.getParameter("target_url"));
-									}
-								});
-								alert.add(button);
-							}
-
-						}
-
-						@Override
-						public void onError(PerunException error) {
-							submit.setProcessing(false);
-							form.setVisible(false);
-							alert.setVisible(true);
-							alert.setText(error.getName() + ": " + error.getMessage());
-							alert.setReportInfo(error);
-							alert.setRetryHandler(new ClickHandler() {
-								@Override
-								public void onClick(ClickEvent event) {
-									UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), events);
-								}
-							});
-						}
-
-						@Override
-						public void onLoadingStart() {
-							submit.setProcessing(true);
-						}
-					});
-
-				}
-
-			}
-		});
 
 	}
 

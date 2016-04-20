@@ -13,18 +13,18 @@
 		<b:ModalHeader>
 			<b:Heading size="H3" marginTop="5" marginBottom="5">
 				<b:Icon ui:field="icon" type="BUG" fixedWidth="true" pull="LEFT" paddingTop="4"/>
-				<b.html:Text text="Report error"/>
+				<b.html:Text text="Report error" ui:field="heading"/>
 			</b:Heading>
 		</b:ModalHeader>
 		<b:ModalBody ui:field="modalBody">
 			<b:Form>
 				<b:FieldSet>
 					<b:FormGroup>
-						<b:FormLabel>Subject: </b:FormLabel>
+						<b:FormLabel ui:field="subjectLabel">Subject: </b:FormLabel>
 						<p.boxes:ExtendedTextBox ui:field="subject"/>
 					</b:FormGroup>
 					<b:FormGroup>
-						<b:FormLabel>Message: </b:FormLabel>
+						<b:FormLabel ui:field="messageLabel">Message: </b:FormLabel>
 						<p.boxes:ExtendedTextArea placeholder="You can attach custom message describing what you tried to do." focus="true" ui:field="message" />
 					</b:FormGroup>
 				</b:FieldSet>

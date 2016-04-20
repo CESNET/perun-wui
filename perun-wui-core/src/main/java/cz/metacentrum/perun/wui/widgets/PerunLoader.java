@@ -7,6 +7,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
+import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.model.PerunException;
 import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.Progress;
@@ -209,7 +210,7 @@ public class PerunLoader extends Composite {
 		state = PerunLoaderState.error;
 		progress.setActive(false);
 		bar.setType(ProgressBarType.DANGER);
-		alert.setText(error.getName() + ": " + error.getMessage());
+		alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
 
 		alert.setRetryHandler(handler);
 		alert.setReportInfo(error);

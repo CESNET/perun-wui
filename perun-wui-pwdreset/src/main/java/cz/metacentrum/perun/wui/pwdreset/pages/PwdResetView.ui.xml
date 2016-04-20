@@ -15,7 +15,7 @@
 
 		<b:Container>
 			<b:Row>
-				<b:Column size="MD_12">
+				<b:Column size="MD_8" offset="MD_2">
 
 					<b:Heading size="H2" ui:field="pageTitle">
 						<b:Icon ui:field="icon" type="KEY" fixedWidth="true" />
@@ -25,10 +25,8 @@
 
 					<p:PerunLoader ui:field="loader" visible="true" />
 
-					<p:AlertErrorReporter ui:field="alert" visible="false" />
-
-					<b:Form ui:field="form" visible="false" addStyleNames="col-md-4">
-						<b:FieldSet marginTop="50" marginBottom="50">
+					<b:Form ui:field="form" visible="false" addStyleNames="col-md-6">
+						<b:FieldSet marginTop="50">
 
 							<b:FormLabel text="Nové heslo" showRequiredIndicator="true" ui:field="passLabel"/>
 
@@ -41,12 +39,17 @@
 								<b:HelpBlock ui:field="itemStatus" />
 							</b:FormGroup>
 
+						</b:FieldSet>
+
+						<b:FieldSet marginTop="50">
 							<b:FormGroup>
 								<p:PerunButton icon="CHEVRON_RIGHT" iconFixedWidth="true" type="SUCCESS" ui:field="submit" text="Password reset" />
 							</b:FormGroup>
-
 						</b:FieldSet>
+
 					</b:Form>
+
+					<p:AlertErrorReporter ui:field="alert" visible="false" marginTop="20" addStyleNames="col-md-8" />
 
 				</b:Column>
 			</b:Row>
