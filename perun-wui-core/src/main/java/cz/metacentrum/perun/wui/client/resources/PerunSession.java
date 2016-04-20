@@ -108,7 +108,7 @@ public class PerunSession {
 	}
 
 	/**
-	 * Returns type of authz for RPC url: krb, cert, fed, non.
+	 * Returns type of authz for RPC url: krb, cert, fed, non, others
 	 * RPC type is included in PerunWeb.html derived from current url.
 	 *
 	 * @return type of RPC authz

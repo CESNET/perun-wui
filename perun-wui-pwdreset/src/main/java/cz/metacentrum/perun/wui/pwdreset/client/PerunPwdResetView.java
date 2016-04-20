@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.pwdreset.client.resources.PerunPwdResetTranslation;
@@ -85,8 +86,12 @@ public class PerunPwdResetView extends ViewImpl implements PerunPwdResetPresente
 			UiUtils.addLanguageSwitcher(topMenu);
 		}
 
-		// init buttons
 		logout.setText(translation.logout());
+
+		// init buttons
+		if (PerunSession.getInstance().getRpcServer().equals("non")) {
+			logout.setVisible(false);
+		}
 
 		Element elem = DOM.getElementById("perun-help");
 		if (elem != null) {

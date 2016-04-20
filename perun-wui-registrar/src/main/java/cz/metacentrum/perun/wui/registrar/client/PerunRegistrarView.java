@@ -15,6 +15,7 @@ import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
@@ -158,6 +159,11 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		application.setText(translation.application());
 		myApplications.setText(translation.myApplications());
 		logout.setText(translation.logout());
+
+		// hide if not signed-in
+		if (PerunSession.getInstance().getRpcServer().equals("non")) {
+			logout.setVisible(false);
+		}
 
 	}
 
