@@ -177,77 +177,20 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					loader.onFinished();
 					loader.removeFromParent();
 
-					Summary summary = new SummaryImpl(registrar);
-					StepManager stepManager = new FormStepManager(pp, formView, summary);
-
-					//////// This block of code should represent (guess) WHAT USER WANT to do. /////////
-					if (isApplyingToGroup(registrar)) {
-
-						if (voInitialFormExists(registrar)) {
-
-							stepManager.addStep(new VoInitStep(registrar, form));
-							stepManager.addStep(new GroupInitStep(registrar, form));
-							stepManager.addStep(new SummaryStep(formView));
-							stepManager.begin();
-
-						} else if (voExtensionFormExists(registrar)) {
-
-							stepManager.addStep(new GroupInitStep(registrar, form));
-							for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
-								if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
-										!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
-									// offer only when VO doesn't have empty or "You are registered" form.
-									stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
-								}
-							}
-							stepManager.addStep(new SummaryStep(formView));
-							stepManager.begin();
-
-						} else {
-
-							// Because vo initial form can be empty (admin did not create it).
-							if (!isMemberOfVo(registrar) && !appliedToVo(registrar))
-								stepManager.addStep(new VoInitStep(registrar, form));
-							stepManager.addStep(new GroupInitStep(registrar, form));
-							stepManager.addStep(new SummaryStep(formView));
-							stepManager.begin();
-
-						}
-
-					} else {
-
-						if (voInitialFormExists(registrar)) {
-
-							stepManager.addStep(new VoInitStep(registrar, form));
-							stepManager.addStep(new SummaryStep(formView));
-							stepManager.begin();
-
-						} else if (voExtensionFormExists(registrar)) {
-
-							stepManager.addStep(new VoExtStep(registrar, form));
-							stepManager.addStep(new SummaryStep(formView));
-							stepManager.begin();
-
-						} else {
-
-							// However form does not exist user still want to do something here.
-							if (isMemberOfVo(registrar)) {
-								stepManager.addStep(new VoExtStep(registrar, form));
-							} else {
-								stepManager.addStep(new VoInitStep(registrar, form));
-							}
-							stepManager.addStep(new SummaryStep(formView));
-							stepManager.begin();
-
-						}
-
-					}
-					
-
 					// CHECK SIMILAR USERS
+					// Make sure we load form only after user decide to skip identity joining
+
 					if (!registrar.getSimilarUsers().isEmpty()) {
-						showSimilarUsersDialog(registrar);
+						showSimilarUsersDialog(registrar, new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+								loadSteps(pp, registrar);
+							}
+						});
+					} else {
+						loadSteps(pp, registrar);
 					}
+
 				}
 
 			}
@@ -270,7 +213,75 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	}
 
+	private void loadSteps(PerunPrincipal pp, RegistrarObject registrar) {
 
+		Summary summary = new SummaryImpl(registrar);
+		StepManager stepManager = new FormStepManager(pp, formView, summary);
+
+		//////// This block of code should represent (guess) WHAT USER WANT to do. /////////
+		if (isApplyingToGroup(registrar)) {
+
+			if (voInitialFormExists(registrar)) {
+
+				stepManager.addStep(new VoInitStep(registrar, form));
+				stepManager.addStep(new GroupInitStep(registrar, form));
+				stepManager.addStep(new SummaryStep(formView));
+				stepManager.begin();
+
+			} else if (voExtensionFormExists(registrar)) {
+
+				stepManager.addStep(new GroupInitStep(registrar, form));
+				for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
+					if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+							!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
+						// offer only when VO doesn't have empty or "You are registered" form.
+						stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
+					}
+				}
+				stepManager.addStep(new SummaryStep(formView));
+				stepManager.begin();
+
+			} else {
+
+				// Because vo initial form can be empty (admin did not create it).
+				if (!isMemberOfVo(registrar) && !appliedToVo(registrar))
+					stepManager.addStep(new VoInitStep(registrar, form));
+				stepManager.addStep(new GroupInitStep(registrar, form));
+				stepManager.addStep(new SummaryStep(formView));
+				stepManager.begin();
+
+			}
+
+		} else {
+
+			if (voInitialFormExists(registrar)) {
+
+				stepManager.addStep(new VoInitStep(registrar, form));
+				stepManager.addStep(new SummaryStep(formView));
+				stepManager.begin();
+
+			} else if (voExtensionFormExists(registrar)) {
+
+				stepManager.addStep(new VoExtStep(registrar, form));
+				stepManager.addStep(new SummaryStep(formView));
+				stepManager.begin();
+
+			} else {
+
+				// However form does not exist user still want to do something here.
+				if (isMemberOfVo(registrar)) {
+					stepManager.addStep(new VoExtStep(registrar, form));
+				} else {
+					stepManager.addStep(new VoInitStep(registrar, form));
+				}
+				stepManager.addStep(new SummaryStep(formView));
+				stepManager.begin();
+
+			}
+
+		}
+
+	}
 
 	private boolean voInitialFormExists(RegistrarObject ro) {
 		return !ro.getVoFormInitial().isEmpty();
@@ -344,8 +355,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		notice.setVisible(false);
 	}
 
-
-	private void showSimilarUsersDialog(RegistrarObject object) {
+	private void showSimilarUsersDialog(RegistrarObject object, final ClickHandler handler) {
 
 		final Modal modal = new Modal();
 		modal.setTitle(object.getSimilarUsers().size() > 1 ? translation.similarUsersFoundTitle() : translation.similarUserFoundTitle());
@@ -467,6 +477,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			@Override
 			public void onClick(ClickEvent event) {
 				modal.hide();
+				// trigger steps loading
+				handler.onClick(event);
 			}
 		});
 		noThanks.setType(ButtonType.DANGER);
