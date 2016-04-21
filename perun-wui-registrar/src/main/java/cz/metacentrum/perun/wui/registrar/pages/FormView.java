@@ -124,7 +124,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		final PerunLoader loader = new PerunLoader();
 		form.add(loader);
-		RegistrarManager.initializeRegistrar(voName, groupName, new JsonEvents() {
+
+		RegistrarManager.initializeRegistrar(URL.decodeQueryString(voName), URL.decodeQueryString(groupName), new JsonEvents() {
 
 			JsonEvents retry = this;
 
