@@ -21,6 +21,8 @@ import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.ExtSource;
 import cz.metacentrum.perun.wui.model.beans.Group;
@@ -191,7 +193,13 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 						} else if (voExtensionFormExists(registrar)) {
 
 							stepManager.addStep(new GroupInitStep(registrar, form));
-							stepManager.addStep(new VoExtOfferStep(registrar, form));
+							for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
+								if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+										!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
+									// offer only when VO doesn't have empty or "You are registered" form.
+									stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
+								}
+							}
 							stepManager.addStep(new SummaryStep(formView));
 							stepManager.begin();
 
