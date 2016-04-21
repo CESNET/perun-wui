@@ -32,7 +32,7 @@ public class VoInitStep extends FormStep {
 
 		form.setFormItems(registrar.getVoFormInitial());
 
-		if (!form.containsSubmitButton()) {
+		if (!form.containsSubmitButton() && !form.containsOnlyTextItems()) {
 			PerunException ex = PerunException.createNew("0", "FormWrongFormedException", "Registration form is wrong formed.");
 			result.setException(ex);
 			events.onError(ex);

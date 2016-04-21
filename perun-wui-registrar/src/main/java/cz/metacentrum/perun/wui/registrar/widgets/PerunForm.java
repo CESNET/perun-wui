@@ -15,6 +15,8 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.items.Header;
+import cz.metacentrum.perun.wui.registrar.widgets.items.HtmlComment;
 import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
 import cz.metacentrum.perun.wui.registrar.widgets.items.SubmitButton;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
@@ -185,6 +187,21 @@ public class PerunForm extends FieldSet {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * TRUE if form contains only textual items like info: "You are already registered"
+	 * or "You must be student of PV179".
+	 *
+	 * @return true if form contains only textual items
+	 */
+	public boolean containsOnlyTextItems() {
+		for (PerunFormItem item : items) {
+			if (!(item instanceof Header) && !(item instanceof HtmlComment)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	/**
