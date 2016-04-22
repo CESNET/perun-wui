@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyCodes;
 import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -122,7 +123,7 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 
 		if (!captchaOK) {
 
-			final String voName = Window.Location.getParameter("vo");
+			final String voName = (Window.Location.getParameter("vo") != null) ? URL.decodeQueryString(Window.Location.getParameter("vo")) : null;
 			final String reCaptchaPublicKey = PerunConfiguration.getReCaptchaPublicKey();
 
 			if (voName != null && !voName.isEmpty() && reCaptchaPublicKey != null && !reCaptchaPublicKey.isEmpty()) {
@@ -260,7 +261,7 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 
 	private void loadVoAttributes(final Events<List<Attribute>> callback) {
 
-		final String voName = Window.Location.getParameter("vo");
+		final String voName = (Window.Location.getParameter("vo") != null) ? URL.decodeQueryString(Window.Location.getParameter("vo")) : null;
 
 		if (voName == null || voName.isEmpty()) {
 			PerunException exception = PerunException.createNew("0", "WrongURL", "Missing parameters in URL.");

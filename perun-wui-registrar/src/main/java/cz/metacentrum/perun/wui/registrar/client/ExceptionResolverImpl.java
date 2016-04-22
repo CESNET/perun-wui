@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.registrar.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -88,11 +89,13 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 		} else if (exception.getName().equalsIgnoreCase("VoNotExistsException")) {
 
-			setInfo(trans.voNotExistsException(Window.Location.getParameter("vo")), null);
+			String voName = (Window.Location.getParameter("vo") != null) ? URL.decodeQueryString(Window.Location.getParameter("vo")) : null;
+			setInfo(trans.voNotExistsException(voName), null);
 
 		} else if (exception.getName().equalsIgnoreCase("GroupNotExistsException")) {
 
-			setInfo(trans.groupNotExistsException(Window.Location.getParameter("group")), null);
+			String groupName = (Window.Location.getParameter("group") != null) ? URL.decodeQueryString(Window.Location.getParameter("group")) : null;
+			setInfo(trans.groupNotExistsException(groupName), null);
 
 		} else if (exception.getName().equalsIgnoreCase("WrongURL")) {
 

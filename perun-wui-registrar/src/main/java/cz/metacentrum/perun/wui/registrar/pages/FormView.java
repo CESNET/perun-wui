@@ -111,8 +111,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	public void draw() {
 
-		final String voName = Window.Location.getParameter("vo");
-		final String groupName = Window.Location.getParameter("group");
+		final String voName = (Window.Location.getParameter("vo") != null) ? URL.decodeQueryString(Window.Location.getParameter("vo")) : null;
+		final String groupName = (Window.Location.getParameter("group") != null) ? URL.decodeQueryString(Window.Location.getParameter("group")) : null;
 		final PerunPrincipal pp = PerunSession.getInstance().getPerunPrincipal();
 
 		if (voName == null || voName.isEmpty()) {
@@ -125,7 +125,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		final PerunLoader loader = new PerunLoader();
 		form.add(loader);
 
-		RegistrarManager.initializeRegistrar(URL.decodeQueryString(voName), URL.decodeQueryString(groupName), new JsonEvents() {
+		RegistrarManager.initializeRegistrar(voName, groupName, new JsonEvents() {
 
 			JsonEvents retry = this;
 
