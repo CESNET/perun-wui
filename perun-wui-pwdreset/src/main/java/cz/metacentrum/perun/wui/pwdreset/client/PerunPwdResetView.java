@@ -8,6 +8,7 @@ import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.History;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FocusPanel;
 import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.Widget;
@@ -58,6 +59,8 @@ public class PerunPwdResetView extends ViewImpl implements PerunPwdResetPresente
 	@UiField static NavbarHeader navbarHeader;
 	@UiField Span brand;
 
+	private boolean isAccountActivation = Window.Location.getParameterMap().containsKey("activation");
+
 	@UiHandler(value="logout")
 	public void logoutClick(ClickEvent event) {
 		History.newItem("logout");
@@ -73,7 +76,8 @@ public class PerunPwdResetView extends ViewImpl implements PerunPwdResetPresente
 	PerunPwdResetView(final PerunPwdResetViewUiBinder binder) {
 
 		initWidget(binder.createAndBindUi(this));
-		brand.setText(translation.pwdresetAppName());
+
+		brand.setText((isAccountActivation) ? translation.activateAppName() : translation.pwdresetAppName());
 
 		// put logo
 		Image logo = PerunConfiguration.getBrandLogo();

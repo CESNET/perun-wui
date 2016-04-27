@@ -55,6 +55,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	private ArrayList<Attribute> logins;
 	private String namespace = "";
 
+	private boolean isAccountActivation = Window.Location.getParameterMap().containsKey("activation");
+
 	private PerunButton continueButton = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
 		@Override
 		public void onClick(ClickEvent event) {
@@ -78,8 +80,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 		initWidget(binder.createAndBindUi(this));
 
-		text.setText(translation.pwdresetAppName());
-		submit.setText(translation.submitPwdResetButton());
+		text.setText((isAccountActivation) ? translation.activateAppName() : translation.pwdresetAppName());
+		submit.setText((isAccountActivation) ? translation.submitActivateButton() : translation.submitPwdResetButton());
 		passLabel.setText(translation.pwdresetLabel());
 
 		passwordTextBox.addBlurHandler(new BlurHandler() {
@@ -134,7 +136,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 								submit.setProcessing(false);
 								form.setVisible(false);
 								alert.setType(AlertType.SUCCESS);
-								alert.setText(translation.resetSuccess());
+								alert.setText((isAccountActivation) ? translation.activateSuccess() : translation.resetSuccess());
 								alert.setVisible(true);
 								if (Window.Location.getParameterMap().containsKey("target_url")) {
 									alert.getToolbar().setVisible(true);
@@ -193,7 +195,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 								submit.setProcessing(false);
 								form.setVisible(false);
 								alert.setType(AlertType.SUCCESS);
-								alert.setText(translation.resetSuccess());
+								alert.setText((isAccountActivation) ? translation.activateSuccess() : translation.resetSuccess());
 								alert.setVisible(true);
 								if (Window.Location.getParameterMap().containsKey("target_url")) {
 									alert.getToolbar().setVisible(true);
@@ -268,7 +270,9 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 							}
 							if (found) {
 								// HAVE LOGIN AND SUPPORTED
-								text.setText(translation.passwordResetFor(a.getValue() + "@" + namespace.toUpperCase()));
+								text.setText((isAccountActivation) ?
+										translation.activateFor(a.getValue() + "@" + namespace.toUpperCase()) :
+										translation.passwordResetFor(a.getValue() + "@" + namespace.toUpperCase()));
 								form.setVisible(true);
 								return;
 							}
@@ -278,11 +282,11 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 					if (!PerunConfiguration.getSupportedPasswordNamespaces().contains(namespace)) {
 						// not supported
 						alert.setVisible(true);
-						alert.setHTML(translation.namespaceNotSupported(namespace));
+						alert.setHTML((isAccountActivation) ? translation.namespaceNotSupportedActive(namespace) : translation.namespaceNotSupported(namespace));
 					} else {
 						// doesn't have login
 						alert.setVisible(true);
-						alert.setHTML(translation.dontHaveLogin(namespace));
+						alert.setHTML((isAccountActivation) ? translation.dontHaveLoginActive(namespace) : translation.dontHaveLogin(namespace));
 					}
 
 				}

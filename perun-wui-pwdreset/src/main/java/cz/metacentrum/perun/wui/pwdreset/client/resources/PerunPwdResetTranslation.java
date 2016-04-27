@@ -50,4 +50,24 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("You can`t reset password. You don`t have login in namespace <i>{0}</i>.")
 	public String dontHaveLogin(String namespace);
 
+	// -------------- ACTIVATE ACCOUNT TRANSLATION ------------------------ //
+
+	@DefaultMessage("Activate account")
+	public String activateAppName();
+
+	@DefaultMessage("Activate account for {0}")
+	public String activateFor(String login);
+
+	@DefaultMessage("Activate account")
+	public String submitActivateButton();
+
+	@DefaultMessage("Account is active.")
+	public String activateSuccess();
+
+	@DefaultMessage("Account activation in a namespace <i>{0}</i> is not supported.")
+	public String namespaceNotSupportedActive(String namespace);
+
+	@DefaultMessage("Can`t activate account. You don`t have login in namespace <i>{0}</i>.")
+	public String dontHaveLoginActive(String namespace);
+
 }
