@@ -80,13 +80,17 @@ public class FromFederation extends PerunFormItemEditable {
 
 	@Override
 	protected void setValueImpl(String value) {
+		// FIXME - for now consume all multi-value attributes as they are
+		// FIXME - We should implement value select for users
 		if (isOnlyPreview()) {
 			Span span = new Span();
-			span.setText(value.split(";")[0]);
+			//span.setText(value.split(";")[0]);
+			span.setText(value);
 			getPreview().add(span);
 			return;
 		}
-		getBox().setValue(value.split(";")[0]);
+		//getBox().setValue(value.split(";")[0]);
+		getBox().setValue(value);
 	}
 
 

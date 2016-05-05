@@ -254,7 +254,13 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 		}
 
 		String token = placeManager.getCurrentPlaceRequest().getNameToken();
-		if (token == null || token.isEmpty()) token = PerunRegistrarPlaceTokens.getForm();
+		if (token == null || token.isEmpty()) {
+			if (Window.Location.getParameterMap().containsKey("i") && Window.Location.getParameterMap().containsKey("m")) {
+				token = PerunRegistrarPlaceTokens.getVerify();
+			} else {
+				token = PerunRegistrarPlaceTokens.getForm();
+			}
+		}
 		getView().setActiveMenuItem(token);
 
 	}
