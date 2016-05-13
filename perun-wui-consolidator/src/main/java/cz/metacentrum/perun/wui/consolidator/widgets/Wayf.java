@@ -465,9 +465,13 @@ public class Wayf extends Composite {
 				builder.sendRequest(null, new RequestCallback() {
 							@Override
 							public void onResponseReceived(Request request, Response response) {
-								Feed feed = (Feed)convertFeed(response.getText());
-								for (String key :feed.getEntities().getKeys()) {
-									entities.set(key, feed.getEntities().get(key));
+								try {
+									Feed feed = (Feed) convertFeed(response.getText());
+									for (String key : feed.getEntities().getKeys()) {
+										entities.set(key, feed.getEntities().get(key));
+									}
+								} catch (Exception ex) {
+									// Unable to parse feed - skip it
 								}
 								callCounter.put(groupName, callCounter.get(groupName)-1);
 								if (callCounter.get(groupName) == 0) {
