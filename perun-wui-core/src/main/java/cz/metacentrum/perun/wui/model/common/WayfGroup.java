@@ -86,4 +86,13 @@ public class WayfGroup extends JavaScriptObject {
 		return JsUtils.getNativePropertyObject(this, "data").cast();
 	}
 
+	/**
+	 * Get target entity IdP for SP to use (if not configured by SP based on URL)
+	 *
+	 * @return Target entity ID
+	 */
+	public final String getTargetEntity() {
+		return JsUtils.getNativePropertyString(this, "target");
+	}
+
 }

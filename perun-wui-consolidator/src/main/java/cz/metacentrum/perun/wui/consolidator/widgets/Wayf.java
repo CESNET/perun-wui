@@ -282,7 +282,7 @@ public class Wayf extends Composite {
 
 				} else {
 
-					// group is single item IdP
+					// group is a single item IdP with redirect configured in ShibbolethSP locally
 					groupButton.addClickHandler(new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent clickEvent) {
@@ -298,6 +298,23 @@ public class Wayf extends Composite {
 
 				}
 
+			} else if (group.getAuthzType().equals("proxy")) {
+
+				groupButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent clickEvent) {
+						// single IdP item but with locally defined IdP EntityID to use (not server side by SP and used URL)
+						String usedKey = group.getTargetEntity().replace("&amp;", "&");
+						String target = "";
+						if (redirect != null && !redirect.isEmpty()) {
+							target = "&target_url=" + redirect;
+						}
+						String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
+						final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?entityID=" + usedKey + "&target=" + consolidatorUrl);
+						Window.Location.replace(redirectUrl);
+					}
+				});
+
 			}
 
 			// nice align when less then 3 columns
@@ -306,6 +323,7 @@ public class Wayf extends Composite {
 				col.add(groupButton.getWidget());
 				row.add(col);
 			} else {
+				GWT.log("after set");
 				Column col = new Column(ColumnSize.MD_4, ColumnSize.LG_4, ColumnSize.SM_6, ColumnSize.XS_12);
 				col.setOffset(ColumnOffset.MD_4, ColumnOffset.LG_4, ColumnOffset.SM_3);
 				col.add(groupButton.getWidget());
