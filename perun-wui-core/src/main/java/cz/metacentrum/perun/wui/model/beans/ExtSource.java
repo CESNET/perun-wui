@@ -23,7 +23,8 @@ public class ExtSource extends GeneralObject {
 		INTERNAL("cz.metacentrum.perun.core.impl.ExtSourceInternal"),
 		XML("cz.metacentrum.perun.core.impl.ExtSourceXML"),
 		CSV("cz.metacentrum.perun.core.impl.ExtSourceCSV"),
-		GOOGLE("cz.metacentrum.perun.core.impl.ExtSourceGoogle");
+		GOOGLE("cz.metacentrum.perun.core.impl.ExtSourceGoogle"),
+		EGISSO("cz.metacentrum.perun.core.impl.ExtSourceEGISSO");
 
 		private final String type;
 

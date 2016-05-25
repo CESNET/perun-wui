@@ -61,7 +61,7 @@ public class JoinPage {
 	public void clickFinish(ClickEvent event) {
 
 		if (redirect != null && !redirect.isEmpty()) {
-			Window.Location.replace(redirect);
+			Window.Location.assign(redirect);
 		}
 
 	}
@@ -70,9 +70,9 @@ public class JoinPage {
 	public void clickBack(ClickEvent event) {
 
 		if (redirect != null && !redirect.isEmpty()) {
-			Window.Location.replace(Utils.getIdentityConsolidatorLink(false)+"?target_url="+redirect);
+			Window.Location.assign(Utils.getIdentityConsolidatorLink(false)+"?target_url="+redirect);
 		} else {
-			Window.Location.replace(Utils.getIdentityConsolidatorLink(false));
+			Window.Location.assign(Utils.getIdentityConsolidatorLink(false));
 		}
 
 	}

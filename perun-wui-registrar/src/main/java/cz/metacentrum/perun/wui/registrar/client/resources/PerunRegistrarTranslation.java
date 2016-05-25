@@ -92,6 +92,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Extend")
 	public String offerMembershipExtensionExtend();
 
+	@DefaultMessage("<i>User don`t have identity suitable for automatic joining. If it`s you, <b>please contact support at: <a href=\"mailto:{0}\">{0}</a></b>.</i>")
+	public String noIdentityForJoining(String mailAddress);
+
 	// -------------- REGISTRATION FORM WIDGETS ------------------------ //
 
 	@DefaultMessage("Text is too long!")
@@ -151,6 +154,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("By identity provider")
 	public String byIdp();
 
+	@DefaultMessage("By login/password")
+	public String byLoginPassword();
+
 	@DefaultMessage("--- Not selected ---")
 	public String notSelected();
 
@@ -201,8 +207,6 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Mail verification message sent to <b>{0}</b>")
 	public String mailVerificationRequestSent(String mailAddress);
-
-
 
 	// -------------- APP DETAIL PAGE ------------------------ //
 

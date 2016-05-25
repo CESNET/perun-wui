@@ -108,7 +108,7 @@ public class Wayf extends Composite {
 						if (redirect != null && !redirect.isEmpty()) {
 							url = url + "&target_url=" + URL.encodeQueryString(redirect);
 						}
-						Window.Location.replace(url);
+						Window.Location.assign(url);
 					}
 				});
 
@@ -126,7 +126,7 @@ public class Wayf extends Composite {
 									if (redirect != null && !redirect.isEmpty()) {
 										url = url + "&target_url=" + URL.encodeQueryString(redirect);
 									}
-									Window.Location.replace(url);
+									Window.Location.assign(url);
 									return;
 								}
 							}
@@ -137,7 +137,7 @@ public class Wayf extends Composite {
 						if (redirect != null && !redirect.isEmpty()) {
 							url = url + "&target_url=" + URL.encodeQueryString(redirect);
 						}
-						Window.Location.replace(url);
+						Window.Location.assign(url);
 					}
 				});
 
@@ -246,7 +246,7 @@ public class Wayf extends Composite {
 													}
 													String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
 													final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?entityID=" + usedKey + "&target=" + consolidatorUrl);
-													Window.Location.replace(redirectUrl);
+													Window.Location.assign(redirectUrl);
 												}
 											});
 
@@ -292,7 +292,7 @@ public class Wayf extends Composite {
 							}
 							String consolidatorUrl = Utils.getIdentityConsolidatorLink(group.getUrl(), false) + URL.encodeQueryString("?token=" + token + target);
 							final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + consolidatorUrl;
-							Window.Location.replace(redirectUrl);
+							Window.Location.assign(redirectUrl);
 						}
 					});
 
@@ -311,7 +311,7 @@ public class Wayf extends Composite {
 						}
 						String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
 						final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?entityID=" + usedKey + "&target=" + consolidatorUrl);
-						Window.Location.replace(redirectUrl);
+						Window.Location.assign(redirectUrl);
 					}
 				});
 

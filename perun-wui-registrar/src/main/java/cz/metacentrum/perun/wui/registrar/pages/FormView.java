@@ -364,7 +364,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		modal.setDataKeyboard(false);
 		modal.setDataBackdrop(ModalBackdrop.STATIC);
 		modal.setClosable(false);
-		modal.setWidth("700px");
+		modal.setWidth("750px");
 
 		FlexTable ft = new FlexTable();
 		ft.setWidth("100%");
@@ -374,8 +374,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		for (Identity identity : object.getSimilarUsers()) {
 
 			ft.setHTML(row, 0, "<strong>"+identity.getName()+"</strong><br />"+
-					identity.getOrganization()+"<br />"+identity.getEmail());
-			ft.getFlexCellFormatter().setWidth(row, 0, "200px");
+					((identity.getOrganization() != null) ? identity.getOrganization() : "<i style='color:grey'>N/A</i>") +"<br />"+identity.getEmail());
+			ft.getFlexCellFormatter().setWidth(row, 0, "180px");
 
 			ButtonGroup certGroup = new ButtonGroup();
 			DropDownMenu menu = getCertificatesJoinButton(certGroup);
@@ -383,8 +383,12 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			ButtonGroup idpGroup = new ButtonGroup();
 			DropDownMenu menu2 = getIdpJoinButton(idpGroup);
 
+			ButtonGroup othersGroup = new ButtonGroup();
+			DropDownMenu menu3 = getOthersJoinButton(othersGroup);
+
 			boolean certFound = false;
 			boolean idpFound = false;
+			boolean othersFound = false;
 
 			ArrayList<ExtSource> sources = identity.getExternalIdentities();
 			Collections.sort(sources, new Comparator<ExtSource>() {
@@ -407,7 +411,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 								@Override
 								public void onFinished(JavaScriptObject jso) {
 									String token = ((BasicOverlayObject) jso).getString();
-									Window.Location.replace(Utils.getIdentityConsolidatorLink("cert", true) + "&token=" + token);
+									Window.Location.assign(Utils.getIdentityConsolidatorLink("cert", true) + "&token=" + token);
 								}
 
 								@Override
@@ -441,7 +445,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 									String token = ((BasicOverlayObject) jso).getString();
 									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true)+URL.encodeQueryString("&token="+token);
 									String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?entityID=" + source.getName()+"&target="+consolidatorUrl);
-									Window.Location.replace(redirectUrl);
+									Window.Location.assign(redirectUrl);
 								}
 
 								@Override
@@ -459,7 +463,58 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					if (!idpFound) ft.setWidget(row, 2, idpGroup);
 					idpFound = true;
 
+				} else if (source.getType().equals(ExtSource.ExtSourceType.KERBEROS.getType())) {
+
+					if (source.getName().equalsIgnoreCase("EINFRA") ||
+							source.getName().equalsIgnoreCase("EINFRA-SERVICES") ||
+							source.getName().equalsIgnoreCase("SAGRID") ||
+							source.getName().equalsIgnoreCase("ICS.MUNI.CZ")) {
+
+						String toBePrefix = "krb";
+						if (source.getName().equalsIgnoreCase("EINFRA-SERVICES")) toBePrefix = "krbes";
+						// others goes to /krb/ on their respective instances
+						final String prefix = toBePrefix;
+
+						AnchorListItem link = new AnchorListItem(Utils.translateKerberos(source.getName()));
+						menu3.add(link);
+						link.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
+
+								RegistrarManager.getConsolidatorToken(new JsonEvents() {
+									@Override
+									public void onFinished(JavaScriptObject jso) {
+										String token = ((BasicOverlayObject) jso).getString();
+										String consolidatorUrl = Utils.getIdentityConsolidatorLink(prefix, true) + "&token=" + token;
+										Window.Location.replace(consolidatorUrl);
+									}
+
+									@Override
+									public void onError(PerunException error) {
+
+									}
+
+									@Override
+									public void onLoadingStart() {
+
+									}
+								});
+							}
+						});
+
+						if (!othersFound) ft.setWidget(row, 3, othersGroup);
+						othersFound = true;
+
+					}
+
 				}
+
+			}
+
+			if (sources.isEmpty() || (!idpFound && !certFound && !othersFound)) {
+
+				// no identity for joining
+				ft.setHTML(row, 1, translation.noIdentityForJoining(PerunConfiguration.getBrandSupportMail()));
 
 			}
 
@@ -542,6 +597,26 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		certGroup.add(idpButt);
 		DropDownMenu idpMenu = new DropDownMenu();
 		certGroup.add(idpMenu);
+
+		return idpMenu;
+
+	}
+
+	private DropDownMenu getOthersJoinButton(ButtonGroup othersButton) {
+
+		Button othButt = new Button(translation.byLoginPassword(), IconType.KEY, new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+
+			}
+		});
+		othButt.setPaddingLeft(10);
+		othButt.setIconFixedWidth(true);
+		othButt.setType(ButtonType.SUCCESS);
+		othButt.setDataToggle(Toggle.DROPDOWN);
+		othersButton.add(othButt);
+		DropDownMenu idpMenu = new DropDownMenu();
+		othersButton.add(idpMenu);
 
 		return idpMenu;
 

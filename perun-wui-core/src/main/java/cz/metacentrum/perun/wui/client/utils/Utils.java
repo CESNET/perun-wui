@@ -710,6 +710,7 @@ public class Utils {
 		if (value != null && !value.isEmpty()) {
 
 			if (target) {
+				// FIXME - encode query twice only if current is fed ?
 				value += "?target_url=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() +  URL.encodeQueryString(URL.encodeQueryString(Window.Location.getQueryString()));
 			}
 			return value;
@@ -740,7 +741,18 @@ public class Utils {
 			String link = baseUrl + "/"+authz+"/ic/";
 
 			if (target) {
-				link += "?target_url=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath() +  URL.encodeQueryString(URL.encodeQueryString(Window.Location.getQueryString()));
+
+				link += "?target_url=" + Window.Location.getProtocol() + "//" + Window.Location.getHost() + Window.Location.getPath();
+
+				if (PerunConfiguration.getFedAuthz().contains(authz)) {
+					// for fed destination encode return query twice
+					link += URL.encodeQueryString(URL.encodeQueryString(Window.Location.getQueryString()));
+					return link;
+				}
+
+				// not fed-like path
+				link += URL.encodeQueryString(Window.Location.getQueryString());
+
 			}
 
 			return link;

@@ -403,6 +403,16 @@ public final class PerunConfiguration {
 		return name;
 	}
 
+	/**
+	 * Returns list of all /authz/ paths, which are behind Shibboleth SP (federation access).
+	 *
+	 * @return list of all /fed/-like authz paths
+	 */
+	public static ArrayList<String> getFedAuthz() {
+		String value = getConfigPropertyString("fedAuthz");
+		return Utils.stringToList(value, ",");
+	}
+
 	// ---------------------------   WAYF   ---------------------------- //
 
 	/**
