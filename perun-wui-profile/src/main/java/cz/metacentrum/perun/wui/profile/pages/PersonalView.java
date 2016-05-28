@@ -55,7 +55,7 @@ public class PersonalView extends ViewImpl implements PersonalPresenter.MyView {
 	DescriptionTitle orgLabel;
 	@UiField
 	DescriptionData orgData;
-	@UiField
+/*	@UiField
 	DescriptionTitle phoneLabel;
 	@UiField
 	DescriptionData phoneData;
@@ -66,7 +66,7 @@ public class PersonalView extends ViewImpl implements PersonalPresenter.MyView {
 	@UiField
 	DescriptionTitle timeLabel;
 	@UiField
-	DescriptionData timeData;
+	DescriptionData timeData;*/
 
 	@Inject
 	public PersonalView(PersonalViewUiBinder binder) {
@@ -81,22 +81,23 @@ public class PersonalView extends ViewImpl implements PersonalPresenter.MyView {
 		orgLabel.setText(translation.organization());
 		nameLabel.setText(translation.name());
 		emailLabel.setText(translation.preferredMail());
-		phoneLabel.setText(translation.phone());
-		langLabel.setText(translation.preferredLang());
-		timeLabel.setText(translation.timezone());
 
 		nameData.setText(user.getFullName());
 		emailData.setText(user.getPreferredEmail());
 		orgData.setText(user.getOrganization());
 
-		Attribute phone = user.getAttribute("urn:perun:user:attribute-def:def:phone");
+		/*phoneLabel.setText(translation.phone());
+		langLabel.setText(translation.preferredLang());
+		timeLabel.setText(translation.timezone());*/
+
+		/*Attribute phone = user.getAttribute("urn:perun:user:attribute-def:def:phone");
 		if (phone != null) phoneData.setText(phone.getValue());
 
 		Attribute lang = user.getAttribute("urn:perun:user:attribute-def:def:preferredLanguage");
 		if (lang != null) langData.setText(lang.getValue());
 
 		Attribute timezone = user.getAttribute("urn:perun:user:attribute-def:def:timezone");
-		if (timezone != null) timeData.setText(timezone.getValue());
+		if (timezone != null) timeData.setText(timezone.getValue());*/
 
 	}
 

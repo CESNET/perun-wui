@@ -54,4 +54,29 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Phone")
 	String phone();
 
+
+
+	@DefaultMessage("Federated identity")
+	String federatedIdp();
+
+	@DefaultMessage("Login")
+	String federatedLogin();
+
+	@DefaultMessage("Certificate issuer")
+	String x509Issuer();
+
+	@DefaultMessage("Identity")
+	String x509Identity();
+
+	@DefaultMessage("Removing identity")
+	String removingIdentity();
+
+	@DefaultMessage("Loading identities")
+	String loadingIdentities();
+
+	@DefaultMessage("Add new federated identity")
+	String addFed();
+
+	@DefaultMessage("Add new certificate")
+	String addCert();
 }

@@ -27,12 +27,12 @@
 					<b:DescriptionData ui:field="orgData" paddingBottom="10" />
 					<b:DescriptionTitle ui:field="emailLabel" paddingBottom="10" />
 					<b:DescriptionData ui:field="emailData" paddingBottom="10" />
-					<b:DescriptionTitle ui:field="phoneLabel" paddingBottom="10" />
+					<!--<b:DescriptionTitle ui:field="phoneLabel" paddingBottom="10" />
 					<b:DescriptionData ui:field="phoneData" paddingBottom="10" />
 					<b:DescriptionTitle ui:field="langLabel" paddingBottom="10" />
 					<b:DescriptionData ui:field="langData" paddingBottom="10" />
 					<b:DescriptionTitle ui:field="timeLabel" paddingBottom="10" />
-					<b:DescriptionData ui:field="timeData" paddingBottom="10" />
+					<b:DescriptionData ui:field="timeData" paddingBottom="10" />-->
 				</b:Description>
 
 	</b.html:Div>

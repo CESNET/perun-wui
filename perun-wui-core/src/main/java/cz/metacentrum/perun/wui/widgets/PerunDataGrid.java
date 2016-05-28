@@ -40,9 +40,9 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	final PerunDataGrid<T> dataGrid = this;
 
 	// list of items displayed in table
-	ArrayList<T> content = new ArrayList<>();
+	List<T> content = new ArrayList<>();
 	// list of all items passed to table
-	ArrayList<T> backup = new ArrayList<>();
+	List<T> backup = new ArrayList<>();
 
 	// selection models
 	SingleSelectionModel<T> singleSelectionModel = new SingleSelectionModel<T>(new PerunKeyProvider<T>());
@@ -69,7 +69,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 
 	// we must store all columns and their headers/footers by reference, since add/insert/remove methods with
 	// index doesn't work properly on table redraws (when keep existing columns is used).
-	ArrayList<Column<T, ?>> columns = new ArrayList<>();
+	List<Column<T, ?>> columns = new ArrayList<>();
 	Column<T, T> checkBoxColumn;
 	Map<Column<T, ?>, Header<?>> columnHeaders = new HashMap<>();
 	Map<Column<T, ?>, Header<?>> columnFooters = new HashMap<>();
@@ -445,7 +445,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	 *
 	 * @param objects objects to add to table
 	 */
-	public void addToTable(ArrayList<T> objects) {
+	public void addToTable(List<T> objects) {
 		if (objects != null && !objects.isEmpty()) {
 			for (int i = 0; i < objects.size(); i++) {
 				if (objects.get(i) != null) {
@@ -563,7 +563,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	 *
 	 * @param objects objects to remove
 	 */
-	public void removeFromTable(ArrayList<T> objects) {
+	public void removeFromTable(List<T> objects) {
 		// FIXME - save remove from list, we cant use object's equals().
 		backup.removeAll(objects);
 		content.removeAll(objects);
@@ -590,7 +590,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	 *
 	 * @param list content to set to table
 	 */
-	public void setList(ArrayList<T> list) {
+	public void setList(List<T> list) {
 
 		// TODO - suggest oracle + default sort ?
 
@@ -726,9 +726,9 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	 *
 	 * @return ArrayList of selected items
 	 */
-	public ArrayList<T> getSelectedList() {
+	public List<T> getSelectedList() {
 
-		ArrayList<T> result = new ArrayList<>();
+		List<T> result = new ArrayList<>();
 		if (singleSelection) {
 			result.add(singleSelectionModel.getSelectedObject());
 		} else {
@@ -750,7 +750,7 @@ public class PerunDataGrid<T extends JavaScriptObject> extends DataGrid<T> {
 	 *
 	 * @return instance of list of displayed objects
 	 */
-	public ArrayList<T> getList() {
+	public List<T> getList() {
 		return this.content;
 	}
 

@@ -19,6 +19,9 @@ public interface PerunProfileResources extends ClientBundle {
 
 		String logoWrapper();
 
+		String grid();
+
+		String identities();
 	}
 
 	@Source("css/PerunProfile.gss")

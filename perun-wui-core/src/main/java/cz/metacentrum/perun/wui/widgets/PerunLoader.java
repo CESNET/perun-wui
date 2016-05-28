@@ -130,7 +130,7 @@ public class PerunLoader extends Composite {
 		progress.setActive(true);
 		bar.setPercent(100);
 		bar.setType(ProgressBarType.DEFAULT);
-
+		bar.setVisible(true);
 
 		/*Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
 			@Override

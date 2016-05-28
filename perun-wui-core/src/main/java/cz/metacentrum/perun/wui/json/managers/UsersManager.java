@@ -108,6 +108,22 @@ public class UsersManager {
 	}
 
 	/**
+	 * Gets list of all external sources of the user.
+	 *
+	 * @param userId Users ID
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getUserExtSources(int userId, JsonEvents events){
+
+		JsonClient client = new JsonClient(events);
+		if (userId > 0) client.put("user", userId);
+		return client.call(USERS_MANAGER + "getUserExtSources");
+
+	}
+
+	/**
 	 * Return list of VOs where user is a member (independent of membership status)
 	 *
 	 * @param userId Users ID

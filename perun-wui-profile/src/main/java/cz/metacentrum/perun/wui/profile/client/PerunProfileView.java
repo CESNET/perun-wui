@@ -55,17 +55,17 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 
 	@UiField AnchorListItem topMenuMyProfile;
 	@UiField AnchorListItem personal;
-	@UiField AnchorListItem organizations;
+//	@UiField AnchorListItem organizations;
 	@UiField AnchorListItem identities;
-	@UiField AnchorListItem logins;
-	@UiField AnchorListItem settings;
+//	@UiField AnchorListItem logins;
+//	@UiField AnchorListItem settings;
 	@UiField NavbarNav topMenu;
 
 	@UiField AnchorListItem personalXS;
-	@UiField AnchorListItem organizationsXS;
+//	@UiField AnchorListItem organizationsXS;
 	@UiField AnchorListItem identitiesXS;
-	@UiField AnchorListItem loginsXS;
-	@UiField AnchorListItem settingsXS;
+//	@UiField AnchorListItem loginsXS;
+//	@UiField AnchorListItem settingsXS;
 
 	@UiField AnchorListItem logout;
 
