@@ -12,28 +12,63 @@
 
 	<b.html:Div>
 
-				<b:Heading size="H2" ui:field="pageTitle">
-					<b:Icon ui:field="icon" type="USER" fixedWidth="true" />
-					<b.html:Text text="" ui:field="text"/>
-					<b.html:Small text="" ui:field="small"/>
-				</b:Heading>
+		<b:Heading size="H2" ui:field="pageTitle">
+			<b:Icon ui:field="icon" type="USER" fixedWidth="true" />
+			<b.html:Text text="" ui:field="text"/>
+			<b.html:Small text="" ui:field="small"/>
+		</b:Heading>
 
-				<p:PerunLoader ui:field="loader" />
+		<p:PerunLoader visible="false" ui:field="loader" />
 
-				<b:Description horizontal="true" paddingTop="20">
-					<b:DescriptionTitle ui:field="nameLabel" paddingBottom="10" />
-					<b:DescriptionData ui:field="nameData" paddingBottom="10" />
-					<b:DescriptionTitle ui:field="orgLabel" paddingBottom="10" />
-					<b:DescriptionData ui:field="orgData" paddingBottom="10" />
-					<b:DescriptionTitle ui:field="emailLabel" paddingBottom="10" />
-					<b:DescriptionData ui:field="emailData" paddingBottom="10" />
-					<!--<b:DescriptionTitle ui:field="phoneLabel" paddingBottom="10" />
-					<b:DescriptionData ui:field="phoneData" paddingBottom="10" />
-					<b:DescriptionTitle ui:field="langLabel" paddingBottom="10" />
-					<b:DescriptionData ui:field="langData" paddingBottom="10" />
-					<b:DescriptionTitle ui:field="timeLabel" paddingBottom="10" />
-					<b:DescriptionData ui:field="timeData" paddingBottom="10" />-->
-				</b:Description>
+		<b.html:Div ui:field="personalInfo" visible="false" paddingTop="20">
+			<b:Row paddingBottom="10">
+				<b:Column size="SM_4" ui:field="nameLabel" addStyleNames="{res.gss.personalInfoLabel}" />
+				<b:Column size="SM_8" ui:field="nameData" />
+			</b:Row>
+			<b:Row paddingBottom="10">
+				<b:Column size="SM_4" ui:field="orgLabel" addStyleNames="{res.gss.personalInfoLabel}" />
+				<b:Column size="SM_8" ui:field="orgData" />
+			</b:Row>
+			<b:Row paddingBottom="10">
+				<b:Column size="SM_4" ui:field="emailLabel" addStyleNames="{res.gss.personalInfoLabel}"/>
+				<b:Column size="SM_8" ui:field="emailData" >
+					<b:Button ui:field="updateEmailModalBtn" size="EXTRA_SMALL" marginLeft="10" text="update"
+							  dataTarget="#updateEmailModal" dataToggle="MODAL" />
+				</b:Column>
+			</b:Row>
+			<!--<b:DescriptionTitle ui:field="phoneLabel" paddingBottom="10" />
+			<b:DescriptionData ui:field="phoneData" paddingBottom="10" />
+			<b:DescriptionTitle ui:field="langLabel" paddingBottom="10" />
+			<b:DescriptionData ui:field="langData" paddingBottom="10" />
+			<b:DescriptionTitle ui:field="timeLabel" paddingBottom="10" />
+			<b:DescriptionData ui:field="timeData" paddingBottom="10" />-->
+		</b.html:Div>
+
+
+		<b:Modal title="Update preferred e-mail" ui:field="updateEmailModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true" b:id="updateEmailModal">
+			<b:ModalBody>
+
+				<b:Alert ui:field="alreadyEmailRequests" visible="false" />
+
+				<p:PerunLoader ui:field="updateEmailLoader" />
+
+				<b:Form ui:field="updateEmailForm" visible="false" >
+					<b:FieldSet>
+
+						<b:FormGroup ui:field="updateEmailFormGroup">
+							<b:FormLabel ui:field="updateEmailLabel" for="formEmail">new e-mail</b:FormLabel>
+							<b:Input type="EMAIL" b:id="formEmail" ui:field="newUpdateEmail" />
+							<b:HelpBlock ui:field="updateEmailHelpBlock"/>
+						</b:FormGroup>
+
+						<b:Button ui:field="updateEmailBtn" type="PRIMARY">Request a change</b:Button>
+
+					</b:FieldSet>
+				</b:Form>
+
+			</b:ModalBody>
+		</b:Modal>
+
 
 	</b.html:Div>
 

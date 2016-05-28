@@ -5,6 +5,7 @@ import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class with JavaScript native utilities functions.
@@ -258,8 +259,8 @@ public class JsUtils {
 	 * @param jsa javascript array of strings
 	 * @return ArrayList<String> list of strings
 	 */
-	public static final ArrayList<String> listFromJsArrayString(JsArrayString jsa) {
-		ArrayList<String> arrayList = new ArrayList<String>();
+	public static final List<String> listFromJsArrayString(JsArrayString jsa) {
+		List<String> arrayList = new ArrayList<String>();
 		if (jsa != null) {
 			for (int i = 0; i < jsa.length(); i++) {
 				String str = jsa.get(i).toString();

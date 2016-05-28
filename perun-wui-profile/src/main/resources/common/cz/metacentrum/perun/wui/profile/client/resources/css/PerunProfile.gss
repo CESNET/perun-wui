@@ -13,11 +13,6 @@ body {
 	margin-bottom: 8px;
 }
 
-.grid {
-	height: 30vh;
-	margin-bottom: 15px;
-}
-
 .identities table {
 	margin-bottom: 6px;
 }
@@ -27,6 +22,12 @@ body {
 .identities table button {
 	margin-bottom: 0px;
 }
+
+.personalInfoLabel {
+	font-weight: bold;
+	text-align: right;
+}
+
 /* Since we show left-menu on bigger screen, align header too */
 @media screen and (min-width: 768px) {
 	.logoWrapper {
