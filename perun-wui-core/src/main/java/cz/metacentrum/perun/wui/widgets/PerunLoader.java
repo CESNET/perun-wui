@@ -108,7 +108,7 @@ public class PerunLoader extends Composite {
 	public void onFilter(String text) {
 
 		state = PerunLoaderState.filter;
-		bar.getParent().setVisible(false);
+		progress.setVisible(false);
 
 		// TODO ALERT
 		message.setText("No results match the filter '" + text + "'.");
@@ -163,7 +163,7 @@ public class PerunLoader extends Composite {
 	public void onEmpty(){
 
 		state = PerunLoaderState.empty;
-		bar.getParent().setVisible(false);
+		progress.setVisible(false);
 		message.setText(emptyMessage);
 		message.setVisible(true);
 	}
@@ -191,7 +191,7 @@ public class PerunLoader extends Composite {
 	public void onFinishedEmpty(){
 
 		state = PerunLoaderState.empty;
-		bar.getParent().setVisible(false);
+		progress.setVisible(false);
 
 		message.setText("Loading finished. No results found.");
 		message.setVisible(true);
@@ -204,6 +204,7 @@ public class PerunLoader extends Composite {
 	public void onError(PerunException error, final ClickHandler handler) {
 
 		progress.setVisible(true);
+		bar.setVisible(true);
 		message.setVisible(false);
 		alert.setVisible(true);
 

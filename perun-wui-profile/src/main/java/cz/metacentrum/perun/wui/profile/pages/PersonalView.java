@@ -67,15 +67,15 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	@UiField
 	Column nameLabel;
 	@UiField
-	Column nameData;
+	Text nameData;
 	@UiField
 	Column emailLabel;
 	@UiField
-	Column emailData;
+	Text emailData;
 	@UiField
 	Column orgLabel;
 	@UiField
-	Column orgData;
+	Text orgData;
 /*	@UiField
 	DescriptionTitle phoneLabel;
 	@UiField
@@ -114,12 +114,6 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	public PersonalView(PersonalViewUiBinder binder) {
 		initWidget(binder.createAndBindUi(this));
 
-		draw();
-	}
-
-	public void draw() {
-
-		//small.setText(translation.profile());
 
 		orgLabel.add(new Text(translation.organization()));
 		nameLabel.add(new Text((translation.name())));
@@ -160,9 +154,9 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 		text.setText(user.getFullName());
 
-		nameData.add(new Text((user.getFullName())));
-		emailData.insert(new Text((user.getPreferredEmail())), 0);
-		orgData.add(new Text((user.getOrganization())));
+		nameData.setText(user.getFullName());
+		emailData.setText(user.getPreferredEmail());
+		orgData.setText(user.getOrganization());
 
 		/*Attribute phone = user.getAttribute("urn:perun:user:attribute-def:def:phone");
 		if (phone != null) phoneData.setText(phone.getValue());

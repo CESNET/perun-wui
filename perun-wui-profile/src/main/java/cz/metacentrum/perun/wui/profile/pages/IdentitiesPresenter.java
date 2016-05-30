@@ -35,11 +35,9 @@ import java.util.List;
  */
 public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, IdentitiesPresenter.MyProxy> implements IdentitiesUiHandlers {
 
-	private User user;
 	private List<UserExtSource> userExtSources;
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
-	private IdentitiesPresenter presenter = this;
 
 	public interface MyView extends View, HasUiHandlers<IdentitiesUiHandlers> {
 		void loadingUserExtSourcesStart();
@@ -61,10 +59,7 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 		getView().setUiHandlers(this);
 	}
 
-	@Override
-	public void onBind() {
-		user = PerunSession.getInstance().getUser();
-	}
+
 	@Override
 	public void onReveal() {
 		loadUserExtSources();
@@ -74,7 +69,7 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 
 	@Override
 	public void loadUserExtSources() {
-		UsersManager.getUserExtSources(user.getId(), new JsonEvents() {
+		UsersManager.getUserExtSources(getUserId(), new JsonEvents() {
 
 			@Override
 			public void onFinished(JavaScriptObject result) {
@@ -97,7 +92,7 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 
 	@Override
 	public void removeUserExtSource(final UserExtSource userExtSource) {
-		UsersManager.removeUserExtSource(user.getId(), userExtSource.getId(), new JsonEvents() {
+		UsersManager.removeUserExtSource(getUserId(), userExtSource.getId(), new JsonEvents() {
 
 			@Override
 			public void onFinished(JavaScriptObject result) {
@@ -120,6 +115,29 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 	@Override
 	public void addUserExtSource() {
 		Window.Location.assign(Utils.getIdentityConsolidatorLink(true));
+	}
+
+
+	private Integer getUserId() {
+
+		try {
+
+			String userId = placeManager.getCurrentPlaceRequest().getParameter("id", null);
+			if (userId == null) {
+				userId = String.valueOf(PerunSession.getInstance().getUserId());
+			}
+
+			final int id = Integer.valueOf(userId);
+
+			if (id < 1) {
+				placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
+			}
+
+			return id;
+		} catch (NumberFormatException e) {
+			placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
+		}
+		return null;
 	}
 
 }

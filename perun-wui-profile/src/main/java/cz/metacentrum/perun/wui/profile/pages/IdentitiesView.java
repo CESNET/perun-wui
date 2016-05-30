@@ -90,13 +90,27 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		TextColumn<UserExtSource> nameCol = new TextColumn<UserExtSource>() {
 			@Override
 			public String getValue(UserExtSource userExtSource) {
-				return getFriendlyExtSourceName(userExtSource);
+				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
+					return Utils.translateIdp(userExtSource.getExtSource().getName());
+				} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
+					return getCertParam(userExtSource.getExtSource().getName(), "CN") +
+							", " +
+							getCertParam(userExtSource.getExtSource().getName(), "O");
+				} else {
+					return userExtSource.getExtSource().getName();
+				}
 			}
 		};
 		TextColumn<UserExtSource> loginCol = new TextColumn<UserExtSource>() {
 			@Override
 			public String getValue(UserExtSource userExtSource) {
-				return userExtSource.getLogin();
+				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
+					return userExtSource.getLogin().split("@")[0];
+				} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
+					return Utils.convertCertCN(userExtSource.getLogin());
+				} else {
+					return userExtSource.getLogin();
+				}
 			}
 		};
 		Column<UserExtSource, String> removeColumn = new Column<UserExtSource, String>(
@@ -212,72 +226,14 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onError(ex, retry);
 	}
 
+	private String getCertParam(String string, String param) {
 
-
-	private String getFriendlyExtSourceName(UserExtSource userExtSource) {
-		ExtSource extSource = userExtSource.getExtSource();
-
-		if (ExtSourceType.IDP.getType().equals(extSource.getType())) {
-
-			if  (fedNameDict.containsKey(extSource.getName())) {
-				return fedNameDict.get(extSource.getName());
-			}
-
-			if  (extSource.getName().equals("https://extidp.cesnet.cz/idp/shibboleth")) {
-				GWT.log("log");
-				String socialId = userExtSource.getLogin().split("@")[1];
-				if  (socialNameDict.containsKey(socialId)) {
-					return socialNameDict.get(socialId);
-				}
+		for (String s : string.split("/")) {
+			if (s.startsWith(param+"=")) {
+				return Utils.unescapeDN(s.split("=")[1]);
 			}
 		}
-		return extSource.getName();
-	}
-
-	private static final Map<String, String> fedNameDict;
-	static
-	{
-		fedNameDict = new HashMap<>();
-		fedNameDict.put("https://idp.upce.cz/idp/shibboleth", "University in Pardubice");
-		fedNameDict.put("https://idp.slu.cz/idp/shibboleth", "University in Opava");
-		fedNameDict.put("https://login.feld.cvut.cz/idp/shibboleth", "Faculty of Electrical Engineering, Czech Technical University In Prague");
-		fedNameDict.put("https://www.vutbr.cz/SSO/saml2/idp", "Brno University of Technology");
-		fedNameDict.put("https://shibboleth.nkp.cz/idp/shibboleth", "The National Library of the Czech Republic");
-		fedNameDict.put("https://idp2.civ.cvut.cz/idp/shibboleth", "Czech Technical University In Prague");
-		fedNameDict.put("https://shibbo.tul.cz/idp/shibboleth", "Technical University of Liberec");
-		fedNameDict.put("https://idp.mendelu.cz/idp/shibboleth", "Mendel University in Brno");
-		fedNameDict.put("https://cas.cuni.cz/idp/shibboleth", "Charles University in Prague");
-		fedNameDict.put("https://wsso.vscht.cz/idp/shibboleth", "Institute of Chemical Technology Prague");
-		fedNameDict.put("https://idp.vsb.cz/idp/shibboleth", "VSB – Technical University of Ostrava");
-		fedNameDict.put("https://whoami.cesnet.cz/idp/shibboleth", "CESNET");
-		fedNameDict.put("https://helium.jcu.cz/idp/shibboleth", "University of South Bohemia");
-		fedNameDict.put("https://idp.ujep.cz/idp/shibboleth", "Jan Evangelista Purkyne University in Usti nad Labem");
-		fedNameDict.put("https://idp.amu.cz/idp/shibboleth", "Academy of Performing Arts in Prague");
-		fedNameDict.put("https://idp.lib.cas.cz/idp/shibboleth", "Academy of Sciences Library");
-		fedNameDict.put("https://shibboleth.mzk.cz/simplesaml/metadata.xml", "Moravian  Library");
-		fedNameDict.put("https://idp2.ics.muni.cz/idp/shibboleth", "Masaryk University");
-		fedNameDict.put("https://idp.upol.cz/idp/shibboleth", "Palacky University, Olomouc");
-		fedNameDict.put("https://idp.fnplzen.cz/idp/shibboleth", "FN Plzen");
-		fedNameDict.put("https://id.vse.cz/idp/shibboleth", "University of Economics, Prague");
-		fedNameDict.put("https://shib.zcu.cz/idp/shibboleth", "University of West Bohemia");
-		fedNameDict.put("https://idptoo.osu.cz/simplesaml/saml2/idp/metadata.php", "University of Ostrava");
-		fedNameDict.put("https://login.ics.muni.cz/idp/shibboleth", "MetaCentrum");
-		fedNameDict.put("https://idp.hostel.eduid.cz/idp/shibboleth", "eduID.cz Hostel");
-		fedNameDict.put("https://shibboleth.techlib.cz/idp/shibboleth", "National Library of Technology");
-		fedNameDict.put("https://www.egi.eu/idp/shibboleth", "EGI SSO");
-		fedNameDict.put("https://engine.elixir-czech.org/authentication/idp/metadata", "ELIXIR ID");
-	}
-
-	private static final Map<String, String> socialNameDict;
-	static
-	{
-		socialNameDict = new HashMap<>();
-		socialNameDict.put("google.extidp.cesnet.cz", "Google");
-		socialNameDict.put("facebook.extidp.cesnet.cz", "Facebook");
-		socialNameDict.put("mojeid.extidp.cesnet.cz", "mojeID");
-		socialNameDict.put("linkedin.extidp.cesnet.cz", "LinkedIn");
-		socialNameDict.put("twitter.extidp.cesnet.cz", "Twitter");
-		socialNameDict.put("seznam.extidp.cesnet.cz", "Seznam");
+		return "";
 	}
 
 }

@@ -23,15 +23,20 @@
 		<b.html:Div ui:field="personalInfo" visible="false" paddingTop="20">
 			<b:Row paddingBottom="10">
 				<b:Column size="SM_4" ui:field="nameLabel" addStyleNames="{res.gss.personalInfoLabel}" />
-				<b:Column size="SM_8" ui:field="nameData" />
+				<b:Column size="SM_8" >
+					<b.html:Text ui:field="nameData" />
+				</b:Column>
 			</b:Row>
 			<b:Row paddingBottom="10">
 				<b:Column size="SM_4" ui:field="orgLabel" addStyleNames="{res.gss.personalInfoLabel}" />
-				<b:Column size="SM_8" ui:field="orgData" />
+				<b:Column size="SM_8" >
+					<b.html:Text ui:field="orgData" />
+				</b:Column>
 			</b:Row>
 			<b:Row paddingBottom="10">
-				<b:Column size="SM_4" ui:field="emailLabel" addStyleNames="{res.gss.personalInfoLabel}"/>
-				<b:Column size="SM_8" ui:field="emailData" >
+				<b:Column size="SM_4" ui:field="emailLabel" addStyleNames="{res.gss.personalInfoLabel}" />
+				<b:Column size="SM_8" >
+					<b.html:Text ui:field="emailData" />
 					<b:Button ui:field="updateEmailModalBtn" size="EXTRA_SMALL" marginLeft="10" text="update"
 							  dataTarget="#updateEmailModal" dataToggle="MODAL" />
 				</b:Column>

@@ -70,7 +70,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	@Override
 	public void loadUser() {
 
-		final int id = PerunSession.getInstance().getUserId();
+		final int id = getUserId();
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -112,7 +112,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	@Override
 	public void checkEmailRequestPending() {
 
-		final int id = PerunSession.getInstance().getUserId();
+		final int id = getUserId();
 
 		UsersManager.getPendingPreferredEmailChanges(id, new JsonEvents() {
 
@@ -162,6 +162,28 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 			}
 		});
 
+	}
+
+	private Integer getUserId() {
+
+		try {
+
+			String userId = placeManager.getCurrentPlaceRequest().getParameter("id", null);
+			if (userId == null) {
+				userId = String.valueOf(PerunSession.getInstance().getUserId());
+			}
+
+			final int id = Integer.valueOf(userId);
+
+			if (id < 1) {
+				placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
+			}
+
+			return id;
+		} catch (NumberFormatException e) {
+			placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
+		}
+		return null;
 	}
 
 
