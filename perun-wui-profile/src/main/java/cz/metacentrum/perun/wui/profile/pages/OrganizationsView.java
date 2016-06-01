@@ -9,22 +9,17 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.MembersManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
-import cz.metacentrum.perun.wui.json.managers.VosManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Member;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
 import cz.metacentrum.perun.wui.model.beans.User;
 import cz.metacentrum.perun.wui.model.beans.Vo;
-import cz.metacentrum.perun.wui.model.columnProviders.VoColumnProvider;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
-import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 import org.gwtbootstrap3.client.ui.Alert;
@@ -35,12 +30,10 @@ import org.gwtbootstrap3.client.ui.PanelCollapse;
 import org.gwtbootstrap3.client.ui.PanelHeader;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import org.gwtbootstrap3.client.ui.constants.PanelType;
-import org.gwtbootstrap3.client.ui.constants.Pull;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Small;
-import org.gwtbootstrap3.client.ui.html.Span;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
@@ -55,7 +48,7 @@ public class OrganizationsView extends ViewImpl implements OrganizationsPresente
 
 	private RichUser user;
 
-	interface PersonalViewUiBinder extends UiBinder<Widget, OrganizationsView> {
+	interface OrganizationsViewUiBinder extends UiBinder<Widget, OrganizationsView> {
 	}
 
 	private PerunProfileTranslation translation = GWT.create(PerunProfileTranslation.class);
@@ -79,7 +72,7 @@ public class OrganizationsView extends ViewImpl implements OrganizationsPresente
 	//PerunDataGrid<Vo> grid = new PerunDataGrid<Vo>(false, new VoColumnProvider());
 
 	@Inject
-	public OrganizationsView(PersonalViewUiBinder binder) {
+	public OrganizationsView(OrganizationsViewUiBinder binder) {
 		initWidget(binder.createAndBindUi(this));
 	}
 

@@ -5,6 +5,7 @@ import com.google.gwt.core.client.JsArrayString;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Overlay type for ApplicationFormItem from Perun-Registrar.
@@ -221,7 +222,7 @@ public class ApplicationFormItem extends JavaScriptObject {
 	public final ArrayList<Application.ApplicationType> getApplicationTypes() {
 
 		// TODO - check if it works
-		ArrayList<String> list = JsUtils.listFromJsArrayString(JsUtils.getNativePropertyArrayString(this, "applicationTypes"));
+		List<String> list = JsUtils.listFromJsArrayString(JsUtils.getNativePropertyArrayString(this, "applicationTypes"));
 		ArrayList<Application.ApplicationType> result = new ArrayList<Application.ApplicationType>();
 		for (String s : list) {
 			result.add(Application.ApplicationType.valueOf(s));

@@ -54,4 +54,53 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Phone")
 	String phone();
 
+
+
+	@DefaultMessage("Federated identity")
+	String federatedIdp();
+
+	@DefaultMessage("Login")
+	String federatedLogin();
+
+	@DefaultMessage("Certificate issuer")
+	String x509Issuer();
+
+	@DefaultMessage("Identity")
+	String x509Identity();
+
+	@DefaultMessage("Removing identity")
+	String removingIdentity();
+
+	@DefaultMessage("Loading identities")
+	String loadingIdentities();
+
+	@DefaultMessage("Add new federated identity")
+	String addFed();
+
+	@DefaultMessage("Add new certificate")
+	String addCert();
+
+	@DefaultMessage("Loading user data")
+	String loadingUserData();
+
+	@DefaultMessage("update")
+	String updateEmail();
+
+	@DefaultMessage("New preferred email")
+	String newPreferredEmail();
+
+	@DefaultMessage("Send validation email")
+	String sendValidationEmail();
+
+	@DefaultMessage("Sending validation email")
+	String requestingEmailUpdate();
+
+	@DefaultMessage("Invalid email format")
+	String wrongEmailFormat();
+
+	@DefaultMessage("Validation email has been send to {0}. Check your inbox and complete validation by clicking on link in received email.")
+	String haveRequestedEmailUpdate(String emails);
+
+	@DefaultMessage("Preferred email update")
+	String updateEmailModalTitle();
 }

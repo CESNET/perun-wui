@@ -108,6 +108,22 @@ public class UsersManager {
 	}
 
 	/**
+	 * Gets list of all external sources of the user.
+	 *
+	 * @param userId Users ID
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getUserExtSources(int userId, JsonEvents events){
+
+		JsonClient client = new JsonClient(events);
+		if (userId > 0) client.put("user", userId);
+		return client.call(USERS_MANAGER + "getUserExtSources");
+
+	}
+
+	/**
 	 * Return list of VOs where user is a member (independent of membership status)
 	 *
 	 * @param userId Users ID
@@ -120,6 +136,45 @@ public class UsersManager {
 		JsonClient client = new JsonClient(events);
 		if (userId > 0) client.put("user", userId);
 		return client.call(USERS_MANAGER + "getVosWhereUserIsMember");
+
+	}
+
+	/**
+	 * Request to change preferred email address of user. Validation mail is sent on new address.
+	 * Change is not saved until user validate new email address by calling validatePreferredEmailChange()
+	 * method with proper set of parameters (sent in validation mail).
+	 *
+	 * @param userId Users ID
+	 * @param email  New email address to set
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request requestPreferredEmailChange(int userId, String email, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (userId > 0) client.put("user", userId);
+		client.put("email", email);
+		return client.call(USERS_MANAGER + "requestPreferredEmailChange");
+
+	}
+
+	/**
+	 * Request to change preferred email address of user. Validation mail is sent on new address.
+	 * Change is not saved until user validate new email address by calling validatePreferredEmailChange()
+	 * method with proper set of parameters (sent in validation mail).
+	 *
+	 * @param userId Users ID
+	 * @param email  New email address to set
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getPendingPreferredEmailChanges(int userId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (userId > 0) client.put("user", userId);
+		return client.call(USERS_MANAGER + "getPendingPreferredEmailChanges");
 
 	}
 

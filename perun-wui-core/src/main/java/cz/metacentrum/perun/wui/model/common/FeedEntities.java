@@ -6,6 +6,7 @@ import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Overlay type for FeedEntities object which represents
@@ -64,7 +65,7 @@ public class FeedEntities extends JavaScriptObject {
 	 *
 	 * @return List of all IdPs identifiers
 	 */
-	public final ArrayList<String> getKeys() {
+	public final List<String> getKeys() {
 		return JsUtils.listFromJsArrayString(keys());
 	}
 
