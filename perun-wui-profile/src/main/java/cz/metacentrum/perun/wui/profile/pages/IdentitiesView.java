@@ -1,49 +1,24 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
-import com.google.gwt.cell.client.ActionCell;
-import com.google.gwt.cell.client.ButtonCellBase;
-import com.google.gwt.cell.client.Cell;
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.cell.client.TextButtonCell;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dom.client.Element;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.safehtml.shared.SafeHtml;
-import com.google.gwt.safehtml.shared.SafeHtmlBuilder;
-import com.google.gwt.text.shared.SafeHtmlRenderer;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.Column;
-import com.google.gwt.user.cellview.client.LoadingStateChangeEvent;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.json.Events;
-import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.UsersManager;
-import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.ExtSource;
 import cz.metacentrum.perun.wui.model.beans.ExtSource.ExtSourceType;
-import cz.metacentrum.perun.wui.model.beans.RichUser;
-import cz.metacentrum.perun.wui.model.beans.User;
 import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
-import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
-import org.gwtbootstrap3.client.ui.Alert;
-import org.gwtbootstrap3.client.ui.base.button.AbstractButton;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
@@ -52,9 +27,7 @@ import org.gwtbootstrap3.client.ui.html.Small;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * View for displaying VO membership details
@@ -91,11 +64,15 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 			@Override
 			public String getValue(UserExtSource userExtSource) {
 				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
+					if (userExtSource.getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth")) {
+						// hack our social IdP so we can tell from where identity is
+						return Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
+					}
 					return Utils.translateIdp(userExtSource.getExtSource().getName());
 				} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
-					return getCertParam(userExtSource.getExtSource().getName(), "CN") +
+					return getCertParam(userExtSource.getExtSource().getName(), "O") +
 							", " +
-							getCertParam(userExtSource.getExtSource().getName(), "O");
+							getCertParam(userExtSource.getExtSource().getName(), "CN");
 				} else {
 					return userExtSource.getExtSource().getName();
 				}
