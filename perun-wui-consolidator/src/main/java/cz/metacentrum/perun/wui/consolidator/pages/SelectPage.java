@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.consolidator.pages;
 import com.google.gwt.core.client.*;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
@@ -16,6 +17,7 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ExtSource;
 import cz.metacentrum.perun.wui.widgets.*;
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.AlertType;
 
 /**
  * Single page used by consolidator to display it's state
@@ -44,6 +46,7 @@ public class SelectPage {
 	@UiField Heading identity;
 	@UiField Heading login;
 	@UiField Alert alert;
+	@UiField Alert counter;
 
 	public SelectPage() {
 	}
@@ -127,6 +130,7 @@ public class SelectPage {
 					loader.onFinished();
 					loader.setVisible(false);
 					wayf.setVisible(true);
+					setTimer();
 
 				}
 
@@ -148,10 +152,33 @@ public class SelectPage {
 			loader.onFinished();
 			loader.setVisible(false);
 			wayf.setVisible(true);
+			setTimer();
 
 		}
 
 		return rootElement;
+
+	}
+
+	private void setTimer() {
+
+		counter.setText(translation.authorizationTokenWillExpire(300));
+		counter.setVisible(true);
+
+		Timer t = new Timer() {
+			int count = 60 * 5;
+			public void run() {
+				counter.setText(translation.authorizationTokenWillExpire(count));
+				count--;
+				if (count < 0) {
+					counter.setType(AlertType.DANGER);
+					counter.setText(translation.authorizationTokenHasExpired());
+					this.cancel();
+				}
+			}
+		};
+		t.scheduleRepeating(1000);
+		t.run();
 
 	}
 

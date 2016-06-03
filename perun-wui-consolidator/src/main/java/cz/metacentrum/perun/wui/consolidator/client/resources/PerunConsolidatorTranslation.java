@@ -40,6 +40,12 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("No organization found")
 	public String noOrganizationFound();
 
+	@DefaultMessage("Your authorization token will expire in {0}s. Please make your choice before that.")
+	public String authorizationTokenWillExpire(int count);
+
+	@DefaultMessage("Your authorization token has expired. Please reload the page to retry.")
+	public String authorizationTokenHasExpired();
+
 	/* --  JOIN PAGE -- */
 
 	@DefaultMessage("Continue")
