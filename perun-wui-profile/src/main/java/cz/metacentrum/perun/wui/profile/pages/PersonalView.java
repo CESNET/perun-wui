@@ -225,6 +225,7 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 			}
 			alreadyEmailRequests.setText(translation.haveRequestedEmailUpdate(emails));
 		}
+		updateEmailModal.hide();
 	}
 
 	@Override

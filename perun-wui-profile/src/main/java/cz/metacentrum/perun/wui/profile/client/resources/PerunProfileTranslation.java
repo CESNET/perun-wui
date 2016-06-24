@@ -39,7 +39,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Title after")
 	String titleAfter();
 
-	@DefaultMessage("Preferred email")
+	@DefaultMessage("E-mail")
 	String preferredMail();
 
 	@DefaultMessage("Preferred language")
@@ -83,24 +83,25 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Loading user data")
 	String loadingUserData();
 
-	@DefaultMessage("update")
+	@DefaultMessage("Change")
 	String updateEmail();
 
-	@DefaultMessage("New preferred email")
+	@DefaultMessage("New e-mail")
 	String newPreferredEmail();
 
-	@DefaultMessage("Send validation email")
+	@DefaultMessage("Request e-mail change (you will receive validation e-mail)")
 	String sendValidationEmail();
 
-	@DefaultMessage("Sending validation email")
+	@DefaultMessage("Sending validation e-mail")
 	String requestingEmailUpdate();
 
-	@DefaultMessage("Invalid email format")
+	@DefaultMessage("Invalid e-mail format")
 	String wrongEmailFormat();
 
-	@DefaultMessage("Validation email has been send to {0}. Check your inbox and complete validation by clicking on link in received email.")
+	@DefaultMessage("Validation e-mail has been send to {0}. Check your inbox and complete validation by clicking on link in received e-mail.")
 	String haveRequestedEmailUpdate(String emails);
 
-	@DefaultMessage("Preferred email update")
+	@DefaultMessage("E-mail change")
 	String updateEmailModalTitle();
+
 }
