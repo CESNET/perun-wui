@@ -45,7 +45,7 @@ public interface PerunErrorTranslation extends PerunTranslation {
 	@DefaultMessage("Server is probably being restarted at the moment. Please try again later.")
 	public String httpError404();
 
-	@DefaultMessage("Can't contact remote server, connection was lost.")
+	@DefaultMessage("Can`t contact remote server, connection was lost.")
 	public String httpError0();
 
 	@DefaultMessage("Cross-site request was blocked by browser.")
