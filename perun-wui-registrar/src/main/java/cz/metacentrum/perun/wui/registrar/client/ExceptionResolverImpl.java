@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -122,6 +123,15 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			setInfo(trans.registrarException(getBeanName()), null);
 
 		} else {
+
+			if (JsUtils.checkParseInt(exception.getErrorId())) {
+				int exceptionId = Integer.parseInt(exception.getErrorId());
+				// assume HTTP error
+				if (exceptionId < 600) {
+					setInfo(trans.unableToSubmit(), exception.getMessage(), false);
+					return;
+				}
+			}
 
 			setInfo(trans.registrarException(getBeanName()), null);
 

@@ -20,7 +20,9 @@ import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.user.client.Window;
+import cz.metacentrum.perun.wui.client.resources.PerunErrorTranslation;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -66,6 +68,8 @@ public class JsonClient {
 	private String requestUrl;
 	private JSONObject json = new JSONObject();
 	private boolean checkIfPending = false;
+
+	private PerunErrorTranslation errorTranslation = GWT.create(PerunErrorTranslation.class);
 
 	private Map<String, PerunRequest> runningRequests = new HashMap<>();
 	private static Paragraph layout = new Paragraph();
@@ -286,14 +290,14 @@ public class JsonClient {
 						PerunException error = new JSONObject().getJavaScriptObject().cast();
 						error.setErrorId("" + resp.getStatusCode());
 						error.setName(resp.getStatusText());
-						error.setMessage("Server responded with HTTP error: " + resp.getStatusCode() + " - " + resp.getStatusText());
+						error.setMessage(errorTranslation.httpErrorAny(resp.getStatusCode(), resp.getStatusText()));
 						error.setPostData(data);
 						error.setRequestURL(url);
 
 						if (resp.getStatusCode() == 401 || resp.getStatusCode() == 403) {
 
 							error.setName("Not Authorized");
-							error.setMessage("You are not authorized to server. Your session might have expired. Please refresh the browser window to re-login.");
+							error.setMessage(errorTranslation.httpError401or403());
 
 						} else if (resp.getStatusCode() == 500) {
 
@@ -374,7 +378,7 @@ public class JsonClient {
 								} else {
 
 									error.setName("ServerInternalError");
-									error.setMessage("Server encounter internal error while processing your request. Please report this error and retry.");
+									error.setMessage(errorTranslation.httpError500());
 
 								}
 
@@ -383,17 +387,17 @@ public class JsonClient {
 						} else if (resp.getStatusCode() == 503) {
 
 							error.setName("Server Temporarily Unavailable");
-							error.setMessage("Server is temporarily unavailable. Please try again later.");
+							error.setMessage(errorTranslation.httpError503());
 
 						} else if (resp.getStatusCode() == 404) {
 
 							error.setName("Not found");
-							error.setMessage("Server is probably being restarted at the moment. Please try again later.");
+							error.setMessage(errorTranslation.httpError404());
 
 						} else if (resp.getStatusCode() == 0) {
 
 							error.setName("Aborted");
-							error.setMessage("Can't contact remote server, connection was lost.");
+							error.setMessage(errorTranslation.httpError0());
 
 							// force reload page if it's first GUI call, otherwise keep it to alert box
 							if (runningRequests.get(requestUrl) != null && runningRequests.get(requestUrl).getManager().equals("authzResolver") &&
@@ -439,7 +443,7 @@ public class JsonClient {
 		if (jso != null) {
 			events.onError((PerunException) jso);
 		} else {
-			PerunException error = PerunException.createNew("0", "Cross-site request", "Cross-site request was blocked by browser.");
+			PerunException error = PerunException.createNew("0", "Cross-site request", errorTranslation.httpError0CrossSite());
 			error.setRequestURL(requestUrl);
 			error.setPostData(json.toString());
 			events.onError(error);
