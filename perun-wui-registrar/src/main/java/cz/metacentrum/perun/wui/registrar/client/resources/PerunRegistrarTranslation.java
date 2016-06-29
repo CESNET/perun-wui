@@ -290,6 +290,12 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Unable to submit the form")
 	public String unableToSubmit();
 
+	@DefaultMessage("Can`t submit the form")
+	public String cantSubmitLoA();
+
+	@DefaultMessage("Based on information provided by <i>{0}</i> you are <b>not active academia member</b>. Please sing out and use your home institution (University you are active member) when signing in.")
+	public String notAcademicLoA(String idp);
+
 	/* ------------ LOADER MESSAGES ---------------- */
 
 	@DefaultMessage("Loading ...")

@@ -12,6 +12,8 @@ import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 
+import java.util.Objects;
+
 /**
  * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
@@ -114,6 +116,10 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			setInfo(trans.applicationNotCreatedBecauseLogin(), null, false);
 
+		} else if (exception.getName().equalsIgnoreCase("CantBeSubmittedException")) {
+
+			resolveCantBeSubmittedException();
+
 		} else if (exception.getName().equalsIgnoreCase("RpcException")) {
 
 			setInfo(trans.applicationNotCreated(), null, false);
@@ -175,6 +181,16 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			setInfo(trans.cantExtendMembership(), trans.cantExtendMembershipInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 
 		}
+	}
+
+	private void resolveCantBeSubmittedException() {
+
+		if (Objects.equals("NOT_ACADEMIC", exception.getReason())) {
+			setInfo(trans.cantSubmitLoA(), trans.notAcademicLoA(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
+		} else {
+			setInfo(trans.cantSubmitLoA(), exception.getMessage());
+		}
+
 	}
 
 
