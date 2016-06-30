@@ -64,6 +64,12 @@ public class Selectionbox extends PerunFormItemEditable {
 			getSelect().addItem(entry.getValue(), entry.getKey());
 		}
 
+		// allow live-search if more than 10 entries
+		if (getSelect().getItemCount() > 10) {
+			getSelect().setLiveSearch(true);
+			getSelect().setLiveSearchPlaceholder(translation.typeToSearch());
+		}
+
 		return widget;
 
 	}

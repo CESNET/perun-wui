@@ -234,6 +234,18 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 		return !attributeMixin.getAttribute(DATA_LIVE_SEARCH).isEmpty() || attributeMixin.getAttribute(DATA_LIVE_SEARCH).equals(TRUE);
 	}
 
+	public void setLiveSearchPlaceholder(final String liveSearchPlaceholder) {
+		if (liveSearchPlaceholder != null && !liveSearchPlaceholder.isEmpty()) {
+			attributeMixin.setAttribute("data-live-search-placeholder", liveSearchPlaceholder);
+		} else {
+			attributeMixin.removeAttribute("data-live-search-placeholder");
+		}
+	}
+
+	public String getLiveSearchPlaceholder() {
+		return attributeMixin.getAttribute("data-live-search-placeholder");
+	}
+
 	public void setStyle(final ButtonType style) {
 		attributeMixin.setAttribute(DATA_STYLE, style.getCssName());
 	}

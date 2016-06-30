@@ -175,6 +175,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("none of the above")
 	String clearRadiobox();
 
+	@DefaultMessage("Type to search...")
+	String typeToSearch();
+
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
 	@DefaultMessage("Submitted registrations")
@@ -203,7 +206,6 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Re-send mail verification message")
 	public String reSendMailVerificationButton();
-
 
 	@DefaultMessage("Mail verification message sent to <b>{0}</b>")
 	public String mailVerificationRequestSent(String mailAddress);

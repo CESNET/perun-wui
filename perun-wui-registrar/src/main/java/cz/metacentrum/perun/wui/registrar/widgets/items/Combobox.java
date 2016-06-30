@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -8,6 +9,7 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.Select;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.ComboboxValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
@@ -62,9 +64,7 @@ public class Combobox extends PerunFormItemEditable {
 			select.addItem(entry.getValue(), entry.getKey());
 		}
 
-
 		final ExtendedTextBox box = new ExtendedTextBox();
-
 
 		getWidgetPanel().add(select);
 		getWidgetPanel().add(box);
@@ -77,6 +77,12 @@ public class Combobox extends PerunFormItemEditable {
 				checkCustomSelected();
 			}
 		});
+
+		// allow live-search if more than 10 entries
+		if (select.getItemCount() > 10) {
+			select.setLiveSearch(true);
+			select.setLiveSearchPlaceholder(translation.typeToSearch());
+		}
 
 		return widget;
 
