@@ -218,6 +218,25 @@ public final class PerunConfiguration {
 	}
 
 	/**
+	 * Get brand logo URL (link to some webpage) in current user locale. If not present, "en" version is used.
+	 * If none is set null is returned.
+	 * If url is malformed it is returned anyway!
+	 *
+	 * @return Brand logo url or null
+	 */
+	public static String getBrandLogoUrl() {
+
+		String value = getConfigPropertyString("brand.logo.url."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand.logo.url.en");
+		if (value == null || value.isEmpty()) {
+			return null;
+		} else {
+			return value;
+		}
+
+	}
+
+	/**
 	 * Get brand name in current user locale. If not present, "en" version is used.
 	 * If none is set, Perun brand name is used.
 	 *
