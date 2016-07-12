@@ -18,6 +18,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.NavPills;
@@ -107,7 +108,14 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 		logo.setWidth("auto");
 		logo.setHeight("50px");
 		//logo.setPull(Pull.LEFT);
-		logoWrapper.add(logo);
+		String logoUrl = PerunConfiguration.getBrandLogoUrl();
+		if (logoUrl == null) {
+			logoWrapper.add(logo);
+		} else {
+			Anchor a = new Anchor(logoUrl);
+			a.add(logo);
+			logoWrapper.add(a);
+		}
 
 		if (!PerunConfiguration.isLangSwitchingDisabled()) {
 			UiUtils.addLanguageSwitcher(topMenu);
