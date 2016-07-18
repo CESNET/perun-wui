@@ -94,6 +94,7 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 				new ButtonCell(ButtonType.DANGER, ButtonSize.EXTRA_SMALL)) {
 			@Override
 			public String getValue(final UserExtSource extSource) {
+				((ButtonCell) this.getCell()).setEnabled(!extSource.getPersistent());
 				return "✖";
 			}
 		};

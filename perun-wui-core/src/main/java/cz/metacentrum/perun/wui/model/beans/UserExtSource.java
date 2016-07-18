@@ -79,6 +79,30 @@ public class UserExtSource extends GeneralObject {
 	}-*/;
 
 	/**
+	 * Get Persistent flag of this UserExtSource (User's identity).
+	 *
+	 * false = UserExtSource can be removed. It is truly external.
+	 * true = UserExtSource can NOT be removed. It is somehow important and needed in the system.
+	 *
+	 * @return persistent flag
+	 */
+	public final boolean getPersistent() {
+		return JsUtils.getNativePropertyBoolean(this, "persistent");
+	}
+
+	/**
+	 * Get Persistent flag of this UserExtSource (User's identity).
+	 *
+	 * false = UserExtSource can be removed. It is truly external.
+	 * true = UserExtSource can NOT be removed. It is somehow important and needed in the system.
+	 *
+	 * @param persistent flag
+	 */
+	public final native void setPersistent(boolean persistent) /*-{
+		this.persistent = persistent;
+	}-*/;
+
+	/**
 	 * Get ID of User this UserExtSource belongs.
 	 * *
 	 * @return ID of User this UES belongs to
