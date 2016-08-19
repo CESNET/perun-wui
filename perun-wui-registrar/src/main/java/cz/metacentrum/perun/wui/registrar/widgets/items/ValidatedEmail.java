@@ -20,6 +20,7 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
@@ -149,7 +150,7 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		validMails = Arrays.asList(value.split(";"));
 
 		// remove duplicates
-		validMails = new ArrayList<>(new HashSet<>(validMails));
+		validMails = new ArrayList<>(new LinkedHashSet<>(validMails));
 
 		getTextBox().setValue(validMails.get(0));
 
@@ -254,7 +255,7 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	}
 
 	private boolean isCustomSelected() {
-		if (getSelect() != null) getSelect().getSelectedValue().equals(CUSTOM_ID);
+		if (getSelect() != null) return getSelect().getSelectedValue().equals(CUSTOM_ID);
 		return false;
 	}
 
