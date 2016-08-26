@@ -315,6 +315,22 @@ public class Wayf extends Composite {
 					}
 				});
 
+			} else if (group.getAuthzType().equals("direct")) {
+
+				groupButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent clickEvent) {
+						// Directly redirect to URL with appending return url with token
+						String target = "";
+						if (redirect != null && !redirect.isEmpty()) {
+							target = "&target_url=" + redirect;
+						}
+						String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
+						final String redirectUrl = group.getUrl() + consolidatorUrl;
+						Window.Location.assign(redirectUrl);
+					}
+				});
+
 			}
 
 			// nice align when less then 3 columns
