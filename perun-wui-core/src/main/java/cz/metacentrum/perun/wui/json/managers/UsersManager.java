@@ -165,7 +165,6 @@ public class UsersManager {
 	 * method with proper set of parameters (sent in validation mail).
 	 *
 	 * @param userId Users ID
-	 * @param email  New email address to set
 	 * @param events Events done on callback
 	 *
 	 * @return Request unique request
