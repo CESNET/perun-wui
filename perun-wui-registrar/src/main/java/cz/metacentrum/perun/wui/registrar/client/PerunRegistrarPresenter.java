@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.KeyDownEvent;
 import com.google.gwt.event.dom.client.KeyDownHandler;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -85,6 +86,10 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 	@Override
 	protected void onBind() {
 		super.onBind();
+
+		if (Window.Location.getParameterMap().containsKey("page") && "apps".equalsIgnoreCase(Window.Location.getParameter("page"))) {
+			History.newItem(PerunRegistrarPlaceTokens.getMyApps());
+		}
 
 		loadVoAttributes(new Events<List<Attribute>>() {
 
@@ -257,6 +262,8 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 		if (token == null || token.isEmpty()) {
 			if (Window.Location.getParameterMap().containsKey("i") && Window.Location.getParameterMap().containsKey("m")) {
 				token = PerunRegistrarPlaceTokens.getVerify();
+			} else if (Window.Location.getParameterMap().containsKey("page") && "apps".equalsIgnoreCase(Window.Location.getParameter("page"))) {
+				token = PerunRegistrarPlaceTokens.getMyApps();
 			} else {
 				token = PerunRegistrarPlaceTokens.getForm();
 			}
