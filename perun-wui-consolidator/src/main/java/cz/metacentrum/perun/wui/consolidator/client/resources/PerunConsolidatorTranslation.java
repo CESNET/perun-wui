@@ -60,7 +60,7 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Your identities were successfully joined.")
 	public String joinedMessage();
 
-	@DefaultMessage("Your have following registered identities")
+	@DefaultMessage("You have following registered identities")
 	public String myIdents();
 
 	/* -- EXCEPTIONS -- */

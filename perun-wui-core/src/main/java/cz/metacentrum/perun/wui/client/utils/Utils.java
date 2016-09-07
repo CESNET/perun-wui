@@ -83,6 +83,15 @@ public class Utils {
 		organizationsTranslation.put("@github.extidp.cesnet.cz", "GitHub");
 		organizationsTranslation.put("@orcid.extidp.cesnet.cz", "OrcID");
 
+		organizationsTranslation.put("@google", "Google");
+		organizationsTranslation.put("@facebook", "Facebook");
+		organizationsTranslation.put("@mojeid", "MojeID");
+		organizationsTranslation.put("@linkedin", "LinkedIn");
+		organizationsTranslation.put("@twitter", "Twitter");
+		organizationsTranslation.put("@seznam", "Seznam");
+		organizationsTranslation.put("@github", "GitHub");
+		organizationsTranslation.put("@orcid", "OrcID");
+
 		// kerberos
 		organizationsTranslation.put("META", "MetaCentrum");
 		organizationsTranslation.put("EINFRA", "CESNET eInfrastructure");

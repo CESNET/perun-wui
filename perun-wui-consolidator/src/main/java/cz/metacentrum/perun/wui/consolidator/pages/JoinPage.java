@@ -239,6 +239,8 @@ public class JoinPage {
 		alert.setText(translation.joinedMessage());
 		alert.setVisible(true);
 
+		/* TODO - temporary disabled
+
 		for (UserExtSource ues : list) {
 
 			if (ues.getExtSource().getType().equals(ExtSource.ExtSourceType.IDP.getType()) ||
@@ -253,7 +255,7 @@ public class JoinPage {
 				if (extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
 					translatedExtSourceName = Utils.translateIdp(translatedExtSourceName);
 					// social identity or proxy IdP
-					if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org")) {
+					if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org") || translatedExtSourceName.equals("https://login.elixir-czech.org/idp/")) {
 						translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
 						translatedActor = translatedActor.split("@")[0];
 					}
@@ -271,6 +273,8 @@ public class JoinPage {
 		}
 
 		myidents.setVisible(true);
+
+		*/
 
 		if (redirect != null && !redirect.isEmpty()) {
 			finishButton.setText(translation.finishButtonContinue());
