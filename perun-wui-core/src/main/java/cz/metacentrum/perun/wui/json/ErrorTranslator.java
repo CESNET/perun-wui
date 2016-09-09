@@ -1,7 +1,9 @@
 package cz.metacentrum.perun.wui.json;
 
 import com.google.gwt.core.client.GWT;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunErrorTranslation;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -360,6 +362,10 @@ public class ErrorTranslator {
 
 			return "Group and Resource doesn't belong to the same VO.";
 
+		} else if ("GroupOperationsException".equalsIgnoreCase(errorName)) {
+
+			return "Action is not permitted, since it violates group arithmetic rules.";
+
 		} else if ("GroupSynchronizationAlreadyRunningException".equalsIgnoreCase(errorName)) {
 
 			return "Can't start group synchronization between Perun and external source, because it's already running.";
@@ -478,6 +484,17 @@ public class ErrorTranslator {
 		} else if ("PasswordDoesntMatchException".equalsIgnoreCase(errorName)) {
 
 			return "Can't set new password. Old password doesn't match.";
+
+		} else if ("PasswordStrengthFailedException".equalsIgnoreCase(errorName)) {
+
+			if (PerunConfiguration.perunInstanceName().equals("VŠUP")) {
+				return translation.passwordStrengthVSUP();
+			}
+			return "Used password doesn't match required strength constraints.";
+
+		} else if ("PasswordOperationTimeoutException".equalsIgnoreCase(errorName)) {
+
+			return "Operation with password exceeded expected time limit. Please try again.";
 
 		} else if ("RelationExistsException".equalsIgnoreCase(errorName)) {
 

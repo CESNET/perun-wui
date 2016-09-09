@@ -134,18 +134,7 @@ public class ErrorReporter {
 		// clear password fields if present
 		final JSONObject postObject = new JSONObject(JsonUtils.parseJson(ex.getPostData()));
 
-		if (postObject.getJavaScriptObject() != null) {
-			Set<String> keys = postObject.keySet();
-			if (keys.contains("oldPassword")) {
-				postObject.put("oldPassword", new JSONString(""));
-			}
-			if (keys.contains("newPassword")) {
-				postObject.put("newPassword", new JSONString(""));
-			}
-			if (keys.contains("password")) {
-				postObject.put("password", new JSONString(""));
-			}
-		}
+		clearPasswords(postObject);
 
 		String text = "";
 		if (!message.getText().trim().isEmpty()) {
@@ -211,5 +200,23 @@ public class ErrorReporter {
 
 	}
 
+	/**
+	 * Clear all password-like params from posted objects
+	 *
+	 * @param object object to clear
+	 */
+	private static void clearPasswords(JSONObject object) {
+
+		for (String key : object.keySet()) {
+			if (key.equals("oldPassword") || key.equals("newPassword") || key.equals("password")) {
+				object.put(key, new JSONString(""));
+			} else {
+				JSONObject obj = object.get(key).isObject();
+				if (obj != null) {
+					clearPasswords(obj);
+				}
+			}
+		}
+	}
 
 }

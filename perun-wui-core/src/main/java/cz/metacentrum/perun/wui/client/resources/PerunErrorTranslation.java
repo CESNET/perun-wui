@@ -52,4 +52,9 @@ public interface PerunErrorTranslation extends PerunTranslation {
 	public String httpError0CrossSite();
 
 
+	// SPECIFIC ERRORS
+	@DefaultMessage("Eduroam password must not match your VŠUP password.")
+	public String passwordStrengthVSUP();
+
+
 }
