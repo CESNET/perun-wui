@@ -25,7 +25,7 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Your current identity is not registered. Now please select already registered identity (previously used to access Perun).")
 	public String notRegistered();
 
-	@DefaultMessage("Your are signed in as")
+	@DefaultMessage("Your are signed in by")
 	public String currentIdentityIs();
 
 	@DefaultMessage("Add new way of signing in...")

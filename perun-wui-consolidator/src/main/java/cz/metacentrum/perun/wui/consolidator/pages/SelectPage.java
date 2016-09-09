@@ -78,12 +78,15 @@ public class SelectPage {
 					String translatedActor = PerunSession.getInstance().getPerunPrincipal().getActor();
 
 					if (extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
-						translatedExtSourceName = Utils.translateIdp(translatedExtSourceName);
+
+						translatedExtSourceName = translatedActor.split("@")[1];// Utils.translateIdp(translatedExtSourceName);
 						// social identity
 						if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org") || translatedExtSourceName.equals("https://login.elixir-czech.org/idp/")) {
 							translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
 							translatedActor = translatedActor.split("@")[0];
 						}
+
+						translatedActor = translatedActor.split("@")[0];
 
 						// get actor from attributes if present
 						String displayName = PerunSession.getInstance().getPerunPrincipal().getAdditionInformation("displayName");
@@ -106,19 +109,17 @@ public class SelectPage {
 
 					heading.setVisible(true);
 					if (PerunSession.getInstance().getUser() != null) {
-						identity.setText(PerunSession.getInstance().getUser().getFullName());
+						login.setText(PerunSession.getInstance().getUser().getFullName());
+						login.setSubText("( " + PerunSession.getInstance().getPerunPrincipal().getActor() + " )");
+						login.setVisible(true);
 					} else {
-						identity.setText(translatedActor);
-					}
-					identity.setSubText(" " + translation.at() + " " + translatedExtSourceName);
-					identity.setVisible(true);
-					joinHeading.setVisible(true);
-
-					// show real user-name if actor was translated or it's not IdP
-					if (!translatedActor.equals(PerunSession.getInstance().getPerunPrincipal().getActor()) || !extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
-						login.setText("( " + PerunSession.getInstance().getPerunPrincipal().getActor() + " )");
+						login.setText(translatedActor);
 						login.setVisible(true);
 					}
+					identity.setText(translatedExtSourceName);
+					identity.setVisible(true);
+					joinHeading.setVisible(true);
+					identity.setTitle(translatedActor);
 
 					if (PerunSession.getInstance().getUser() == null) {
 						alert.setVisible(true);
