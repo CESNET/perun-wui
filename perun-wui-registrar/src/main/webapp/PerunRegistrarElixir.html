@@ -41,12 +41,8 @@
 			// if not set, set from browser settings
 			if (l_lang == null) {
 
-				if (navigator.userLanguage) // Explorer
-					l_lang = navigator.userLanguage.split("-")[0];
-				else if (navigator.language) // FF
-					l_lang = navigator.language;
-				else
-					l_lang = "en";
+				// force english
+				l_lang = "en";
 
 			}
 
