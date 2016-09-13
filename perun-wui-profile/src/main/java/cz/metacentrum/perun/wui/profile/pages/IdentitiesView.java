@@ -152,6 +152,12 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		federatedIdentitiesTable.setRowData(federatedIdentities);
 		((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onEmpty();
 		x509IdentitiesTable.setRowData(x509Identities);
+
+		if (!x509Identities.isEmpty()) {
+			x509IdentitiesTable.setVisible(true);
+			addCertBtn.setVisible(true);
+		}
+
 	}
 
 	@Override

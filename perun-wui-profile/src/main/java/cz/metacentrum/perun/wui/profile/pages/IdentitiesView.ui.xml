@@ -25,9 +25,9 @@
 		<p:PerunButton ui:field="addFedBtn" icon="PLUS" type="SUCCESS"/>
 
 
-		<b.gwt:CellTable ui:field="x509IdentitiesTable" condensed="true" bordered="true" striped="false" />
+		<b.gwt:CellTable ui:field="x509IdentitiesTable" condensed="true" bordered="true" striped="false" visible="false" />
 
-		<p:PerunButton ui:field="addCertBtn" icon="PLUS" type="SUCCESS"/>
+		<p:PerunButton ui:field="addCertBtn" icon="PLUS" type="SUCCESS" visible="false"/>
 
 
 	</b.html:Div>

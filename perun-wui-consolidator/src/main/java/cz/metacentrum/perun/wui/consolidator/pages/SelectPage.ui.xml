@@ -18,13 +18,13 @@
 
 	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b:Heading size="H3" ui:field="heading" alignment="CENTER" visible="false" />
+		<b:Heading size="H4" ui:field="heading" alignment="CENTER" visible="false" />
 
-		<b:Heading size="H4" ui:field="identity" alignment="CENTER" visible="false" />
+		<b:Heading size="H4" ui:field="identity" alignment="CENTER" visible="false" emphasis="MUTED"/>
 
 		<b:Heading size="H5" ui:field="login" alignment="CENTER" visible="false" />
 
-		<b:Heading size="H3" ui:field="joinHeading" alignment="CENTER" visible="false" marginTop="10" />
+		<b:Heading size="H4" ui:field="joinHeading" alignment="CENTER" visible="false" marginTop="10" />
 
 		<p:PerunLoader ui:field="loader" visible="false"/>
 
