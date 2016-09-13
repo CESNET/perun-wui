@@ -111,10 +111,10 @@ public class SelectPage {
 					if (PerunSession.getInstance().getUser() != null) {
 						login.setText(PerunSession.getInstance().getUser().getFullName());
 						login.setSubText("( " + PerunSession.getInstance().getPerunPrincipal().getActor() + " )");
-						login.setVisible(true);
+						//login.setVisible(true);
 					} else {
 						login.setText(translatedActor);
-						login.setVisible(true);
+						//login.setVisible(true);
 					}
 					identity.setText(translatedExtSourceName);
 					identity.setVisible(true);
@@ -163,8 +163,8 @@ public class SelectPage {
 
 	private void setTimer() {
 
-		counter.setText(translation.authorizationTokenWillExpire(300));
-		counter.setVisible(true);
+		//counter.setText(translation.authorizationTokenWillExpire(300));
+		//counter.setVisible(true);
 
 		Timer t = new Timer() {
 			int count = 60 * 5;
@@ -173,6 +173,7 @@ public class SelectPage {
 				count--;
 				if (count < 0) {
 					counter.setType(AlertType.DANGER);
+					counter.setVisible(true);
 					counter.setText(translation.authorizationTokenHasExpired());
 					this.cancel();
 				}

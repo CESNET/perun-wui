@@ -505,6 +505,23 @@ public final class PerunConfiguration {
 		return SPlogout;
 	}
 
+
+	public static boolean isWayfLinkAnotherButtonDisabled() {
+		return getConfigPropertyBoolean("wayf.linkAnotherButton.disabled");
+	}
+
+	public static String getWayfLinkAnotherButtonText() {
+		String value = getConfigPropertyString("wayf.linkAnotherButton."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("wayf.linkAnotherButton.en");
+		return value;
+	}
+
+	public static String getWayfLeaveButtonText() {
+		String value = getConfigPropertyString("wayf.leaveButton."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("wayf.leaveButton.en");
+		return value;
+	}
+
 	private void PerunConfiguration() {
 	}
 

@@ -46,7 +46,8 @@ public class WayfGroupButton extends Panel implements HasClickHandlers {
 			image = new Image(group.getIconUrl());
 			panelBody.add(image);
 		} else {
-			panelBody.add(new Heading(HeadingSize.H4, group.getName(locale)));
+			panelBody.setVisible(false);
+			//panelBody.add(new Heading(HeadingSize.H4, group.getName(locale)));
 		}
 
 		description.setText(group.getDescription(locale));

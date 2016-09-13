@@ -99,7 +99,13 @@ public class JoinPage {
 
 		}
 
-		backButton.setText(translation.backButton());
+
+		if (PerunConfiguration.getWayfLinkAnotherButtonText() != null) {
+			backButton.setText(PerunConfiguration.getWayfLinkAnotherButtonText());
+		} else {
+			backButton.setText(translation.backButton());
+		}
+		backButton.setVisible(!PerunConfiguration.isWayfLinkAnotherButtonDisabled());
 		heading.setText(translation.currentIdentityIs());
 		myidents.setText(translation.myIdents());
 
@@ -164,7 +170,11 @@ public class JoinPage {
 				}
 
 				if (redirect != null && !redirect.isEmpty()) {
-					finishButton.setText(translation.finishButtonLeave());
+					if (PerunConfiguration.getWayfLeaveButtonText() != null) {
+						finishButton.setText(PerunConfiguration.getWayfLeaveButtonText());
+					} else {
+						finishButton.setText(translation.finishButtonLeave());
+					}
 					finishButton.setIcon(IconType.CHEVRON_RIGHT);
 					finishButton.setIconPosition(IconPosition.RIGHT);
 					finishButton.setVisible(true);
@@ -216,10 +226,10 @@ public class JoinPage {
 				if (PerunSession.getInstance().getUser() != null) {
 					login.setText(PerunSession.getInstance().getUser().getFullName());
 					login.setSubText("( " + PerunSession.getInstance().getPerunPrincipal().getActor() + " )");
-					login.setVisible(true);
+					//login.setVisible(true);
 				} else {
 					login.setText(translatedActor);
-					login.setVisible(true);
+					//login.setVisible(true);
 				}
 				identity.setText(translatedExtSourceName);
 				identity.setVisible(true);
@@ -279,16 +289,24 @@ public class JoinPage {
 		*/
 
 		if (redirect != null && !redirect.isEmpty()) {
-			finishButton.setText(translation.finishButtonContinue());
+			if (PerunConfiguration.getWayfLeaveButtonText() != null) {
+				finishButton.setText(PerunConfiguration.getWayfLeaveButtonText());
+			} else {
+				finishButton.setText(translation.finishButtonContinue());
+			}
 			finishButton.setIcon(IconType.CHEVRON_RIGHT);
 			finishButton.setIconPosition(IconPosition.RIGHT);
 			finishButton.setVisible(true);
 		}
 
-		backButton.setText(translation.backButton());
+		backButton.setVisible(!PerunConfiguration.isWayfLinkAnotherButtonDisabled());
 		backButton.setIcon(IconType.CHEVRON_LEFT);
 		backButton.setIconPosition(IconPosition.LEFT);
-		backButton.setVisible(true);
+		if (PerunConfiguration.getWayfLinkAnotherButtonText() != null) {
+			backButton.setText(PerunConfiguration.getWayfLinkAnotherButtonText());
+		} else {
+			backButton.setText(translation.backButton());
+		}
 
 	}
 
