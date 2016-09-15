@@ -11,7 +11,7 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 
 	/* --  GENERIC -- */
 
-	@DefaultMessage("Identity consolidator")
+	@DefaultMessage("Link a new account")
 	public String appName();
 
 	/* --  SELECT PAGE -- */
@@ -28,7 +28,7 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Your are signed in with")
 	public String currentIdentityIs();
 
-	@DefaultMessage("link new account from")
+	@DefaultMessage("link an account")
 	public String joinWith();
 
 	@DefaultMessage("at")

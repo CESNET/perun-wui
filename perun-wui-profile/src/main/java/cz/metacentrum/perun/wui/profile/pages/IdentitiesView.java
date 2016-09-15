@@ -9,6 +9,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -19,15 +20,19 @@ import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Small;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * View for displaying VO membership details
@@ -64,11 +69,13 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 			@Override
 			public String getValue(UserExtSource userExtSource) {
 				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
-					if (userExtSource.getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth")) {
-						// hack our social IdP so we can tell from where identity is
-						return Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
+					String name = userExtSource.getExtSource().getName();
+					String translated = Utils.translateIdp(userExtSource.getExtSource().getName());
+					GWT.log(name + "=" + translated);
+					if (Objects.equals(name, translated)) {
+						translated = Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
 					}
-					return Utils.translateIdp(userExtSource.getExtSource().getName());
+					return translated;
 				} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
 					return getCertParam(userExtSource.getExtSource().getName(), "O") +
 							", " +
@@ -105,14 +112,38 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 			}
 		});
 
+		Column<UserExtSource, String> infoColumn = new Column<UserExtSource, String>(
+				new ButtonCell(ButtonType.INFO, ButtonSize.EXTRA_SMALL)) {
+			@Override
+			public String getValue(final UserExtSource extSource) {
+				return "info";
+			}
+		};
+		infoColumn.setFieldUpdater(new FieldUpdater<UserExtSource, String>() {
+			@Override
+			public void update(int i, UserExtSource userExtSource, String buttonText) {
+				if (userExtSource != null && userExtSource.getLogin() != null) {
+					Modal modal = new Modal();
+					modal.setTitle("Account internal identification");
+					modal.setRemoveOnHide(true);
+					ModalBody body = new ModalBody();
+					body.add(new Paragraph(userExtSource.getLogin()));
+					modal.add(body);
+					modal.show();
+				};
+			}
+		});
+
 
 		PerunLoader plFed = new PerunLoader();
 		plFed.getElement().getStyle().setMarginTop(6, Style.Unit.PX);
 		federatedIdentitiesTable.setEmptyTableWidget(plFed);
-		federatedIdentitiesTable.addColumn(nameCol, translation.federatedIdp());
-		federatedIdentitiesTable.addColumn(loginCol, translation.federatedLogin());
+		federatedIdentitiesTable.addColumn(nameCol, "");
+		//federatedIdentitiesTable.addColumn(loginCol, translation.federatedLogin());
+		federatedIdentitiesTable.addColumn(infoColumn);
 		federatedIdentitiesTable.addColumn(removeColumn);
-		federatedIdentitiesTable.setColumnWidth(federatedIdentitiesTable.getColumnCount()-1, "10%");
+		federatedIdentitiesTable.setColumnWidth(federatedIdentitiesTable.getColumnCount()-1, "5%");
+		federatedIdentitiesTable.setColumnWidth(federatedIdentitiesTable.getColumnCount()-2, "5%");
 
 
 		PerunLoader plCert = new PerunLoader();
@@ -121,7 +152,7 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		x509IdentitiesTable.addColumn(nameCol, translation.x509Issuer());
 		x509IdentitiesTable.addColumn(loginCol, translation.x509Identity());
 		x509IdentitiesTable.addColumn(removeColumn);
-		x509IdentitiesTable.setColumnWidth(x509IdentitiesTable.getColumnCount()-1, "10%");
+		x509IdentitiesTable.setColumnWidth(x509IdentitiesTable.getColumnCount()-1, "5%");
 
 
 		ClickHandler icLinkHandler = new ClickHandler() {
@@ -143,7 +174,7 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		List<UserExtSource> x509Identities = new ArrayList<>();
 		for (UserExtSource es : userExtSources) {
 			if (ExtSourceType.IDP.getType().equals(es.getExtSource().getType())) {
-				federatedIdentities.add(es);
+				if (!es.getPersistent()) federatedIdentities.add(es);
 			} else if (ExtSourceType.X509.getType().equals(es.getExtSource().getType())) {
 				x509Identities.add(es);
 			}
