@@ -63,6 +63,7 @@ public class SelectPage {
 		}
 
 		heading.setText(translation.currentIdentityIs());
+		joinHeading.setVisible(!PerunConfiguration.isWayfLinkAnAccountDisabled());
 		String text = PerunConfiguration.getWayfLinkAnAccountText();
 		if (text == null || text.isEmpty()) {
 			joinHeading.setText(translation.joinWith());
@@ -136,7 +137,7 @@ public class SelectPage {
 					}
 					identity.setText(translatedExtSourceName);
 					identity.setVisible(true);
-					joinHeading.setVisible(true);
+					joinHeading.setVisible(!PerunConfiguration.isWayfLinkAnAccountDisabled());
 					identity.setTitle(translatedActor);
 
 					if (PerunSession.getInstance().getUser() == null) {
