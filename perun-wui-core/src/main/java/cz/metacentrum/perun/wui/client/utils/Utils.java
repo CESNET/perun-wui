@@ -28,6 +28,7 @@ public class Utils {
 	public static final String LOGIN_VALUE_MATCHER = "^[a-zA-Z0-9_][-A-z0-9_.@/]*$";
 
 	private static final HashMap<String, String> organizationsTranslation = new HashMap<String, String>();
+	private static boolean firstTranslationCall = true;
 
 	static {
 
@@ -1213,10 +1214,14 @@ public class Utils {
 	 */
 	public static String translateIdp(String name) {
 
+		if (firstTranslationCall) {
+			firstTranslationCall = false;
+			// overwrite default with custom
+			organizationsTranslation.putAll(PerunConfiguration.getCustomIdpTranslations());
+		}
 		if (organizationsTranslation.get(name) != null) {
 			return organizationsTranslation.get(name);
 		}
-
 		return name;
 
 	}
@@ -1229,6 +1234,11 @@ public class Utils {
 	 */
 	public static String translateKerberos(String name) {
 
+		if (firstTranslationCall) {
+			firstTranslationCall = false;
+			// overwrite default with custom
+			organizationsTranslation.putAll(PerunConfiguration.getCustomIdpTranslations());
+		}
 		if (organizationsTranslation.get(name) != null) {
 			return organizationsTranslation.get(name);
 		}
@@ -1236,5 +1246,6 @@ public class Utils {
 		return name;
 
 	}
+
 
 }
