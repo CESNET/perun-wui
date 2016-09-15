@@ -13,7 +13,10 @@ import org.gwtbootstrap3.client.ui.Image;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class allows to read configuration of Perun for WUI apps.
@@ -432,6 +435,9 @@ public final class PerunConfiguration {
 		return Utils.stringToList(value, ",");
 	}
 
+
+
+
 	// ---------------------------   WAYF   ---------------------------- //
 
 	/**
@@ -520,6 +526,24 @@ public final class PerunConfiguration {
 		String value = getConfigPropertyString("wayf.leaveButton."+getCurrentLocaleName());
 		if (value == null || value.isEmpty()) value = getConfigPropertyString("wayf.leaveButton.en");
 		return value;
+	}
+
+	/**
+	 * Return map of customized IdP (or ext source) translations.
+	 *
+	 * @return map of translated IdPs
+	 */
+	public static Map<String,String> getCustomIdpTranslations() {
+		String value = getConfigPropertyString("wayf.idpTranslations");
+
+		Map<String,String> translation = new HashMap<>();
+		List<String> couples = Utils.stringToList(value, "#");
+		for (String couple : couples) {
+			String[] cp = couple.split("\\|");
+			translation.put(cp[0],cp[1]);
+		}
+		return translation;
+
 	}
 
 	private void PerunConfiguration() {
