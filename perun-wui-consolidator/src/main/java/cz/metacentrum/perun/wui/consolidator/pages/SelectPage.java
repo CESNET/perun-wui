@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorTranslation;
@@ -62,7 +63,12 @@ public class SelectPage {
 		}
 
 		heading.setText(translation.currentIdentityIs());
-		joinHeading.setText(translation.joinWith());
+		String text = PerunConfiguration.getWayfLinkAnAccountText();
+		if (text == null || text.isEmpty()) {
+			joinHeading.setText(translation.joinWith());
+		} else {
+			joinHeading.setText(text);
+		}
 
 		// fixme on error loader.onError(error, null);
 

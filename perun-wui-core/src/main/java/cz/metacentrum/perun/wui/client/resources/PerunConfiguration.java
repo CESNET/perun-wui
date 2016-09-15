@@ -528,6 +528,12 @@ public final class PerunConfiguration {
 		return value;
 	}
 
+	public static String getWayfLinkAnAccountText() {
+		String value = getConfigPropertyString("wayf.linkAnAccount."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("wayf.linkAnAccount.en");
+		return value;
+	}
+
 	/**
 	 * Return map of customized IdP (or ext source) translations.
 	 *
