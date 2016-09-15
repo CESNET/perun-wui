@@ -587,6 +587,10 @@ public final class PerunConfiguration {
 		return value;
 	}
 
+	public static boolean isWayfLinkAnAccountDisabled() {
+		return getConfigPropertyBoolean("wayf.linkAnAccount.disabled");
+	}
+
 	/**
 	 * Return map of customized IdP (or ext source) translations.
 	 *
