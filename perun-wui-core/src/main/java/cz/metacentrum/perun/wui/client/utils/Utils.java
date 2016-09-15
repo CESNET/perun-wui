@@ -65,7 +65,7 @@ public class Utils {
 
 		// Handle social identities
 
-		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth", "Social");
+		//organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth", "Social");
 		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:google", "Google");
 		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:facebook", "Facebook");
 		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth&authnContextClassRef=urn:cesnet:extidp:authn:linkedin", "LinkedIn");

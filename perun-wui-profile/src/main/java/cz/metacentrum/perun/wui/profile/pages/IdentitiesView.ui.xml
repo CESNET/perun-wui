@@ -8,6 +8,9 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
+	<!-- Import Translation -->
+	<ui:with field='trans' type='cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation'/>
+
 	<b.html:Div styleName="{res.gss.identities}">
 
 		<b:Heading size="H2" ui:field="pageTitle">
@@ -15,6 +18,10 @@
 			<b.html:Text text="" ui:field="text"/>
 			<b.html:Small text="" ui:field="small"/>
 		</b:Heading>
+
+		<b.html:Paragraph>
+			<ui:text from='{trans.myIdentsText}'/>
+		</b.html:Paragraph>
 
 
 		<p:PerunLoader ui:field="loader" visible="false"/>

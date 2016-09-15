@@ -18,7 +18,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Virtual organizations")
 	public String menuOrganizations();
 
-	@DefaultMessage("My identities")
+	@DefaultMessage("My linked accounts")
 	public String menuMyIdentities();
 
 	@DefaultMessage("Logins & Passwords")
@@ -55,6 +55,8 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	String phone();
 
 
+	@DefaultMessage("These are the accounts you use to access services.")
+	public String myIdentsText();
 
 	@DefaultMessage("Federated identity")
 	String federatedIdp();
@@ -74,7 +76,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Loading identities")
 	String loadingIdentities();
 
-	@DefaultMessage("Add new federated identity")
+	@DefaultMessage("Link a new account")
 	String addFed();
 
 	@DefaultMessage("Add new certificate")
