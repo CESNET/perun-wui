@@ -27,6 +27,7 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.html.Div;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Single page used by consolidator to display it's state
@@ -193,12 +194,21 @@ public class JoinPage {
 
 				if (extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
 
-					translatedExtSourceName = translatedActor.split("@")[1];// Utils.translateIdp(translatedExtSourceName);
+					String translatedExtSourceName2 = Utils.translateIdp(translatedExtSourceName);
+					if (Objects.equals(translatedExtSourceName, translatedExtSourceName2)) {
+						String translatedExtSourceName3 = Utils.translateIdp("@"+translatedActor.split("@")[1]);
+						if (!Objects.equals(translatedExtSourceName3, "@"+translatedActor.split("@")[1])) {
+							translatedExtSourceName = translatedExtSourceName3;
+						}
+					} else {
+						translatedExtSourceName = translatedExtSourceName2;
+					}
 
+					//translatedExtSourceName = translatedActor.split("@")[1];// Utils.translateIdp(translatedExtSourceName);
 					// social identity
 					if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org") || translatedExtSourceName.equals("https://login.elixir-czech.org/idp/")) {
-						translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
-						translatedActor = translatedActor.split("@")[0];
+						//translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
+						//translatedActor = translatedActor.split("@")[0];
 					}
 
 					translatedActor = translatedActor.split("@")[0];
