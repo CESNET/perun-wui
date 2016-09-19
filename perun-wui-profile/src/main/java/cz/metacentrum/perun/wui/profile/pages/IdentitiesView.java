@@ -20,8 +20,10 @@ import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
+import org.gwtbootstrap3.client.ui.ModalFooter;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
@@ -64,25 +66,10 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		addFedBtn.setText(translation.addFed());
 		addCertBtn.setText(translation.addCert());
 
-
 		TextColumn<UserExtSource> nameCol = new TextColumn<UserExtSource>() {
 			@Override
 			public String getValue(UserExtSource userExtSource) {
-				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
-					String name = userExtSource.getExtSource().getName();
-					String translated = Utils.translateIdp(userExtSource.getExtSource().getName());
-					GWT.log(name + "=" + translated);
-					if (Objects.equals(name, translated)) {
-						translated = Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
-					}
-					return translated;
-				} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
-					return getCertParam(userExtSource.getExtSource().getName(), "O") +
-							", " +
-							getCertParam(userExtSource.getExtSource().getName(), "CN");
-				} else {
-					return userExtSource.getExtSource().getName();
-				}
+				return translateUesIdentification(userExtSource);
 			}
 		};
 		TextColumn<UserExtSource> loginCol = new TextColumn<UserExtSource>() {
@@ -107,8 +94,37 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		};
 		removeColumn.setFieldUpdater(new FieldUpdater<UserExtSource, String>() {
 			@Override
-			public void update(int i, UserExtSource userExtSource, String buttonText) {
-				getUiHandlers().removeUserExtSource(userExtSource);
+			public void update(int i, final UserExtSource userExtSource, String buttonText) {
+
+				final Modal modal = new Modal();
+				modal.setTitle("Remove linked account?");
+				modal.setRemoveOnHide(true);
+
+				ModalBody body = new ModalBody();
+				modal.add(body);
+
+				body.add(new Paragraph("Do you wish to remove linked account: "+translateUesIdentification(userExtSource) + "?"));
+
+				ModalFooter footer = new ModalFooter();
+				modal.add(footer);
+
+				footer.add(PerunButton.getButton(PerunButtonType.REMOVE, new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						getUiHandlers().removeUserExtSource(userExtSource);
+						modal.hide();
+					}
+				}));
+
+				footer.add(PerunButton.getButton(PerunButtonType.CANCEL, new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						modal.hide();
+					}
+				}));
+
+				modal.show();
+
 			}
 		});
 
@@ -249,6 +265,26 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 			}
 		}
 		return "";
+	}
+
+	private String translateUesIdentification(UserExtSource userExtSource) {
+
+		if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
+			String name = userExtSource.getExtSource().getName();
+			String translated = Utils.translateIdp(userExtSource.getExtSource().getName());
+			GWT.log(name + "=" + translated);
+			if (Objects.equals(name, translated)) {
+				translated = Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
+			}
+			return translated;
+		} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
+			return getCertParam(userExtSource.getExtSource().getName(), "O") +
+					", " +
+					getCertParam(userExtSource.getExtSource().getName(), "CN");
+		} else {
+			return userExtSource.getExtSource().getName();
+		}
+
 	}
 
 }

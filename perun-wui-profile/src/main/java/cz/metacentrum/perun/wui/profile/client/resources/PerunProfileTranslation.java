@@ -55,7 +55,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	String phone();
 
 
-	@DefaultMessage("These are the accounts you use to access services.")
+	@DefaultMessage("These are the accounts you use to access your services.")
 	public String myIdentsText();
 
 	@DefaultMessage("Federated identity")
