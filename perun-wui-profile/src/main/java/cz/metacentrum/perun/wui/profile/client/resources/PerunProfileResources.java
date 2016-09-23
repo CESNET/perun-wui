@@ -22,6 +22,8 @@ public interface PerunProfileResources extends ClientBundle {
 		String identities();
 
 		String personalInfoLabel();
+
+		String dangerModal();
 	}
 
 	@Source("css/PerunProfile.gss")
