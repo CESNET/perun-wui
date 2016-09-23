@@ -17,6 +17,7 @@ import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ExtSource.ExtSourceType;
 import cz.metacentrum.perun.wui.model.beans.UserExtSource;
+import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
@@ -122,6 +123,15 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 						modal.hide();
 					}
 				}));
+
+				boolean lastItem = (federatedIdentitiesTable.getVisibleItemCount() + x509IdentitiesTable.getVisibleItemCount() <= 1);
+
+				if (lastItem) {
+					modal.setTitle("Remove last linked account?");
+					body.add(new Paragraph("If you remove all linked accounts, you won’t be able to sign in anymore. " +
+							"Do you wish to remove last linked account: "+translateUesIdentification(userExtSource) + "?"));
+					modal.addStyleName(PerunProfileResources.INSTANCE.gss().dangerModal());
+				}
 
 				modal.show();
 
