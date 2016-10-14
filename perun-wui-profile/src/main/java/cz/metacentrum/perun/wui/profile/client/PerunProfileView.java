@@ -103,6 +103,11 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 			menuWrapper.setVisible(false);
 		}
 
+		// set Title from property if any
+		if (PerunConfiguration.getBrandProfileTitle() != null) {
+			brand.setText(PerunConfiguration.getBrandProfileTitle());
+		}
+
 		// put logo
 		Image logo = PerunConfiguration.getBrandLogo();
 		logo.setWidth("auto");
