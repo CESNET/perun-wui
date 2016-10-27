@@ -237,6 +237,41 @@ public final class PerunConfiguration {
 	}
 
 	/**
+	 * Get brand title of user profile in current locale. If not present, "en" version is used.
+	 * If property is not set at all, null is returned.
+	 *
+	 * @return Configured title or null
+	 */
+	public static String getBrandProfileTitle() {
+
+		String value = getConfigPropertyString("brand.profile.title."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand.profile.title.en");
+		if (value == null || value.isEmpty()) {
+			return null;
+		} else {
+			return value;
+		}
+	}
+
+
+	/**
+	 * Get brand title of registrar in current locale. If not present, "en" version is used.
+	 * If property is not set at all, null is returned.
+	 *
+	 * @return Configured title or null
+	 */
+	public static String getBrandRegistrarTitle() {
+
+		String value = getConfigPropertyString("brand.registrar.title."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand.registrar.title.en");
+		if (value == null || value.isEmpty()) {
+			return null;
+		} else {
+			return value;
+		}
+	}
+
+	/**
 	 * Get brand name in current user locale. If not present, "en" version is used.
 	 * If none is set, Perun brand name is used.
 	 *

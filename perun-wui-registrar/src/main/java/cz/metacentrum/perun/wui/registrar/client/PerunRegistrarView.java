@@ -142,7 +142,13 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	PerunRegistrarView(final PerunRegistrarViewUiBinder binder) {
 
 		initWidget(binder.createAndBindUi(this));
-		brand.setText(translation.registrarAppName());
+
+		// set Title from property if any
+		if (PerunConfiguration.getBrandRegistrarTitle() != null) {
+			brand.setText(PerunConfiguration.getBrandRegistrarTitle());
+		} else {
+			brand.setText(translation.registrarAppName());
+		}
 
 		// put logo
 		Image logo = PerunConfiguration.getBrandLogo();
