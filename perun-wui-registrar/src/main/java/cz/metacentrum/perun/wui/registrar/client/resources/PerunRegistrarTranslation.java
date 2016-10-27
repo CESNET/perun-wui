@@ -53,20 +53,20 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	// MESSAGES
 
-	@DefaultMessage("Please check your mailbox {0} and verify your e-mail address. " +
+	@DefaultMessage("Please check your mailbox {0} and click the link to verify your email address. " +
 			"Without verification it is not possible to approve your application.")
 	public String verifyMail(String mail);
 
-	@DefaultMessage("Please wait till administrator of {0} will accept your application.")
+	@DefaultMessage("Please wait until your application to {0} will be approved.")
 	public String waitForAcceptation(String voOrGroupName);
 
-	@DefaultMessage("Please wait till administrator of {0} will accept your extension.")
+	@DefaultMessage("Please wait until your application for membership extension to {0} will be approved.")
 	public String waitForExtAcceptation(String voOrGroupName);
 
 	@DefaultMessage("After acceptation you will become member of {0} automatically.")
 	String waitForVoAcceptation(String groupName);
 
-	@DefaultMessage("From now you are member of {0}.")
+	@DefaultMessage("You are now a member of {0}.")
 	public String registered(String voOrGroupName);
 
 	@DefaultMessage("Your membership in {0} is valid now.")

@@ -167,10 +167,10 @@ public interface PerunTranslation extends Messages {
 
 	/* ------------ FOOTER ---------------------------- */
 
-	@DefaultMessage("<i class=\"fa fa-support\">&nbsp;</i>Support at <a href=\"mailto:{0}\">{0}</a>")
+	@DefaultMessage("<i class=\"fa fa-support\">&nbsp;</i>Support: <a href=\"mailto:{0}\">{0}</a>")
 	public String supportAt(String email);
 
-	@DefaultMessage("<i class=\"fa fa-support\">&nbsp;</i>Support at&nbsp;")
+	@DefaultMessage("<i class=\"fa fa-support\">&nbsp;</i>Support: &nbsp;")
 	public String supportAtMails();
 
 	@DefaultMessage("Powered by <a href=\'https://perun.cesnet.cz/web/\'>Perun</a> &copy; {0} <a href=\'https://www.cesnet.cz/\'>CESNET</a> &amp; <a href=\'https://www.cerit-sc.cz/\'>CERIT-SC</a>")
