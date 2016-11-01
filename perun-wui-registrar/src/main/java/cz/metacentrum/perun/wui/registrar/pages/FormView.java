@@ -63,6 +63,7 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * View for displaying registration form of VO / Group
@@ -76,7 +77,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	private FormView formView = this;
 
-	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
+	private static PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	private Vo vo;
 	private Group group;
@@ -182,7 +183,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					// Make sure we load form only after user decide to skip identity joining
 
 					if (!registrar.getSimilarUsers().isEmpty()) {
-						showSimilarUsersDialog(registrar, new ClickHandler() {
+						showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
 								loadSteps(pp, registrar);
@@ -356,10 +357,10 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		notice.setVisible(false);
 	}
 
-	private void showSimilarUsersDialog(RegistrarObject object, final ClickHandler handler) {
+	public static void showSimilarUsersDialog(List<Identity> similar, final ClickHandler handler) {
 
 		final Modal modal = new Modal();
-		modal.setTitle(object.getSimilarUsers().size() > 1 ? translation.similarUsersFoundTitle() : translation.similarUserFoundTitle());
+		modal.setTitle(similar.size() > 1 ? translation.similarUsersFoundTitle() : translation.similarUserFoundTitle());
 		modal.setFade(true);
 		modal.setDataKeyboard(false);
 		modal.setDataBackdrop(ModalBackdrop.STATIC);
@@ -371,7 +372,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		ft.setCellSpacing(5);
 
 		int row = 0;
-		for (Identity identity : object.getSimilarUsers()) {
+		for (Identity identity : similar) {
 
 			ft.setHTML(row, 0, "<strong>"+identity.getName()+"</strong><br />"+
 					((identity.getOrganization() != null) ? identity.getOrganization() : "<i style='color:grey'>N/A</i>") +"<br />"+identity.getEmail());
@@ -562,7 +563,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	}
 
 
-	private DropDownMenu getCertificatesJoinButton(ButtonGroup certGroup) {
+	private static DropDownMenu getCertificatesJoinButton(ButtonGroup certGroup) {
 
 		Button certButt = new Button(translation.byCertificate(), IconType.CERTIFICATE, new ClickHandler() {
 			@Override
@@ -582,7 +583,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	}
 
-	private DropDownMenu getIdpJoinButton(ButtonGroup certGroup) {
+	private static DropDownMenu getIdpJoinButton(ButtonGroup certGroup) {
 
 		Button idpButt = new Button(translation.byIdp(), IconType.USER, new ClickHandler() {
 			@Override
@@ -602,7 +603,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	}
 
-	private DropDownMenu getOthersJoinButton(ButtonGroup othersButton) {
+	private static DropDownMenu getOthersJoinButton(ButtonGroup othersButton) {
 
 		Button othButt = new Button(translation.byLoginPassword(), IconType.KEY, new ClickHandler() {
 			@Override

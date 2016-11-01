@@ -331,4 +331,20 @@ public class RegistrarManager {
 
 	}
 
+	/**
+	 * Check for similar users based on filled application form.
+	 *
+	 * @param formItems Form items to check similar users for
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request checkForSimilarUsers(List<ApplicationFormItemData> formItems, JsonEvents events) {
+
+		JsonClient client = new JsonClient(true, events);
+		if (formItems != null) client.put("formItems", formItems);
+		return client.call(REGISTRAR_MANAGER + "checkForSimilarUsers");
+
+	}
+
 }

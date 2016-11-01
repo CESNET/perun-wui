@@ -2,12 +2,13 @@ package cz.metacentrum.perun.wui.registrar.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.i18n.client.LocaleInfo;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
-import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
-import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
@@ -15,6 +16,8 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.model.beans.Identity;
+import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Header;
 import cz.metacentrum.perun.wui.registrar.widgets.items.HtmlComment;
 import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
@@ -29,6 +32,7 @@ import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Utility class used to handle Perun Application forms.
@@ -55,6 +59,8 @@ public class PerunForm extends FieldSet {
 	private PerunTranslation perunTranslation = GWT.create(PerunTranslation.class);
 
 	private List<PerunFormItem> items = new ArrayList<>();
+
+	private boolean checkSimilarUsersAgain = false;
 
 	/**
 	 * Create form instance
@@ -220,36 +226,44 @@ public class PerunForm extends FieldSet {
 
 				if (result) {
 
-					/* debug logging
-					for (PerunFormItem item : items) {
-						GWT.log(item.getItemData().getFormItem().getShortname() + " : " + item.getValue());
+					if (checkSimilarUsersAgain) {
+
+						// validation ok - check similar users
+						RegistrarManager.checkForSimilarUsers(getFormItemData(), new JsonEvents() {
+							@Override
+							public void onFinished(JavaScriptObject result) {
+
+								List<Identity> identities = JsUtils.<Identity>jsoAsList(result);
+								if (identities.isEmpty()) {
+									// no similar identities found - submit application
+									createApplication(button);
+								} else {
+									FormView.showSimilarUsersDialog(identities, new ClickHandler() {
+										@Override
+										public void onClick(ClickEvent event) {
+											// user declined joining - submit application
+											createApplication(button);
+										}
+									});
+								}
+							}
+
+							@Override
+							public void onError(PerunException error) {
+								// don't care
+								createApplication(button);
+							}
+
+							@Override
+							public void onLoadingStart() {
+
+							}
+						});
+
+					} else {
+						// validation ok - create immediately
+						createApplication(button);
 					}
-					GWT.log(app.toString());*/
-
-					RegistrarManager.createApplication(app, getFormItemData(), new JsonEvents() {
-						@Override
-						public void onFinished(JavaScriptObject jso) {
-
-							button.setProcessing(false);
-							button.setEnabled(true);
-							if (onSubmitEvent != null) onSubmitEvent.onFinished(jso);
-
-						}
-
-						@Override
-						public void onError(PerunException error) {
-							button.setProcessing(false);
-							button.setEnabled(true);
-							if (onSubmitEvent != null) onSubmitEvent.onError(error);
-						}
-
-						@Override
-						public void onLoadingStart() {
-							button.setProcessing(true);
-							button.setEnabled(false);
-							if (onSubmitEvent != null) onSubmitEvent.onLoadingStart();
-						}
-					});
 
 				}
 			}
@@ -267,6 +281,40 @@ public class PerunForm extends FieldSet {
 			}
 		});
 
+
+	}
+
+	/**
+	 * Finally send application form to Perun API
+	 *
+	 * @param button
+	 */
+	private void createApplication(final PerunButton button) {
+
+		RegistrarManager.createApplication(app, getFormItemData(), new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject jso) {
+
+				button.setProcessing(false);
+				button.setEnabled(true);
+				if (onSubmitEvent != null) onSubmitEvent.onFinished(jso);
+
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				button.setProcessing(false);
+				button.setEnabled(true);
+				if (onSubmitEvent != null) onSubmitEvent.onError(error);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				button.setProcessing(true);
+				button.setEnabled(false);
+				if (onSubmitEvent != null) onSubmitEvent.onLoadingStart();
+			}
+		});
 
 	}
 
@@ -291,6 +339,25 @@ public class PerunForm extends FieldSet {
 		final boolean[] firstLoop = {true};
 
 		for (final PerunFormItem item : items) {
+
+			// for anonymous users
+			if (PerunSession.getInstance().getUser() == null) {
+
+				String prefilledValue = item.getItemData().getPrefilledValue();
+
+				if (Objects.equals(item.getItemData().getFormItem().getType(), ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL)) {
+					if (prefilledValue == null || !prefilledValue.contains(item.getValue())) {
+						// mail changed - re-check existing users
+						checkSimilarUsersAgain = true;
+					}
+				} else if (Objects.equals(item.getItemData().getFormItem().getPerunAttribute(), "urn:perun:user:attribute-def:core:displayName")) {
+					if (!Objects.equals(prefilledValue, item.getValue())) {
+						// name changed - re-check existing users
+						checkSimilarUsersAgain = true;
+					}
+				}
+
+			}
 
 			item.validate(new Events<Boolean>() {
 				@Override
