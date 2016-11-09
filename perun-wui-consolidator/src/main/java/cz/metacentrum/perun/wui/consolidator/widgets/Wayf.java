@@ -325,7 +325,16 @@ public class Wayf extends Composite {
 						if (redirect != null && !redirect.isEmpty()) {
 							target = "&target_url=" + redirect;
 						}
+						/*
 						String consolidatorUrl = Utils.getIdentityConsolidatorLink(null, false) + URL.encodeQueryString("?token=" + token + target);
+						final String redirectUrl = group.getUrl() + consolidatorUrl;
+						*/
+						String consolidatorUrl = "";
+						if (group.getUrl().contains("%3F")) {
+							consolidatorUrl = URL.encodeQueryString("&token=" + token + target);
+						} else {
+							consolidatorUrl = URL.encodeQueryString("?token=" + token + target);
+						}
 						final String redirectUrl = group.getUrl() + consolidatorUrl;
 						Window.Location.assign(redirectUrl);
 					}
