@@ -1,7 +1,9 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -13,6 +15,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -176,7 +179,11 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 			final int id = Integer.valueOf(userId);
 
 			if (id < 1) {
-				placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
+				if (PerunConfiguration.getBrandProfileUnknownUrl() != null) {
+					Window.Location.assign(PerunConfiguration.getBrandProfileUnknownUrl());
+				} else {
+					placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
+				}
 			}
 
 			return id;

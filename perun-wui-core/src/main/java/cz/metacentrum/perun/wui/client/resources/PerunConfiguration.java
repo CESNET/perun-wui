@@ -255,6 +255,24 @@ public final class PerunConfiguration {
 
 
 	/**
+	 * Get brand URL where unknown users are redirected in current locale. If not present, "en" version is used.
+	 * If property is not set at all, null is returned.
+	 *
+	 * @return Configured url or null
+	 */
+	public static String getBrandProfileUnknownUrl() {
+
+		String value = getConfigPropertyString("brand.profile.unknownUsersRedirect."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("brand.profile.unknownUsersRedirect.en");
+		if (value == null || value.isEmpty()) {
+			return null;
+		} else {
+			return value;
+		}
+	}
+
+
+	/**
 	 * Get brand title of registrar in current locale. If not present, "en" version is used.
 	 * If property is not set at all, null is returned.
 	 *
