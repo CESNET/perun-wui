@@ -196,6 +196,8 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 			pageContent.clear();
 			if (content != null) {
 				pageContent.add(content);
+				// DEBUG
+				//GWT.log("set in slot: " + content.getClass().getSimpleName());
 			}
 		} else {
 			super.setInSlot(slot, content);

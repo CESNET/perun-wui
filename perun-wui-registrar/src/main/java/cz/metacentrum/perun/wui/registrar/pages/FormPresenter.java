@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.pages;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -25,6 +26,8 @@ public class FormPresenter extends Presenter<FormPresenter.MyView, FormPresenter
 	private boolean verifyOnceVisited = false;
 
 	public interface MyView extends View {
+		/*Actually load form */
+		void draw();
 	}
 
 	@NameToken(PerunRegistrarPlaceTokens.FORM)
@@ -54,8 +57,7 @@ public class FormPresenter extends Presenter<FormPresenter.MyView, FormPresenter
 		if (i != null && m != null && !verifyOnceVisited) {
 
 			PlaceRequest placeRequest = new PlaceRequest.Builder()
-					.nameToken(PerunRegistrarPlaceTokens.VERIFY)
-					.with("i", i).with("m", m).build();
+					.nameToken(PerunRegistrarPlaceTokens.VERIFY).build();
 			// form load failed
 			verifyOnceVisited = true;
 			getProxy().manualRevealFailed();
@@ -64,6 +66,7 @@ public class FormPresenter extends Presenter<FormPresenter.MyView, FormPresenter
 
 		} else {
 			getProxy().manualReveal(FormPresenter.this);
+			getView().draw();
 		}
 
 	}

@@ -90,6 +90,9 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 		if (Window.Location.getParameterMap().containsKey("page") && "apps".equalsIgnoreCase(Window.Location.getParameter("page"))) {
 			History.newItem(PerunRegistrarPlaceTokens.getMyApps());
 		}
+		if (Window.Location.getParameterMap().containsKey("i") && Window.Location.getParameterMap().containsKey("m")) {
+			History.newItem(PerunRegistrarPlaceTokens.getVerify(), false);
+		}
 
 		loadVoAttributes(new Events<List<Attribute>>() {
 

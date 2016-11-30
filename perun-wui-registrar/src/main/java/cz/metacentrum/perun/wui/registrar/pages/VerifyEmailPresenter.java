@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.pages;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -49,45 +50,41 @@ public class VerifyEmailPresenter extends Presenter<VerifyEmailPresenter.MyView,
 	public void prepareFromRequest(final PlaceRequest request) {
 		super.prepareFromRequest(request);
 
-		try {
-			final String i = Window.Location.getParameter("i");
-			final String m = Window.Location.getParameter("m");
-			if (i == null || m == null) {
-				placeManager.revealErrorPlace(request.getNameToken());
-			}
-
-			RegistrarManager.validateEmail(i, m, new JsonEvents() {
-
-				final JsonEvents retry = this;
-
-				@Override
-				public void onFinished(JavaScriptObject jso) {
-					BasicOverlayObject result = jso.cast();
-					getView().setResult(result.getBoolean());
-					getProxy().manualReveal(presenter);
-				}
-
-				@Override
-				public void onError(PerunException error) {
-					if (error.getName().equals("PrivilegeException")) {
-						getProxy().manualRevealFailed();
-						placeManager.revealUnauthorizedPlace(request.getNameToken());
-					} else {
-						getProxy().manualRevealFailed();
-						placeManager.revealErrorPlace(request.getNameToken());
-						getView().onError(error, retry);
-					}
-				}
-
-				@Override
-				public void onLoadingStart() {
-					getView().onLoadingStart();
-				}
-			});
-		} catch( NumberFormatException e ) {
-			getProxy().manualRevealFailed();
+		final String i = Window.Location.getParameter("i");
+		final String m = Window.Location.getParameter("m");
+		if (i == null || m == null) {
 			placeManager.revealErrorPlace(request.getNameToken());
 		}
+
+		RegistrarManager.validateEmail(i, m, new JsonEvents() {
+
+			final JsonEvents retry = this;
+
+			@Override
+			public void onFinished(JavaScriptObject jso) {
+				BasicOverlayObject result = jso.cast();
+				getView().setResult(result.getBoolean());
+				getProxy().manualReveal(presenter);
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				GWT.log("Error");
+				if (error.getName().equals("PrivilegeException")) {
+					getProxy().manualRevealFailed();
+					placeManager.revealUnauthorizedPlace(request.getNameToken());
+				} else {
+					getProxy().manualRevealFailed();
+					placeManager.revealErrorPlace(request.getNameToken());
+					getView().onError(error, retry);
+				}
+			}
+
+			@Override
+			public void onLoadingStart() {
+				getView().onLoadingStart();
+			}
+		});
 
 	}
 

@@ -98,7 +98,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	public FormView(FormViewUiBinder binder) {
 		initWidget(binder.createAndBindUi(this));
 		exceptionResolver = new ExceptionResolverImpl();
-		draw();
+		//draw(); - must be called from outside in order to be loaded only when necessary
 	}
 
 	public PerunForm getForm() {
