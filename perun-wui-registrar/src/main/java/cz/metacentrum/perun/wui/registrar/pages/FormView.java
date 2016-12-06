@@ -433,7 +433,16 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				} else if (source.getType().equals(ExtSource.ExtSourceType.IDP.getType())) {
 
-					AnchorListItem link = new AnchorListItem(Utils.translateIdp(source.getName()));
+					String entityId = source.getName();
+					String originalIdP = source.getName();
+					if (source.getName().startsWith("https://login.elixir-czech.org/idp/")) {
+						// FIXME - hacked for Elixir proxy IdP to work with original user IdP name
+						entityId = source.getName().split("@")[0];
+						originalIdP = "@" + source.getName().split("@")[1];
+					}
+					final String finalEntityId = entityId;
+
+					AnchorListItem link = new AnchorListItem(Utils.translateIdp(originalIdP));
 					menu2.add(link);
 					link.addClickHandler(new ClickHandler() {
 						@Override
@@ -445,7 +454,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 									// FINAL URL must logout from SP, login to SP using specified IdP, redirect to IC and after that return to application form
 									String token = ((BasicOverlayObject) jso).getString();
 									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true)+URL.encodeQueryString("&token="+token);
-									String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?entityID=" + source.getName()+"&target="+consolidatorUrl);
+									String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?entityID=" + finalEntityId +"&target="+consolidatorUrl);
 									Window.Location.assign(redirectUrl);
 								}
 

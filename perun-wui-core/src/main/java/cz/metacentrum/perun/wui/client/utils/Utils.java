@@ -62,6 +62,7 @@ public class Utils {
 		organizationsTranslation.put("https://shibboleth.utb.cz/idp/shibboleth", "Tomas Bata University in Zlin");
 		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI");
 		organizationsTranslation.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
+		organizationsTranslation.put("https://login.elixir-czech.org/idp", "Elixir Czech");
 
 		// Handle social identities
 
