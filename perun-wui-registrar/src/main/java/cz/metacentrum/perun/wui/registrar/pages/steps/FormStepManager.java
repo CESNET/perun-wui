@@ -1,5 +1,7 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -45,7 +47,9 @@ public class FormStepManager implements StepManager {
     private void call(final Step current) {
 
         formView.getForm().clear();
-        current.call(pp, summary, new Events<Result>() {
+        // on start of each "step", scroll to the top
+	    Window.scrollTo(0, 85);
+	    current.call(pp, summary, new Events<Result>() {
 
             @Override
             public void onFinished(Result result) {
