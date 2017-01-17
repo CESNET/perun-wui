@@ -238,6 +238,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 							!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
 						// offer only when VO doesn't have empty or "You are registered" form.
 						stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
+						break;
 					}
 				}
 				stepManager.addStep(new SummaryStep(formView));
