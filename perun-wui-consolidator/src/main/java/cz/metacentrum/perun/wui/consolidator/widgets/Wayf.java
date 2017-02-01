@@ -143,8 +143,8 @@ public class Wayf extends Composite {
 
 			} else if (group.getAuthzType().equals("fed")) {
 
-				// load external feed data
-				if (group.getFeeds() != null && !group.getFeeds().isEmpty()) {
+				// load external feed data or local feed data
+				if ((group.getFeeds() != null && !group.getFeeds().isEmpty()) || !group.getFeedData().getKeys().isEmpty()) {
 
 					// wait to load feeds
 

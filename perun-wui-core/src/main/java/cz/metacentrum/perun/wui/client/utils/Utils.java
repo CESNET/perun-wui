@@ -64,6 +64,8 @@ public class Utils {
 		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI");
 		organizationsTranslation.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
 		organizationsTranslation.put("https://login.elixir-czech.org/idp", "Elixir Czech");
+		organizationsTranslation.put("https://mojeid.cz/saml/idp.xml", "MojeID");
+		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI SSO");
 
 		// Handle social identities
 
