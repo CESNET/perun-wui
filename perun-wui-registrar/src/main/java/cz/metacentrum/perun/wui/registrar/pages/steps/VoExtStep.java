@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
@@ -36,6 +37,12 @@ public class VoExtStep extends FormStep {
 			PerunException ex = PerunException.createNew("0", "FormWrongFormedException", "Extension form is wrong formed.");
 			result.setException(ex);
 			events.onError(ex);
+			return;
+		}
+
+		// If form can't be submitted and user is a member (outside condition), redirect to targetexisting automatically
+		if (!form.containsSubmitButton() && form.containsOnlyTextItems() && Window.Location.getParameterMap().containsKey("targetexisting")) {
+			Window.Location.assign(Window.Location.getParameter("targetexisting"));
 			return;
 		}
 
