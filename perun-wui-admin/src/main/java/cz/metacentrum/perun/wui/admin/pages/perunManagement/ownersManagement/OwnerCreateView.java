@@ -14,6 +14,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.OwnersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Owner;
+import cz.metacentrum.perun.wui.widgets.ErrorReporter;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.*;
@@ -68,6 +69,9 @@ public class OwnerCreateView extends ViewImpl implements OwnerCreatePresenter.My
 				@Override
 				public void onError(PerunException error) {
 					createButton.setProcessing(false);
+					// FIXME - custom display of exception
+					ErrorReporter reportBox = new ErrorReporter(error);
+					reportBox.getWidget().show();
 				}
 
 				@Override
