@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
 import com.google.gwt.uibinder.client.UiBinder;
@@ -32,6 +33,7 @@ import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.html.Text;
 
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -58,6 +60,10 @@ public class ErrorReporter {
 	@UiField FormLabel messageLabel;
 	@UiField Text heading;
 	private Modal widget;
+
+	public ErrorReporter(final PerunException ex) {
+		this(ex, null);
+	}
 
 	public ErrorReporter(final PerunException ex, final PerunButton originalReportButton) {
 
@@ -179,8 +185,10 @@ public class ErrorReporter {
 		sendButton.setVisible(false);
 		cancelButton.setText(translation.close());
 
-		originalReportButton.setEnabled(false);
-		originalReportButton.setText(translation.reportErrorEnd());
+		if (originalReportButton != null) {
+			originalReportButton.setEnabled(false);
+			originalReportButton.setText(translation.reportErrorEnd());
+		}
 
 	}
 
@@ -214,6 +222,30 @@ public class ErrorReporter {
 				JSONObject obj = object.get(key).isObject();
 				if (obj != null) {
 					clearPasswords(obj);
+				}
+			}
+		}
+
+		if (object.containsKey("data") && object.get("data") != null) {
+			JSONArray formItemsData = object.get("data").isArray();
+			if (formItemsData != null) {
+				for (int i=0; i<formItemsData.size(); i++) {
+					if (formItemsData.get(i) != null) {
+						JSONObject formItemWithData = formItemsData.get(i).isObject();
+						if (formItemWithData != null && formItemWithData.containsKey("formItem") && formItemWithData.get("formItem") != null) {
+							JSONObject formItem = formItemWithData.get("formItem").isObject();
+							if (formItem != null && formItem.containsKey("type") && formItem.get("type") != null) {
+								JSONString type = formItem.get("type").isString();
+								if (type != null && Objects.equals(type.stringValue(), "PASSWORD")) {
+									// form item of type password
+									if (formItemWithData.containsKey("value")) {
+										// clear value property
+										formItemWithData.put("value", new JSONString(""));
+									}
+								}
+							}
+						}
+					}
 				}
 			}
 		}

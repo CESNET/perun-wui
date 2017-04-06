@@ -44,7 +44,7 @@ public class OwnersManager {
 	 */
 	public static Request deleteOwner(int owner, JsonEvents events) {
 
-		JsonClient client = new JsonClient(events);
+		JsonClient client = new JsonClient(true, events);
 		client.put("owner", owner);
 		return client.call(OWNERS_MANAGER + "deleteOwner");
 
@@ -69,7 +69,7 @@ public class OwnersManager {
 		owner.put("type", new JSONString(ownerType));
 		owner.put("contact", new JSONString(ownerContact));
 
-		JsonClient client = new JsonClient(events);
+		JsonClient client = new JsonClient(true, events);
 		client.put("owner", owner.getJavaScriptObject());
 		return client.call(OWNERS_MANAGER + "createOwner");
 

@@ -81,8 +81,8 @@ public class PerunAdmin extends AbstractPresenterModule implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 
-		GWT.UncaughtExceptionHandler handler = new ExceptionLogger();
-		GWT.setUncaughtExceptionHandler(handler);
+		ExceptionLogger exceptionHandler = new ExceptionLogger();
+		GWT.setUncaughtExceptionHandler(exceptionHandler);
 
 		try {
 			// ensure injecting custom CSS styles of PerunWui
@@ -94,7 +94,7 @@ public class PerunAdmin extends AbstractPresenterModule implements EntryPoint {
 			Utils.getDefaultNotifyOptions().makeDefault();
 
 		} catch (RuntimeException ex) {
-			handler.onUncaughtException(ex);
+			exceptionHandler.onUncaughtException(ex);
 		}
 
 	}
