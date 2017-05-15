@@ -194,6 +194,13 @@ public class SummaryStep implements Step {
 			if (!msg.getText().isEmpty()) {
 				messages.add(msg);
 			}
+		} else if (resVo.getException() != null && "CantBeApprovedException".equals(resVo.getException().getName())) {
+
+			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
+			ListGroupItem msg = new ListGroupItem();
+			msg.setText(translation.waitForAcceptation(resVo.getBean().getName()));
+			messages.add(msg);
+
 		} else {
 			displayException(resVo.getException(), resVo.getBean());
 		}
@@ -253,6 +260,14 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
+
+		} else if (resVo.getException() != null && "CantBeApprovedException".equals(resVo.getException().getName())) {
+
+			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
+			ListGroupItem msg = new ListGroupItem();
+			msg.setText(translation.waitForExtAcceptation(resVo.getBean().getName()));
+			messages.add(msg);
+
 		} else {
 			displayException(resVo.getException(), resVo.getBean());
 		}

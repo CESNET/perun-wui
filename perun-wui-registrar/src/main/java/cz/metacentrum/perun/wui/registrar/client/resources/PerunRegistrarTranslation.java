@@ -289,6 +289,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Your application to {0} has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
 	public String registrarException(String voOrGroupName);
 
+	@DefaultMessage("Application to {0} has been submitted, but not approved automatically, due to unexpected error. Your administrator has been informed and he will deal with it.")
+	public String cantBeApproved(String voOrGroupName);
+
 	@DefaultMessage("Unable to submit the form")
 	public String unableToSubmit();
 

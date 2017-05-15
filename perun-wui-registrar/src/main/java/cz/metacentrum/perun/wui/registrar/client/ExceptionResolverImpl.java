@@ -120,6 +120,10 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			resolveCantBeSubmittedException();
 
+		} else if (exception.getName().equalsIgnoreCase("CantBeApprovedException")) {
+
+			setInfo(trans.cantBeApproved(getBeanName()), null, true);
+
 		} else if (exception.getName().equalsIgnoreCase("RpcException")) {
 
 			setInfo(trans.applicationNotCreated(), null, false);
