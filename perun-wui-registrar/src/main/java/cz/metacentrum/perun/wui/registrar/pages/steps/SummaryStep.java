@@ -188,13 +188,8 @@ public class SummaryStep implements Step {
 			title.add(successIcon());
 			ListGroupItem msg = new ListGroupItem();
 
-			if (summary.alreadyAppliedToVo()) {
-				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForVoAcceptation(((Group) res.getBean()).getShortName()));
-			} else {
-				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
-			}
+			title.add(new Text(" "+translation.initTitle()));
+			msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
 
 			messages.add(msg);
 			verifyMailMessage(summary, messages);
