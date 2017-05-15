@@ -85,6 +85,16 @@ public class SummaryStep implements Step {
 
 			messages.add(msg);
 			verifyMailMessage(summary, messages);
+		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
+
+			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
+			title.add(successIcon());
+			ListGroupItem msg = new ListGroupItem();
+			title.add(new Text(" "+translation.initTitle()));
+			msg.setText(translation.waitForAcceptation(res.getBean().getName()));
+			messages.add(msg);
+			verifyMailMessage(summary, messages);
+
 		} else {
 			displayException(res.getException(), res.getBean());
 		}
@@ -118,6 +128,17 @@ public class SummaryStep implements Step {
 
 			messages.add(msg);
 			verifyMailMessage(summary, messages);
+
+		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
+
+			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
+			title.add(successIcon());
+			ListGroupItem msg = new ListGroupItem();
+			title.add(new Text(" "+translation.extendTitle()));
+			msg.setText(translation.waitForExtAcceptation(res.getBean().getName()));
+			messages.add(msg);
+			verifyMailMessage(summary, messages);
+
 		} else {
 			// TODO - solve this BLEEEH hack in better way.
 			if (res.getException().getName().equals("DuplicateRegistrationAttemptException")) {
@@ -160,6 +181,24 @@ public class SummaryStep implements Step {
 
 			messages.add(msg);
 			verifyMailMessage(summary, messages);
+
+		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
+
+			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
+			title.add(successIcon());
+			ListGroupItem msg = new ListGroupItem();
+
+			if (summary.alreadyAppliedToVo()) {
+				title.add(new Text(" "+translation.initTitle()));
+				msg.setText(translation.waitForVoAcceptation(((Group) res.getBean()).getShortName()));
+			} else {
+				title.add(new Text(" "+translation.initTitle()));
+				msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
+			}
+
+			messages.add(msg);
+			verifyMailMessage(summary, messages);
+
 		} else {
 			displayException(res.getException(), res.getBean());
 		}
