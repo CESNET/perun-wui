@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.GeneralObject;
@@ -76,19 +75,32 @@ public class FormStepManager implements StepManager {
                     bean = current.getResult().getBean();
                 }
 
-                exceptionResolver.resolve(result.getException(), result.getBean());
-                if (exceptionResolver.isSoft()) {
-                    // if exception is soft we show it and continue in process
-                    formView.displayException(error, bean);
-                    if (result != null) {
-                        summary.addResult(result);
-                    }
-                    formView.getForm().clear();
-                    (new SubStep(formView.getForm())).call(pp, summary, this);
+                if (result.getException() != null && "CantBeApprovedException".equals(result.getException().getName())) {
+
+	                // FIXME - hack to silently skip CantBeApproved exception thrown by auto-approval mode
+	                // make it look-like ok state - error is shown on summary page
+	                summary.addResult(result);
+	                formView.hideNotice();
+	                call(steps.remove());
+
                 } else {
-                    // if exception is hard we show it and stay on form (do nothing).
-                    formView.displayException(error, bean);
+
+	                exceptionResolver.resolve(result.getException(), result.getBean());
+	                if (exceptionResolver.isSoft()) {
+		                // if exception is soft we show it and continue in process
+		                formView.displayException(error, bean);
+		                if (result != null) {
+			                summary.addResult(result);
+		                }
+		                formView.getForm().clear();
+		                (new SubStep(formView.getForm())).call(pp, summary, this);
+	                } else {
+		                // if exception is hard we show it and stay on form (do nothing).
+		                formView.displayException(error, bean);
+	                }
+
                 }
+
             }
 
             @Override
