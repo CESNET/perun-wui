@@ -14,6 +14,7 @@ See https://perun.cesnet.cz/ for more details about the base project.
 ### Related projects ###
 
 * [Perun](https://github.com/CESNET/perun) - main Perun repository
+* [Perun ansible](https://github.com/CESNET/perun-ansible) - Perun installation automation using Ansible
 * [Perun services](https://github.com/CESNET/perun-services) - connectors Perun uses to manage services
 * [Google Group connector](https://github.com/CESNET/google-group-connector) - allow provisioning of Google groups on your domain
 
