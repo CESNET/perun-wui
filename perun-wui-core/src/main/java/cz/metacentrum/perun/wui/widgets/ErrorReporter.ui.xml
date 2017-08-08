@@ -19,6 +19,10 @@
 		<b:ModalBody ui:field="modalBody">
 			<b:Form>
 				<b:FieldSet>
+					<b:FormGroup ui:field="formGroupFrom" visible="false">
+						<b:FormLabel ui:field="fromLabel" visible="false">From: </b:FormLabel>
+						<p.boxes:ExtendedTextBox ui:field="from" visible="false"/>
+					</b:FormGroup>
 					<b:FormGroup>
 						<b:FormLabel ui:field="subjectLabel">Subject: </b:FormLabel>
 						<p.boxes:ExtendedTextBox ui:field="subject"/>

@@ -2,8 +2,14 @@ package cz.metacentrum.perun.wui.widgets;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.event.logical.shared.ValueChangeEvent;
+import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -15,6 +21,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunErrorTranslation;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.JsonUtils;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
@@ -27,10 +34,12 @@ import org.gwtbootstrap3.client.shared.event.ModalHiddenHandler;
 import org.gwtbootstrap3.client.shared.event.ModalShownEvent;
 import org.gwtbootstrap3.client.shared.event.ModalShownHandler;
 import org.gwtbootstrap3.client.ui.Alert;
+import org.gwtbootstrap3.client.ui.FormGroup;
 import org.gwtbootstrap3.client.ui.FormLabel;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
+import org.gwtbootstrap3.client.ui.constants.ValidationState;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.Objects;
@@ -51,13 +60,18 @@ public class ErrorReporter {
 
 	private static PerunErrorTranslation translation = GWT.create(PerunErrorTranslation.class);
 
+	private static boolean unknownUser = PerunSession.getInstance().getUserId() == -1;
+
 	@UiField PerunButton sendButton;
 	@UiField PerunButton cancelButton;
 	@UiField ExtendedTextArea message;
 	@UiField ExtendedTextBox subject;
+	@UiField ExtendedTextBox from;
 	@UiField ModalBody modalBody;
+	@UiField FormLabel fromLabel;
 	@UiField FormLabel subjectLabel;
 	@UiField FormLabel messageLabel;
+	@UiField FormGroup formGroupFrom;
 	@UiField Text heading;
 	private Modal widget;
 
@@ -72,6 +86,66 @@ public class ErrorReporter {
 		subject.setText("Reported error: " + ex.getRequestURL() + " (" +ex.getErrorId() + ")");
 		message.setHeight("100px");
 
+		// only if perun-user unknown
+		if (unknownUser) {
+
+			fromLabel.setVisible(true);
+			from.setVisible(true);
+			formGroupFrom.setVisible(true);
+			from.setPlaceholder(translation.reportErrorFromPlaceholder());
+
+			String mailsRaw = PerunSession.getInstance().getPerunPrincipal().getAdditionInformation("mail");
+			if (mailsRaw != null && !mailsRaw.isEmpty()) {
+				String[] mails = mailsRaw.split(";");
+				if (mails.length > 0) {
+					from.setValue(mails[0]);
+				}
+			}
+
+			// FIXME - implement some common value change checker for all input fields !!!
+
+			from.addValueChangeHandler(new ValueChangeHandler<String>() {
+				@Override
+				public void onValueChange(ValueChangeEvent<String> event) {
+					boolean isValid = Utils.isValidEmail(from.getValue());
+					sendButton.setEnabled(isValid);
+					if (isValid) {
+						formGroupFrom.setValidationState(ValidationState.NONE);
+					} else {
+						formGroupFrom.setValidationState(ValidationState.ERROR);
+					}
+				}
+			});
+
+			from.addBlurHandler(new BlurHandler() {
+				@Override
+				public void onBlur(BlurEvent event) {
+					boolean isValid = Utils.isValidEmail(from.getValue());
+					sendButton.setEnabled(isValid);
+					if (isValid) {
+						formGroupFrom.setValidationState(ValidationState.NONE);
+					} else {
+						formGroupFrom.setValidationState(ValidationState.ERROR);
+					}
+				}
+			});
+
+			from.addKeyUpHandler(new KeyUpHandler() {
+				@Override
+				public void onKeyUp(KeyUpEvent event) {
+					boolean isValid = Utils.isValidEmail(from.getValue());
+					sendButton.setEnabled(isValid);
+					if (isValid) {
+						formGroupFrom.setValidationState(ValidationState.NONE);
+					} else {
+						formGroupFrom.setValidationState(ValidationState.ERROR);
+					}
+				}
+			});
+
+		}
+
+		fromLabel.setText(translation.reportErrorFromLabel());
 		heading.setText(translation.reportErrorHeading());
 		subjectLabel.setText(translation.reportErrorSubjectLabel());
 		messageLabel.setText(translation.reportErrorMessageLabel());
@@ -89,6 +163,13 @@ public class ErrorReporter {
 		sendButton.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
+
+				if (unknownUser && !Utils.isValidEmail(from.getValue())) {
+					formGroupFrom.setValidationState(ValidationState.ERROR);
+					return;
+				} else if (unknownUser) {
+					formGroupFrom.setValidationState(ValidationState.NONE);
+				}
 
 				if (subject.getText().isEmpty()) {
 					subject.setText("Reported error: " + ex.getRequestURL() + " (" + ex.getErrorId() + ")");
@@ -156,11 +237,12 @@ public class ErrorReporter {
 		text += "Application state: " + Window.Location.createUrlBuilder().buildString() + "\n\n";
 		text += "Authz: " + PerunSession.getInstance().getRolesString() + "\n\n";
 
-		if (PerunSession.getInstance().getUser() == null) {
+		if (unknownUser) {
 			// post original authz if unknown user
 			text += "Actor/ExtSource: " + PerunSession.getInstance().getPerunPrincipal().getActor() + " / " +
 					PerunSession.getInstance().getPerunPrincipal().getExtSource() + " (" +
 					PerunSession.getInstance().getPerunPrincipal().getExtSourceType() + ")" + "\n\n";
+			text += "Contact: " + from.getValue() + "\n\n";
 		}
 		text += "GUI version: " + PerunWebConstants.INSTANCE.guiVersion();
 		text += "\n\n-------------------------------------\nSent from Perun UI";
