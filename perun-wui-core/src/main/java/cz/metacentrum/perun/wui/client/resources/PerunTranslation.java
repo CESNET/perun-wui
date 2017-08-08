@@ -185,6 +185,12 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Report error")
 	public String reportErrorHeading();
 
+	@DefaultMessage("From")
+	public String reportErrorFromLabel();
+
+	@DefaultMessage("Please insert your email address.")
+	public String reportErrorFromPlaceholder();
+
 	@DefaultMessage("Subject")
 	public String reportErrorSubjectLabel();
 
