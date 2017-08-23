@@ -280,13 +280,14 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 	private String translateUesIdentification(UserExtSource userExtSource) {
 
 		if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
-			String name = userExtSource.getExtSource().getName();
 			String translated = Utils.translateIdp(userExtSource.getExtSource().getName());
-			GWT.log(name + "=" + translated);
-			if (Objects.equals(name, translated)) {
-				translated = Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
+			String specificTranslated = Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
+			if (!Objects.equals(specificTranslated, translated)) {
+				// prefer specific Identity translation
+				return specificTranslated + " (" + translated + ")";
+			} else {
+				return translated;
 			}
-			return translated;
 		} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
 			return getCertParam(userExtSource.getExtSource().getName(), "O") +
 					", " +
