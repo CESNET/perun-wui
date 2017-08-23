@@ -591,6 +591,11 @@ public final class PerunConfiguration {
 		return getConfigPropertyBoolean("wayf.linkAnAccount.disabled");
 	}
 
+	public static List<String> getRegistrarEnforcedProxies() {
+		String value = getConfigPropertyString("registrar.enforceProxy");
+		return Utils.stringToList(value, ",");
+	}
+
 	/**
 	 * Return map of customized IdP (or ext source) translations.
 	 *
