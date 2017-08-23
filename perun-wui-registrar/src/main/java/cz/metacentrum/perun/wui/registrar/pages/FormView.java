@@ -436,11 +436,16 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 					String entityId = source.getName();
 					String originalIdP = source.getName();
+
+					/*
+					WE NO LONGER WANT TO SPECIFY source IdPs for ELIXIR, just reference the proxy itself
 					if (source.getName().startsWith("https://login.elixir-czech.org/idp/")) {
 						// FIXME - hacked for Elixir proxy IdP to work with original user IdP name
 						entityId = source.getName().split("@")[0];
 						originalIdP = "@" + source.getName().split("@")[1];
 					}
+					*/
+
 					final String finalEntityId = entityId;
 
 					AnchorListItem link = new AnchorListItem(Utils.translateIdp(originalIdP));
