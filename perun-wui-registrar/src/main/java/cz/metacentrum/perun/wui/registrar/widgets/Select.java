@@ -69,9 +69,9 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 	private static final String SHOW_TICK = "show-tick";
 	private static final String MULTIPLE = "multiple";
 
-	private final AttributeMixin<Select> attributeMixin = new AttributeMixin<Select>(this);
-	private final FocusableMixin<Select> focusableMixin = new FocusableMixin<Select>(this);
-	private final EnabledMixin<Select> enabledMixin = new EnabledMixin<Select>(this);
+	private final AttributeMixin<Select> attributeMixin = new AttributeMixin<>(this);
+	private final FocusableMixin<Select> focusableMixin = new FocusableMixin<>(this);
+	private final EnabledMixin<Select> enabledMixin = new EnabledMixin<>(this);
 
 	public Select() {
 		setStyleName(BOOTSTRAP_SELECT);
@@ -86,12 +86,7 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 	protected void onLoad() {
 		super.onLoad();
 
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				initialize();
-			}
-		});
+		Scheduler.get().scheduleDeferred((Command) this::initialize);
 
 	}
 
@@ -270,12 +265,7 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 
 	public void setValue(final String value) {
 		// Need to defer the setValue to make sure the element is actually in the DOM to manipulate
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				setValue(getElement(), value);
-			}
-		});
+		Scheduler.get().scheduleDeferred((Command) () -> setValue(getElement(), value));
 	}
 
 	public void setValues(final String... values) {
@@ -286,12 +276,7 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 		}
 
 		// Need to defer the setValue to make sure the element is actually in the DOM to manipulate
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				setValue(getElement(), array);
-			}
-		});
+		Scheduler.get().scheduleDeferred((Command) () -> setValue(getElement(), array));
 	}
 
 	public void setValue(final Option opt) {
@@ -315,7 +300,7 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 	}
 
 	public List<String> getAllSelectedValues() {
-		final List<String> allSelected = new ArrayList<String>();
+		final List<String> allSelected = new ArrayList<>();
 
 		for (int i = 0; i < getItemCount(); i++) {
 			if (isItemSelected(i)) {
