@@ -32,9 +32,9 @@
 		<maven.test.skip>false</maven.test.skip>
 
 		<!-- Project wide GWT version -->
-		<gwtVersion>2.7.0</gwtVersion>
-		<gwtPluginVersion>2.7.0</gwtPluginVersion>
-		<gwtp.version>1.5.3</gwtp.version>
+		<gwtVersion>2.8.1</gwtVersion>
+		<gwtPluginVersion>2.8.1</gwtPluginVersion>
+		<gwtp.version>1.6</gwtp.version>
 		<gin.version>2.1.2</gin.version>
 
 	</properties>
@@ -239,14 +239,14 @@
 			<dependency>
 				<groupId>org.gwtbootstrap3</groupId>
 				<artifactId>gwtbootstrap3</artifactId>
-				<version>0.9.2</version>
+				<version>0.9.4</version>
 				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
 				<groupId>org.gwtbootstrap3</groupId>
 				<artifactId>gwtbootstrap3-extras</artifactId>
-				<version>0.9.2</version>
+				<version>0.9.4</version>
 				<scope>provided</scope>
 			</dependency>
 

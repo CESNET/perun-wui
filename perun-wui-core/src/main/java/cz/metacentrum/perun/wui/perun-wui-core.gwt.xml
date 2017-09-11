@@ -26,7 +26,8 @@
 
 	<!-- Support for Google Closure Stylesheets -->
 	<set-configuration-property name="CssResource.enableGss" value="true" />
-	<set-configuration-property name="CssResource.legacy" value="true" />
+	<!-- set GSS as default-->
+	<set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true"/>
 	<!--<set-configuration-property name="CssResource.conversionMode" value="strict" />
 	<set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true" />-->
 

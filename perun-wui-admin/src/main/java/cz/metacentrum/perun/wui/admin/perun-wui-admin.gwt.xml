@@ -13,6 +13,8 @@
 	<!-- GWTP support -->
 	<inherits name="com.google.gwt.inject.Inject"/>
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
+	<!-- set GSS as default-->
+	<set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true"/>
 	<!-- define gin module injector -->
 	<set-configuration-property name="gin.ginjector.modules" value="cz.metacentrum.perun.wui.admin.client.PerunAdmin"/>
 	<!-- bootstrap app before loading page -->
