@@ -61,3 +61,4 @@ Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+!/perun-wui-cabinet/src/main/java/cz/metacentrum/perun/wui/cabinet/client/PerunCabinetView.ui.xml

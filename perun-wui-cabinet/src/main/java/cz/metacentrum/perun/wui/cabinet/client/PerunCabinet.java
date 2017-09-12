@@ -11,14 +11,29 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.*;
+import com.gwtplatform.mvp.client.RootPresenter;
+import com.gwtplatform.mvp.client.annotations.DefaultPlace;
+import com.gwtplatform.mvp.client.annotations.ErrorPlace;
+import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
+import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
+import com.gwtplatform.mvp.client.gin.DefaultModule;
+import cz.metacentrum.perun.wui.cabinet.client.resources.PerunCabinetPlaceTokens;
+import cz.metacentrum.perun.wui.cabinet.client.resources.PerunCabinetResources;
+import cz.metacentrum.perun.wui.cabinet.pages.HomePresenter;
+import cz.metacentrum.perun.wui.cabinet.pages.HomeView;
+import cz.metacentrum.perun.wui.client.PerunPlaceManager;
+import cz.metacentrum.perun.wui.client.PerunRootPresenter;
+import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
+import cz.metacentrum.perun.wui.pages.*;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Navbar;
 import org.gwtbootstrap3.client.ui.NavbarHeader;
@@ -28,8 +43,55 @@ import org.gwtbootstrap3.client.ui.NavbarHeader;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class PerunCabinet implements EntryPoint, ValueChangeHandler<String> {
+public class PerunCabinet extends AbstractPresenterModule implements EntryPoint {
 
+	@Override
+	public void onModuleLoad() {
+		ExceptionLogger exceptionHandler = new ExceptionLogger();
+		GWT.setUncaughtExceptionHandler(exceptionHandler);
+
+		try {
+
+			// set default for Growl plugin
+			Utils.getDefaultNotifyOptions().makeDefault();
+
+			// ensure injecting custom CSS styles of PerunWui
+			PerunResources.INSTANCE.gss().ensureInjected();
+
+			PerunCabinetResources.INSTANCE.gss().ensureInjected();
+
+		} catch (Exception ex) {
+			exceptionHandler.onUncaughtException(ex);
+		}
+	}
+
+	@Override
+	protected void configure() {
+		install(new DefaultModule.Builder().placeManager(PerunPlaceManager.class).build());
+
+		// make sure app is embedded in a correct DIV
+		bind(RootPresenter.class).to(PerunRootPresenter.class).asEagerSingleton();
+
+		// Main Application must bind generic Presenter and custom View !!
+		bindPresenter(PerunCabinetPresenter.class, PerunCabinetPresenter.MyView.class, PerunCabinetView.class, PerunCabinetPresenter.MyProxy.class);
+
+		// bind app-specific pages
+		// TODO - implement pages
+		bindPresenter(HomePresenter.class, HomePresenter.MyView.class, HomeView.class, HomePresenter.MyProxy.class);
+
+		// pre-defined places
+		bindConstant().annotatedWith(DefaultPlace.class).to(PerunCabinetPlaceTokens.HOME);
+		bindConstant().annotatedWith(ErrorPlace.class).to(PerunCabinetPlaceTokens.NOT_FOUND);
+		bindConstant().annotatedWith(UnauthorizedPlace.class).to(PerunCabinetPlaceTokens.UNAUTHORIZED);
+
+		// generic pages
+		bindPresenter(NotAuthorizedPresenter.class, NotAuthorizedPresenter.MyView.class, NotAuthorizedView.class, NotAuthorizedPresenter.MyProxy.class);
+		bindPresenter(NotFoundPresenter.class, NotFoundPresenter.MyView.class, NotFoundView.class, NotFoundPresenter.MyProxy.class);
+		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class, LogoutView.class, LogoutPresenter.MyProxy.class);
+		bindPresenter(NotUserPresenter.class, NotUserPresenter.MyView.class, NotUserView.class, NotUserPresenter.MyProxy.class);
+	}
+
+	/*
 	interface PerunCabinetUiBinder extends UiBinder<Widget, PerunCabinet>{}
 
 	private static PerunCabinetUiBinder uiBinder = GWT.create(PerunCabinetUiBinder.class);
@@ -171,5 +233,7 @@ public class PerunCabinet implements EntryPoint, ValueChangeHandler<String> {
 		}
 
 	}
+*/
+
 
 }

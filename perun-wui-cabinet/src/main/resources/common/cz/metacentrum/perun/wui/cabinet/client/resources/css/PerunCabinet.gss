@@ -1,0 +1,27 @@
+
+@def MIN_WIDTH 320px;
+@def MIN_HEIGHT 320px;
+
+/* MAIN LAYOUT */
+
+body {
+	min-width: MIN_WIDTH;
+	min-height: MIN_HEIGHT;
+}
+
+.app {
+	margin-bottom: 8px;
+}
+
+/* Since we show left-menu on bigger screen, align header too */
+@media screen and (min-width: 768px) {
+	.logoWrapper {
+		text-align: center;
+		min-width: 250px;
+		display: inline-block;
+		margin-left: 15px;
+		/*margin-right: 15px;*/
+	}
+}
+
+/* HACKS */
