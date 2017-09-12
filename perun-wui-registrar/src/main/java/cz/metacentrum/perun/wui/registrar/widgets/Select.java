@@ -37,14 +37,11 @@ import org.gwtbootstrap3.client.ui.base.mixin.AttributeMixin;
 import org.gwtbootstrap3.client.ui.base.mixin.EnabledMixin;
 import org.gwtbootstrap3.client.ui.base.mixin.FocusableMixin;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
-import org.gwtbootstrap3.extras.select.client.constants.Styles;
 import org.gwtbootstrap3.extras.select.client.ui.Option;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.gwtbootstrap3.extras.select.client.constants.DataAttributes.*;
-import static org.gwtbootstrap3.extras.select.client.constants.DataAttributes.DATA_STYLE;
 
 
 /**
@@ -59,12 +56,25 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 	private static final String DESELECT_ALL = "deselectAll";
 	private static final String TRUE = "true";
 
-	private final AttributeMixin<Select> attributeMixin = new AttributeMixin<Select>(this);
-	private final FocusableMixin<Select> focusableMixin = new FocusableMixin<Select>(this);
-	private final EnabledMixin<Select> enabledMixin = new EnabledMixin<Select>(this);
+	private static final String BOOTSTRAP_SELECT = "bootstrap-select";
+	private static final String DATA_HEADER = "data-header";
+	private static final String DATA_SHOW_SUBTEXT = "data-show-subtext";
+	private static final String DATA_SIZE = "data-size";
+	private static final String DATA_WIDTH = "data-width";
+	private static final String DATA_SELECTED_TEXT_FORMAT = "data-selected-text-format";
+	private static final String DATA_LIVE_SEARCH = "data-live-search";
+	private static final String DATA_STYLE = "data-style";
+
+	private static final String SHOW_MENU_ARROW = "show-menu-arrow";
+	private static final String SHOW_TICK = "show-tick";
+	private static final String MULTIPLE = "multiple";
+
+	private final AttributeMixin<Select> attributeMixin = new AttributeMixin<>(this);
+	private final FocusableMixin<Select> focusableMixin = new FocusableMixin<>(this);
+	private final EnabledMixin<Select> enabledMixin = new EnabledMixin<>(this);
 
 	public Select() {
-		setStyleName(Styles.BOOTSTRAP_SELECT);
+		setStyleName(BOOTSTRAP_SELECT);
 	}
 
 	public Select(boolean isMultipleSelect) {
@@ -76,12 +86,7 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 	protected void onLoad() {
 		super.onLoad();
 
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				initialize();
-			}
-		});
+		Scheduler.get().scheduleDeferred((Command) this::initialize);
 
 	}
 
@@ -167,26 +172,26 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 
 	public void setShowMenuArrow(final boolean showMenuArrow) {
 		if (showMenuArrow) {
-			addStyleName(Styles.SHOW_MENU_ARROW);
+			addStyleName(SHOW_MENU_ARROW);
 		} else {
-			removeStyleName(Styles.SHOW_MENU_ARROW);
+			removeStyleName(SHOW_MENU_ARROW);
 		}
 	}
 
 	public boolean getShowMenuArrow() {
-		return StyleHelper.containsStyle(getStyleName(), Styles.SHOW_MENU_ARROW);
+		return StyleHelper.containsStyle(getStyleName(), SHOW_MENU_ARROW);
 	}
 
 	public void setShowTick(final boolean showTick) {
 		if (showTick) {
-			addStyleName(Styles.SHOW_TICK);
+			addStyleName(SHOW_TICK);
 		} else {
-			removeStyleName(Styles.SHOW_TICK);
+			removeStyleName(SHOW_TICK);
 		}
 	}
 
 	public boolean getShowTick() {
-		return StyleHelper.containsStyle(getStyleName(), Styles.SHOW_TICK);
+		return StyleHelper.containsStyle(getStyleName(), SHOW_TICK);
 	}
 
 	/**
@@ -260,12 +265,7 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 
 	public void setValue(final String value) {
 		// Need to defer the setValue to make sure the element is actually in the DOM to manipulate
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				setValue(getElement(), value);
-			}
-		});
+		Scheduler.get().scheduleDeferred((Command) () -> setValue(getElement(), value));
 	}
 
 	public void setValues(final String... values) {
@@ -276,12 +276,7 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 		}
 
 		// Need to defer the setValue to make sure the element is actually in the DOM to manipulate
-		Scheduler.get().scheduleDeferred(new Command() {
-			@Override
-			public void execute() {
-				setValue(getElement(), array);
-			}
-		});
+		Scheduler.get().scheduleDeferred((Command) () -> setValue(getElement(), array));
 	}
 
 	public void setValue(final Option opt) {
@@ -305,7 +300,7 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 	}
 
 	public List<String> getAllSelectedValues() {
-		final List<String> allSelected = new ArrayList<String>();
+		final List<String> allSelected = new ArrayList<>();
 
 		for (int i = 0; i < getItemCount(); i++) {
 			if (isItemSelected(i)) {
@@ -409,7 +404,7 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 
 	private native void initialize(Element e) /*-{
 
-		var elem = $wnd.jQuery(e);
+	var elem = $wnd.jQuery(e);
 
 		elem.selectpicker({
 			iconBase: 'fa',
@@ -417,7 +412,6 @@ public class Select extends ListBox implements Focusable, HasEnabled {
 			style: 'btn-default form-control',
 			dropupAuto: true
 		});
-
 	}-*/;
 
 	private native void setValue(Element e, JsArrayString value) /*-{

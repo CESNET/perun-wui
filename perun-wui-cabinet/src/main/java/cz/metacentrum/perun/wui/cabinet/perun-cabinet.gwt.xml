@@ -5,6 +5,9 @@
 	<!-- support GWT Bootstrap 3 theme -->
 	<inherits name="cz.metacentrum.perun.wui.perun-wui-core"/>
 
+	<!-- set GSS as default-->
+	<set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true"/>
+
 	<!-- Specify the app entry point class. -->
 	<entry-point class="cz.metacentrum.perun.wui.cabinet.client.PerunCabinet"/>
 

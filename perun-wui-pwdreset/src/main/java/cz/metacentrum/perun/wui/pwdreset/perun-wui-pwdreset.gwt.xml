@@ -13,6 +13,9 @@
 	<!-- bootstrap app before loading page -->
 	<set-configuration-property name="gwtp.bootstrapper" value="cz.metacentrum.perun.wui.client.PerunBootstrapper"/>
 
+	<!-- set GSS as default-->
+	<set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true"/>
+
 	<!-- Specify the app entry point class. -->
 	<entry-point class="cz.metacentrum.perun.wui.pwdreset.client.PerunPwdReset"/>
 
