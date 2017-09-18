@@ -12,6 +12,33 @@ public interface PerunCabinetTranslation extends PerunTranslation {
 	@DefaultMessage("Publications")
 	String appName();
 
-	@DefaultMessage("My profile")
-	String menuMyProfile();
+	@DefaultMessage("Publications")
+	String publications();
+
+	@DefaultMessage("Title")
+	String title();
+
+	@DefaultMessage("Authors")
+	String authors();
+
+	@DefaultMessage("Year")
+	String year();
+
+	@DefaultMessage("Thanks")
+	String thanks();
+
+	@DefaultMessage("Cite")
+	String cite();
+
+	@DefaultMessage("New publication")
+	String newPublication();
+
+	@DefaultMessage("Loading publications")
+	String loadingPublications();
+
+	@DefaultMessage("Search by title")
+	String filterText();
+
+	@DefaultMessage("List all")
+	String listAll();
 }

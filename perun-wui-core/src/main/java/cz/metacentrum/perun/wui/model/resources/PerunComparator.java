@@ -6,6 +6,7 @@ import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.beans.*;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -127,8 +128,23 @@ public class PerunComparator<T extends JavaScriptObject> implements Comparator<T
 		if (PerunColumnType.APPLICATION_GROUP_NAME.equals(this.column)) return this.compareByApplicationGroupName(o1, o2);
 		if (PerunColumnType.APPLICATION_LOA.equals(this.column)) return this.compareByApplicationLoA(o1, o2);
 
-		return 0;
+		// Publication columns
+		if (PerunColumnType.PUBLICATION_YEAR.equals(this.column)) return this.compareByPublicationYear(o1, o2);
 
+		return 0;
+	}
+
+	/**
+	 * Compares Publications by year.
+	 *
+	 * @param o1
+	 * @param o2
+	 * @return
+	 */
+	private int compareByPublicationYear(GeneralObject o1, GeneralObject o2) {
+		Publication p1 = o1.cast();
+		Publication p2 = o2.cast();
+		return p1.getYear() - p2.getYear();
 	}
 
 	/**

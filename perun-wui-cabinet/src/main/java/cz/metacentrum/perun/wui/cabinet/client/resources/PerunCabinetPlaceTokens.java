@@ -10,9 +10,14 @@ import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
 public class PerunCabinetPlaceTokens extends PlaceTokens {
 
 	//General pages
-	public static final String HOME = "home";
+	public static final String PUBLICATIONS = "publications";
+	public static final String NEW_PUBLICATION = "new-publication";
 
-	public static String getHOME() {
-		return HOME;
+	public static String getPublications() {
+		return PUBLICATIONS;
+	}
+
+	public static String getNewPublication() {
+		return NEW_PUBLICATION;
 	}
 }

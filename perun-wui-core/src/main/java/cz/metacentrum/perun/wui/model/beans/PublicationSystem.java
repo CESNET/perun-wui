@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
