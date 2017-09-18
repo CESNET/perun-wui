@@ -13,6 +13,8 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
 
+
+
     <!-- Default GWT locale	-->
     <meta id="meta-lang" name="gwt:property" content="locale=en">
 
@@ -142,6 +144,77 @@
     <!-- Load GWT GUI -->
     <script type="text/javascript" language="javascript" src="./PerunCabinet/PerunCabinet.nocache.js"></script>
 
+    <style type="text/css" >
+
+        /* Sticky footer */
+        body {
+            height: 100vh; /* Not use min-height because of IE 10/11 bug */
+            display: flex;
+            flex-direction: column;
+        }
+        body > * {
+            flex-shrink: 0; /* because items used to shrink when content is too long */
+        }
+        #app-content {
+            flex: 1 0 auto;
+        }
+
+        /* HIDE RE-CAPTCHA INPUT FIELD - we use or own TextBox */
+        .recaptcha_input_area {
+            display: none !important;
+        }
+        .recaptchatable, .recaptcha_theme_clean {
+            border: none !important;
+        }
+        #recaptcha_response_field {
+            visibility:hidden !important;
+            background:blue !important;
+        }
+
+        #footer {
+            background-color: #4b4d4a;
+            border-top: 10px solid #dcdcda;
+            clear: both;
+            color: #e1e5e9;
+            font-size: 0.8em;
+            overflow: hidden;
+            padding-top: 20px;
+        }
+        #footer a:link, #footer a:visited {
+            color: #e1e5e9;
+        }
+        #footer a:link, #footer a:visited {
+            text-decoration: underline;
+        }
+        #footer a:link:hover, #footer a:visited:hover, #footer a:link:focus, #footer a:visited:focus, #footer a:link:active, #footer a:visited:active {
+            text-decoration: none;
+        }
+        #footer .col {
+            line-height: 2.1em;
+            margin-bottom: 20px;
+        }
+        #footer .col h2 {
+            border-bottom: 1px solid white;
+            color: #e1e5e9;
+            font-size: 1.05em;
+            margin-bottom: 1em;
+            padding-bottom: 0.8em;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        #perun-footer {
+            margin-top: 3em;
+            background-color: #f8f8f8;
+            border-top: 1px solid #e7e7e7;
+            padding-top: 1em;
+            padding-bottom: 1em;
+        }
+        #perun-credits {
+            text-align: right;
+        }
+
+    </style>
 </head>
 <body>
 

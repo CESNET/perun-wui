@@ -13,7 +13,7 @@ import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 
 
-public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter.MyProxy> {
+public class PublicationsPresenter extends Presenter<PublicationsPresenter.MyView, PublicationsPresenter.MyProxy> {
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
 
@@ -23,11 +23,11 @@ public class HomePresenter extends Presenter<HomePresenter.MyView, HomePresenter
 
 	@NameToken(PerunCabinetPlaceTokens.HOME)
 	@ProxyStandard
-	public interface MyProxy extends ProxyPlace<HomePresenter> {
+	public interface MyProxy extends ProxyPlace<PublicationsPresenter> {
 	}
 
 	@Inject
-	public HomePresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
+	public PublicationsPresenter(final EventBus eventBus, final MyView view, final MyProxy proxy) {
 		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 

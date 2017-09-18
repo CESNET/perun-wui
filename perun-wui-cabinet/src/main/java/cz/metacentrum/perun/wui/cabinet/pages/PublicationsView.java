@@ -10,12 +10,12 @@ import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 
-public class HomeView extends ViewImpl implements HomePresenter.MyView {
-	interface HomeViewUiBinder extends UiBinder<Widget, HomeView> {
+public class PublicationsView extends ViewImpl implements PublicationsPresenter.MyView {
+	interface PublicationsViewUiBinder extends UiBinder<Widget, PublicationsView> {
 	}
 
 	@Inject
-	public HomeView(HomeViewUiBinder binder) {
+	public PublicationsView(PublicationsViewUiBinder binder) {
 		initWidget(binder.createAndBindUi(this));
 	}
 

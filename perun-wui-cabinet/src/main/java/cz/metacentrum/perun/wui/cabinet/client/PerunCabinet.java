@@ -2,15 +2,6 @@ package cz.metacentrum.perun.wui.cabinet.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.*;
 import com.gwtplatform.mvp.client.RootPresenter;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.annotations.ErrorPlace;
@@ -19,24 +10,14 @@ import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
 import com.gwtplatform.mvp.client.gin.DefaultModule;
 import cz.metacentrum.perun.wui.cabinet.client.resources.PerunCabinetPlaceTokens;
 import cz.metacentrum.perun.wui.cabinet.client.resources.PerunCabinetResources;
-import cz.metacentrum.perun.wui.cabinet.pages.HomePresenter;
-import cz.metacentrum.perun.wui.cabinet.pages.HomeView;
+import cz.metacentrum.perun.wui.cabinet.pages.PublicationsPresenter;
+import cz.metacentrum.perun.wui.cabinet.pages.PublicationsView;
 import cz.metacentrum.perun.wui.client.PerunPlaceManager;
 import cz.metacentrum.perun.wui.client.PerunRootPresenter;
 import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.AuthzManager;
-import cz.metacentrum.perun.wui.json.managers.UtilsManager;
-import cz.metacentrum.perun.wui.model.BasicOverlayObject;
-import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.pages.*;
-import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import org.gwtbootstrap3.client.ui.Navbar;
-import org.gwtbootstrap3.client.ui.NavbarHeader;
 
 /**
  * Entry point for Cabinet application
@@ -77,7 +58,7 @@ public class PerunCabinet extends AbstractPresenterModule implements EntryPoint 
 
 		// bind app-specific pages
 		// TODO - implement pages
-		bindPresenter(HomePresenter.class, HomePresenter.MyView.class, HomeView.class, HomePresenter.MyProxy.class);
+		bindPresenter(PublicationsPresenter.class, PublicationsPresenter.MyView.class, PublicationsView.class, PublicationsPresenter.MyProxy.class);
 
 		// pre-defined places
 		bindConstant().annotatedWith(DefaultPlace.class).to(PerunCabinetPlaceTokens.HOME);
