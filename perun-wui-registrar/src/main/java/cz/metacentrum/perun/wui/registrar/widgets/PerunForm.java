@@ -303,9 +303,17 @@ public class PerunForm extends FieldSet {
 
 			@Override
 			public void onError(PerunException error) {
-				button.setProcessing(false);
-				button.setEnabled(true);
-				if (onSubmitEvent != null) onSubmitEvent.onError(error);
+
+				// in a case of browser lag, user might submit same application multiple-times
+				// AlreadyProcessingException prevents concurrent run on server and must be
+				// silently skipped in GUI (first successful request will handle all actions)
+				if (!"AlreadyProcessingException".equals(error.getName())) {
+					// some real exception
+					button.setProcessing(false);
+					button.setEnabled(true);
+					if (onSubmitEvent != null) onSubmitEvent.onError(error);
+				}
+
 			}
 
 			@Override
