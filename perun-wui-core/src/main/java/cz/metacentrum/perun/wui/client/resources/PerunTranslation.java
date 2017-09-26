@@ -209,4 +209,23 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Automatic error reporting is not working at the moment. Please send following message to <b>{0}</b> by mail. Thank you.")
 	public String reportErrorFail(String supportMail);
 
+
+	/* -----------   TABLE HEADER ------------------------*/
+	@DefaultMessage("Title")
+	String title();
+
+	@DefaultMessage("Authors")
+	String authors();
+
+	@DefaultMessage("Year")
+	String year();
+
+	@DefaultMessage("Thanks")
+	String thanks();
+
+	@DefaultMessage("Cite")
+	String cite();
+
+	@DefaultMessage("Show")
+	String show();
 }

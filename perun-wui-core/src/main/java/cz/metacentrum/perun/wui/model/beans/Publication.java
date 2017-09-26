@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
@@ -14,6 +14,15 @@ import cz.metacentrum.perun.wui.model.GeneralObject;
 public class Publication extends GeneralObject {
 
 	protected Publication() {
+	}
+
+	/**
+	 * Gets the title
+	 *
+	 * @return the title
+	 */
+	public final String getTitle() {
+		return JsUtils.getNativePropertyString(this, "title");
 	}
 
 	/**

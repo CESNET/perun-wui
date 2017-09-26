@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -25,7 +25,7 @@ public class RichPublication extends Publication {
 	 *
 	 * @return Thanks associated with this Publication
 	 */
-	public final ArrayList<Thanks> getThanks() {
+	public final ArrayList<RichThanks> getThanks() {
 		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "thanks"));
 	}
 

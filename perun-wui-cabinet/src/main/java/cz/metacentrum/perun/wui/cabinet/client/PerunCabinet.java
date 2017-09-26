@@ -2,174 +2,84 @@ package cz.metacentrum.perun.wui.cabinet.client;
 
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.logical.shared.ValueChangeEvent;
-import com.google.gwt.event.logical.shared.ValueChangeHandler;
-import com.google.gwt.uibinder.client.UiBinder;
-import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.History;
-import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.*;
+import com.gwtplatform.mvp.client.RootPresenter;
+import com.gwtplatform.mvp.client.annotations.DefaultPlace;
+import com.gwtplatform.mvp.client.annotations.ErrorPlace;
+import com.gwtplatform.mvp.client.annotations.UnauthorizedPlace;
+import com.gwtplatform.mvp.client.gin.AbstractPresenterModule;
+import com.gwtplatform.mvp.client.gin.DefaultModule;
+import cz.metacentrum.perun.wui.cabinet.client.resources.PerunCabinetPlaceTokens;
+import cz.metacentrum.perun.wui.cabinet.client.resources.PerunCabinetResources;
+import cz.metacentrum.perun.wui.cabinet.pages.NewPublicationPresenter;
+import cz.metacentrum.perun.wui.cabinet.pages.NewPublicationView;
+import cz.metacentrum.perun.wui.cabinet.pages.PublicationsPresenter;
+import cz.metacentrum.perun.wui.cabinet.pages.PublicationsView;
+import cz.metacentrum.perun.wui.client.PerunPlaceManager;
+import cz.metacentrum.perun.wui.client.PerunRootPresenter;
+import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.AuthzManager;
-import cz.metacentrum.perun.wui.json.managers.UtilsManager;
-import cz.metacentrum.perun.wui.model.BasicOverlayObject;
-import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
-import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import org.gwtbootstrap3.client.ui.Navbar;
-import org.gwtbootstrap3.client.ui.NavbarHeader;
+import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.pages.LogoutPresenter;
+import cz.metacentrum.perun.wui.pages.LogoutView;
+import cz.metacentrum.perun.wui.pages.NotAuthorizedPresenter;
+import cz.metacentrum.perun.wui.pages.NotAuthorizedView;
+import cz.metacentrum.perun.wui.pages.NotFoundPresenter;
+import cz.metacentrum.perun.wui.pages.NotFoundView;
+import cz.metacentrum.perun.wui.pages.NotUserPresenter;
+import cz.metacentrum.perun.wui.pages.NotUserView;
 
 /**
  * Entry point for Cabinet application
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
+ * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
  */
-public class PerunCabinet implements EntryPoint, ValueChangeHandler<String> {
-
-	interface PerunCabinetUiBinder extends UiBinder<Widget, PerunCabinet>{}
-
-	private static PerunCabinetUiBinder uiBinder = GWT.create(PerunCabinetUiBinder.class);
-
-	private static boolean perunLoaded = false;
-	private static PerunLoader guiLoader = new PerunLoader();
-	private PerunCabinet gui = this;
-
-	@UiField Navbar navbar;
-	@UiField NavbarHeader navbarHeader;
+public class PerunCabinet extends AbstractPresenterModule implements EntryPoint {
 
 	@Override
 	public void onModuleLoad() {
+		ExceptionLogger exceptionHandler = new ExceptionLogger();
+		GWT.setUncaughtExceptionHandler(exceptionHandler);
 
-		// ensure injecting custom CSS styles of PerunWui
-		PerunResources.INSTANCE.gss().ensureInjected();
+		try {
 
-		AuthzManager.getPerunPrincipal(new JsonEvents() {
-			@Override
-			public void onFinished(JavaScriptObject jso) {
+			// set default for Growl plugin
+			Utils.getDefaultNotifyOptions().makeDefault();
 
-				PerunPrincipal pp = ((PerunPrincipal) jso);
+			// ensure injecting custom CSS styles of PerunWui
+			PerunResources.INSTANCE.gss().ensureInjected();
 
-				PerunSession.getInstance().setPerunPrincipal(pp);
-				PerunSession.getInstance().setRoles(pp.getRoles());
+			PerunCabinetResources.INSTANCE.gss().ensureInjected();
 
-				// TODO - later load this setting from local storage too
-				PerunSession.getInstance().setExtendedInfoVisible(PerunSession.getInstance().isPerunAdmin());
-
-				History.addValueChangeHandler(gui);
-
-				UtilsManager.getGuiConfiguration(new JsonEvents() {
-					@Override
-					public void onFinished(JavaScriptObject jso) {
-
-						// store configuration
-						PerunSession.getInstance().setConfiguration((BasicOverlayObject) jso.cast());
-
-						RootLayoutPanel.get().clear();
-						RootLayoutPanel.get().add(uiBinder.createAndBindUi(gui));
-
-						Image logo = new Image(PerunResources.INSTANCE.getPerunLogo());
-						logo.setWidth("auto");
-						logo.setHeight("65px");
-						navbarHeader.insert(logo, 0);
-
-						// TRIGGER LOADING DEFAULT TABS
-						//PerunCabinet.getContent().openTab(History.getToken());
-
-						perunLoaded = true;
-
-					}
-
-					@Override
-					public void onError(PerunException error) {
-						perunLoaded = false;
-						//guiLoader.onError(error);
-					}
-
-					@Override
-					public void onLoadingStart() {
-
-					}
-				});
-
-			}
-
-			@Override
-			public void onError(PerunException error) {
-				perunLoaded = false;
-				//guiLoader.onError(error);
-			}
-
-			@Override
-			public void onLoadingStart() {
-				RootLayoutPanel.get().clear();
-				RootLayoutPanel.get().add(guiLoader.getWidget());
-
-				Scheduler.get().scheduleFixedPeriod(new Scheduler.RepeatingCommand() {
-					@Override
-					public boolean execute() {
-						if (guiLoader.getProgressBar().getPercent() <= 100) {
-							guiLoader.getProgressBar().setPercent(guiLoader.getProgressBar().getPercent() + 1);
-							return true;
-						}
-						return false;
-					}
-				}, 200);
-
-				perunLoaded = false;
-			}
-		});
-
+		} catch (Exception ex) {
+			exceptionHandler.onUncaughtException(ex);
+		}
 	}
 
 	@Override
-	public void onValueChange(ValueChangeEvent<String> stringValueChangeEvent) {
+	protected void configure() {
+		install(new DefaultModule.Builder().placeManager(PerunPlaceManager.class).build());
 
-		// if GUI not loaded, change should force module loading
-		if (!perunLoaded) {
-			onModuleLoad();
-			return;
-		}
+		// make sure app is embedded in a correct DIV
+		bind(RootPresenter.class).to(PerunRootPresenter.class).asEagerSingleton();
 
-		// when there is no token, default tabs are loaded
-		// this is useful if user has bookmarked a site other than the homepage.
-		if (History.getToken().isEmpty()) {
+		// Main Application must bind generic Presenter and custom View !!
+		bindPresenter(PerunCabinetPresenter.class, PerunCabinetPresenter.MyView.class, PerunCabinetView.class, PerunCabinetPresenter.MyProxy.class);
 
-			// get whole URL
-			String url = Window.Location.getHref();
-			String newToken = "";
+		// bind app-specific pages
+		// TODO - implement pages
+		bindPresenter(PublicationsPresenter.class, PublicationsPresenter.MyView.class, PublicationsView.class, PublicationsPresenter.MyProxy.class);
+		bindPresenter(NewPublicationPresenter.class, NewPublicationPresenter.MyView.class, NewPublicationView.class, NewPublicationPresenter.MyProxy.class);
 
-			int index = -1;
+		// pre-defined places
+		bindConstant().annotatedWith(DefaultPlace.class).to(PerunCabinetPlaceTokens.PUBLICATIONS);
+		bindConstant().annotatedWith(ErrorPlace.class).to(PerunCabinetPlaceTokens.NOT_FOUND);
+		bindConstant().annotatedWith(UnauthorizedPlace.class).to(PerunCabinetPlaceTokens.UNAUTHORIZED);
 
-			if (url.contains("?locale=")) {
-				// with locale
-				index = url.indexOf("?", url.indexOf("?") + 1);
-			} else {
-				// without locale
-				index = url.indexOf("?");
-			}
-
-			if (index != -1) {
-				newToken = url.substring(index + 1);
-			}
-
-			// will sort of break URL, but will work without refreshing whole GUI
-			if (newToken.isEmpty()) {
-				// token was empty anyway - load default
-				//PerunCabinet.getContent().openTab(newToken);
-
-			} else {
-				// token is now correct - load it
-				History.newItem(newToken);
-			}
-
-		} else {
-			//PerunCabinet.getContent().openTab(History.getToken());
-		}
-
+		// generic pages
+		bindPresenter(NotAuthorizedPresenter.class, NotAuthorizedPresenter.MyView.class, NotAuthorizedView.class, NotAuthorizedPresenter.MyProxy.class);
+		bindPresenter(NotFoundPresenter.class, NotFoundPresenter.MyView.class, NotFoundView.class, NotFoundPresenter.MyProxy.class);
+		bindPresenter(LogoutPresenter.class, LogoutPresenter.MyView.class, LogoutView.class, LogoutPresenter.MyProxy.class);
+		bindPresenter(NotUserPresenter.class, NotUserPresenter.MyView.class, NotUserView.class, NotUserPresenter.MyProxy.class);
 	}
-
 }
