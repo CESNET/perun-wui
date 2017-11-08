@@ -261,6 +261,17 @@ public class SummaryStep implements Step {
 
 			messages.add(msg);
 
+		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
+
+			// FIXME - hack to ignore CantBeApprovedException since VO/Group manager can manually handle it.
+			title.add(successIcon());
+			ListGroupItem msg = new ListGroupItem();
+
+			title.add(new Text(" "+translation.initTitle()));
+			msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
+
+			messages.add(msg);
+
 		} else {
 			displayException(res.getException(), res.getBean());
 		}
@@ -322,6 +333,17 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
+		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
+
+			// FIXME - hack to ignore CantBeApprovedException since VO/Group manager can manually handle it.
+			title.add(successIcon());
+			ListGroupItem msg = new ListGroupItem();
+
+			title.add(new Text(" "+translation.initTitle()));
+			msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
+
+			messages.add(msg);
+
 		} else {
 			displayException(res.getException(), res.getBean());
 		}
