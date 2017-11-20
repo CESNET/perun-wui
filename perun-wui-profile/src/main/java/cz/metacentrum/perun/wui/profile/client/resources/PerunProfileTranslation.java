@@ -9,11 +9,26 @@ import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
  */
 public interface PerunProfileTranslation extends PerunTranslation {
 
+	@DefaultMessage("Member ID")
+	String memberId();
+
+	@DefaultMessage("Member status")
+	String memberStatus();
+
+	@DefaultMessage("Member details")
+	String memberDetails();
+
+	@DefaultMessage("Select VO")
+	String selectVo();
+
 	@DefaultMessage("User profile")
 	public String appName();
 
 	@DefaultMessage("My profile")
 	public String menuMyProfile();
+
+	@DefaultMessage("My groups")
+	String menuMyGroups();
 
 	@DefaultMessage("Virtual organizations")
 	public String menuOrganizations();
@@ -104,4 +119,9 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("E-mail change")
 	String updateEmailModalTitle();
 
+	@DefaultMessage("Member groups")
+	String memberGroups();
+
+	@DefaultMessage("You are not a member of any group in selected VO.")
+	String noGroups();
 }

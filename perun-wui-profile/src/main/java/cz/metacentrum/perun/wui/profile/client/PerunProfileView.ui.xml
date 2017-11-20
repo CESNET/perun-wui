@@ -39,9 +39,12 @@
 									<b:AnchorListItem visibleOn="XS" ui:field="personalXS" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >
 										<ui:text from='{trans.menuMyProfile}'/>
 									</b:AnchorListItem>
-									<!--<b:AnchorListItem visibleOn="XS" ui:field="organizationsXS" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">
+									<b:AnchorListItem visibleOn="XS" ui:field="organizationsXS" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">
 										<ui:text from='{trans.menuOrganizations}'/>
-									</b:AnchorListItem>-->
+									</b:AnchorListItem>
+									<b:AnchorListItem visibleOn="XS" ui:field="groupsXS" icon="GROUP" iconFixedWidth="true" targetHistoryToken="{placeTokens.getGroups}">
+										<ui:text from='{trans.menuMyGroups}' />
+									</b:AnchorListItem>
 									<!--<b:AnchorListItem visibleOn="XS" ui:field="identitiesXS" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">
 										<ui:text from='{trans.menuMyIdentities}'/>
 									</b:AnchorListItem>-->
@@ -68,7 +71,7 @@
 			<b:Row>
 
 				<!-- SIDE MENU -->
-				<b:Column size="SM_4">
+				<b:Column size="SM_3">
 
 					<!-- LEFT MENU -->
 					<b.html:Div ui:field="menu" visibleOn="SM_MD_LG">
@@ -85,12 +88,15 @@
 									<b:AnchorListItem ui:field="personal" icon="USER" iconFixedWidth="true" targetHistoryToken="{placeTokens.getPersonal}" >
 										<ui:text from='{trans.menuMyProfile}'/>
 									</b:AnchorListItem>
-									<!--<b:AnchorListItem ui:field="organizations" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">
+									<b:AnchorListItem ui:field="organizations" icon="BUILDING_O" iconFixedWidth="true" targetHistoryToken="{placeTokens.getOrganizations}">
 										<ui:text from='{trans.menuOrganizations}'/>
-									</b:AnchorListItem>-->
-									<!--<b:AnchorListItem ui:field="identities" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">
+									</b:AnchorListItem>
+									<b:AnchorListItem ui:field="identities" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">
 										<ui:text from='{trans.menuMyIdentities}'/>
-									</b:AnchorListItem>-->
+									</b:AnchorListItem>
+									<b:AnchorListItem ui:field="groups" icon="GROUP" iconFixedWidth="true" targetHistoryToken="{placeTokens.getGroups}">
+										<ui:text from='{trans.menuMyGroups}'/>
+									</b:AnchorListItem>
 									<!--<b:AnchorListItem ui:field="logins" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" >
 										<ui:text from='{trans.menuLoginsAndPasswords}'/>
 									</b:AnchorListItem>
@@ -106,7 +112,7 @@
 				</b:Column>
 
 				<!-- PAGE CONTENT -->
-				<b:Column size="SM_8" ui:field="pageContent"/>
+				<b:Column size="SM_9" ui:field="pageContent"/>
 
 			</b:Row>
 

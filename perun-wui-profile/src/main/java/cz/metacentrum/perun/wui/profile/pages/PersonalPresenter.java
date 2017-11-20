@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Window;
@@ -25,8 +24,6 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,7 +47,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 		void setEmailUpdateRequests(List<String> pendingEmails);
 
 		void requestingEmailUpdateStart();
-		void requestingEmailUptadeError(PerunException ex, String email);
+		void requestingEmailUpdateError(PerunException ex, String email);
 	}
 
 	@NameToken(PerunProfilePlaceTokens.PERSONAL)
@@ -143,7 +140,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	public void updateEmail(final String email) {
 
 		if (!Utils.isValidEmail(email)) {
-			getView().requestingEmailUptadeError(null, email);
+			getView().requestingEmailUpdateError(null, email);
 			return;
 		}
 
@@ -156,7 +153,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 
 			@Override
 			public void onError(PerunException error) {
-				getView().requestingEmailUptadeError(error, email);
+				getView().requestingEmailUpdateError(error, email);
 			}
 
 			@Override

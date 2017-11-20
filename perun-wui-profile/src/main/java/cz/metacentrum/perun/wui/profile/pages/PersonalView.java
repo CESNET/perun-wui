@@ -6,26 +6,16 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
-import com.google.gwt.user.client.ui.FormPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
-import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
-import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
-import cz.metacentrum.perun.wui.model.beans.User;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
-import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Column;
-import org.gwtbootstrap3.client.ui.Description;
-import org.gwtbootstrap3.client.ui.DescriptionData;
-import org.gwtbootstrap3.client.ui.DescriptionTitle;
 import org.gwtbootstrap3.client.ui.Form;
 import org.gwtbootstrap3.client.ui.FormGroup;
 import org.gwtbootstrap3.client.ui.FormLabel;
@@ -36,7 +26,6 @@ import org.gwtbootstrap3.client.ui.base.form.AbstractForm;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Small;
-import org.gwtbootstrap3.client.ui.html.Span;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.List;
@@ -76,6 +65,15 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	Column orgLabel;
 	@UiField
 	Text orgData;
+	@UiField
+	Column languageLabel;
+	@UiField
+	Text languageData;
+	@UiField
+	Column timezoneLabel;
+	@UiField
+	Text timezoneData;
+
 /*	@UiField
 	DescriptionTitle phoneLabel;
 	@UiField
@@ -118,20 +116,16 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		orgLabel.add(new Text(translation.organization()));
 		nameLabel.add(new Text((translation.name())));
 		emailLabel.add(new Text((translation.preferredMail())));
+		languageLabel.add(new Text((translation.preferredLang())));
+		timezoneLabel.add(new Text((translation.timezone())));
 
-		updateEmailBtn.addClickHandler(new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent clickEvent) {
-				updateEmailForm.submit();
-			}
-		});
+		updateEmailBtn.addClickHandler((event) ->
+				updateEmailForm.submit()
+		);
 
-		updateEmailForm.addSubmitHandler(new AbstractForm.SubmitHandler() {
-			@Override
-			public void onSubmit(AbstractForm.SubmitEvent submitEvent) {
-				submitEvent.cancel();
-				getUiHandlers().updateEmail(newUpdateEmail.getValue());
-			}
+		updateEmailForm.addSubmitHandler(submitEvent -> {
+			submitEvent.cancel();
+			getUiHandlers().updateEmail(newUpdateEmail.getValue());
 		});
 
 		updateEmailLoader.getElement().getStyle().setMarginTop(8, Style.Unit.PX);
@@ -154,9 +148,11 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 		text.setText(user.getFullName());
 
-		nameData.setText(user.getFullName());
-		emailData.setText(user.getPreferredEmail());
-		orgData.setText(user.getOrganization());
+		nameData.setText(user.getFullName()!= null ? user.getFullName() : "-");
+		emailData.setText(user.getPreferredEmail() != null ? user.getPreferredEmail() : "-");
+		orgData.setText(user.getOrganization() != null ? user.getOrganization() : "-");
+		languageData.setText(user.getPreferredLanguage()!= null ? user.getPreferredLanguage() : "-");
+		timezoneData.setText(user.getTimezone()!= null ? user.getTimezone() : "-");
 
 		/*Attribute phone = user.getAttribute("urn:perun:user:attribute-def:def:phone");
 		if (phone != null) phoneData.setText(phone.getValue());
@@ -178,12 +174,7 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	@Override
 	public void loadingUserError(PerunException ex) {
 		loader.setVisible(true);
-		loader.onError(ex, new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-				getUiHandlers().loadUser();
-			}
-		});
+		loader.onError(ex, event -> getUiHandlers().loadUser());
 		personalInfo.setVisible(false);
 	}
 
@@ -197,12 +188,7 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 	@Override
 	public void checkingEmailUpdatesError(PerunException ex) {
-		updateEmailLoader.onError(ex, new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent clickEvent) {
-				getUiHandlers().checkEmailRequestPending();
-			}
-		});
+		updateEmailLoader.onError(ex, clickEvent -> getUiHandlers().checkEmailRequestPending());
 		updateEmailLoader.setVisible(true);
 		updateEmailForm.setVisible(true);
 	}
@@ -238,19 +224,14 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	}
 
 	@Override
-	public void requestingEmailUptadeError(PerunException ex, final String email) {
+	public void requestingEmailUpdateError(PerunException ex, final String email) {
 		if (ex == null) {
 			updateEmailLoader.setVisible(false);
 			updateEmailFormGroup.setValidationState(ValidationState.ERROR);
 			updateEmailHelpBlock.setVisible(true);
 			updateEmailHelpBlock.setText(translation.wrongEmailFormat());
 		} else {
-			updateEmailLoader.onError(ex, new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent clickEvent) {
-					getUiHandlers().updateEmail(email);
-				}
-			});
+			updateEmailLoader.onError(ex, clickEvent -> getUiHandlers().updateEmail(email));
 			updateEmailLoader.setVisible(true);
 			updateEmailForm.setVisible(true);
 			updateEmailFormGroup.setValidationState(ValidationState.NONE);

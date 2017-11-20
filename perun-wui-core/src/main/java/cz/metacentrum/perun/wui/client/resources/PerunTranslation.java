@@ -228,4 +228,7 @@ public interface PerunTranslation extends Messages {
 
 	@DefaultMessage("Show")
 	String show();
+
+	@DefaultMessage("Description")
+	String description();
 }

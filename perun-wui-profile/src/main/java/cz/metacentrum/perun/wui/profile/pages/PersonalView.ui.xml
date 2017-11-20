@@ -41,6 +41,18 @@
 							  dataTarget="#updateEmailModal" dataToggle="MODAL" />
 				</b:Column>
 			</b:Row>
+			<b:Row paddingBottom="10">
+				<b:Column size="SM_4" ui:field="languageLabel" addStyleNames="{res.gss.personalInfoLabel}" />
+				<b:Column size="SM_8" >
+					<b.html:Text ui:field="languageData" />
+				</b:Column>
+			</b:Row>
+			<b:Row paddingBottom="10">
+				<b:Column size="SM_4" ui:field="timezoneLabel" addStyleNames="{res.gss.personalInfoLabel}" />
+				<b:Column size="SM_8" >
+					<b.html:Text ui:field="timezoneData" />
+				</b:Column>
+			</b:Row>
 			<!--<b:DescriptionTitle ui:field="phoneLabel" paddingBottom="10" />
 			<b:DescriptionData ui:field="phoneData" paddingBottom="10" />
 			<b:DescriptionTitle ui:field="langLabel" paddingBottom="10" />

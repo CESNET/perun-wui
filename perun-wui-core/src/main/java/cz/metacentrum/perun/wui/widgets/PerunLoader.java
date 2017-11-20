@@ -48,7 +48,7 @@ public class PerunLoader extends Composite {
 	@UiField Alert message;
 	private HandlerRegistration lastRetryHandler;
 
-	String emptyMessage = "No items found.";
+	private String emptyMessage = "Loading finished. No results found.";
 
 	private PerunException catchedException;
 
@@ -193,7 +193,7 @@ public class PerunLoader extends Composite {
 		state = PerunLoaderState.empty;
 		progress.setVisible(false);
 
-		message.setText("Loading finished. No results found.");
+		message.setText(emptyMessage);
 		message.setVisible(true);
 
 	}

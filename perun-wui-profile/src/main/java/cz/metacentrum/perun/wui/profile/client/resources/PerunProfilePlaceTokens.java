@@ -15,6 +15,7 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 	public static final String ORGANIZATIONS = "organizations";
 	public static final String LOGINS = "logins";
 	public static final String SETTINGS = "settings";
+	public static final String GROUPS = "groups";
 
 
 	public static String getPersonal() {
@@ -27,6 +28,10 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 
 	public static String getOrganizations() {
 		return ORGANIZATIONS;
+	}
+
+	public static String getGroups() {
+		return GROUPS;
 	}
 
 	public static String getLogins() {
