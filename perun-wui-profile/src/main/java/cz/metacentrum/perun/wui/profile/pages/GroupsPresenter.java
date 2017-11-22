@@ -15,6 +15,7 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.GroupsManager;
 import cz.metacentrum.perun.wui.json.managers.MembersManager;
@@ -27,6 +28,9 @@ import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens
 
 import java.util.List;
 
+/**
+ * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
+ */
 public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPresenter.MyProxy> implements GroupsUiHandlers {
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
@@ -66,7 +70,7 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 	@Override
 	public void loadVos() {
 
-		final Integer userId = getUserId();
+		final Integer userId = Utils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -82,7 +86,7 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 
 	@Override
 	public void loadDataForVo(int voId) {
-		final Integer userId = getUserId();
+		final Integer userId = Utils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -151,25 +155,5 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 				getView().loadVosStart();
 			}
 		});
-	}
-
-	private Integer getUserId() {
-		try {
-			String userId = placeManager.getCurrentPlaceRequest().getParameter("id", null);
-			if (userId == null) {
-				userId = String.valueOf(PerunSession.getInstance().getUserId());
-			}
-
-			final int id = Integer.valueOf(userId);
-
-			if (id < 1) {
-				placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-			}
-
-			return id;
-		} catch (NumberFormatException e) {
-			placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-		}
-		return null;
 	}
 }

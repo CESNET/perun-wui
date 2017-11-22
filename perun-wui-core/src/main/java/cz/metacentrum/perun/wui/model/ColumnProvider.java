@@ -139,7 +139,7 @@ public abstract class ColumnProvider<T extends JavaScriptObject> {
 	 * @param fieldUpdater updater called when user clicks on cell
 	 * @return PerunColumn displaying string value
 	 */
-	public static <T extends JavaScriptObject> PerunColumn<T, String> createColumn(PerunColumnType type, final GetValue<T, String> getter, final FieldUpdater<T, String> fieldUpdater) {
+	public static <T extends JavaScriptObject, V> PerunColumn<T, String> createColumn(PerunColumnType type, final GetValue<T, String> getter, final FieldUpdater<T, String> fieldUpdater) {
 
 		Cell<String> cell;
 

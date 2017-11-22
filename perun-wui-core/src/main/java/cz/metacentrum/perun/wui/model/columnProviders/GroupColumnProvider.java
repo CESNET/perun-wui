@@ -2,25 +2,25 @@ package cz.metacentrum.perun.wui.model.columnProviders;
 
 import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.cellview.client.Column;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.beans.Group;
-import cz.metacentrum.perun.wui.model.beans.RichPublication;
-import cz.metacentrum.perun.wui.model.resources.IconCell;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
-import org.gwtbootstrap3.client.ui.constants.IconSize;
-import org.gwtbootstrap3.client.ui.constants.IconType;
-import org.gwtbootstrap3.extras.bootbox.client.Bootbox;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 
+/**
+ * Implementation of {@link ColumnProvider ColumnProvider}
+ * for {@link Group Group} to display info to user.
+ *
+ * @author Vojtěch Sassmann <vojtech.sassmann@gmail.com>
+ */
 public class GroupColumnProvider extends ColumnProvider<Group> {
 
 	private static ArrayList<PerunColumnType> defaultColumns = new ArrayList<>();

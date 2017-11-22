@@ -5,9 +5,9 @@ import com.gwtplatform.mvp.client.UiHandlers;
 /**
  * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
  */
-public interface GroupsUiHandlers extends UiHandlers {
+public interface CompleteInfoUiHandlers extends UiHandlers {
 
-	void loadVos();
+	void loadUserData();
 
-	void loadDataForVo(int voId);
+	void navigateBack();
 }

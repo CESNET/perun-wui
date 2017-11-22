@@ -7,6 +7,7 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
+import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import org.gwtbootstrap3.extras.animate.client.ui.constants.Animation;
@@ -1389,4 +1390,29 @@ public class Utils {
 
 	}
 
+
+	/**
+	 * Returns user's id
+	 *
+	 * @return user's id or null when error
+	 */
+	public static Integer getUserId(PlaceManager placeManager) {
+		try {
+			String userId = placeManager.getCurrentPlaceRequest().getParameter("id", null);
+			if (userId == null) {
+				userId = String.valueOf(PerunSession.getInstance().getUserId());
+			}
+
+			final int id = Integer.valueOf(userId);
+
+			if (id < 1) {
+				placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
+			}
+
+			return id;
+		} catch (NumberFormatException e) {
+			placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
+		}
+		return null;
+	}
 }

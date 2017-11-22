@@ -13,9 +13,7 @@ import cz.metacentrum.perun.wui.model.columnProviders.GroupColumnProvider;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.Heading;
-import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Text;
 import org.gwtbootstrap3.extras.select.client.ui.Option;
@@ -23,7 +21,9 @@ import org.gwtbootstrap3.extras.select.client.ui.Select;
 
 import java.util.List;
 
-
+/**
+ * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
+ */
 public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements GroupsPresenter.MyView {
 
 	interface GroupsViewUiBinder extends UiBinder<Widget, GroupsView> {}
@@ -107,7 +107,7 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 	@Override
 	public void loadVoDataStart() {
 		voSelect.setEnabled(false);
-		setVoDataUiVisible(false);
+		groupsDataGrid.setVisible(false);
 
 		loader.setVisible(true);
 		loader.onLoading(translation.loadingUserData());
@@ -119,13 +119,9 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 	public void setGroups(List<Group> groups) {
 		groupsDataGrid.setList(groups);
 		voSelect.setEnabled(true);
-		setVoDataUiVisible(true);
+		groupsDataGrid.setVisible(true);
 		voData.setVisible(true);
 
 		loader.setVisible(false);
-	}
-
-	private void setVoDataUiVisible(boolean value) {
-		groupsDataGrid.setVisible(value);
 	}
 }

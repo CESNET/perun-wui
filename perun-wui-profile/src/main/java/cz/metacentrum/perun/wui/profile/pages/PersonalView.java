@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -73,6 +74,8 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	Column timezoneLabel;
 	@UiField
 	Text timezoneData;
+	@UiField
+	Hyperlink completeInfoLink;
 
 /*	@UiField
 	DescriptionTitle phoneLabel;
@@ -133,6 +136,7 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		updateEmailBtn.setText(translation.sendValidationEmail());
 		updateEmailModal.setTitle(translation.updateEmailModalTitle());
 		updateEmailLabel.setText(translation.newPreferredEmail());
+		completeInfoLink.setText(translation.completeInfo());
 
 		/*phoneLabel.setText(translation.phone());
 		langLabel.setText(translation.preferredLang());

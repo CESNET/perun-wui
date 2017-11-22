@@ -8,6 +8,9 @@
 	<ui:style>
 	</ui:style>
 
+	<!-- Import place tokens -->
+	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens"/>
+
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
 	<b.html:Div>
@@ -59,6 +62,7 @@
 			<b:DescriptionData ui:field="langData" paddingBottom="10" />
 			<b:DescriptionTitle ui:field="timeLabel" paddingBottom="10" />
 			<b:DescriptionData ui:field="timeData" paddingBottom="10" />-->
+			<g:Hyperlink ui:field="completeInfoLink" targetHistoryToken="{placeTokens.getCompleteInfo}"/>
 		</b.html:Div>
 
 

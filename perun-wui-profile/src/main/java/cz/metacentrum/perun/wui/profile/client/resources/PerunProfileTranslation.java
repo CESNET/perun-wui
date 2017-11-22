@@ -124,4 +124,16 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("You are not a member of any group in selected VO.")
 	String noGroups();
+
+	@DefaultMessage("User information")
+	String userInfo();
+
+	@DefaultMessage("Information from virtual organizations")
+	String voInfo();
+
+	@DefaultMessage("Display all information")
+	String completeInfo();
+
+	@DefaultMessage("here")
+	String here();
 }
