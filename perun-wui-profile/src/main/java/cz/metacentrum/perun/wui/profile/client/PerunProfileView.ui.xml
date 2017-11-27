@@ -48,6 +48,9 @@
 									<b:AnchorListItem visibleOn="XS" ui:field="identitiesXS" icon="EYE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getIdentities}">
 										<ui:text from='{trans.menuMyIdentities}'/>
 									</b:AnchorListItem>
+									<b:AnchorListItem visibleOn="XS" ui:field="resourcesXS" icon="GLOBE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getResources}">
+										<ui:text from='{trans.menuMyIdentities}'/>
+									</b:AnchorListItem>
 									<!--<b:AnchorListItem visibleOn="XS" ui:field="loginsXS" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" >
 										<ui:text from='{trans.menuLoginsAndPasswords}'/>
 									</b:AnchorListItem>
@@ -96,6 +99,9 @@
 									</b:AnchorListItem>
 									<b:AnchorListItem ui:field="groups" icon="GROUP" iconFixedWidth="true" targetHistoryToken="{placeTokens.getGroups}">
 										<ui:text from='{trans.menuMyGroups}'/>
+									</b:AnchorListItem>
+									<b:AnchorListItem ui:field="resources" icon="GLOBE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getResources}">
+										<ui:text from='{trans.menuMyResources}'/>
 									</b:AnchorListItem>
 									<!--<b:AnchorListItem ui:field="logins" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" >
 										<ui:text from='{trans.menuLoginsAndPasswords}'/>

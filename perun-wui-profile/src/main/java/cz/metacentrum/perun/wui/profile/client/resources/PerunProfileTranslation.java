@@ -136,4 +136,10 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("here")
 	String here();
+
+	@DefaultMessage("My resources")
+	String menuMyResources();
+
+	@DefaultMessage("No resources found")
+	String noResources();
 }

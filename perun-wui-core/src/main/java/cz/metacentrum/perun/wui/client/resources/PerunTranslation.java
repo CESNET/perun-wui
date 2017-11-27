@@ -237,4 +237,7 @@ public interface PerunTranslation extends Messages {
 
 	@DefaultMessage("Value")
 	String value();
+
+	@DefaultMessage("Facility name")
+	String facilityName();
 }

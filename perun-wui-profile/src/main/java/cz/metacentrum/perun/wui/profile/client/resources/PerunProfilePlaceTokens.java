@@ -17,6 +17,7 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 	public static final String SETTINGS = "settings";
 	public static final String GROUPS = "groups";
 	public static final String COMPLETE_INFO = "completeInfo";
+	public static final String RESOURCES = "resources";
 
 	public static String getCompleteInfo() {
 		return COMPLETE_INFO;
@@ -46,4 +47,7 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 		return SETTINGS;
 	}
 
+	public static String getResources() {
+		return RESOURCES;
+	}
 }

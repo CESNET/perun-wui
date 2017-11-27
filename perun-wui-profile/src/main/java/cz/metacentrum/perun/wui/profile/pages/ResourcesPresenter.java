@@ -17,47 +17,44 @@ import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.GroupsManager;
 import cz.metacentrum.perun.wui.json.managers.MembersManager;
+import cz.metacentrum.perun.wui.json.managers.ResourcesManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Member;
+import cz.metacentrum.perun.wui.model.beans.RichResource;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
 import java.util.List;
 
-/**
- * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
- */
-public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPresenter.MyProxy> implements GroupsUiHandlers {
+public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, ResourcesPresenter.MyProxy> implements ResourcesUiHandlers {
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
 
-	public interface MyView extends View, HasUiHandlers<GroupsUiHandlers> {
-
-		void setVosError(PerunException error);
-
-		void setVoDataError(PerunException error);
+	public interface MyView extends View, HasUiHandlers<ResourcesUiHandlers> {
 
 		void setVos(List<Vo> vos);
 
+		void setVosError(PerunException error);
+
 		void loadVosStart();
 
-		void loadVoDataStart();
+		void setResourcesDataError(PerunException error);
 
-		void setGroups(List<Group> groups);
+		void loadResourcesDataStart();
+
+		void setResources(List<RichResource> resources);
 	}
 
-	@NameToken(PerunProfilePlaceTokens.GROUPS)
+	@NameToken(PerunProfilePlaceTokens.RESOURCES)
 	@ProxyStandard
-	public interface MyProxy extends ProxyPlace<GroupsPresenter> {
+	public interface MyProxy extends ProxyPlace<ResourcesPresenter> {
 
 	}
 
 	@Inject
-	public GroupsPresenter(final EventBus eventBus, final MyView myView, final MyProxy myProxy) {
+	public ResourcesPresenter(final EventBus eventBus, final MyView myView, final MyProxy myProxy) {
 		super(eventBus, myView, myProxy, PerunPresenter.SLOT_MAIN_CONTENT);
 		getView().setUiHandlers(this);
 	}
@@ -84,59 +81,6 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 		}
 	}
 
-	@Override
-	public void loadDataForVo(int voId) {
-		final Integer userId = Utils.getUserId(placeManager);
-
-		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
-
-		if (userId == null || userId < 1) {
-			placeManager.revealErrorPlace(request.getNameToken());
-			return;
-		}
-
-		loadMemberAndGroups(userId, voId);
-	}
-
-	private void loadGroups(int memberId) {
-		GroupsManager.getMemberGroups(memberId, new JsonEvents() {
-			@Override
-			public void onFinished(JavaScriptObject result) {
-				getView().setGroups(JsUtils.jsoAsList(result));
-			}
-
-			@Override
-			public void onError(PerunException error) {
-				getView().setVoDataError(error);
-			}
-
-			@Override
-			public void onLoadingStart() {
-				// do nothing
-			}
-		});
-	}
-
-	private void loadMemberAndGroups(int userId, int voId) {
-		MembersManager.getMemberByUser(userId, voId, new JsonEvents() {
-			@Override
-			public void onFinished(JavaScriptObject result) {
-				Member member = (Member) result;
-				loadGroups(member.getId());
-			}
-
-			@Override
-			public void onError(PerunException error) {
-				getView().setVoDataError(error);
-			}
-
-			@Override
-			public void onLoadingStart() {
-				getView().loadVoDataStart();
-			}
-		});
-	}
-
 	private void loadVos(int userId) {
 		UsersManager.getVosWhereUserIsMember(userId, new JsonEvents() {
 			@Override
@@ -152,6 +96,60 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 			@Override
 			public void onLoadingStart() {
 				getView().loadVosStart();
+			}
+		});
+	}
+
+	@Override
+	public void loadDataForVo(int voId) {
+		final Integer userId = Utils.getUserId(placeManager);
+
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
+
+		if (userId == null || userId < 1) {
+			placeManager.revealErrorPlace(request.getNameToken());
+			return;
+		}
+
+		loadMemberAndResources(userId, voId);
+	}
+
+	private void loadMemberAndResources(Integer userId, int voId) {
+		MembersManager.getMemberByUser(userId, voId, new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				Member member = (Member) result;
+				loadResources(member.getId());
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				getView().setResourcesDataError(error);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				getView().loadResourcesDataStart();
+			}
+		});
+	}
+
+	private void loadResources(int id) {
+		ResourcesManager.getAssignedRichResources(id, new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				List<RichResource> resources = JsUtils.jsoAsList(result);
+				getView().setResources(resources);
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				getView().setResourcesDataError(error);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				getView().loadResourcesDataStart();
 			}
 		});
 	}
