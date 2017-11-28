@@ -22,7 +22,7 @@
 			<b:Container fluid="true">
 				<!--User info-->
 				<b:Row>
-					<b:Heading size="H3" ui:field="userLabel"/>
+					<b:Heading size="H3" ui:field="userLabel" visible="false"/>
 					<b:Column size="SM_12" ui:field="userColumn">
 						<b.gwt:DataGrid visible="false" bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
 										ui:field="userDataGrid"/>
@@ -30,7 +30,7 @@
 				</b:Row>
 				<!--Members info-->
 				<b:Row>
-					<b:Heading size="H3" ui:field="voDataLabel"/>
+					<b:Heading size="H3" ui:field="membersLabel" visible="false"/>
 					<b:Column size="SM_12" ui:field="membersColumn">
 					</b:Column>
 				</b:Row>

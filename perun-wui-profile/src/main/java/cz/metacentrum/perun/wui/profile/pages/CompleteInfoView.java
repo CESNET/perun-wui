@@ -37,7 +37,7 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 	private PerunProfileTranslation translation = GWT.create(PerunProfileTranslation.class);
 
 	@UiField Heading userLabel;
-	@UiField Heading voDataLabel;
+	@UiField Heading membersLabel;
 	@UiField Button backButton;
 	@UiField Column membersColumn;
 	@UiField Column userColumn;
@@ -56,7 +56,7 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 
 		backButton.setText(translation.back());
 		userLabel.setText(translation.userInfo());
-		voDataLabel.setText(translation.voInfo());
+		membersLabel.setText(translation.voInfo());
 	}
 
 	@Override
@@ -65,6 +65,7 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 		userDataGrid.setList(notEmptyAttributes);
 
 		userColumn.setVisible(true);
+		userLabel.setVisible(true);
 	}
 
 	@Override
@@ -76,13 +77,15 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 	public void onLoadingStart() {
 		userColumn.setVisible(false);
 		membersColumn.setVisible(false);
+		userLabel.setVisible(false);
+		membersLabel.setVisible(false);
 
 		loader.setVisible(true);
 		loader.onLoading(translation.loadingUserData());
 	}
 
 	@Override
-	public void setMembers(Map<RichMember, Vo> memberVoMap) {
+	public void setMembersWithVo(Map<RichMember, Vo> memberVoMap) {
 		membersColumn.clear();
 
 		for (RichMember member : memberVoMap.keySet()) {
@@ -110,6 +113,7 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 		loader.onFinished();
 		loader.setVisible(false);
 		membersColumn.setVisible(true);
+		membersLabel.setVisible(true);
 	}
 
 	@UiHandler({"backButton"})

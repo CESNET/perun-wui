@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.client.utils;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.core.client.JsArrayString;
+import cz.metacentrum.perun.wui.model.beans.Member;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -298,4 +299,13 @@ public class JsUtils {
 		return new Date().getFullYear()
 	}-*/;
 
+	public static <T extends JavaScriptObject> List<T> jsoListAsList(List<JavaScriptObject> results) {
+		List<T> converted = new ArrayList<>();
+
+		for (JavaScriptObject result : results) {
+				converted.add((T)result);
+		}
+
+		return converted;
+	}
 }

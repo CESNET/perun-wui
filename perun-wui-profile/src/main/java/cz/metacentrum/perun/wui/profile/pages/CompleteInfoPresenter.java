@@ -24,9 +24,10 @@ import cz.metacentrum.perun.wui.model.beans.Member;
 import cz.metacentrum.perun.wui.model.beans.RichMember;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
 import cz.metacentrum.perun.wui.model.beans.Vo;
-import cz.metacentrum.perun.wui.profile.json.LoadMembersDataJsonEvent;
+import cz.metacentrum.perun.wui.json.AbstractRepeatingJsonEvent;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -45,7 +46,7 @@ public class CompleteInfoPresenter extends Presenter<CompleteInfoPresenter.MyVie
 
 		void onLoadingStart();
 
-		void setMembers(Map<RichMember, Vo> memberVoMap);
+		void setMembersWithVo(Map<RichMember, Vo> memberVoMap);
 	}
 
 	@NameToken(PerunProfilePlaceTokens.COMPLETE_INFO)
@@ -127,34 +128,61 @@ public class CompleteInfoPresenter extends Presenter<CompleteInfoPresenter.MyVie
 	}
 
 	private void getRichMembers(int userId, List<Vo> vos) {
-		LoadMembersDataJsonEvent.reset();
-		LoadMembersDataJsonEvent.setNumberOfMembers(vos.size());
+		AbstractRepeatingJsonEvent getMemberByUserRepeating = new AbstractRepeatingJsonEvent(vos.size()){
+			@Override
+			public void finished(List<JavaScriptObject> results) {
+				List<Member> members = JsUtils.jsoListAsList(results);
+				getRichMembersFromMembers(members, vos);
+			}
 
-		for (Vo vo : vos) {
-			MembersManager.getMemberByUser(userId, vo.getId(), new JsonEvents() {
-				@Override
-				public void onFinished(JavaScriptObject result) {
-					Member member = (Member) result;
-					getRichMember(member, vo);
-				}
+			@Override
+			public void erred(PerunException exception) {
+				getView().onLoadingError(exception);
+			}
 
-				@Override
-				public void onError(PerunException error) {
-					getView().onLoadingError(error);
-				}
+			@Override
+			public void started() {
+				// do nothing
+			}
+		};
 
-				@Override
-				public void onLoadingStart() {
-					// do nothing
-				}
-			});
+		for (Vo vo: vos) {
+			MembersManager.getMemberByUser(userId, vo.getId(), getMemberByUserRepeating);
 		}
 	}
 
-	private void getRichMember(Member member, Vo vo) {
-		LoadMembersDataJsonEvent event = new LoadMembersDataJsonEvent(getView(), vo);
+	private void getRichMembersFromMembers(List<Member> members, List<Vo> vos) {
+		AbstractRepeatingJsonEvent richMembersRepeatingEvent = new AbstractRepeatingJsonEvent(members.size()) {
+			@Override
+			public void erred(PerunException exception) {
+				getView().onLoadingError(exception);
+			}
 
-		MembersManager.getRichMemberWithAttributes(member.getId(), event);
+			@Override
+			public void finished(List<JavaScriptObject> results) {
+				List<RichMember> richMembers = JsUtils.jsoListAsList(results);
+				Map<RichMember, Vo> memberVoMap = new HashMap<>();
+				for (RichMember richMember : richMembers) {
+					for (Vo vo : vos) {
+						if (richMember.getVoId() == vo.getId()) {
+							memberVoMap.put(richMember, vo);
+							break;
+						}
+					}
+				}
+
+				getView().setMembersWithVo(memberVoMap);
+			}
+
+			@Override
+			public void started() {
+				// do nothing
+			}
+		};
+
+		for (Member member : members) {
+			MembersManager.getRichMemberWithAttributes(member.getId(), richMembersRepeatingEvent);
+		}
 	}
 
 	@Override
