@@ -27,7 +27,6 @@ public class ResourceColumnProvider extends ColumnProvider<RichResource> {
 
 	static {
 		defaultColumns.add(PerunColumnType.NAME);
-		defaultColumns.add(PerunColumnType.FACILITY_NAME);
 		defaultColumns.add(PerunColumnType.DESCRIPTION);
 	}
 
@@ -101,20 +100,6 @@ public class ResourceColumnProvider extends ColumnProvider<RichResource> {
 					table.setColumnWidth(nameColumn, widthInPixels + "px");
 				} else {
 					table.setColumnWidth(nameColumn, "30%");
-				}
-				break;
-			case FACILITY_NAME:
-				PerunColumn<RichResource, String> facilityNameColumn = createColumn(column,
-						richResource -> String.valueOf(richResource.getFacility().getName()), this.getFieldUpdater(table)
-				);
-				facilityNameColumn.setSortable(true);
-				table.getColumnSortHandler().setComparator(facilityNameColumn, new PerunComparator<RichPublication>(PerunColumnType.FACILITY_NAME));
-				facilityNameColumn.setColumnType(column);
-				table.addColumn(facilityNameColumn, translation.facilityName());
-				if (widthInPixels > 0) {
-					table.setColumnWidth(facilityNameColumn, widthInPixels + "px");
-				} else {
-					table.setColumnWidth(facilityNameColumn, "30%");
 				}
 				break;
 			case DESCRIPTION:

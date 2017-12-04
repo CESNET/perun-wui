@@ -67,7 +67,7 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 	}
 
 	@Override
-	protected void onBind() {
+	protected void onReveal() {
 		loadVos();
 	}
 

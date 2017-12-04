@@ -25,24 +25,22 @@
 			<b:Container fluid="true">
 				<!--Vo select-->
 				<b:Row>
-					<b:Column size="SM_4">
-						<select:Select ui:field="voSelect"/>
-					</b:Column>
-					<b:Column size="SM_4">
-					</b:Column>
+					<select:Select ui:field="voSelect" visible="false"/>
 				</b:Row>
 				<b.html:Div ui:field="voData" visible="false">
-					<b:Row>
-						<b.html:Hr/>
-						<b:Heading size="H2" ui:field="voLabel"/>
-					</b:Row>
+					<b.html:Div ui:field="voHead">
+						<b:Row>
+							<b.html:Hr/>
+							<b:Heading size="H2" ui:field="voLabel"/>
+						</b:Row>
+					</b.html:Div>
 					<!--Member Groups-->
 					<b:Row>
 						<b:Column size="SM_12">
 							<b:Heading size="H4" ui:field="memberGroupsLabel"/>
 
-							<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
-											ui:field="memberGroupsDataGrid"/>
+							<b.gwt:CellTable ui:field="memberGroupsTable" condensed="true" bordered="true" striped="false" />
+
 						</b:Column>
 					</b:Row>
 					<!--Admin Groups-->
@@ -50,8 +48,7 @@
 						<b:Column size="SM_12">
 							<b:Heading size="H4" ui:field="adminGroupsLabel"/>
 
-							<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
-											ui:field="adminGroupsDataGrid"/>
+							<b.gwt:CellTable ui:field="adminGroupsTable" condensed="true" bordered="true" striped="false" />
 						</b:Column>
 					</b:Row>
 					<b:Row>

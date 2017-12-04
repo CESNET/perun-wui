@@ -63,4 +63,7 @@ public enum PerunColumnType {
 
 	// resource column
 	FACILITY_NAME,
+
+	// rich ues column
+	REMOVE,
 }

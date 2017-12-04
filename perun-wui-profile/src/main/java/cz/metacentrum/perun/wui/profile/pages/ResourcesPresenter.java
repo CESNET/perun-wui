@@ -60,7 +60,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 	}
 
 	@Override
-	protected void onBind() {
+	protected void onReveal() {
 		loadVos();
 	}
 

@@ -71,12 +71,6 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 
 
-	@DefaultMessage("Federated identity")
-	String federatedIdp();
-
-	@DefaultMessage("Login")
-	String federatedLogin();
-
 	@DefaultMessage("Certificate issuer")
 	String x509Issuer();
 
@@ -119,10 +113,10 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("E-mail change")
 	String updateEmailModalTitle();
 
-	@DefaultMessage("Groups which you are member of")
+	@DefaultMessage("Groups in which you are a member")
 	String memberGroups();
 
-	@DefaultMessage("Groups which you are admin of")
+	@DefaultMessage("Groups in which you are an admin")
 	String adminGroups();
 
 	@DefaultMessage("You are not a member of any group in selected VO.")
@@ -148,4 +142,16 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("No resources found")
 	String noResources();
+
+	@DefaultMessage("Email")
+	String uesEmail();
+
+	@DefaultMessage("Other identities")
+	String otherIdentities();
+
+	@DefaultMessage("External source name")
+	String uesName();
+
+	@DefaultMessage("No groups found.")
+	String noGroups();
 }

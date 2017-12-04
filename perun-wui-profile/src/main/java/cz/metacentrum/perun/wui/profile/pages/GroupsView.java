@@ -1,8 +1,10 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -14,6 +16,7 @@ import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.gwt.CellTable;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Text;
 import org.gwtbootstrap3.extras.select.client.ui.Option;
@@ -37,26 +40,18 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 	@UiField Heading adminGroupsLabel;
 	@UiField Heading voLabel;
 	@UiField Div voData;
+	@UiField Div voHead;
 
-	@UiField(provided = true)
-	PerunDataGrid<Group> memberGroupsDataGrid;
-	@UiField(provided = true)
-	PerunDataGrid<Group> adminGroupsDataGrid;
+	@UiField CellTable<Group> memberGroupsTable;
+	@UiField CellTable<Group> adminGroupsTable;
 
 	@Inject
 	public GroupsView(GroupsViewUiBinder binder) {
 
-		memberGroupsDataGrid = new PerunDataGrid<>(new GroupColumnProvider());
-		memberGroupsDataGrid.getLoaderWidget().setEmptyMessage(translation.noMemberGroups());
-		memberGroupsDataGrid.setSelectionEnabled(false);
-		memberGroupsDataGrid.drawTableColumns();
-
-		adminGroupsDataGrid = new PerunDataGrid<>(new GroupColumnProvider());
-		adminGroupsDataGrid.getLoaderWidget().setEmptyMessage(translation.noAdminGroups());
-		adminGroupsDataGrid.setSelectionEnabled(false);
-		adminGroupsDataGrid.drawTableColumns();
-
 		initWidget(binder.createAndBindUi(this));
+
+		initTable(memberGroupsTable);
+		initTable(adminGroupsTable);
 
 		title.setText(translation.menuMyGroups());
 
@@ -79,17 +74,26 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 
 	@Override
 	public void setVos(List<Vo> vos) {
-		voSelect.clear();
+		if (vos.size() == 1) {
+			getUiHandlers().loadDataForVo(vos.get(0).getId());
+			voHead.setVisible(false);
+			voSelect.setVisible(false);
+		} else {
+			voSelect.clear();
 
-		voSelect.setVisible(true);
+			voSelect.setVisible(true);
 
-		loader.setVisible(false);
-		for (Vo vo : vos) {
-			GWT.log(vo.getName());
-			Option option = new Option();
-			option.setText(vo.getName());
-			option.setValue(String.valueOf(vo.getId()));
-			voSelect.add(option);
+			loader.setVisible(false);
+			for (Vo vo : vos) {
+				GWT.log(vo.getName());
+				Option option = new Option();
+				option.setText(vo.getName());
+				option.setValue(String.valueOf(vo.getId()));
+				voSelect.add(option);
+			}
+			voSelect.refresh();
+
+			voData.setVisible(false);
 		}
 	}
 
@@ -107,8 +111,6 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 
 	@Override
 	public void loadVosStart() {
-		voSelect.setVisible(false);
-
 		loader.setVisible(true);
 		loader.onLoading(translation.loadingUserData());
 	}
@@ -123,14 +125,14 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 
 	@Override
 	public void setMemberGroups(List<Group> groups) {
-		memberGroupsDataGrid.setList(groups);
-		GWT.log("memberGroups " + groups.toString());
+		((PerunLoader)memberGroupsTable.getEmptyTableWidget()).onEmpty();
+		memberGroupsTable.setRowData(groups);
 	}
 
 	@Override
 	public void setAdminGroups(List<Group> groups) {
-		adminGroupsDataGrid.setList(groups);
-		GWT.log("adminGroups " + groups.toString());
+		((PerunLoader)adminGroupsTable.getEmptyTableWidget()).onEmpty();
+		adminGroupsTable.setRowData(groups);
 	}
 
 	@Override
@@ -138,9 +140,28 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 		voSelect.setEnabled(true);
 		voData.setVisible(true);
 
-		memberGroupsDataGrid.refresh();
-		adminGroupsDataGrid.refresh();
-
 		loader.setVisible(false);
+	}
+
+	private void initTable(CellTable<Group> table) {
+		TextColumn<Group> nameCol = new TextColumn<Group>() {
+			@Override
+			public String getValue(Group group) {
+				return group.getName();
+			}
+		};
+		TextColumn<Group> descriptionCol = new TextColumn<Group>() {
+			@Override
+			public String getValue(Group group) {
+				return group.getDescription();
+			}
+		};
+
+		PerunLoader pl = new PerunLoader();
+		pl.setEmptyMessage(translation.noGroups());
+		pl.getElement().getStyle().setMarginTop(20, Style.Unit.PX);
+		table.setEmptyTableWidget(pl);
+		table.addColumn(nameCol, translation.name());
+		table.addColumn(descriptionCol, translation.description());
 	}
 }

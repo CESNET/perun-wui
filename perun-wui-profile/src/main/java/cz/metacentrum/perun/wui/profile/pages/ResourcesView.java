@@ -33,6 +33,7 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 	@UiField Select voSelect;
 	@UiField Heading voLabel;
 	@UiField Div resourceData;
+	@UiField Div voHead;
 
 	@UiField(provided = true)
 	PerunDataGrid<RichResource> resourcesDataGrid;
@@ -70,25 +71,32 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 
 	@Override
 	public void loadVosStart() {
-		voSelect.setVisible(false);
-
 		loader.setVisible(true);
 		loader.onLoading(translation.loadingUserData());
 	}
 
 	@Override
 	public void setVos(List<Vo> vos) {
-		voSelect.clear();
+		if (vos.size() == 1) {
+			getUiHandlers().loadDataForVo(vos.get(0).getId());
+			voHead.setVisible(false);
+			voSelect.removeFromParent();
+			voSelect.setVisible(false);
+		} else {
+			voSelect.clear();
 
-		voSelect.setVisible(true);
+			voSelect.setVisible(true);
 
-		loader.setVisible(false);
-		for (Vo vo : vos) {
-			GWT.log(vo.getName());
-			Option option = new Option();
-			option.setText(vo.getName());
-			option.setValue(String.valueOf(vo.getId()));
-			voSelect.add(option);
+			loader.setVisible(false);
+			for (Vo vo : vos) {
+				GWT.log(vo.getName());
+				Option option = new Option();
+				option.setText(vo.getName());
+				option.setValue(String.valueOf(vo.getId()));
+				voSelect.add(option);
+			}
+
+			voSelect.refresh();
 		}
 	}
 

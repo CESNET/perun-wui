@@ -240,4 +240,16 @@ public interface PerunTranslation extends Messages {
 
 	@DefaultMessage("Facility name")
 	String facilityName();
+
+	@DefaultMessage("Federated identity")
+	String federatedIdp();
+
+	@DefaultMessage("Login")
+	String federatedLogin();
+
+	@DefaultMessage("Email")
+	String email();
+
+	@DefaultMessage("Login")
+	String login();
 }

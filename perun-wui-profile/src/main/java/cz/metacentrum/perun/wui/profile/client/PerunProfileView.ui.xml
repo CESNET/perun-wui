@@ -49,7 +49,7 @@
 										<ui:text from='{trans.menuMyIdentities}'/>
 									</b:AnchorListItem>
 									<b:AnchorListItem visibleOn="XS" ui:field="resourcesXS" icon="GLOBE" iconFixedWidth="true" targetHistoryToken="{placeTokens.getResources}">
-										<ui:text from='{trans.menuMyIdentities}'/>
+										<ui:text from='{trans.menuMyResources}'/>
 									</b:AnchorListItem>
 									<!--<b:AnchorListItem visibleOn="XS" ui:field="loginsXS" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" >
 										<ui:text from='{trans.menuLoginsAndPasswords}'/>

@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.json;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 

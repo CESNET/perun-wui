@@ -17,15 +17,18 @@ import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.json.Events;
+import cz.metacentrum.perun.wui.json.AbstractRepeatingJsonEvent;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.RepeatingJsonEvent;
+import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.RichUser;
-import cz.metacentrum.perun.wui.model.beans.User;
+import cz.metacentrum.perun.wui.model.beans.Attribute;
+import cz.metacentrum.perun.wui.model.beans.RichUserExtSource;
 import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,14 +38,12 @@ import java.util.List;
  */
 public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, IdentitiesPresenter.MyProxy> implements IdentitiesUiHandlers {
 
-	private List<UserExtSource> userExtSources;
-
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
 
 	public interface MyView extends View, HasUiHandlers<IdentitiesUiHandlers> {
 		void loadingUserExtSourcesStart();
 		void loadingUserExtSourcesError(PerunException ex);
-		void setUserExtSources(List<UserExtSource> extSources);
+		void setUserExtSources(List<RichUserExtSource> extSources);
 
 		void removingUserExtSourceStart(UserExtSource userExtSource);
 		void removingUserExtSourceError(PerunException ex, UserExtSource userExtSource);
@@ -69,75 +70,110 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 
 	@Override
 	public void loadUserExtSources() {
-		UsersManager.getUserExtSources(getUserId(), new JsonEvents() {
+		Integer userId = Utils.getUserId(placeManager);
 
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
+
+		if (userId == null) {
+			placeManager.revealErrorPlace(request.getNameToken());
+		} else {
+			UsersManager.getUserExtSources(userId, new JsonEvents() {
+
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					List<UserExtSource> userExtSources = JsUtils.jsoAsList(result);
+
+					loadMails(userExtSources);
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					getView().loadingUserExtSourcesError(error);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					getView().loadingUserExtSourcesStart();
+				}
+
+			});
+		}
+	}
+
+	private void mapAttributesAndUes(List<Attribute> attributes, List<UserExtSource> ueses) {
+		List<RichUserExtSource> richUserExtSources = new ArrayList<>();
+		if (attributes.size() != ueses.size()) {
+			// hopefully should not happen
+			getView().loadingUserExtSourcesError(null);
+			return;
+		}
+
+		for (int i = 0; i < ueses.size(); i++) {
+			RichUserExtSource rues = RichUserExtSource.mapUesToRichUes(ueses.get(i), attributes.get(i));
+			richUserExtSources.add(rues);
+		}
+
+		getView().setUserExtSources(richUserExtSources);
+	}
+
+	private void loadMails(List<UserExtSource> userExtSources) {
+
+		AbstractRepeatingJsonEvent attributesEvent = new AbstractRepeatingJsonEvent(userExtSources.size()) {
 			@Override
-			public void onFinished(JavaScriptObject result) {
-				userExtSources = JsUtils.jsoAsList(result.cast());
-				getView().setUserExtSources(userExtSources);
+			public void finished(List<JavaScriptObject> results) {
+				List<Attribute> attributes = JsUtils.jsoListAsList(results);
+
+				mapAttributesAndUes(attributes, userExtSources);
 			}
 
 			@Override
-			public void onError(PerunException error) {
-				getView().loadingUserExtSourcesError(error);
+			public void erred(PerunException exception) {
+				getView().loadingUserExtSourcesError(exception);
 			}
 
 			@Override
-			public void onLoadingStart() {
-				getView().loadingUserExtSourcesStart();
+			public void started() {
+				// do nothing
 			}
+		};
 
-		});
+		for (UserExtSource ues : userExtSources) {
+			AttributesManager.getUesAttribute(ues.getId(), "urn:perun:ues:attribute-def:def:mail", attributesEvent);
+		}
 	}
 
 	@Override
 	public void removeUserExtSource(final UserExtSource userExtSource) {
-		UsersManager.removeUserExtSource(getUserId(), userExtSource.getId(), new JsonEvents() {
+		Integer userId = Utils.getUserId(placeManager);
 
-			@Override
-			public void onFinished(JavaScriptObject result) {
-				userExtSources.remove(userExtSource);
-				getView().setUserExtSources(userExtSources);
-			}
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
-			@Override
-			public void onError(PerunException error) {
-				getView().removingUserExtSourceError(error, userExtSource);
-			}
+		if (userId == null) {
+			placeManager.revealErrorPlace(request.getNameToken());
+		} else {
+			UsersManager.removeUserExtSource(userId, userExtSource.getId(), new JsonEvents() {
 
-			@Override
-			public void onLoadingStart() {
-				getView().removingUserExtSourceStart(userExtSource);
-			}
-		});
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					getView().setUserExtSources(JsUtils.jsoAsList(result));
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					getView().removingUserExtSourceError(error, userExtSource);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					getView().removingUserExtSourceStart(userExtSource);
+				}
+			});
+		}
 	}
 
 	@Override
 	public void addUserExtSource() {
 		Window.Location.assign(Utils.getIdentityConsolidatorLink(true));
-	}
-
-
-	private Integer getUserId() {
-
-		try {
-
-			String userId = placeManager.getCurrentPlaceRequest().getParameter("id", null);
-			if (userId == null) {
-				userId = String.valueOf(PerunSession.getInstance().getUserId());
-			}
-
-			final int id = Integer.valueOf(userId);
-
-			if (id < 1) {
-				placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-			}
-
-			return id;
-		} catch (NumberFormatException e) {
-			placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-		}
-		return null;
 	}
 
 }
