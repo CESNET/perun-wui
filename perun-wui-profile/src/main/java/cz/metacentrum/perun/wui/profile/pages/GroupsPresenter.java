@@ -47,7 +47,11 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 
 		void loadVoDataStart();
 
-		void setGroups(List<Group> groups);
+		void setMemberGroups(List<Group> groups);
+
+		void setAdminGroups(List<Group> groups);
+
+		void onLoadFinish();
 	}
 
 	@NameToken(PerunProfilePlaceTokens.GROUPS)
@@ -98,11 +102,34 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 		loadMemberAndGroups(userId, voId);
 	}
 
-	private void loadGroups(int memberId) {
+	private void loadAdminGroups(int userId, int voId) {
+		UsersManager.getGroupsWhereUserIsAdmin(userId, voId, new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				getView().setAdminGroups(JsUtils.jsoAsList(result));
+
+				getView().onLoadFinish();
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				getView().setVoDataError(error);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				// do nothing
+			}
+		});
+	}
+
+	private void loadGroups(int memberId, int userId, int voId) {
 		GroupsManager.getMemberGroups(memberId, new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject result) {
-				getView().setGroups(JsUtils.jsoAsList(result));
+				getView().setMemberGroups(JsUtils.jsoAsList(result));
+
+				loadAdminGroups(userId, voId);
 			}
 
 			@Override
@@ -122,7 +149,7 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 			@Override
 			public void onFinished(JavaScriptObject result) {
 				Member member = (Member) result;
-				loadGroups(member.getId());
+				loadGroups(member.getId(), userId, voId);
 			}
 
 			@Override

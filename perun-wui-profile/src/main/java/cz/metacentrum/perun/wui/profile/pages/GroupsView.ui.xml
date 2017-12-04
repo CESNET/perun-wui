@@ -36,13 +36,22 @@
 						<b.html:Hr/>
 						<b:Heading size="H2" ui:field="voLabel"/>
 					</b:Row>
-					<!--Groups-->
+					<!--Member Groups-->
 					<b:Row>
 						<b:Column size="SM_12">
 							<b:Heading size="H4" ui:field="memberGroupsLabel"/>
 
-							<b.gwt:DataGrid visible="false" bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
-											ui:field="groupsDataGrid"/>
+							<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
+											ui:field="memberGroupsDataGrid"/>
+						</b:Column>
+					</b:Row>
+					<!--Admin Groups-->
+					<b:Row>
+						<b:Column size="SM_12">
+							<b:Heading size="H4" ui:field="adminGroupsLabel"/>
+
+							<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
+											ui:field="adminGroupsDataGrid"/>
 						</b:Column>
 					</b:Row>
 					<b:Row>

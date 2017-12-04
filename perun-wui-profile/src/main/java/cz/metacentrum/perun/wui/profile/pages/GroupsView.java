@@ -34,25 +34,34 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 	@UiField Text title;
 	@UiField Select voSelect;
 	@UiField Heading memberGroupsLabel;
+	@UiField Heading adminGroupsLabel;
 	@UiField Heading voLabel;
 	@UiField Div voData;
 
 	@UiField(provided = true)
-	PerunDataGrid<Group> groupsDataGrid;
+	PerunDataGrid<Group> memberGroupsDataGrid;
+	@UiField(provided = true)
+	PerunDataGrid<Group> adminGroupsDataGrid;
 
 	@Inject
 	public GroupsView(GroupsViewUiBinder binder) {
 
-		groupsDataGrid = new PerunDataGrid<>(new GroupColumnProvider());
-		groupsDataGrid.getLoaderWidget().setEmptyMessage(translation.noGroups());
-		groupsDataGrid.setSelectionEnabled(false);
-		groupsDataGrid.drawTableColumns();
+		memberGroupsDataGrid = new PerunDataGrid<>(new GroupColumnProvider());
+		memberGroupsDataGrid.getLoaderWidget().setEmptyMessage(translation.noMemberGroups());
+		memberGroupsDataGrid.setSelectionEnabled(false);
+		memberGroupsDataGrid.drawTableColumns();
+
+		adminGroupsDataGrid = new PerunDataGrid<>(new GroupColumnProvider());
+		adminGroupsDataGrid.getLoaderWidget().setEmptyMessage(translation.noAdminGroups());
+		adminGroupsDataGrid.setSelectionEnabled(false);
+		adminGroupsDataGrid.drawTableColumns();
 
 		initWidget(binder.createAndBindUi(this));
 
 		title.setText(translation.menuMyGroups());
 
 		memberGroupsLabel.setText(translation.memberGroups());
+		adminGroupsLabel.setText(translation.adminGroups());
 
 		voSelect.setTitle(translation.selectVo() + ":");
 
@@ -107,20 +116,30 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 	@Override
 	public void loadVoDataStart() {
 		voSelect.setEnabled(false);
-		groupsDataGrid.setVisible(false);
 
 		loader.setVisible(true);
 		loader.onLoading(translation.loadingUserData());
-
-		groupsDataGrid.getLoaderWidget().onLoading();
 	}
 
 	@Override
-	public void setGroups(List<Group> groups) {
-		groupsDataGrid.setList(groups);
+	public void setMemberGroups(List<Group> groups) {
+		memberGroupsDataGrid.setList(groups);
+		GWT.log("memberGroups " + groups.toString());
+	}
+
+	@Override
+	public void setAdminGroups(List<Group> groups) {
+		adminGroupsDataGrid.setList(groups);
+		GWT.log("adminGroups " + groups.toString());
+	}
+
+	@Override
+	public void onLoadFinish() {
 		voSelect.setEnabled(true);
-		groupsDataGrid.setVisible(true);
 		voData.setVisible(true);
+
+		memberGroupsDataGrid.refresh();
+		adminGroupsDataGrid.refresh();
 
 		loader.setVisible(false);
 	}

@@ -119,11 +119,17 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("E-mail change")
 	String updateEmailModalTitle();
 
-	@DefaultMessage("Member groups")
+	@DefaultMessage("Groups which you are member of")
 	String memberGroups();
 
+	@DefaultMessage("Groups which you are admin of")
+	String adminGroups();
+
 	@DefaultMessage("You are not a member of any group in selected VO.")
-	String noGroups();
+	String noMemberGroups();
+
+	@DefaultMessage("You are not admin of any group in selected VO.")
+	String noAdminGroups();
 
 	@DefaultMessage("User information")
 	String userInfo();
