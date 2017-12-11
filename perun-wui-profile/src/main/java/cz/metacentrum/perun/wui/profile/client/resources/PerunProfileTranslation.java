@@ -154,4 +154,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("No groups found.")
 	String noGroups();
+
+	@DefaultMessage("Groups")
+	String groups();
 }

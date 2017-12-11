@@ -29,7 +29,7 @@ public class RichUserExtSource extends UserExtSource {
         this.email = email;
     }-*/;
 
-	public static RichUserExtSource mapUesToRichUes(UserExtSource ues, Attribute mailAttribute) {
+	public static RichUserExtSource mapUes(UserExtSource ues, Attribute mailAttribute) {
 		RichUserExtSource richUserExtSource = (RichUserExtSource) ues;
 		richUserExtSource.setEmail(mailAttribute.getValue());
 

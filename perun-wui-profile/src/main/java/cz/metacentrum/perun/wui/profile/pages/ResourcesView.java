@@ -1,19 +1,24 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.RichResource;
+import cz.metacentrum.perun.wui.model.beans.RichResourceWithGroups;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.columnProviders.ResourceColumnProvider;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Text;
 import org.gwtbootstrap3.extras.select.client.ui.Option;
@@ -34,19 +39,12 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 	@UiField Heading voLabel;
 	@UiField Div resourceData;
 	@UiField Div voHead;
-
-	@UiField(provided = true)
-	PerunDataGrid<RichResource> resourcesDataGrid;
+	@UiField DataGrid<RichResourceWithGroups> resourcesDataGrid;
 
 	@Inject
 	public ResourcesView(GroupsViewUiBinder binder) {
-		resourcesDataGrid = new PerunDataGrid<>(new ResourceColumnProvider());
 
 		initWidget(binder.createAndBindUi(this));
-
-		resourcesDataGrid.setSelectionEnabled(false);
-		resourcesDataGrid.drawTableColumns();
-		resourcesDataGrid.getLoaderWidget().setEmptyMessage(translation.noResources());
 
 		title.setText(translation.menuMyResources());
 
@@ -62,6 +60,8 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 			int selectedVoId = Integer.parseInt(valueChangeEvent.getValue());
 			getUiHandlers().loadDataForVo(selectedVoId);
 		});
+
+		initTable(resourcesDataGrid);
 	}
 
 	@Override
@@ -97,6 +97,8 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 			}
 
 			voSelect.refresh();
+
+			resourceData.setVisible(false);
 		}
 	}
 
@@ -116,13 +118,55 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 	}
 
 	@Override
-	public void setResources(List<RichResource> resources) {
+	public void setResources(List<RichResourceWithGroups> richResourceWithGroups) {
 		voSelect.setEnabled(true);
 
 		loader.onFinished();
 		loader.setVisible(false);
 
-		resourcesDataGrid.setList(resources);
+		((PerunLoader)resourcesDataGrid.getEmptyTableWidget()).onEmpty();
+		resourcesDataGrid.setRowData(richResourceWithGroups);
 		resourceData.setVisible(true);
+	}
+
+	private void initTable(DataGrid<RichResourceWithGroups> table) {
+		TextColumn<RichResourceWithGroups> nameCol = new TextColumn<RichResourceWithGroups>() {
+			@Override
+			public String getValue(RichResourceWithGroups richResourceWithGroups) {
+				return richResourceWithGroups.getRichResource().getName();
+			}
+		};
+
+		TextColumn<RichResourceWithGroups> descriptionCol = new TextColumn<RichResourceWithGroups>() {
+			@Override
+			public String getValue(RichResourceWithGroups richResourceWithGroups) {
+				return richResourceWithGroups.getRichResource().getDescription();
+			}
+		};
+
+		TextColumn<RichResourceWithGroups> groupsCol = new TextColumn<RichResourceWithGroups>() {
+			@Override
+			public String getValue(RichResourceWithGroups richResourceWithGroups) {
+				StringBuilder str = new StringBuilder();
+				List<Group> groups = richResourceWithGroups.getGroups();
+				for (int i = 0; i < groups.size(); i++) {
+					Group group = groups.get(i);
+					str.append(group.getShortName());
+					if (i != groups.size()-1) {
+						str.append(", ");
+					}
+				}
+
+				return str.toString();
+			}
+		};
+
+		PerunLoader pl = new PerunLoader();
+		pl.setEmptyMessage(translation.noResources());
+		pl.getElement().getStyle().setMarginTop(20, Style.Unit.PX);
+		table.setEmptyTableWidget(pl);
+		table.addColumn(nameCol, translation.name());
+		table.addColumn(descriptionCol, translation.description());
+		table.addColumn(groupsCol, translation.groups());
 	}
 }

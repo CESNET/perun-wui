@@ -29,4 +29,20 @@ public class ResourcesManager {
 
 		return client.call(RESOURCES_MANAGER + "getAssignedRichResources");
 	}
+
+	/**
+	 * List all groups associated with the resource and member.
+	 *
+	 * @param resource resource id
+	 * @param member member id
+	 * @param events events to be done
+	 * @return Request unique request
+	 */
+	public static Request getAssignedGroups(int resource, int member, JsonEvents events) {
+		JsonClient client = new JsonClient(events);
+		if (resource > 0) client.put("resource", resource);
+		if (member > 0) client.put("member", member);
+
+		return client.call(RESOURCES_MANAGER + "getAssignedGroups");
+	}
 }

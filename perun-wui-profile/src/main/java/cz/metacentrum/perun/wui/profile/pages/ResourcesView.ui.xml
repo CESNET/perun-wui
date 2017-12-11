@@ -39,7 +39,7 @@
 						<b:Column size="SM_12">
 							<b:Heading size="H4" ui:field="resourceLabel"/>
 
-							<b.gwt:DataGrid visible="true" bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
+							<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
 											ui:field="resourcesDataGrid"/>
 						</b:Column>
 					</b:Row>

@@ -39,7 +39,7 @@
 						<b:Column size="SM_12">
 							<b:Heading size="H4" ui:field="memberGroupsLabel"/>
 
-							<b.gwt:CellTable ui:field="memberGroupsTable" condensed="true" bordered="true" striped="false" />
+							<b.gwt:CellTable ui:field="memberGroupsTable" condensed="true"  bordered="true" striped="true" />
 
 						</b:Column>
 					</b:Row>
@@ -48,7 +48,7 @@
 						<b:Column size="SM_12">
 							<b:Heading size="H4" ui:field="adminGroupsLabel"/>
 
-							<b.gwt:CellTable ui:field="adminGroupsTable" condensed="true" bordered="true" striped="false" />
+							<b.gwt:CellTable ui:field="adminGroupsTable" condensed="true" bordered="true" striped="true" />
 						</b:Column>
 					</b:Row>
 					<b:Row>

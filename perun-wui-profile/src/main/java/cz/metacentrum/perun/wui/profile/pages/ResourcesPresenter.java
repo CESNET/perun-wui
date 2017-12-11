@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -16,16 +17,21 @@ import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.json.AbstractRepeatingJsonEvent;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.MembersManager;
 import cz.metacentrum.perun.wui.json.managers.ResourcesManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Member;
+import cz.metacentrum.perun.wui.model.beans.Resource;
 import cz.metacentrum.perun.wui.model.beans.RichResource;
+import cz.metacentrum.perun.wui.model.beans.RichResourceWithGroups;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, ResourcesPresenter.MyProxy> implements ResourcesUiHandlers {
@@ -44,7 +50,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 
 		void loadResourcesDataStart();
 
-		void setResources(List<RichResource> resources);
+		void setResources(List<RichResourceWithGroups> resources);
 	}
 
 	@NameToken(PerunProfilePlaceTokens.RESOURCES)
@@ -139,7 +145,11 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 			@Override
 			public void onFinished(JavaScriptObject result) {
 				List<RichResource> resources = JsUtils.jsoAsList(result);
-				getView().setResources(resources);
+				if (resources.isEmpty()) {
+					getView().setResources(new ArrayList<>());
+				} else {
+					loadGroupsForResources(resources);
+				}
 			}
 
 			@Override
@@ -152,5 +162,80 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 				getView().loadResourcesDataStart();
 			}
 		});
+	}
+
+	private void loadGroupsForResources(List<RichResource> richResources) {
+		Integer userId = Utils.getUserId(placeManager);
+
+
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
+
+		if (userId == null) {
+			placeManager.revealErrorPlace(request.getNameToken());
+		} else {
+
+			AbstractRepeatingJsonEvent memberEvent = new AbstractRepeatingJsonEvent(richResources.size()) {
+				@Override
+				public void finished(List<JavaScriptObject> results) {
+					List<Member> members = JsUtils.jsoListAsList(results);
+					loadGroupsFromMembers(richResources, members);
+				}
+
+				@Override
+				public void erred(PerunException exception) {
+					getView().setResourcesDataError(exception);
+				}
+
+				@Override
+				public void started() {
+					// do nothing
+				}
+			};
+
+			for (RichResource resource : richResources) {
+				MembersManager.getMemberByUser(userId, resource.getVoId(), memberEvent);
+			}
+		}
+	}
+
+	private void loadGroupsFromMembers(List<RichResource> resources, List<Member> members) {
+
+		AbstractRepeatingJsonEvent resourceGroupsEvent = new AbstractRepeatingJsonEvent(members.size()) {
+			@Override
+			public void finished(List<JavaScriptObject> results) {
+				List<List<Group>> resourcesGroups = new ArrayList<>();
+
+				for (JavaScriptObject result : results) {
+					List<Group> groups = JsUtils.jsoAsList(result);
+					GWT.log("Groups XX: " + groups.size());
+					resourcesGroups.add(JsUtils.jsoAsList(result));
+
+				}
+				List<RichResourceWithGroups> resourceWithGroups = new ArrayList<>();
+				for (int i = 0; i < resources.size(); i++) {
+					resourceWithGroups.add(new RichResourceWithGroups(resources.get(i),resourcesGroups.get(i)));
+
+				}
+
+				getView().setResources(resourceWithGroups);
+			}
+
+			@Override
+			public void erred(PerunException exception) {
+				getView().setResourcesDataError(exception);
+			}
+
+			@Override
+			public void started() {
+				// do nothing
+			}
+		};
+
+		for (int i = 0; i < members.size(); i++) {
+			Member member = members.get(i);
+			Resource resource = resources.get(i);
+
+			ResourcesManager.getAssignedGroups(resource.getId(), member.getId(), resourceGroupsEvent);
+		}
 	}
 }

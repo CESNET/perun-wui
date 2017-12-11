@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -19,7 +18,6 @@ import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.AbstractRepeatingJsonEvent;
 import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.RepeatingJsonEvent;
 import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -109,7 +107,7 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 		}
 
 		for (int i = 0; i < ueses.size(); i++) {
-			RichUserExtSource rues = RichUserExtSource.mapUesToRichUes(ueses.get(i), attributes.get(i));
+			RichUserExtSource rues = RichUserExtSource.mapUes(ueses.get(i), attributes.get(i));
 			richUserExtSources.add(rues);
 		}
 
