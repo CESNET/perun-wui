@@ -30,8 +30,7 @@
 		<p:PerunButton ui:field="addCertBtn" icon="PLUS" type="SUCCESS"/>
 
 		<b.html:Div>
-			<b:Button ui:field="showOtherUesButton" size="SMALL" text="update"
-					  dataTarget="#otherUesModal" dataToggle="MODAL" />
+			<b:Button ui:field="showOtherUesButton" type="LINK" size="SMALL" dataTarget="#otherUesModal" dataToggle="MODAL" />
 		</b.html:Div>
 
 

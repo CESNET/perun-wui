@@ -19,18 +19,25 @@
 
 		<b.html:Div ui:field="page" paddingTop="20">
 
+			<b:Alert ui:field="pageDescriptionAlert" type="INFO"/>
+
 			<b:Container fluid="true">
 				<!--User info-->
 				<b:Row>
-					<b:Heading size="H3" ui:field="userLabel" visible="false"/>
 					<b:Column size="SM_12" ui:field="userColumn">
-						<b.gwt:DataGrid visible="false" bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
-										ui:field="userDataGrid"/>
+						<b:Panel marginBottom="40">
+							<b:PanelHeader>
+								<b:Heading size="H4" ui:field="userLabel" visible="false"/>
+							</b:PanelHeader>
+							<b:PanelBody paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0">
+								<b.gwt:DataGrid visible="false" bordered="false" condensed="true" striped="false" hover="true" height="300px" width="100%"
+												ui:field="userDataGrid"/>
+							</b:PanelBody>
+						</b:Panel>
 					</b:Column>
 				</b:Row>
 				<!--Members info-->
 				<b:Row>
-					<b:Heading size="H3" ui:field="membersLabel" visible="false"/>
 					<b:Column size="SM_12" ui:field="membersColumn">
 					</b:Column>
 				</b:Row>

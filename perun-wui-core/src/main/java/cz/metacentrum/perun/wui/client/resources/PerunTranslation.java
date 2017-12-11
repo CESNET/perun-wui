@@ -252,4 +252,7 @@ public interface PerunTranslation extends Messages {
 
 	@DefaultMessage("Login")
 	String login();
+
+	@DefaultMessage("Virtual organization")
+	String vo();
 }

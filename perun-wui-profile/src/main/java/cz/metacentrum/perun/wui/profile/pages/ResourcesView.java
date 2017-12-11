@@ -11,11 +11,8 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.RichResource;
-import cz.metacentrum.perun.wui.model.beans.RichResourceWithGroups;
 import cz.metacentrum.perun.wui.model.beans.Vo;
-import cz.metacentrum.perun.wui.model.columnProviders.ResourceColumnProvider;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
-import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
@@ -24,9 +21,14 @@ import org.gwtbootstrap3.client.ui.html.Text;
 import org.gwtbootstrap3.extras.select.client.ui.Option;
 import org.gwtbootstrap3.extras.select.client.ui.Select;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
-
+/**
+ * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
+ */
 public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> implements ResourcesPresenter.MyView {
 
 	interface GroupsViewUiBinder extends UiBinder<Widget, ResourcesView> {}
@@ -39,7 +41,7 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 	@UiField Heading voLabel;
 	@UiField Div resourceData;
 	@UiField Div voHead;
-	@UiField DataGrid<RichResourceWithGroups> resourcesDataGrid;
+	@UiField DataGrid<Map.Entry<RichResource, List<Group>>> resourcesDataGrid;
 
 	@Inject
 	public ResourcesView(GroupsViewUiBinder binder) {
@@ -112,43 +114,43 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 	@Override
 	public void loadResourcesDataStart() {
 		voSelect.setEnabled(false);
-
-		loader.setVisible(true);
-		loader.onLoading(translation.loadingUserData());
+		((PerunLoader)resourcesDataGrid.getEmptyTableWidget()).onLoading(translation.loadingUserData());
 	}
 
 	@Override
-	public void setResources(List<RichResourceWithGroups> richResourceWithGroups) {
+	public void setResources(Map<RichResource, List<Group>> richResourceWithGroups) {
 		voSelect.setEnabled(true);
 
 		loader.onFinished();
 		loader.setVisible(false);
 
 		((PerunLoader)resourcesDataGrid.getEmptyTableWidget()).onEmpty();
-		resourcesDataGrid.setRowData(richResourceWithGroups);
+		List<Map.Entry<RichResource, List<Group>>> tableData = new ArrayList<>(richResourceWithGroups.entrySet());
+		tableData.sort(Comparator.comparing(o -> o.getKey().getName()));
+		resourcesDataGrid.setRowData(tableData);
 		resourceData.setVisible(true);
 	}
 
-	private void initTable(DataGrid<RichResourceWithGroups> table) {
-		TextColumn<RichResourceWithGroups> nameCol = new TextColumn<RichResourceWithGroups>() {
+	private void initTable(DataGrid<Map.Entry<RichResource, List<Group>>> table) {
+		TextColumn<Map.Entry<RichResource, List<Group>>> nameCol = new TextColumn<Map.Entry<RichResource, List<Group>>>() {
 			@Override
-			public String getValue(RichResourceWithGroups richResourceWithGroups) {
-				return richResourceWithGroups.getRichResource().getName();
+			public String getValue(Map.Entry<RichResource, List<Group>> richResourceWithGroups) {
+				return richResourceWithGroups.getKey().getName();
 			}
 		};
 
-		TextColumn<RichResourceWithGroups> descriptionCol = new TextColumn<RichResourceWithGroups>() {
+		TextColumn<Map.Entry<RichResource, List<Group>>> descriptionCol = new TextColumn<Map.Entry<RichResource, List<Group>>>() {
 			@Override
-			public String getValue(RichResourceWithGroups richResourceWithGroups) {
-				return richResourceWithGroups.getRichResource().getDescription();
+			public String getValue(Map.Entry<RichResource, List<Group>> richResourceWithGroups) {
+				return richResourceWithGroups.getKey().getDescription();
 			}
 		};
 
-		TextColumn<RichResourceWithGroups> groupsCol = new TextColumn<RichResourceWithGroups>() {
+		TextColumn<Map.Entry<RichResource, List<Group>>> groupsCol = new TextColumn<Map.Entry<RichResource, List<Group>>>() {
 			@Override
-			public String getValue(RichResourceWithGroups richResourceWithGroups) {
+			public String getValue(Map.Entry<RichResource, List<Group>> richResourceWithGroups) {
 				StringBuilder str = new StringBuilder();
-				List<Group> groups = richResourceWithGroups.getGroups();
+				List<Group> groups = richResourceWithGroups.getValue();
 				for (int i = 0; i < groups.size(); i++) {
 					Group group = groups.get(i);
 					str.append(group.getShortName());
@@ -167,6 +169,6 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 		table.setEmptyTableWidget(pl);
 		table.addColumn(nameCol, translation.name());
 		table.addColumn(descriptionCol, translation.description());
-		table.addColumn(groupsCol, translation.groups());
+		table.addColumn(groupsCol, translation.resourceGroups());
 	}
 }

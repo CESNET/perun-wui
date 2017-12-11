@@ -24,19 +24,19 @@
 		<p:PerunLoader visible="false" ui:field="loader" />
 
 		<b.html:Div ui:field="personalInfo" visible="false" paddingTop="20">
-			<b:Row paddingBottom="10">
+			<b:Row paddingBottom="10" ui:field="nameRow">
 				<b:Column size="SM_4" ui:field="nameLabel" addStyleNames="{res.gss.personalInfoLabel}" />
 				<b:Column size="SM_8" >
 					<b.html:Text ui:field="nameData" />
 				</b:Column>
 			</b:Row>
-			<b:Row paddingBottom="10">
+			<b:Row paddingBottom="10" ui:field="organizationRow">
 				<b:Column size="SM_4" ui:field="orgLabel" addStyleNames="{res.gss.personalInfoLabel}" />
 				<b:Column size="SM_8" >
 					<b.html:Text ui:field="orgData" />
 				</b:Column>
 			</b:Row>
-			<b:Row paddingBottom="10">
+			<b:Row paddingBottom="10" ui:field="preferredEmailRow">
 				<b:Column size="SM_4" ui:field="emailLabel" addStyleNames="{res.gss.personalInfoLabel}" />
 				<b:Column size="SM_8" >
 					<b.html:Text ui:field="emailData" />
@@ -44,13 +44,13 @@
 							  dataTarget="#updateEmailModal" dataToggle="MODAL" />
 				</b:Column>
 			</b:Row>
-			<b:Row paddingBottom="10">
+			<b:Row paddingBottom="10" ui:field="preferredLanguageRow">
 				<b:Column size="SM_4" ui:field="languageLabel" addStyleNames="{res.gss.personalInfoLabel}" />
 				<b:Column size="SM_8" >
 					<b.html:Text ui:field="languageData" />
 				</b:Column>
 			</b:Row>
-			<b:Row paddingBottom="10">
+			<b:Row paddingBottom="10" ui:field="timezoneRow">
 				<b:Column size="SM_4" ui:field="timezoneLabel" addStyleNames="{res.gss.personalInfoLabel}" />
 				<b:Column size="SM_8" >
 					<b.html:Text ui:field="timezoneData" />
@@ -62,7 +62,6 @@
 			<b:DescriptionData ui:field="langData" paddingBottom="10" />
 			<b:DescriptionTitle ui:field="timeLabel" paddingBottom="10" />
 			<b:DescriptionData ui:field="timeData" paddingBottom="10" />-->
-			<g:Hyperlink ui:field="completeInfoLink" targetHistoryToken="{placeTokens.getCompleteInfo}"/>
 		</b.html:Div>
 
 

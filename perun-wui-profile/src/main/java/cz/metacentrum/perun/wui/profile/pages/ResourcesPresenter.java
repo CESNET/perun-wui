@@ -27,13 +27,17 @@ import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Member;
 import cz.metacentrum.perun.wui.model.beans.Resource;
 import cz.metacentrum.perun.wui.model.beans.RichResource;
-import cz.metacentrum.perun.wui.model.beans.RichResourceWithGroups;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+/**
+ * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
+ */
 public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, ResourcesPresenter.MyProxy> implements ResourcesUiHandlers {
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
@@ -50,7 +54,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 
 		void loadResourcesDataStart();
 
-		void setResources(List<RichResourceWithGroups> resources);
+		void setResources(Map<RichResource, List<Group>> resources);
 	}
 
 	@NameToken(PerunProfilePlaceTokens.RESOURCES)
@@ -146,7 +150,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 			public void onFinished(JavaScriptObject result) {
 				List<RichResource> resources = JsUtils.jsoAsList(result);
 				if (resources.isEmpty()) {
-					getView().setResources(new ArrayList<>());
+					getView().setResources(new HashMap<>());
 				} else {
 					loadGroupsForResources(resources);
 				}
@@ -211,10 +215,9 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 					resourcesGroups.add(JsUtils.jsoAsList(result));
 
 				}
-				List<RichResourceWithGroups> resourceWithGroups = new ArrayList<>();
+				Map<RichResource, List<Group>> resourceWithGroups = new HashMap<>();
 				for (int i = 0; i < resources.size(); i++) {
-					resourceWithGroups.add(new RichResourceWithGroups(resources.get(i),resourcesGroups.get(i)));
-
+					resourceWithGroups.put(resources.get(i), resourcesGroups.get(i));
 				}
 
 				getView().setResources(resourceWithGroups);

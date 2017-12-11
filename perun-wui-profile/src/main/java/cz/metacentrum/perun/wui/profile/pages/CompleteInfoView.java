@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -17,9 +18,13 @@ import cz.metacentrum.perun.wui.model.columnProviders.OverviewAttributesColumnPr
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.Panel;
+import org.gwtbootstrap3.client.ui.PanelBody;
+import org.gwtbootstrap3.client.ui.PanelHeader;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 import org.gwtbootstrap3.client.ui.html.Div;
 
@@ -37,11 +42,11 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 	private PerunProfileTranslation translation = GWT.create(PerunProfileTranslation.class);
 
 	@UiField Heading userLabel;
-	@UiField Heading membersLabel;
 	@UiField Button backButton;
 	@UiField Column membersColumn;
 	@UiField Column userColumn;
 	@UiField PerunLoader loader;
+	@UiField Alert pageDescriptionAlert;
 
 	@UiField(provided = true)
 	PerunDataGrid<Attribute> userDataGrid = new PerunDataGrid<>(new OverviewAttributesColumnProvider());
@@ -56,7 +61,8 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 
 		backButton.setText(translation.back());
 		userLabel.setText(translation.userInfo());
-		membersLabel.setText(translation.voInfo());
+
+		pageDescriptionAlert.setText(translation.allInfoDescriptionText());
 	}
 
 	@Override
@@ -78,7 +84,6 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 		userColumn.setVisible(false);
 		membersColumn.setVisible(false);
 		userLabel.setVisible(false);
-		membersLabel.setVisible(false);
 
 		loader.setVisible(true);
 		loader.onLoading(translation.loadingUserData());
@@ -89,31 +94,44 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 		membersColumn.clear();
 
 		for (RichMember member : memberVoMap.keySet()) {
-			Heading voHeading = new Heading(HeadingSize.H4, memberVoMap.get(member).getName());
+			Heading voHeading = new Heading(HeadingSize.H5,
+												   translation.dataUsedFor() + " " + memberVoMap.get(member).getName());
 
 			PerunDataGrid<Attribute> memberDataGrid = new PerunDataGrid<>(new OverviewAttributesColumnProvider());
 			memberDataGrid.setVisible(true);
 			memberDataGrid.setList(member.getMemberAttributes());
-			memberDataGrid.setBordered(true);
 			memberDataGrid.setCondensed(true);
-			memberDataGrid.setStriped(true);
+			memberDataGrid.setStriped(false);
 			memberDataGrid.setHover(true);
 			memberDataGrid.setHeight("300px");
 			memberDataGrid.setWidth("100%");
 			memberDataGrid.setSelectionEnabled(false);
 			memberDataGrid.drawTableColumns();
+			memberDataGrid.getElement().getStyle().setMarginBottom(0, Style.Unit.PX);
 
 			Div memberArea = new Div();
 			memberArea.add(voHeading);
 			memberArea.add(memberDataGrid);
 
-			membersColumn.add(memberArea);
+			PanelHeader panelHeader = new PanelHeader();
+			PanelBody panelBody = new PanelBody();
+
+			panelHeader.add(voHeading);
+			panelBody.add(memberArea);
+
+			Panel panel = new Panel();
+
+			panel.add(panelHeader);
+			panel.add(panelBody);
+			panelBody.getElement().getStyle().setPadding(0, Style.Unit.PX);
+			panel.getElement().getStyle().setMarginBottom(40, Style.Unit.PX);
+
+			membersColumn.add(panel);
 		}
 
 		loader.onFinished();
 		loader.setVisible(false);
 		membersColumn.setVisible(true);
-		membersLabel.setVisible(true);
 	}
 
 	@UiHandler({"backButton"})

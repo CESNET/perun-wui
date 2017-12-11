@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Window;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.model.beans.Vo;
 import org.gwtbootstrap3.extras.animate.client.ui.constants.Animation;
 import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 
@@ -827,6 +828,35 @@ public class Utils {
 				"<a href=\"#\" data-growl=\"url\"></a>" +
 				"</div>");
 		return options;
+	}
+
+
+	/**
+	 * Return URL to registrar of given VO
+	 *
+	 * @param vo vo to be used
+	 * @return URL to registrar of given Vo
+	 */
+	public static String getMembershipExtendLink(Vo vo) {
+
+		String baseUrl = Window.Location.getProtocol() + "//" + Window.Location.getHost();
+
+
+		String rpc = "";
+		if (PerunSession.getInstance().getRpcServer() != null) {
+			rpc = PerunSession.getInstance().getRpcServer();
+			baseUrl += "/" + rpc + "/registrar/";
+		} else {
+			baseUrl += "/registrar/";
+		}
+
+		if (vo != null) {
+			return baseUrl + "?vo=" + vo.getShortName();
+		} else {
+			return baseUrl;
+		}
+
+
 	}
 
 	/**

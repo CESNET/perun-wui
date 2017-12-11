@@ -18,7 +18,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Member details")
 	String memberDetails();
 
-	@DefaultMessage("Select VO")
+	@DefaultMessage("Choose:")
 	String selectVo();
 
 	@DefaultMessage("User profile")
@@ -30,11 +30,14 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("My groups")
 	String menuMyGroups();
 
-	@DefaultMessage("Virtual organizations")
+	@DefaultMessage("Virtual Organizations")
 	public String menuOrganizations();
 
 	@DefaultMessage("My identities")
 	public String menuMyIdentities();
+
+	@DefaultMessage("My services")
+	String menuMyResources();
 
 	@DefaultMessage("Logins & Passwords")
 	public String menuLoginsAndPasswords();
@@ -119,16 +122,16 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Groups in which you are an admin")
 	String adminGroups();
 
-	@DefaultMessage("You are not a member of any group in selected VO.")
+	@DefaultMessage("You are not a member of any group in selected OrganizationsView.")
 	String noMemberGroups();
 
-	@DefaultMessage("You are not admin of any group in selected VO.")
+	@DefaultMessage("You are not admin of any group in selected OrganizationsView.")
 	String noAdminGroups();
 
 	@DefaultMessage("User information")
 	String userInfo();
 
-	@DefaultMessage("Information from virtual organizations")
+	@DefaultMessage("Information from virtual OrganizationsView")
 	String voInfo();
 
 	@DefaultMessage("Display all information")
@@ -137,16 +140,13 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("here")
 	String here();
 
-	@DefaultMessage("My resources")
-	String menuMyResources();
-
 	@DefaultMessage("No resources found")
 	String noResources();
 
 	@DefaultMessage("Email")
 	String uesEmail();
 
-	@DefaultMessage("Other identities")
+	@DefaultMessage("Show other identities")
 	String otherIdentities();
 
 	@DefaultMessage("External source name")
@@ -157,4 +157,25 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("Groups")
 	String groups();
+
+	@DefaultMessage("Membership expiration")
+	String membershipExpiration();
+
+	@DefaultMessage("Extend")
+	String extendMembership();
+
+	@DefaultMessage("Privacy")
+	String menuPrivacy();
+
+	@DefaultMessage("To view all information that we keep about you, click")
+	String showAllInfoText();
+
+	@DefaultMessage("Here is all information that we keep about you. We keep this information for the purpose of providing services.")
+	String allInfoDescriptionText();
+
+	@DefaultMessage("Groups with access")
+	String resourceGroups();
+
+	@DefaultMessage("Data used for")
+	String dataUsedFor();
 }

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * View for displaying VO membership details
+ * View for displaying OrganizationsView membership details
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */

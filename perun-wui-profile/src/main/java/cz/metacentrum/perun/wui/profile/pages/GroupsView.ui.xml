@@ -25,6 +25,7 @@
 			<b:Container fluid="true">
 				<!--Vo select-->
 				<b:Row>
+					<!--<b:ButtonGroup ui:field="voButtonGroup"/>-->
 					<select:Select ui:field="voSelect" visible="false"/>
 				</b:Row>
 				<b.html:Div ui:field="voData" visible="false">
@@ -37,7 +38,7 @@
 					<!--Member Groups-->
 					<b:Row>
 						<b:Column size="SM_12">
-							<b:Heading size="H4" ui:field="memberGroupsLabel"/>
+							<b:Heading size="H4" ui:field="memberGroupsLabel" marginTop="40"/>
 
 							<b.gwt:CellTable ui:field="memberGroupsTable" condensed="true"  bordered="true" striped="true" />
 
@@ -46,7 +47,7 @@
 					<!--Admin Groups-->
 					<b:Row>
 						<b:Column size="SM_12">
-							<b:Heading size="H4" ui:field="adminGroupsLabel"/>
+							<b:Heading size="H4" ui:field="adminGroupsLabel" marginTop="40"/>
 
 							<b.gwt:CellTable ui:field="adminGroupsTable" condensed="true" bordered="true" striped="true" />
 						</b:Column>

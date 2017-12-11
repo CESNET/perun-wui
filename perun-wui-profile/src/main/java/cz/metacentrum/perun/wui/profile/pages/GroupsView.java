@@ -11,10 +11,10 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Vo;
-import cz.metacentrum.perun.wui.model.columnProviders.GroupColumnProvider;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
-import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.ButtonGroup;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
 import org.gwtbootstrap3.client.ui.html.Div;
@@ -41,6 +41,7 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 	@UiField Heading voLabel;
 	@UiField Div voData;
 	@UiField Div voHead;
+//	@UiField ButtonGroup voButtonGroup;
 
 	@UiField CellTable<Group> memberGroupsTable;
 	@UiField CellTable<Group> adminGroupsTable;
@@ -94,6 +95,12 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 			voSelect.refresh();
 
 			voData.setVisible(false);
+
+			/*for (Vo vo : vos) {
+				Button button = new Button();
+				button.setText(vo.getName());
+				voButtonGroup.add(button);
+			}*/
 		}
 	}
 

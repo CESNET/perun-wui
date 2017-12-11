@@ -2,27 +2,29 @@
 			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
 			 xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
-			 xmlns:b.gwt="urn:import:org.gwtbootstrap3.client.ui.gwt"
 			 xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
 >
 
 	<ui:style>
 	</ui:style>
 
+	<!-- Import place tokens -->
+	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens"/>
+
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
 	<b.html:Div>
 
 		<b:Heading size="H2" ui:field="pageTitle">
-			<b:Icon ui:field="icon" type="BUILDING_O" fixedWidth="true" />
+			<b:Icon ui:field="icon" type="SHIELD" fixedWidth="true" />
 			<b.html:Text text="" ui:field="title"/>
 			<b.html:Small text="" ui:field="subTitle"/>
 		</b:Heading>
 
-		<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
-						ui:field="vosDataGrid"/>
+		<b.html:Text ui:field="showAllInfoText" />
+		<g:InlineHyperlink ui:field="completeInfoLink" targetHistoryToken="{placeTokens.getCompleteInfo}"/>
 
-		<!--<p:PerunLoader visible="false" ui:field="loader" />-->
+		<p:PerunLoader visible="false" ui:field="loader" />
 
 	</b.html:Div>
 

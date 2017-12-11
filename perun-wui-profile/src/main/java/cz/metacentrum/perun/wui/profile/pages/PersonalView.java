@@ -2,14 +2,13 @@ package cz.metacentrum.perun.wui.profile.pages;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.Hyperlink;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
@@ -23,7 +22,7 @@ import org.gwtbootstrap3.client.ui.FormLabel;
 import org.gwtbootstrap3.client.ui.HelpBlock;
 import org.gwtbootstrap3.client.ui.Input;
 import org.gwtbootstrap3.client.ui.Modal;
-import org.gwtbootstrap3.client.ui.base.form.AbstractForm;
+import org.gwtbootstrap3.client.ui.Row;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Small;
@@ -37,6 +36,12 @@ import java.util.List;
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
 public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> implements PersonalPresenter.MyView {
+
+	private static final String NAME = "name";
+	private static final String ORGANIZATION = "organization";
+	private static final String PREFERRED_EMAIL = "preferredEmail";
+	private static final String PREFERRED_LANGUAGE = "preferredLanguage";
+	private static final String TIME_ZONE = "timezone";
 
 	interface PersonalViewUiBinder extends UiBinder<Widget, PersonalView> {
 	}
@@ -74,21 +79,12 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	Column timezoneLabel;
 	@UiField
 	Text timezoneData;
-	@UiField
-	Hyperlink completeInfoLink;
 
-/*	@UiField
-	DescriptionTitle phoneLabel;
-	@UiField
-	DescriptionData phoneData;
-	@UiField
-	DescriptionTitle langLabel;
-	@UiField
-	DescriptionData langData;
-	@UiField
-	DescriptionTitle timeLabel;
-	@UiField
-	DescriptionData timeData;*/
+	@UiField Row nameRow;
+	@UiField Row organizationRow;
+	@UiField Row preferredEmailRow;
+	@UiField Row preferredLanguageRow;
+	@UiField Row timezoneRow;
 
 	@UiField
 	Form updateEmailForm;
@@ -136,12 +132,8 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		updateEmailBtn.setText(translation.sendValidationEmail());
 		updateEmailModal.setTitle(translation.updateEmailModalTitle());
 		updateEmailLabel.setText(translation.newPreferredEmail());
-		completeInfoLink.setText(translation.completeInfo());
 
-		/*phoneLabel.setText(translation.phone());
-		langLabel.setText(translation.preferredLang());
-		timeLabel.setText(translation.timezone());*/
-
+		applyHideConfiguration();
 	}
 
 	@Override
@@ -152,20 +144,11 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 		text.setText(user.getFullName());
 
-		nameData.setText(user.getFullName()!= null ? user.getFullName() : "-");
-		emailData.setText(user.getPreferredEmail() != null ? user.getPreferredEmail() : "-");
-		orgData.setText(user.getOrganization() != null ? user.getOrganization() : "-");
-		languageData.setText(user.getPreferredLanguage()!= null ? user.getPreferredLanguage() : "-");
-		timezoneData.setText(user.getTimezone()!= null ? user.getTimezone() : "-");
-
-		/*Attribute phone = user.getAttribute("urn:perun:user:attribute-def:def:phone");
-		if (phone != null) phoneData.setText(phone.getValue());
-
-		Attribute lang = user.getAttribute("urn:perun:user:attribute-def:def:preferredLanguage");
-		if (lang != null) langData.setText(lang.getValue());
-
-		Attribute timezone = user.getAttribute("urn:perun:user:attribute-def:def:timezone");
-		if (timezone != null) timeData.setText(timezone.getValue());*/
+		setAttribute(user.getFullName(), nameData);
+		setAttribute(user.getOrganization(), orgData);
+		setAttribute(user.getPreferredEmail(), emailData);
+		setAttribute(user.getPreferredLanguage(), languageData);
+		setAttribute(user.getTimezone(), timezoneData);
 	}
 
 	@Override
@@ -241,7 +224,30 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 			updateEmailFormGroup.setValidationState(ValidationState.NONE);
 			updateEmailHelpBlock.setVisible(false);
 		}
+	}
 
+	private void applyHideConfiguration() {
+
+		checkAttribute(NAME, nameRow);
+		checkAttribute(ORGANIZATION, organizationRow);
+		checkAttribute(PREFERRED_EMAIL, preferredEmailRow);
+		checkAttribute(PREFERRED_LANGUAGE, preferredLanguageRow);
+		checkAttribute(TIME_ZONE, timezoneRow);
+	}
+
+	private void checkAttribute(String name, Row attrRow) {
+		List<String> attrsToHide = PerunConfiguration.getProfilePersonalAttributesToHide();
+		if (attrsToHide.contains(name)) {
+			attrRow.setVisible(false);
+		}
+	}
+
+	private void setAttribute(String value, Text label) {
+		if (value == null) {
+			label.setText("-");
+		} else {
+			label.setText(value);
+		}
 	}
 
 }

@@ -26,6 +26,8 @@ import cz.metacentrum.perun.wui.profile.pages.OrganizationsPresenter;
 import cz.metacentrum.perun.wui.profile.pages.OrganizationsView;
 import cz.metacentrum.perun.wui.profile.pages.PersonalPresenter;
 import cz.metacentrum.perun.wui.profile.pages.PersonalView;
+import cz.metacentrum.perun.wui.profile.pages.PrivacyPresenter;
+import cz.metacentrum.perun.wui.profile.pages.PrivacyView;
 import cz.metacentrum.perun.wui.profile.pages.ResourcesPresenter;
 import cz.metacentrum.perun.wui.profile.pages.ResourcesView;
 
@@ -48,6 +50,7 @@ public class PerunProfile extends AbstractPresenterModule implements EntryPoint 
 		bindPresenter(PerunProfilePresenter.class, PerunProfilePresenter.MyView.class, PerunProfileView.class, PerunProfilePresenter.MyProxy.class);
 
 		// bind app-specific pages
+		bindPresenter(PrivacyPresenter.class, PrivacyPresenter.MyView.class, PrivacyView.class, PrivacyPresenter.MyProxy.class);
 		bindPresenter(ResourcesPresenter.class, ResourcesPresenter.MyView.class, ResourcesView.class, ResourcesPresenter.MyProxy.class);
 		bindPresenter(PersonalPresenter.class, PersonalPresenter.MyView.class, PersonalView.class, PersonalPresenter.MyProxy.class);
 		bindPresenter(OrganizationsPresenter.class, OrganizationsPresenter.MyView.class, OrganizationsView.class, OrganizationsPresenter.MyProxy.class);

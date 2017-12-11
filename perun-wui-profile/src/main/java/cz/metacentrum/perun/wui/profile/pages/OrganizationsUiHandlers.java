@@ -1,13 +1,14 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
 import com.gwtplatform.mvp.client.UiHandlers;
+import cz.metacentrum.perun.wui.model.beans.Vo;
 
 /**
  * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
  */
-public interface ResourcesUiHandlers extends UiHandlers {
+public interface OrganizationsUiHandlers extends UiHandlers {
 
-	void loadDataForVo(int voId);
+	void extendMembership(Vo vo);
 
-	void loadVos();
+	void loadData();
 }
