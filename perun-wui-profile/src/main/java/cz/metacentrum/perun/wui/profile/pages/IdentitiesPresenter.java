@@ -119,7 +119,7 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 		AbstractRepeatingJsonEvent attributesEvent = new AbstractRepeatingJsonEvent(userExtSources.size()) {
 			@Override
 			public void finished(List<JavaScriptObject> results) {
-				List<Attribute> attributes = JsUtils.jsoListAsList(results);
+				List<Attribute> attributes = JsUtils.jsListAsList(results);
 
 				mapAttributesAndUes(attributes, userExtSources);
 			}

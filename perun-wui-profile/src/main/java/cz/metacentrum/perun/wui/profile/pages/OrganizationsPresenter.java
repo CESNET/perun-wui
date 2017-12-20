@@ -106,7 +106,7 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 		AbstractRepeatingJsonEvent getMemberByUserRepeating = new AbstractRepeatingJsonEvent(vos.size()){
 			@Override
 			public void finished(List<JavaScriptObject> results) {
-				List<Member> members = JsUtils.jsoListAsList(results);
+				List<Member> members = JsUtils.jsListAsList(results);
 				getRichMembersFromMembers(members, vos);
 			}
 
@@ -135,7 +135,7 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 
 			@Override
 			public void finished(List<JavaScriptObject> results) {
-				List<RichMember> richMembers = JsUtils.jsoListAsList(results);
+				List<RichMember> richMembers = JsUtils.jsListAsList(results);
 				Map<RichMember, Vo> memberVoMap = new HashMap<>();
 				for (RichMember richMember : richMembers) {
 					for (Vo vo : vos) {

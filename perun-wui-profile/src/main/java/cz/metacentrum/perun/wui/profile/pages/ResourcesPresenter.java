@@ -181,7 +181,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 			AbstractRepeatingJsonEvent memberEvent = new AbstractRepeatingJsonEvent(richResources.size()) {
 				@Override
 				public void finished(List<JavaScriptObject> results) {
-					List<Member> members = JsUtils.jsoListAsList(results);
+					List<Member> members = JsUtils.jsListAsList(results);
 					loadGroupsFromMembers(richResources, members);
 				}
 

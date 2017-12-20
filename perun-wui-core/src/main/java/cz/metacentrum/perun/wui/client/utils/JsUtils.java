@@ -299,7 +299,7 @@ public class JsUtils {
 		return new Date().getFullYear()
 	}-*/;
 
-	public static <T extends JavaScriptObject> List<T> jsoListAsList(List<JavaScriptObject> results) {
+	public static <T extends JavaScriptObject> List<T> jsListAsList(List<JavaScriptObject> results) {
 		List<T> converted = new ArrayList<>();
 
 		for (JavaScriptObject result : results) {

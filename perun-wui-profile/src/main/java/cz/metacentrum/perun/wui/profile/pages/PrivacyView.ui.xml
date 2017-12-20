@@ -24,6 +24,16 @@
 		<b.html:Text ui:field="showAllInfoText" />
 		<g:InlineHyperlink ui:field="completeInfoLink" targetHistoryToken="{placeTokens.getCompleteInfo}"/>
 
+		<b.html:Text ui:field="showAupInfoText" />
+
+		<b:Panel>
+			<b:PanelHeader>
+				<b:Heading size="H4" ui:field="aupHeading"/>
+			</b:PanelHeader>
+
+			<b:ListGroup ui:field="aupListGroup"/>
+		</b:Panel>
+
 		<p:PerunLoader visible="false" ui:field="loader" />
 
 	</b.html:Div>

@@ -178,4 +178,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("Data used for")
 	String dataUsedFor();
+
+	@DefaultMessage("Terms of use")
+	String aupHeader();
 }
