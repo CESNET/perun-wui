@@ -86,7 +86,7 @@ public class AttributesManager {
 	}
 
 	/**
-	 * Returns an Attribute by its name. Returns only non-empty attributes.
+	 * Returns an Attribute by its name.
 	 *
 	 * @param uesId UserExtSource id
 	 * @param attrName Attribute name

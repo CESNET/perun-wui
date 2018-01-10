@@ -164,6 +164,10 @@ public class Attribute extends AttributeDefinition {
 				return getValue().isEmpty();
 			case "java.lang.Boolean":
 				return getValue().isEmpty();
+			case "java.lang.LargeString":
+				return getValue().isEmpty();
+			case "java.util.LargeArrayList":
+				return getValue().isEmpty();
 			default:
 				return getValueAsJsArray().length() == 0;
 		}

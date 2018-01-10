@@ -15,7 +15,6 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.GroupsManager;
 import cz.metacentrum.perun.wui.json.managers.MembersManager;
@@ -24,6 +23,7 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Member;
 import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
 import java.util.List;
@@ -74,7 +74,7 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 	@Override
 	public void loadVos() {
 
-		final Integer userId = Utils.getUserId(placeManager);
+		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -90,7 +90,7 @@ public class GroupsPresenter extends Presenter<GroupsPresenter.MyView, GroupsPre
 
 	@Override
 	public void loadDataForVo(int voId) {
-		final Integer userId = Utils.getUserId(placeManager);
+		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 

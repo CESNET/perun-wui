@@ -22,6 +22,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
+import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
 import java.util.List;
@@ -70,11 +71,11 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	@Override
 	public void loadUser() {
 
-		final int id = getUserId();
+		Integer id = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
-		if (id < 1) {
+		if (id == null || id < 1) {
 			placeManager.revealErrorPlace(request.getNameToken());
 		}
 
@@ -112,7 +113,14 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	@Override
 	public void checkEmailRequestPending() {
 
-		final int id = getUserId();
+		Integer id = PerunProfileUtils.getUserId(placeManager);
+
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
+
+		if (id == null || id < 1) {
+			placeManager.revealErrorPlace(request.getNameToken());
+			return;
+		}
 
 		UsersManager.getPendingPreferredEmailChanges(id, new JsonEvents() {
 
@@ -163,32 +171,4 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 		});
 
 	}
-
-	private Integer getUserId() {
-
-		try {
-
-			String userId = placeManager.getCurrentPlaceRequest().getParameter("id", null);
-			if (userId == null) {
-				userId = String.valueOf(PerunSession.getInstance().getUserId());
-			}
-
-			final int id = Integer.valueOf(userId);
-
-			if (id < 1) {
-				if (PerunConfiguration.getBrandProfileUnknownUrl() != null) {
-					Window.Location.assign(PerunConfiguration.getBrandProfileUnknownUrl());
-				} else {
-					placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-				}
-			}
-
-			return id;
-		} catch (NumberFormatException e) {
-			placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-		}
-		return null;
-	}
-
-
 }

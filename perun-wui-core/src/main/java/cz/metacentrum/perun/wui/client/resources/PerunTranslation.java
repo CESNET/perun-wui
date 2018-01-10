@@ -255,4 +255,7 @@ public interface PerunTranslation extends Messages {
 
 	@DefaultMessage("Virtual organization")
 	String vo();
+
+	@DefaultMessage("Loading")
+	String loading();
 }

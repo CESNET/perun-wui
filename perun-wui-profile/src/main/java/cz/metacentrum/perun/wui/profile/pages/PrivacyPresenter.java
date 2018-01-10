@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -15,19 +16,16 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.json.AbstractRepeatingJsonEvent;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
@@ -36,11 +34,14 @@ public class PrivacyPresenter extends Presenter<PrivacyPresenter.MyView, Privacy
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
 
-	public static final String ATTRIBUTE_NAME = "urn:perun:vo:attribute-def:def:applicationURL";
+	//TODO: change this to proper attribute
+	private static final String ATTRIBUTE_NAME = "urn:perun:vo:attribute-def:def:aupLink";
 
 	public interface MyView extends View, HasUiHandlers<PrivacyUiHandlers> {
 
-		void setVosWithAttribute(Map<Vo, Attribute> vosWithAttribute);
+		void addVoWithAulAttribute(Vo vo, Attribute attribute);
+
+		void clearVos();
 
 		void setLoadingError(PerunException e);
 
@@ -66,7 +67,7 @@ public class PrivacyPresenter extends Presenter<PrivacyPresenter.MyView, Privacy
 
 	@Override
 	public void loadVosData() {
-		final Integer userId = Utils.getUserId(placeManager);
+		final Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -86,7 +87,7 @@ public class PrivacyPresenter extends Presenter<PrivacyPresenter.MyView, Privacy
 			@Override
 			public void onFinished(JavaScriptObject result) {
 				List<Vo> vos = JsUtils.jsoAsList(result);
-				loadAttributes(userId, vos);
+				loadAttributes(vos);
 			}
 
 			@Override
@@ -101,32 +102,28 @@ public class PrivacyPresenter extends Presenter<PrivacyPresenter.MyView, Privacy
 		});
 	}
 
-	private void loadAttributes(int userId, List<Vo> vos) {
-
-		AbstractRepeatingJsonEvent attributesEvent = new AbstractRepeatingJsonEvent(vos.size()) {
-			@Override
-			public void finished(List<JavaScriptObject> results) {
-				List<Attribute> attributes = JsUtils.jsListAsList(results);
-
-				Map<Vo, Attribute> vosWithAttribute = new HashMap<>();
-				for (int i = 0; i < vos.size(); i++) {
-					vosWithAttribute.put(vos.get(i), attributes.get(i));
-				}
-
-				getView().setVosWithAttribute(vosWithAttribute);
-			}
-
-			@Override
-			public void erred(PerunException exception) {
-				getView().setLoadingError(exception);
-			}
-
-			@Override
-			public void started() {}
-		};
+	private void loadAttributes(List<Vo> vos) {
+		getView().clearVos();
 
 		for (Vo vo : vos) {
-			AttributesManager.getVoAttribute(vo.getId(), ATTRIBUTE_NAME, attributesEvent);
+			GWT.log("Called: " + vo.getName());
+			AttributesManager.getVoAttribute(vo.getId(), ATTRIBUTE_NAME, new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					Attribute attr = (Attribute) result;
+					getView().addVoWithAulAttribute(vo, attr);
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					getView().setLoadingError(error);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					getView().setLoadingStart();
+				}
+			});
 		}
 	}
 }

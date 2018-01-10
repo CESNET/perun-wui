@@ -39,7 +39,7 @@ public class GroupColumnProvider extends ColumnProvider<Group> {
 
 	@Override
 	public PerunColumnType getDefaultSortColumn() {
-		return PerunColumnType.ID;
+		return PerunColumnType.NAME;
 	}
 
 	@Override

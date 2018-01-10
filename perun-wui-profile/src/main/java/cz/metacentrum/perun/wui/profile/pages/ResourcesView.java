@@ -107,6 +107,7 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 	@Override
 	public void setResourcesDataError(PerunException ex) {
 		voSelect.setEnabled(true);
+		resourceData.setVisible(false);
 		loader.onError(ex, event -> getUiHandlers()
 											.loadDataForVo(Integer.parseInt(voSelect.getSelectedItem().getValue())));
 	}
@@ -114,14 +115,16 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 	@Override
 	public void loadResourcesDataStart() {
 		voSelect.setEnabled(false);
-		((PerunLoader)resourcesDataGrid.getEmptyTableWidget()).onLoading(translation.loadingUserData());
+		resourceData.setVisible(false);
+
+		loader.onLoading(translation.loading());
+		loader.setVisible(true);
 	}
 
 	@Override
 	public void setResources(Map<RichResource, List<Group>> richResourceWithGroups) {
 		voSelect.setEnabled(true);
 
-		loader.onFinished();
 		loader.setVisible(false);
 
 		((PerunLoader)resourcesDataGrid.getEmptyTableWidget()).onEmpty();

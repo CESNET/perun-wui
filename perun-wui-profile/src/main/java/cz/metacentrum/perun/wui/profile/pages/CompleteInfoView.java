@@ -14,7 +14,7 @@ import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.RichMember;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
 import cz.metacentrum.perun.wui.model.beans.Vo;
-import cz.metacentrum.perun.wui.model.columnProviders.OverviewAttributesColumnProvider;
+import cz.metacentrum.perun.wui.model.columnProviders.AttributeColumnProvider;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
@@ -49,7 +49,7 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 	@UiField Alert pageDescriptionAlert;
 
 	@UiField(provided = true)
-	PerunDataGrid<Attribute> userDataGrid = new PerunDataGrid<>(new OverviewAttributesColumnProvider());
+	PerunDataGrid<Attribute> userDataGrid = new PerunDataGrid<>(new AttributeColumnProvider(false));
 
 	@Inject
 	public CompleteInfoView(GroupsViewUiBinder binder) {
@@ -58,6 +58,7 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 		userDataGrid.setVisible(true);
 		userDataGrid.setSelectionEnabled(false);
 		userDataGrid.drawTableColumns();
+		userDataGrid.removeColumn(0);
 
 		backButton.setText(translation.back());
 		userLabel.setText(translation.userInfo());
@@ -97,7 +98,7 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 			Heading voHeading = new Heading(HeadingSize.H5,
 												   translation.dataUsedFor() + " " + memberVoMap.get(member).getName());
 
-			PerunDataGrid<Attribute> memberDataGrid = new PerunDataGrid<>(new OverviewAttributesColumnProvider());
+			PerunDataGrid<Attribute> memberDataGrid = new PerunDataGrid<>(new AttributeColumnProvider(false));
 			memberDataGrid.setVisible(true);
 			memberDataGrid.setList(member.getMemberAttributes());
 			memberDataGrid.setCondensed(true);
@@ -108,6 +109,7 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 			memberDataGrid.setSelectionEnabled(false);
 			memberDataGrid.drawTableColumns();
 			memberDataGrid.getElement().getStyle().setMarginBottom(0, Style.Unit.PX);
+			memberDataGrid.removeColumn(0);
 
 			Div memberArea = new Div();
 			memberArea.add(voHeading);

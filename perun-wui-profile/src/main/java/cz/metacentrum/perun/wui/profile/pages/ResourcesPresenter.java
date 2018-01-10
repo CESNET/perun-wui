@@ -16,7 +16,6 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.AbstractRepeatingJsonEvent;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.MembersManager;
@@ -28,6 +27,7 @@ import cz.metacentrum.perun.wui.model.beans.Member;
 import cz.metacentrum.perun.wui.model.beans.Resource;
 import cz.metacentrum.perun.wui.model.beans.RichResource;
 import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 	@Override
 	public void loadVos() {
 
-		final Integer userId = Utils.getUserId(placeManager);
+		final Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -112,7 +112,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 
 	@Override
 	public void loadDataForVo(int voId) {
-		final Integer userId = Utils.getUserId(placeManager);
+		final Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -169,8 +169,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 	}
 
 	private void loadGroupsForResources(List<RichResource> richResources) {
-		Integer userId = Utils.getUserId(placeManager);
-
+		final Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -180,7 +179,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 
 			AbstractRepeatingJsonEvent memberEvent = new AbstractRepeatingJsonEvent(richResources.size()) {
 				@Override
-				public void finished(List<JavaScriptObject> results) {
+				public void done(List<JavaScriptObject> results) {
 					List<Member> members = JsUtils.jsListAsList(results);
 					loadGroupsFromMembers(richResources, members);
 				}
@@ -206,7 +205,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 
 		AbstractRepeatingJsonEvent resourceGroupsEvent = new AbstractRepeatingJsonEvent(members.size()) {
 			@Override
-			public void finished(List<JavaScriptObject> results) {
+			public void done(List<JavaScriptObject> results) {
 				List<List<Group>> resourcesGroups = new ArrayList<>();
 
 				for (JavaScriptObject result : results) {

@@ -15,7 +15,7 @@ import org.gwtbootstrap3.client.ui.ProgressBar;
 import org.gwtbootstrap3.client.ui.constants.ProgressBarType;
 
 /**
- * Loading widget with progress bar and custom states (loading, finished, error, filter).
+ * Loading widget with progress bar and custom states (loading, done, error, filter).
  * It can be used as part of PerunDataGrid or simple page. When loader is set to error
  * state, error message is displayed with buttons to re-try and to report error.
  *
@@ -48,7 +48,7 @@ public class PerunLoader extends Composite {
 	@UiField Alert message;
 	private HandlerRegistration lastRetryHandler;
 
-	private String emptyMessage = "Loading finished. No results found.";
+	private String emptyMessage = "Loading done. No results found.";
 
 	private PerunException catchedException;
 
@@ -83,7 +83,7 @@ public class PerunLoader extends Composite {
 	}
 
 	/**
-	 * Get current state of PerunLoader e.g. loading, finished,...
+	 * Get current state of PerunLoader e.g. loading, done,...
 	 *
 	 * @return loader state
 	 */
@@ -169,7 +169,7 @@ public class PerunLoader extends Composite {
 	}
 
 	/**
-	 * Called by table when loading is finished and result is not empty.
+	 * Called by table when loading is done and result is not empty.
 	 */
 	public void onFinished(){
 
@@ -181,12 +181,12 @@ public class PerunLoader extends Composite {
 		bar.setVisible(false);
 
 		// TODO ALERT
-		message.setText("Loading finished.");
+		message.setText("Loading done.");
 
 	}
 
 	/**
-	 * Called by table when loading is finished, but resulting list is empty.
+	 * Called by table when loading is done, but resulting list is empty.
 	 */
 	public void onFinishedEmpty(){
 

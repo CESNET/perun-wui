@@ -41,7 +41,6 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 	@UiField Heading voLabel;
 	@UiField Div voData;
 	@UiField Div voHead;
-//	@UiField ButtonGroup voButtonGroup;
 
 	@UiField CellTable<Group> memberGroupsTable;
 	@UiField CellTable<Group> adminGroupsTable;
@@ -95,12 +94,6 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 			voSelect.refresh();
 
 			voData.setVisible(false);
-
-			/*for (Vo vo : vos) {
-				Button button = new Button();
-				button.setText(vo.getName());
-				voButtonGroup.add(button);
-			}*/
 		}
 	}
 
@@ -112,6 +105,9 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 	@Override
 	public void setVoDataError(PerunException error) {
 		voSelect.setEnabled(true);
+
+		voData.setVisible(false);
+
 		loader.onError(error, event -> getUiHandlers()
 											   .loadDataForVo(Integer.parseInt(voSelect.getSelectedItem().getValue())));
 	}
@@ -125,6 +121,8 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 	@Override
 	public void loadVoDataStart() {
 		voSelect.setEnabled(false);
+
+		voData.setVisible(false);
 
 		loader.setVisible(true);
 		loader.onLoading(translation.loadingUserData());

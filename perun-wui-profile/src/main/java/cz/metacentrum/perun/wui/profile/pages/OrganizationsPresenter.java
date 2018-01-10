@@ -25,6 +25,7 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Member;
 import cz.metacentrum.perun.wui.model.beans.RichMember;
 import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
 import java.util.HashMap;
@@ -70,7 +71,7 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 
 	@Override
 	public void loadData() {
-		Integer userId = Utils.getUserId(placeManager);
+		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -105,7 +106,7 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 	private void loadMembersToVos(int userId, List<Vo> vos) {
 		AbstractRepeatingJsonEvent getMemberByUserRepeating = new AbstractRepeatingJsonEvent(vos.size()){
 			@Override
-			public void finished(List<JavaScriptObject> results) {
+			public void done(List<JavaScriptObject> results) {
 				List<Member> members = JsUtils.jsListAsList(results);
 				getRichMembersFromMembers(members, vos);
 			}
@@ -134,7 +135,7 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 			}
 
 			@Override
-			public void finished(List<JavaScriptObject> results) {
+			public void done(List<JavaScriptObject> results) {
 				List<RichMember> richMembers = JsUtils.jsListAsList(results);
 				Map<RichMember, Vo> memberVoMap = new HashMap<>();
 				for (RichMember richMember : richMembers) {

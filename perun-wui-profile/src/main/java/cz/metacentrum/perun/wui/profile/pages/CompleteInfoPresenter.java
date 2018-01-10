@@ -15,7 +15,6 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.MembersManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
@@ -25,6 +24,7 @@ import cz.metacentrum.perun.wui.model.beans.RichMember;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.json.AbstractRepeatingJsonEvent;
+import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
 import java.util.HashMap;
@@ -68,7 +68,7 @@ public class CompleteInfoPresenter extends Presenter<CompleteInfoPresenter.MyVie
 
 	@Override
 	public void loadUserData() {
-		Integer userId = Utils.getUserId(placeManager);
+		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
@@ -130,7 +130,7 @@ public class CompleteInfoPresenter extends Presenter<CompleteInfoPresenter.MyVie
 	private void getRichMembers(int userId, List<Vo> vos) {
 		AbstractRepeatingJsonEvent getMemberByUserRepeating = new AbstractRepeatingJsonEvent(vos.size()){
 			@Override
-			public void finished(List<JavaScriptObject> results) {
+			public void done(List<JavaScriptObject> results) {
 				List<Member> members = JsUtils.jsListAsList(results);
 				getRichMembersFromMembers(members, vos);
 			}
@@ -159,7 +159,7 @@ public class CompleteInfoPresenter extends Presenter<CompleteInfoPresenter.MyVie
 			}
 
 			@Override
-			public void finished(List<JavaScriptObject> results) {
+			public void done(List<JavaScriptObject> results) {
 				List<RichMember> richMembers = JsUtils.jsListAsList(results);
 				Map<RichMember, Vo> memberVoMap = new HashMap<>();
 				for (RichMember richMember : richMembers) {

@@ -1,6 +1,8 @@
-package cz.metacentrum.perun.wui.model.beans;
+package cz.metacentrum.perun.wui.profile.model.beans;
 
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.model.beans.Attribute;
+import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 
 /**
  * Extended UserExtSource entity containing the original ues and its email Attribute.

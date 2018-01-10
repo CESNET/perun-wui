@@ -16,6 +16,7 @@ import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.ListGroup;
 import org.gwtbootstrap3.client.ui.ListGroupItem;
+import org.gwtbootstrap3.client.ui.Panel;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class PrivacyView extends ViewWithUiHandlers<PrivacyUiHandlers> implement
 	@UiField Text showAllInfoText;
 	@UiField Heading aupHeading;
 	@UiField ListGroup aupListGroup;
-
+	@UiField Panel aupPanel;
 
 	@Inject
 	public PrivacyView(GroupsViewUiBinder binder) {
@@ -52,26 +53,25 @@ public class PrivacyView extends ViewWithUiHandlers<PrivacyUiHandlers> implement
 	}
 
 	@Override
-	public void setVosWithAttribute(Map<Vo, Attribute> vosWithAttribute) {
+	public void clearVos() {
+		aupListGroup.clear();
+	}
+
+	@Override
+	public void addVoWithAulAttribute(Vo vo, Attribute attr) {
 		loader.onFinished();
 		loader.setVisible(false);
 
-		List<Map.Entry<Vo, Attribute>> entries = new ArrayList<>(vosWithAttribute.entrySet());
-
-		for (Map.Entry<Vo, Attribute> entry : entries) {
-			Vo vo = entry.getKey();
-			Attribute attr = entry.getValue();
-
-			if (vo == null || attr == null || attr.getValue() == null) {
-				continue;
-			}
-
-			HTML link = new HTML("<a href=\"" + attr.getValue() + "\">" + vo.getName() + "</a>");
-			ListGroupItem item = new ListGroupItem();
-			item.add(link);
-			aupListGroup.setUnstyled(true);
-			aupListGroup.add(item);
+		if (vo == null || attr == null || attr.getValue() == null) {
+			return;
 		}
+
+		aupPanel.setVisible(true);
+		HTML link = new HTML("<a href=\"" + attr.getValue() + "\">" + vo.getName() + "</a>");
+		ListGroupItem item = new ListGroupItem();
+		item.add(link);
+		aupListGroup.setUnstyled(true);
+		aupListGroup.add(item);
 	}
 
 	@Override

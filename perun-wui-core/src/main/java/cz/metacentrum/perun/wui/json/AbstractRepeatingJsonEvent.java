@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.json;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 
@@ -13,7 +12,7 @@ import java.util.List;
  * </p>
  * <p>
  * 	 When is used for the X-th time specified by value in constructor,
- * it calls method 'finished'. When receives some error, it calls the method err.
+ * it calls method 'done'. When receives some error, it calls the method err.
  * But it can maintain another JsonCalls, but if someError happens, it does not call the erred method again.
  * </p>
  * <p>
@@ -46,7 +45,7 @@ public abstract class AbstractRepeatingJsonEvent implements RepeatingJsonEvent {
 	@Override
 	public void onFinished(JavaScriptObject result) {
 		if (finished) {
-			throw new IllegalStateException("Event called more times than specified in 'repeatTimes'");
+			throw new IllegalStateException("Event called more times than specified in constructor");
 		}
 
 		results.add(result);
@@ -54,7 +53,7 @@ public abstract class AbstractRepeatingJsonEvent implements RepeatingJsonEvent {
 
 		if (counter == repeatTimes) {
 			finished = true;
-			finished(results);
+			done(results);
 		}
 	}
 

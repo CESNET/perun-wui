@@ -181,4 +181,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("Terms of use")
 	String aupHeader();
+
+	@DefaultMessage("No identities found")
+	String noIdentities();
 }

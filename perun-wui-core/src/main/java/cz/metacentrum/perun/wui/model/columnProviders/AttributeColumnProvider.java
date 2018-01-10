@@ -1,9 +1,14 @@
 package cz.metacentrum.perun.wui.model.columnProviders;
 
 import com.google.gwt.cell.client.FieldUpdater;
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.json.client.JSONValue;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
+import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
@@ -14,21 +19,30 @@ import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Implementation of {@link ColumnProvider ColumnProvider}
- * for {@link Attribute Attribute}.
+ * for {@link Attribute Attribute} to display user information.
  *
- * @author Pavel Zlámal <zlamal@cesnet.cz>
+ * @author Vojtěch Sassmann <vojtech.sassmann@gmail.com>
  */
 public class AttributeColumnProvider extends ColumnProvider<Attribute> {
-
 	private static ArrayList<PerunColumnType> defaultColumns = new ArrayList<>();
+
+	private boolean nameAsLink = false;
+
+	private PerunTranslation translation = GWT.create(PerunTranslation.class);
+
+	public AttributeColumnProvider(boolean nameAsLink) {
+		this.nameAsLink = nameAsLink;
+	}
 
 	static {
 		defaultColumns.add(PerunColumnType.ID);
 		defaultColumns.add(PerunColumnType.NAME);
+		defaultColumns.add(PerunColumnType.ATTR_VALUE);
 		defaultColumns.add(PerunColumnType.DESCRIPTION);
 	}
 
@@ -51,39 +65,31 @@ public class AttributeColumnProvider extends ColumnProvider<Attribute> {
 	public PerunDataGrid.PerunSelectionEvent<Attribute> getDefaultSelectionEvent() {
 
 		// by default all VOs can be selected
-		return new PerunDataGrid.PerunSelectionEvent<Attribute>() {
-			@Override
-			public boolean canSelectObject(Attribute object) {
-				return (object != null);
-			}
-		};
+		return object -> (object != null);
 
 	}
 
 	@Override
 	public PerunDataGrid.PerunFilterEvent<Attribute> getDefaultFilterEvent() {
-		return new PerunDataGrid.PerunFilterEvent<Attribute>() {
-			@Override
-			public boolean filterOnObject(Set<PerunColumnType> columnTypeSet, String text, Attribute object) {
-				if (object == null || text == null) return false;
+		return (columnTypeSet, text, object) -> {
+			if (object == null || text == null) return false;
 
-				if (columnTypeSet == null || columnTypeSet.isEmpty()) {
-					// use default filter - ID,displayName,description
-					columnTypeSet = new HashSet<PerunColumnType>(Arrays.asList(PerunColumnType.NAME, PerunColumnType.DESCRIPTION));
-				}
-				for (PerunColumnType columnType : columnTypeSet) {
-					if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).contains(text)) {
-						return true;
-					} else if (columnType.equals(PerunColumnType.NAME) && object.getName() != null &&
-							object.getName().toLowerCase().contains(text.toLowerCase())) {
-						return true;
-					} else if (columnType.equals(PerunColumnType.DESCRIPTION) && object.getDescription() != null &&
-							object.getDescription().toLowerCase().contains(text.toLowerCase())) {
-						return true;
-					}
-				}
-				return false;
+			if (columnTypeSet == null || columnTypeSet.isEmpty()) {
+				// use default filter - ID,displayName,description
+				columnTypeSet = new HashSet<>(Arrays.asList(PerunColumnType.NAME, PerunColumnType.DESCRIPTION));
 			}
+			for (PerunColumnType columnType : columnTypeSet) {
+				if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).contains(text)) {
+					return true;
+				} else if (columnType.equals(PerunColumnType.NAME) && object.getName() != null &&
+								   object.getName().toLowerCase().contains(text.toLowerCase())) {
+					return true;
+				} else if (columnType.equals(PerunColumnType.DESCRIPTION) && object.getDescription() != null &&
+								   object.getDescription().toLowerCase().contains(text.toLowerCase())) {
+					return true;
+				}
+			}
+			return false;
 		};
 	}
 
@@ -105,35 +111,29 @@ public class AttributeColumnProvider extends ColumnProvider<Attribute> {
 	@Override
 	public <C> void addColumnToTable(final PerunDataGrid<Attribute> table, PerunColumnType column, FieldUpdater<Attribute, C> updater, int widthInPixels) {
 
-		if (PerunColumnType.ID.equals(column)) {
+		switch (column) {
+			case ID:
+				PerunColumn<Attribute, String> idColumn = createColumn(column,
+						object -> String.valueOf(object.getId()), this.getFieldUpdater(table)
+				);
+				idColumn.setSortable(true);
+				table.getColumnSortHandler().setComparator(idColumn, new PerunComparator<Attribute>(PerunColumnType.ID));
+				idColumn.setColumnType(column);
+				table.addColumn(idColumn, "Id");
+				if (widthInPixels > 0) {
+					table.setColumnWidth(idColumn, widthInPixels + "px");
+				} else {
+					table.setColumnWidth(idColumn, "10%");
+				}
+				break;
+			case NAME:
+				PerunColumn nameColumn;
 
-			PerunColumn<Attribute, String> idColumn = createColumn(column,
-					new GetValue<Attribute, String>() {
-						@Override
-						public String getValue(Attribute object) {
-							return String.valueOf(object.getId());
-						}
-					}, this.<String>getFieldUpdater(table)
-			);
-			idColumn.setSortable(true);
-			table.getColumnSortHandler().setComparator(idColumn, new PerunComparator<Attribute>(PerunColumnType.ID));
-			idColumn.setColumnType(column);
-			table.addColumn(idColumn, "Id");
-			if (widthInPixels > 0) {
-				table.setColumnWidth(idColumn, widthInPixels + "px");
-			} else {
-				table.setColumnWidth(idColumn, "10%");
-			}
-
-		} else if (PerunColumnType.NAME.equals(column)) {
-
-			PerunColumn<Attribute, PerunLinkCell.PerunLinkCellHandler<Attribute>> nameColumn = createColumn(
-					new PerunLinkCell<PerunLinkCell.PerunLinkCellHandler<Attribute>>(),
-					column,
-					new GetValue<Attribute, PerunLinkCell.PerunLinkCellHandler<Attribute>>() {
-						@Override
-						public PerunLinkCell.PerunLinkCellHandler<Attribute> getValue(final Attribute object) {
-							return new PerunLinkCell.PerunLinkCellHandler<Attribute>() {
+				if (nameAsLink) {
+					nameColumn = createColumn(
+							new PerunLinkCell<>(),
+							column,
+							object -> new PerunLinkCell.PerunLinkCellHandler<Attribute>() {
 								@Override
 								public boolean isAuthorized() {
 									return PerunSession.getInstance().isPerunAdmin();
@@ -158,52 +158,110 @@ public class AttributeColumnProvider extends ColumnProvider<Attribute> {
 									return object;
 								}
 
-							};
-						}
-					},
-					this.<PerunLinkCell.PerunLinkCellHandler<Attribute>>getFieldUpdater(table)
-			);
+							},
+							this.<PerunLinkCell.PerunLinkCellHandler<Attribute>>getFieldUpdater(table)
+					);
+				} else {
+					nameColumn = createColumn(
+							column,
+							Attribute::getName,
+							this.getFieldUpdater(table)
+					);
+				}
 
-			nameColumn.setSortable(true);
-			table.getColumnSortHandler().setComparator(nameColumn, new PerunComparator<Attribute>(PerunColumnType.NAME));
-			nameColumn.setColumnType(column);
-			table.addColumn(nameColumn, "Name");
-			if (widthInPixels > 0) {
-				table.setColumnWidth(nameColumn, widthInPixels + "px");
-			} else {
-				// by default not with fixed width
-				table.setColumnWidth(nameColumn, "30%");
-			}
+				nameColumn.setSortable(true);
+				table.getColumnSortHandler().setComparator(nameColumn, new PerunComparator<Attribute>(PerunColumnType.NAME));
+				nameColumn.setColumnType(column);
+				table.addColumn(nameColumn, translation.name());
+				if (widthInPixels > 0) {
+					table.setColumnWidth(nameColumn, widthInPixels + "px");
+				} else {
+					// by default not with fixed width
+					table.setColumnWidth(nameColumn, "30%");
+				}
+				break;
 
-		} else if (PerunColumnType.DESCRIPTION.equals(column)) {
+			case ATTR_VALUE:
+				PerunColumn<Attribute, String> attrValueColumn = createColumn(
+						column,
+						attr -> {
+							if (attr.getType().equals("java.util.LinkedHashMap")) {
+								return generateMap(attr.getValueAsMap());
+							} else if (attr.getType().equals("java.lang.Integer")) {
+								return generateNumberBox(attr.getValue());
+							} else if (attr.getType().equals("java.lang.Boolean")) {
+								return generateCheckBox(attr.getValue());
+							} else if (attr.getType().equals("java.lang.LargeString")) {
+								return generateString(attr.getValue());
+							} else if (attr.getType().equals("java.util.LargeArrayList")) {
+								return generateList(attr.getValueAsJsArray());
+							} else {
+								return generateList(attr.getValueAsJsArray());
+							}
+						},
+						this.getFieldUpdater(table)
+				);
 
-			PerunColumn<Attribute, String> shortNameColumn = createColumn(
+				attrValueColumn.setSortable(true);
+				table.getColumnSortHandler().setComparator(attrValueColumn, new PerunComparator<Attribute>(PerunColumnType.DESCRIPTION));
+				attrValueColumn.setColumnType(column);
+				table.addColumn(attrValueColumn, translation.value());
+				if (widthInPixels > 0) {
+					table.setColumnWidth(attrValueColumn, widthInPixels + "px");
+				} else {
+					table.setColumnWidth(attrValueColumn, "40%");
+				}
+				break;
+
+			case DESCRIPTION:
+				PerunColumn<Attribute, String> shortNameColumn = createColumn(
 					column,
-					new GetValue<Attribute, String>() {
-						@Override
-						public String getValue(Attribute object) {
-							return object.getDescription();
-						}
-					},
-					this.<String>getFieldUpdater(table)
-			);
+						GeneralObject::getDescription,
+					this.getFieldUpdater(table)
+				);
 
-			shortNameColumn.setSortable(true);
-			table.getColumnSortHandler().setComparator(shortNameColumn, new PerunComparator<Attribute>(PerunColumnType.DESCRIPTION));
-			shortNameColumn.setColumnType(column);
-			table.addColumn(shortNameColumn, "Description");
-			if (widthInPixels > 0) {
-				table.setColumnWidth(shortNameColumn, widthInPixels + "px");
-			} else {
-				table.setColumnWidth(shortNameColumn, "60%");
-			}
-
-		} else if (PerunColumnType.ATTR_VALUE.equals(column)) {
-
-			// TODO
-
+				shortNameColumn.setSortable(true);
+				table.getColumnSortHandler().setComparator(shortNameColumn, new PerunComparator<Attribute>(PerunColumnType.DESCRIPTION));
+				shortNameColumn.setColumnType(column);
+				table.addColumn(shortNameColumn, translation.description());
+				if (widthInPixels > 0) {
+					table.setColumnWidth(shortNameColumn, widthInPixels + "px");
+				} else {
+					table.setColumnWidth(shortNameColumn, "30%");
+				}
+				break;
 		}
-
 	}
 
+	private String generateList(JsArrayString valueAsJsArray) {
+		return valueAsJsArray.toString();
+	}
+
+	private String generateString(String value) {
+		return value;
+	}
+
+	private String generateCheckBox(String value) {
+		return value;
+	}
+
+	private String generateNumberBox(String value) {
+		return value;
+	}
+
+	private String generateMap(Map<String, JSONValue> valueAsMap) {
+		StringBuilder str = new StringBuilder();
+		List<String> keys = new ArrayList<>(valueAsMap.keySet());
+
+		for (int i = 0; i < keys.size(); i++) {
+			String key = keys.get(i);
+			str.append(key);
+			str.append(": ");
+			str.append(valueAsMap.get(key).toString());
+			if (i != (keys.size() - 1)) {
+				str.append(", ");
+			}
+		}
+		return str.toString();
+	}
 }
