@@ -19,16 +19,29 @@
 
 		<p:PerunLoader ui:field="loader" visible="false"/>
 
+		<b.html:Div paddingTop="20">
+			<b.gwt:CellTable ui:field="federatedIdentitiesTable" condensed="true" bordered="true" striped="false" />
+			<p:PerunButton ui:field="addFedBtn" icon="PLUS" type="SUCCESS"/>
+		</b.html:Div>
 
-		<b.gwt:CellTable ui:field="federatedIdentitiesTable" condensed="true" bordered="true" striped="false" />
+		<b.html:Div paddingTop="20">
+			<b.gwt:CellTable ui:field="x509IdentitiesTable" condensed="true" bordered="true" striped="false"/>
+			<p:PerunButton ui:field="addCertBtn" icon="PLUS" type="SUCCESS"/>
+		</b.html:Div>
 
-		<p:PerunButton ui:field="addFedBtn" icon="PLUS" type="SUCCESS"/>
+
+		<b.html:Div>
+			<b:Button ui:field="showOtherUesButton" type="LINK" size="SMALL" dataTarget="#otherUesModal" dataToggle="MODAL" />
+		</b.html:Div>
 
 
-		<b.gwt:CellTable ui:field="x509IdentitiesTable" condensed="true" bordered="true" striped="false" />
+		<b:Modal ui:field="otherUesModal" closable="true" fade="true"
+				 dataBackdrop="STATIC" dataKeyboard="true" b:id="otherUesModal">
+			<b:ModalBody>
+				<b.gwt:CellTable ui:field="otherIdentitiesTable" condensed="true" bordered="true" striped="false" />
 
-		<p:PerunButton ui:field="addCertBtn" icon="PLUS" type="SUCCESS"/>
-
+			</b:ModalBody>
+		</b:Modal>
 
 	</b.html:Div>
 

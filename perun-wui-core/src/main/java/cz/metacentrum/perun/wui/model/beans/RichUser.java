@@ -174,6 +174,34 @@ public class RichUser extends User {
 	}
 
 	/**
+	 * Get preferredLanguage stored in UserAttributes of RichUser.
+	 *
+	 * @return preferred language
+	 */
+	public final String getPreferredLanguage() {
+		for (Attribute a : JsUtils.<Attribute>jsoAsList(JsUtils.getNativePropertyArray(this, "userAttributes"))) {
+			if (a.getFriendlyName().equals("preferredLanguage")) {
+				return a.getValue();
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Get timezone stored in UserAttributes of RichUser.
+	 *
+	 * @return preferred language
+	 */
+	public final String getTimezone() {
+		for (Attribute a : JsUtils.<Attribute>jsoAsList(JsUtils.getNativePropertyArray(this, "userAttributes"))) {
+			if (a.getFriendlyName().equals("timezone")) {
+				return a.getValue();
+			}
+		}
+		return null;
+	}
+
+	/**
 	 * Compares to another object
 	 *
 	 * @param o Object to compare

@@ -2,7 +2,6 @@ package cz.metacentrum.perun.wui.profile.pages;
 
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -16,15 +15,15 @@ import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.json.AbstractRepeatingJsonEvent;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.MembersManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Member;
 import cz.metacentrum.perun.wui.model.beans.RichMember;
+import cz.metacentrum.perun.wui.model.beans.RichUser;
 import cz.metacentrum.perun.wui.model.beans.Vo;
+import cz.metacentrum.perun.wui.json.AbstractRepeatingJsonEvent;
 import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
@@ -35,65 +34,66 @@ import java.util.Map;
 /**
  * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
  */
-public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyView, OrganizationsPresenter.MyProxy> implements OrganizationsUiHandlers {
-
-	public interface MyView extends View, HasUiHandlers<OrganizationsUiHandlers> {
-		void onError(PerunException e);
-
-		void onLoadingStart();
-
-		void setData(Map<RichMember, Vo> data);
-	}
+public class CompleteInfoPresenter extends Presenter<CompleteInfoPresenter.MyView, CompleteInfoPresenter.MyProxy> implements CompleteInfoUiHandlers {
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
 
-	@NameToken(PerunProfilePlaceTokens.ORGANIZATIONS)
+	public interface MyView extends View, HasUiHandlers<CompleteInfoUiHandlers> {
+
+		void setUser(RichUser user);
+
+		void onLoadingError(PerunException e);
+
+		void onLoadingStart();
+
+		void setMembersWithVo(Map<RichMember, Vo> memberVoMap);
+	}
+
+	@NameToken(PerunProfilePlaceTokens.COMPLETE_INFO)
 	@ProxyStandard
-	public interface MyProxy extends ProxyPlace<OrganizationsPresenter> {
+	public interface MyProxy extends ProxyPlace<CompleteInfoPresenter> {
 
 	}
 
 	@Inject
-	public OrganizationsPresenter(final EventBus eventBus, final MyView myView, final MyProxy myProxy) {
+	public CompleteInfoPresenter(final EventBus eventBus, final MyView myView, final MyProxy myProxy) {
 		super(eventBus, myView, myProxy, PerunPresenter.SLOT_MAIN_CONTENT);
 		getView().setUiHandlers(this);
 	}
 
 	@Override
 	protected void onReveal() {
-		loadData();
+		loadUserData();
 	}
 
 	@Override
-	public void extendMembership(Vo vo) {
-		Window.Location.assign(Utils.getMembershipExtendLink(vo));
-	}
-
-	@Override
-	public void loadData() {
+	public void loadUserData() {
 		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
-		PlaceRequest request = placeManager.getCurrentPlaceRequest();
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
 		if (userId == null || userId < 1) {
 			placeManager.revealErrorPlace(request.getNameToken());
-		} else {
-			loadData(userId);
+			return;
+		}
+
+		if (PerunSession.getInstance().isSelf(userId)) {
+			getUserData(userId);
+
+			getMembersData(userId);
 		}
 	}
 
-	private void loadData(Integer userId) {
-		UsersManager.getVosWhereUserIsMember(userId, new JsonEvents() {
+	private void getUserData(int userId) {
+		UsersManager.getRichUserWithAttributes(userId, new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject result) {
-				List<Vo> vos = JsUtils.jsoAsList(result);
-
-				loadMembersToVos(userId, vos);
+				getView().setUser((RichUser) result);
 			}
 
 			@Override
 			public void onError(PerunException error) {
-				getView().onError(error);
+				getView().onLoadingError(error);
 			}
 
 			@Override
@@ -103,7 +103,31 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 		});
 	}
 
-	private void loadMembersToVos(int userId, List<Vo> vos) {
+	private void getVos(int userId) {
+		UsersManager.getVosWhereUserIsMember(userId, new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				List<Vo> vos = JsUtils.jsoAsList(result);
+				getRichMembers(userId, vos);
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				getView().onLoadingError(error);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				// do nothing
+			}
+		});
+	}
+
+	private void getMembersData(int userId) {
+		getVos(userId);
+	}
+
+	private void getRichMembers(int userId, List<Vo> vos) {
 		AbstractRepeatingJsonEvent getMemberByUserRepeating = new AbstractRepeatingJsonEvent(vos.size()){
 			@Override
 			public void done(List<JavaScriptObject> results) {
@@ -113,7 +137,7 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 
 			@Override
 			public void erred(PerunException exception) {
-				getView().onError(exception);
+				getView().onLoadingError(exception);
 			}
 
 			@Override
@@ -131,7 +155,7 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 		AbstractRepeatingJsonEvent richMembersRepeatingEvent = new AbstractRepeatingJsonEvent(members.size()) {
 			@Override
 			public void erred(PerunException exception) {
-				getView().onError(exception);
+				getView().onLoadingError(exception);
 			}
 
 			@Override
@@ -147,7 +171,7 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 					}
 				}
 
-				getView().setData(memberVoMap);
+				getView().setMembersWithVo(memberVoMap);
 			}
 
 			@Override
@@ -159,5 +183,10 @@ public class OrganizationsPresenter extends Presenter<OrganizationsPresenter.MyV
 		for (Member member : members) {
 			MembersManager.getRichMemberWithAttributes(member.getId(), richMembersRepeatingEvent);
 		}
+	}
+
+	@Override
+	public void navigateBack() {
+		placeManager.navigateBack();
 	}
 }

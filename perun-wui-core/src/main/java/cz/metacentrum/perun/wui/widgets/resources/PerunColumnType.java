@@ -59,6 +59,11 @@ public enum PerunColumnType {
 	PUBLICATION_YEAR,
 	PUBLICATION_THANKS,
 	PUBLICATION_LOCK,
-	PUBLICATION_CITE
+	PUBLICATION_CITE,
 
+	// resource column
+	FACILITY_NAME,
+
+	// rich ues column
+	REMOVE,
 }

@@ -1,9 +1,7 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
-import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -15,10 +13,13 @@ import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ExtSource.ExtSourceType;
+import cz.metacentrum.perun.wui.profile.model.beans.RichUserExtSource;
 import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
@@ -30,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * View for displaying VO membership details
+ * View for displaying OrganizationsView membership details
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
@@ -44,11 +45,17 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 	@UiField PerunLoader loader;
 	@UiField Text text;
 	@UiField Small small;
-	@UiField CellTable<UserExtSource> federatedIdentitiesTable;
+	@UiField CellTable<RichUserExtSource> federatedIdentitiesTable;
 	@UiField PerunButton addFedBtn;
-	@UiField CellTable<UserExtSource> x509IdentitiesTable;
+	@UiField CellTable<RichUserExtSource> x509IdentitiesTable;
 	@UiField PerunButton addCertBtn;
+	@UiField CellTable<RichUserExtSource> otherIdentitiesTable;
+	@UiField Modal otherUesModal;
+	@UiField Button showOtherUesButton;
 
+	private List<RichUserExtSource> federatedIdentities = new ArrayList<>();
+	private List<RichUserExtSource> x509Identities = new ArrayList<>();
+	private List<RichUserExtSource> otherIdentities = new ArrayList<>();
 
 	@Inject
 	public IdentitiesView(IdentitiesViewUiBinder binder) {
@@ -58,11 +65,22 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		text.setText(translation.menuMyIdentities());
 		addFedBtn.setText(translation.addFed());
 		addCertBtn.setText(translation.addCert());
+		otherUesModal.setTitle(translation.otherIdentities());
+		showOtherUesButton.setText(translation.otherIdentities());
 
-
-		TextColumn<UserExtSource> nameCol = new TextColumn<UserExtSource>() {
+		TextColumn<RichUserExtSource> emailCol = new TextColumn<RichUserExtSource>() {
 			@Override
-			public String getValue(UserExtSource userExtSource) {
+			public String getValue(RichUserExtSource rues) {
+				if (rues.getEmail() == null || rues.getEmail().isEmpty()) {
+					return "N/A";
+				} else {
+					return rues.getEmail();
+				}
+			}
+		};
+		TextColumn<RichUserExtSource> nameCol = new TextColumn<RichUserExtSource>() {
+			@Override
+			public String getValue(RichUserExtSource userExtSource) {
 				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
 					if (userExtSource.getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth")) {
 						// hack our social IdP so we can tell from where identity is
@@ -78,9 +96,9 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 				}
 			}
 		};
-		TextColumn<UserExtSource> loginCol = new TextColumn<UserExtSource>() {
+		TextColumn<RichUserExtSource> loginCol = new TextColumn<RichUserExtSource>() {
 			@Override
-			public String getValue(UserExtSource userExtSource) {
+			public String getValue(RichUserExtSource userExtSource) {
 				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
 					return userExtSource.getLogin().split("@")[0];
 				} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
@@ -90,118 +108,137 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 				}
 			}
 		};
-		Column<UserExtSource, String> removeColumn = new Column<UserExtSource, String>(
+
+		Column<RichUserExtSource, String> removeColumn = new Column<RichUserExtSource, String>(
 				new ButtonCell(ButtonType.DANGER, ButtonSize.EXTRA_SMALL)) {
 			@Override
-			public String getValue(final UserExtSource extSource) {
+			public String getValue(final RichUserExtSource extSource) {
 				((ButtonCell) this.getCell()).setEnabled(!extSource.getPersistent());
 				return "✖";
 			}
 		};
-		removeColumn.setFieldUpdater(new FieldUpdater<UserExtSource, String>() {
-			@Override
-			public void update(int i, UserExtSource userExtSource, String buttonText) {
-				getUiHandlers().removeUserExtSource(userExtSource);
-			}
-		});
+		removeColumn.setFieldUpdater((i, userExtSource, buttonText) -> getUiHandlers().removeUserExtSource(userExtSource));
 
 
 		PerunLoader plFed = new PerunLoader();
-		plFed.getElement().getStyle().setMarginTop(6, Style.Unit.PX);
+		plFed.getElement().getStyle().setMarginTop(20, Style.Unit.PX);
 		federatedIdentitiesTable.setEmptyTableWidget(plFed);
+		federatedIdentitiesTable.addColumn(emailCol, translation.uesEmail());
 		federatedIdentitiesTable.addColumn(nameCol, translation.federatedIdp());
 		federatedIdentitiesTable.addColumn(loginCol, translation.federatedLogin());
 		federatedIdentitiesTable.addColumn(removeColumn);
-		federatedIdentitiesTable.setColumnWidth(federatedIdentitiesTable.getColumnCount()-1, "10%");
-
+		federatedIdentitiesTable.setColumnWidth(federatedIdentitiesTable.getColumnCount()-1, "5%");
+		((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).setEmptyMessage(translation.noIdentities());
 
 		PerunLoader plCert = new PerunLoader();
-		plCert.getElement().getStyle().setMarginTop(6, Style.Unit.PX);
+		plCert.getElement().getStyle().setMarginTop(20, Style.Unit.PX);
 		x509IdentitiesTable.setEmptyTableWidget(plCert);
+		x509IdentitiesTable.addColumn(emailCol, translation.uesEmail());
 		x509IdentitiesTable.addColumn(nameCol, translation.x509Issuer());
 		x509IdentitiesTable.addColumn(loginCol, translation.x509Identity());
 		x509IdentitiesTable.addColumn(removeColumn);
-		x509IdentitiesTable.setColumnWidth(x509IdentitiesTable.getColumnCount()-1, "10%");
+		x509IdentitiesTable.setColumnWidth(x509IdentitiesTable.getColumnCount()-1, "5%");
+		((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).setEmptyMessage(translation.noIdentities());
 
+		PerunLoader plOther = new PerunLoader();
+		plOther.getElement().getStyle().setMarginTop(20, Style.Unit.PX);
+		otherIdentitiesTable.setEmptyTableWidget(plOther);
+		otherIdentitiesTable.addColumn(emailCol, translation.uesEmail());
+		otherIdentitiesTable.addColumn(nameCol, translation.uesName());
+		otherIdentitiesTable.addColumn(loginCol, translation.login());
+		otherIdentitiesTable.addColumn(removeColumn);
+		otherIdentitiesTable.setColumnWidth(otherIdentitiesTable.getColumnCount()-1, "5%");
+		((PerunLoader) otherIdentitiesTable.getEmptyTableWidget()).setEmptyMessage(translation.noIdentities());
 
-		ClickHandler icLinkHandler = new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent clickEvent) {
-				getUiHandlers().addUserExtSource();
-			}
-		};
+		ClickHandler icLinkHandler = clickEvent -> getUiHandlers().addUserExtSource();
 
 		addFedBtn.addClickHandler(icLinkHandler);
 		addCertBtn.addClickHandler(icLinkHandler);
 	}
 
+	@Override
+	public void addUserExtSource(RichUserExtSource es) {
+		if (ExtSourceType.IDP.getType().equals(es.getExtSource().getType())) {
+			federatedIdentities.add(es);
+			federatedIdentitiesTable.setRowData(federatedIdentities);
+		} else if (ExtSourceType.X509.getType().equals(es.getExtSource().getType())) {
+			x509Identities.add(es);
+			x509IdentitiesTable.setRowData(x509Identities);
+		} else {
+			otherIdentities.add(es);
+			otherIdentitiesTable.setRowData(otherIdentities);
+		}
 
+		if (federatedIdentities.isEmpty()) {
+			((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).onEmpty();
+		}
+		if (x509Identities.isEmpty()) {
+			((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onEmpty();
+		}
+		if (otherIdentities.isEmpty()) {
+			((PerunLoader) otherIdentitiesTable.getEmptyTableWidget()).onEmpty();
+		}
+	}
 
 	@Override
-	public void setUserExtSources(List<UserExtSource> userExtSources) {
-		List<UserExtSource> federatedIdentities = new ArrayList<>();
-		List<UserExtSource> x509Identities = new ArrayList<>();
-		for (UserExtSource es : userExtSources) {
-			if (ExtSourceType.IDP.getType().equals(es.getExtSource().getType())) {
-				federatedIdentities.add(es);
-			} else if (ExtSourceType.X509.getType().equals(es.getExtSource().getType())) {
-				x509Identities.add(es);
-			}
-		}
+	public void clearUserExtSources() {
 		((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).onEmpty();
-		federatedIdentitiesTable.setRowData(federatedIdentities);
 		((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onEmpty();
-		x509IdentitiesTable.setRowData(x509Identities);
+		((PerunLoader) otherIdentitiesTable.getEmptyTableWidget()).onEmpty();
+
+		federatedIdentitiesTable.setRowData(new ArrayList<>());
+		x509IdentitiesTable.setRowData(new ArrayList<>());
+		otherIdentitiesTable.setRowData(new ArrayList<>());
+
+		federatedIdentities = new ArrayList<>();
+		x509Identities = new ArrayList<>();
+		otherIdentities = new ArrayList<>();
 	}
 
 	@Override
 	public void removingUserExtSourceStart(UserExtSource userExtSource) {
 		if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
-			federatedIdentitiesTable.setRowData(new ArrayList<UserExtSource>());
+			federatedIdentitiesTable.setRowData(new ArrayList<>());
 			((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).onLoading(translation.removingIdentity());
 		} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
-			x509IdentitiesTable.setRowData(new ArrayList<UserExtSource>());
+			x509IdentitiesTable.setRowData(new ArrayList<>());
 			((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onLoading(translation.removingIdentity());
 		}
 	}
 
 	@Override
 	public void removingUserExtSourceError(PerunException ex, final UserExtSource userExtSource) {
-		ClickHandler retry = new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent clickEvent) {
-				getUiHandlers().removeUserExtSource(userExtSource);
-			}
-		};
+		ClickHandler retry = clickEvent -> getUiHandlers().removeUserExtSource(userExtSource);
+
 		if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
-			federatedIdentitiesTable.setRowData(new ArrayList<UserExtSource>());
+			federatedIdentitiesTable.setRowData(new ArrayList<>());
 			((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).onError(ex, retry);
 		} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
-			x509IdentitiesTable.setRowData(new ArrayList<UserExtSource>());
+			x509IdentitiesTable.setRowData(new ArrayList<>());
 			((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onError(ex, retry);
+		} else {
+			otherIdentitiesTable.setRowData(new ArrayList<>());
+			((PerunLoader) otherIdentitiesTable.getEmptyTableWidget()).onError(ex, retry);
 		}
 	}
 
 	@Override
 	public void loadingUserExtSourcesStart() {
-		federatedIdentitiesTable.setRowData(new ArrayList<UserExtSource>());
 		((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).onLoading(translation.loadingIdentities());
-		x509IdentitiesTable.setRowData(new ArrayList<UserExtSource>());
 		((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onLoading(translation.loadingIdentities());
+		((PerunLoader) otherIdentitiesTable.getEmptyTableWidget()).onLoading(translation.loadingIdentities());
 	}
 
 	@Override
 	public void loadingUserExtSourcesError(PerunException ex) {
-		ClickHandler retry = new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent clickEvent) {
-				getUiHandlers().loadUserExtSources();
-			}
-		};
-		federatedIdentitiesTable.setRowData(new ArrayList<UserExtSource>());
+		ClickHandler retry = clickEvent -> getUiHandlers().loadUserExtSources();
+
+		federatedIdentitiesTable.setRowData(new ArrayList<>());
 		((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).onError(ex, retry);
-		x509IdentitiesTable.setRowData(new ArrayList<UserExtSource>());
+		x509IdentitiesTable.setRowData(new ArrayList<>());
 		((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onError(ex, retry);
+		otherIdentitiesTable.setRowData(new ArrayList<>());
+		((PerunLoader) otherIdentitiesTable.getEmptyTableWidget()).onError(ex, retry);
 	}
 
 	private String getCertParam(String string, String param) {
@@ -213,5 +250,4 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		}
 		return "";
 	}
-
 }

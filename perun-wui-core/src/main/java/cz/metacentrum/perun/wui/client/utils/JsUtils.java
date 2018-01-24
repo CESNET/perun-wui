@@ -298,4 +298,20 @@ public class JsUtils {
 		return new Date().getFullYear()
 	}-*/;
 
+	/**
+	 * Converts List of JavaScriptObject to List of some specific bean
+	 *
+	 * @param list List of objects to be converted
+	 * @param <T> bean type
+	 * @return list of beans of type T
+	 */
+	public static <T extends JavaScriptObject> List<T> jsListAsList(List<JavaScriptObject> list) {
+		List<T> converted = new ArrayList<>();
+
+		for (JavaScriptObject object : list) {
+				converted.add((T)object);
+		}
+
+		return converted;
+	}
 }
