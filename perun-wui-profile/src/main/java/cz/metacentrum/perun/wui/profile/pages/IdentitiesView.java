@@ -7,7 +7,6 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -16,7 +15,6 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ExtSource.ExtSourceType;
 import cz.metacentrum.perun.wui.profile.model.beans.RichUserExtSource;
 import cz.metacentrum.perun.wui.model.beans.UserExtSource;
-import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
@@ -26,13 +24,11 @@ import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
-import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Small;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * View for displaying OrganizationsView membership details
@@ -86,7 +82,8 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 			@Override
 			public String getValue(RichUserExtSource userExtSource) {
 				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
-					if (userExtSource.getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth")) {
+					if (userExtSource.getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth") ||
+							userExtSource.getExtSource().getName().equals("https://login.elixir-czech.org/idp/")) {
 						// hack our social IdP so we can tell from where identity is
 						return Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
 					}
