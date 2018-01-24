@@ -8,6 +8,9 @@
 	<ui:style>
 	</ui:style>
 
+	<!-- Import place tokens -->
+	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens"/>
+
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
 	<b.html:Div>
@@ -21,24 +24,36 @@
 		<p:PerunLoader visible="false" ui:field="loader" />
 
 		<b.html:Div ui:field="personalInfo" visible="false" paddingTop="20">
-			<b:Row paddingBottom="10">
+			<b:Row paddingBottom="10" ui:field="nameRow">
 				<b:Column size="SM_4" ui:field="nameLabel" addStyleNames="{res.gss.personalInfoLabel}" />
 				<b:Column size="SM_8" >
 					<b.html:Text ui:field="nameData" />
 				</b:Column>
 			</b:Row>
-			<b:Row paddingBottom="10">
+			<b:Row paddingBottom="10" ui:field="organizationRow">
 				<b:Column size="SM_4" ui:field="orgLabel" addStyleNames="{res.gss.personalInfoLabel}" />
 				<b:Column size="SM_8" >
 					<b.html:Text ui:field="orgData" />
 				</b:Column>
 			</b:Row>
-			<b:Row paddingBottom="10">
+			<b:Row paddingBottom="10" ui:field="preferredEmailRow">
 				<b:Column size="SM_4" ui:field="emailLabel" addStyleNames="{res.gss.personalInfoLabel}" />
 				<b:Column size="SM_8" >
 					<b.html:Text ui:field="emailData" />
 					<b:Button ui:field="updateEmailModalBtn" size="EXTRA_SMALL" marginLeft="10" text="update"
 							  dataTarget="#updateEmailModal" dataToggle="MODAL" />
+				</b:Column>
+			</b:Row>
+			<b:Row paddingBottom="10" ui:field="preferredLanguageRow">
+				<b:Column size="SM_4" ui:field="languageLabel" addStyleNames="{res.gss.personalInfoLabel}" />
+				<b:Column size="SM_8" >
+					<b.html:Text ui:field="languageData" />
+				</b:Column>
+			</b:Row>
+			<b:Row paddingBottom="10" ui:field="timezoneRow">
+				<b:Column size="SM_4" ui:field="timezoneLabel" addStyleNames="{res.gss.personalInfoLabel}" />
+				<b:Column size="SM_8" >
+					<b.html:Text ui:field="timezoneData" />
 				</b:Column>
 			</b:Row>
 			<!--<b:DescriptionTitle ui:field="phoneLabel" paddingBottom="10" />

@@ -17,6 +17,7 @@ import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
+import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
@@ -30,6 +31,7 @@ import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
 
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -56,16 +58,22 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 
 	@UiField AnchorListItem topMenuMyProfile;
 	@UiField AnchorListItem personal;
-//	@UiField AnchorListItem organizations;
+	@UiField AnchorListItem organizations;
 	@UiField AnchorListItem identities;
+	@UiField AnchorListItem groups;
+	@UiField AnchorListItem resources;
+	@UiField AnchorListItem privacy;
 //	@UiField AnchorListItem logins;
 //	@UiField AnchorListItem settings;
 	@UiField NavbarNav topMenu;
 
 	@UiField AnchorListItem personalXS;
-//	@UiField AnchorListItem organizationsXS;
+	@UiField AnchorListItem organizationsXS;
+	@UiField AnchorListItem groupsXS;
 	@UiField AnchorListItem identitiesXS;
-// @UiField AnchorListItem loginsXS;
+	@UiField AnchorListItem resourcesXS;
+	@UiField AnchorListItem privacyXS;
+//	@UiField AnchorListItem loginsXS;
 //	@UiField AnchorListItem settingsXS;
 
 	@UiField AnchorListItem logout;
@@ -138,6 +146,26 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 			elem2.setInnerHTML(translation.credits(JsUtils.getCurrentYear()));
 		}
 
+		applyHideConfiguration();
+	}
+
+	private void applyHideConfiguration() {
+		setPageVisibility(PerunProfilePlaceTokens.ORGANIZATIONS, organizations, organizationsXS);
+		setPageVisibility(PerunProfilePlaceTokens.GROUPS, groups, groupsXS);
+		setPageVisibility(PerunProfilePlaceTokens.RESOURCES, resources, resourcesXS);
+		setPageVisibility(PerunProfilePlaceTokens.IDENTITIES, identities, identitiesXS);
+		setPageVisibility(PerunProfilePlaceTokens.PRIVACY, privacy, privacyXS);
+	}
+
+	private void setPageVisibility(String name, Widget mainMenuItem, Widget topMenuItem) {
+		List<String> pagesToHide = PerunConfiguration.getProfilePagesToHide();
+		for (String s : pagesToHide) {
+			GWT.log(s);
+		}
+		if (pagesToHide.contains(name)) {
+			mainMenuItem.setVisible(false);
+			topMenuItem.setVisible(false);
+		}
 	}
 
 	@Override

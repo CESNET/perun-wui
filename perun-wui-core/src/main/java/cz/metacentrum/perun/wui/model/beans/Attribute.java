@@ -149,6 +149,31 @@ public class Attribute extends AttributeDefinition {
 	}
 
 	/**
+	 * Returns true, if attribute value is empty
+	 *
+	 * @return true if empty, false otherwise
+	 */
+	public final boolean isEmpty() {
+		if (getValue() == null) {
+			return true;
+		}
+		switch (getType()) {
+			case "java.util.LinkedHashMap":
+				return getValueAsMap().isEmpty();
+			case "java.lang.Integer":
+				return getValue().isEmpty();
+			case "java.lang.Boolean":
+				return getValue().isEmpty();
+			case "java.lang.LargeString":
+				return getValue().isEmpty();
+			case "java.util.LargeArrayList":
+				return getValue().isEmpty();
+			default:
+				return getValueAsJsArray().length() == 0;
+		}
+	}
+
+	/**
 	 * Compares to another object
 	 *
 	 * @param o Object to compare

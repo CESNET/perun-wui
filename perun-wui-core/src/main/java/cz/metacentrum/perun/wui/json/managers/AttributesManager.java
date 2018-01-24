@@ -85,4 +85,35 @@ public class AttributesManager {
 
 	}
 
+	/**
+	 * Returns an Attribute by its name.
+	 *
+	 * @param uesId UserExtSource id
+	 * @param attrName Attribute name
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getUesAttribute(int uesId, String attrName, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (uesId > 0) client.put("userExtSource", uesId);
+		if (attrName != null && !attrName.isEmpty()) client.put("attributeName", attrName);
+		return client.call(ATTRIBUTES_MANAGER + "getAttribute");
+	}
+
+	/**
+	 * Returns an Attribute by its name. Returns only non-empty attributes.
+	 *
+	 * @param vo Vo id
+	 * @param attrName Attribute name
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getVoAttribute(int vo, String attrName, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (vo > 0) client.put("vo", vo);
+		if (attrName != null && !attrName.isEmpty()) client.put("attributeName", attrName);
+		return client.call(ATTRIBUTES_MANAGER + "getAttribute");
+	}
 }

@@ -48,4 +48,18 @@ public class MembersManager {
 
 	}
 
+	/**
+	 * Returns a RichMember with all non-empty user/member attributes by it's member id.
+	 *
+	 * @param memberId ID of member
+	 * @param events Events done on callback
+	 *
+	 * @return Requset unique request
+	 */
+	public static Request getRichMemberWithAttributes(int memberId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (memberId > 0) client.put("id", memberId);
+		return client.call(MEMBERS_MANAGER + "getRichMemberWithAttributes");
+	}
 }

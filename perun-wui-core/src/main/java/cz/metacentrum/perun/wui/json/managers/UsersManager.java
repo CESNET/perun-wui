@@ -243,4 +243,19 @@ public class UsersManager {
 
 	}
 
+	/**
+	 * Returns all groups of specific user in given vo where the given user is admin.
+	 *
+	 * @param user user to be used.
+	 * @param vo vo to be used.
+	 * @param events events done on callback.
+	 * @return Request unique request.
+	 */
+	public static Request getGroupsWhereUserIsAdmin(int user, int vo, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (user > 0) client.put("user", user);
+		if (vo > 0) client.put("vo", vo);
+		return client.call(USERS_MANAGER + "getGroupsWhereUserIsAdmin");
+	}
 }

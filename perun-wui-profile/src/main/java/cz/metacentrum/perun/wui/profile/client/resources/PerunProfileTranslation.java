@@ -9,17 +9,35 @@ import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
  */
 public interface PerunProfileTranslation extends PerunTranslation {
 
+	@DefaultMessage("Member ID")
+	String memberId();
+
+	@DefaultMessage("Member status")
+	String memberStatus();
+
+	@DefaultMessage("Member details")
+	String memberDetails();
+
+	@DefaultMessage("Choose:")
+	String selectVo();
+
 	@DefaultMessage("User profile")
 	public String appName();
 
 	@DefaultMessage("My profile")
 	public String menuMyProfile();
 
-	@DefaultMessage("Virtual organizations")
+	@DefaultMessage("My groups")
+	String menuMyGroups();
+
+	@DefaultMessage("Virtual Organizations")
 	public String menuOrganizations();
 
 	@DefaultMessage("My linked accounts")
 	public String menuMyIdentities();
+
+	@DefaultMessage("My services")
+	String menuMyResources();
 
 	@DefaultMessage("Logins & Passwords")
 	public String menuLoginsAndPasswords();
@@ -57,12 +75,6 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("These are the accounts you use to access your services.")
 	public String myIdentsText();
-
-	@DefaultMessage("Federated identity")
-	String federatedIdp();
-
-	@DefaultMessage("Login")
-	String federatedLogin();
 
 	@DefaultMessage("Certificate issuer")
 	String x509Issuer();
@@ -106,4 +118,72 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("E-mail change")
 	String updateEmailModalTitle();
 
+	@DefaultMessage("Groups in which you are a member")
+	String memberGroups();
+
+	@DefaultMessage("Groups in which you are an admin")
+	String adminGroups();
+
+	@DefaultMessage("You are not a member of any group in selected OrganizationsView.")
+	String noMemberGroups();
+
+	@DefaultMessage("You are not admin of any group in selected OrganizationsView.")
+	String noAdminGroups();
+
+	@DefaultMessage("User information")
+	String userInfo();
+
+	@DefaultMessage("Information from virtual OrganizationsView")
+	String voInfo();
+
+	@DefaultMessage("Display all information")
+	String completeInfo();
+
+	@DefaultMessage("here")
+	String here();
+
+	@DefaultMessage("No resources found")
+	String noResources();
+
+	@DefaultMessage("Email")
+	String uesEmail();
+
+	@DefaultMessage("Show other identities")
+	String otherIdentities();
+
+	@DefaultMessage("External source name")
+	String uesName();
+
+	@DefaultMessage("No groups found.")
+	String noGroups();
+
+	@DefaultMessage("Groups")
+	String groups();
+
+	@DefaultMessage("Membership expiration")
+	String membershipExpiration();
+
+	@DefaultMessage("Extend")
+	String extendMembership();
+
+	@DefaultMessage("Privacy")
+	String menuPrivacy();
+
+	@DefaultMessage("To view all information that we keep about you, click")
+	String showAllInfoText();
+
+	@DefaultMessage("Here is all information that we keep about you. We keep this information for the purpose of providing services.")
+	String allInfoDescriptionText();
+
+	@DefaultMessage("Groups with access")
+	String resourceGroups();
+
+	@DefaultMessage("Data used for")
+	String dataUsedFor();
+
+	@DefaultMessage("Terms of use")
+	String aupHeader();
+
+	@DefaultMessage("No identities found")
+	String noIdentities();
 }

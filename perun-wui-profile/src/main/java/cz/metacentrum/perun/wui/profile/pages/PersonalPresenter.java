@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Window;
@@ -23,10 +22,9 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
+import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,7 +48,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 		void setEmailUpdateRequests(List<String> pendingEmails);
 
 		void requestingEmailUpdateStart();
-		void requestingEmailUptadeError(PerunException ex, String email);
+		void requestingEmailUpdateError(PerunException ex, String email);
 	}
 
 	@NameToken(PerunProfilePlaceTokens.PERSONAL)
@@ -73,11 +71,11 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	@Override
 	public void loadUser() {
 
-		final int id = getUserId();
+		Integer id = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
-		if (id < 1) {
+		if (id == null || id < 1) {
 			placeManager.revealErrorPlace(request.getNameToken());
 		}
 
@@ -115,7 +113,14 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	@Override
 	public void checkEmailRequestPending() {
 
-		final int id = getUserId();
+		Integer id = PerunProfileUtils.getUserId(placeManager);
+
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
+
+		if (id == null || id < 1) {
+			placeManager.revealErrorPlace(request.getNameToken());
+			return;
+		}
 
 		UsersManager.getPendingPreferredEmailChanges(id, new JsonEvents() {
 
@@ -143,7 +148,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	public void updateEmail(final String email) {
 
 		if (!Utils.isValidEmail(email)) {
-			getView().requestingEmailUptadeError(null, email);
+			getView().requestingEmailUpdateError(null, email);
 			return;
 		}
 
@@ -156,7 +161,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 
 			@Override
 			public void onError(PerunException error) {
-				getView().requestingEmailUptadeError(error, email);
+				getView().requestingEmailUpdateError(error, email);
 			}
 
 			@Override
@@ -166,32 +171,4 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 		});
 
 	}
-
-	private Integer getUserId() {
-
-		try {
-
-			String userId = placeManager.getCurrentPlaceRequest().getParameter("id", null);
-			if (userId == null) {
-				userId = String.valueOf(PerunSession.getInstance().getUserId());
-			}
-
-			final int id = Integer.valueOf(userId);
-
-			if (id < 1) {
-				if (PerunConfiguration.getBrandProfileUnknownUrl() != null) {
-					Window.Location.assign(PerunConfiguration.getBrandProfileUnknownUrl());
-				} else {
-					placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-				}
-			}
-
-			return id;
-		} catch (NumberFormatException e) {
-			placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-		}
-		return null;
-	}
-
-
 }

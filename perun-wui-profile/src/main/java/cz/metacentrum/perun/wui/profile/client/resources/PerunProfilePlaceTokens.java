@@ -15,7 +15,14 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 	public static final String ORGANIZATIONS = "organizations";
 	public static final String LOGINS = "logins";
 	public static final String SETTINGS = "settings";
+	public static final String GROUPS = "groups";
+	public static final String COMPLETE_INFO = "completeInfo";
+	public static final String RESOURCES = "resources";
+	public static final String PRIVACY = "privacy";
 
+	public static String getCompleteInfo() {
+		return COMPLETE_INFO;
+	}
 
 	public static String getPersonal() {
 		return PERSONAL;
@@ -29,6 +36,10 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 		return ORGANIZATIONS;
 	}
 
+	public static String getGroups() {
+		return GROUPS;
+	}
+
 	public static String getLogins() {
 		return LOGINS;
 	}
@@ -37,4 +48,11 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 		return SETTINGS;
 	}
 
+	public static String getResources() {
+		return RESOURCES;
+	}
+
+	public static String getPrivacy() {
+		return PRIVACY;
+	}
 }

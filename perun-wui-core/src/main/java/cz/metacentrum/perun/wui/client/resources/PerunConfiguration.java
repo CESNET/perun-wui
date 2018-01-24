@@ -12,6 +12,7 @@ import cz.metacentrum.perun.wui.model.common.WayfGroup;
 import org.gwtbootstrap3.client.ui.Image;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -147,6 +148,38 @@ public final class PerunConfiguration {
 		// can't be stored globally
 		return null;
 
+	}
+
+	/**
+	 * Returns list of page names to be hidden in user profile
+	 *
+	 * @return names of pages to hide
+	 */
+	public static List<String> getProfilePagesToHide() {
+		List<String> attrNames = new ArrayList<>();
+		String data = getConfigPropertyString("profile.hidePages");
+		if (data != null) {
+			String[] values = data.replaceAll("\\s+","").split(",");
+			attrNames.addAll(Arrays.asList(values));
+		}
+
+		return attrNames;
+	}
+
+	/**
+	 * Returns list of attributes that should be hide on user profile page
+	 *
+	 * @return names of attributes that should be hidden
+	 */
+	public static List<String> getProfilePersonalAttributesToHide() {
+		List<String> attrNames = new ArrayList<>();
+		String data = getConfigPropertyString("profile.personal.hideAttributes");
+		if (data != null) {
+			String[] values = data.replaceAll("\\s+","").split(",");
+			attrNames.addAll(Arrays.asList(values));
+		}
+
+		return attrNames;
 	}
 
 	/**

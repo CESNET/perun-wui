@@ -1,0 +1,51 @@
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
+			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+			 xmlns:b.gwt="urn:import:org.gwtbootstrap3.client.ui.gwt"
+			 xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
+			 xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
+>
+
+	<ui:style>
+	</ui:style>
+
+	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
+
+	<b.html:Div>
+
+		<b:Heading size="H2" ui:field="pageTitle">
+			<b:Button type="PRIMARY" icon="ARROW_LEFT" ui:field="backButton" />
+		</b:Heading>
+
+		<b.html:Div ui:field="page" paddingTop="20">
+
+			<b:Alert ui:field="pageDescriptionAlert" type="INFO"/>
+
+			<b:Container fluid="true">
+				<!--User info-->
+				<b:Row>
+					<b:Column size="SM_12" ui:field="userColumn">
+						<b:Panel marginBottom="40">
+							<b:PanelHeader>
+								<b:Heading size="H4" ui:field="userLabel" visible="false"/>
+							</b:PanelHeader>
+							<b:PanelBody paddingTop="0" paddingBottom="0" paddingLeft="0" paddingRight="0">
+								<b.gwt:DataGrid visible="false" bordered="false" condensed="true" striped="false" hover="true" height="300px" width="100%"
+												ui:field="userDataGrid"/>
+							</b:PanelBody>
+						</b:Panel>
+					</b:Column>
+				</b:Row>
+				<!--Members info-->
+				<b:Row>
+					<b:Column size="SM_12" ui:field="membersColumn">
+					</b:Column>
+				</b:Row>
+			</b:Container>
+		</b.html:Div>
+
+		<p:PerunLoader visible="false" ui:field="loader" />
+
+	</b.html:Div>
+
+</ui:UiBinder>

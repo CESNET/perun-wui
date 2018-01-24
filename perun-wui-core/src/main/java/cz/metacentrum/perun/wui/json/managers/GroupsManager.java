@@ -55,5 +55,31 @@ public class GroupsManager {
 
 	}
 
+	/**
+	 * Returns all groups of specific member including group "members".
+	 *
+	 * @param memberId id of member
+	 * @param events Events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getAllMemberGroups(int memberId, JsonEvents events) {
 
+		JsonClient client = new JsonClient(true, events);
+		client.put("member", memberId);
+		return client.call(GROUPS_MANAGER + "getAllMemberGroups");
+	}
+
+	/**
+	 * Returns all groups of specific member.
+	 *
+	 * @param memberId id of member.
+	 * @param events Events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getMemberGroups(int memberId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(true, events);
+		client.put("member", memberId);
+		return client.call(GROUPS_MANAGER + "getMemberGroups");
+	}
 }

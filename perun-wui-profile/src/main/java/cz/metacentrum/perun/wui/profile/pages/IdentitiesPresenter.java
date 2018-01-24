@@ -1,9 +1,6 @@
 package cz.metacentrum.perun.wui.profile.pages;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -20,18 +17,15 @@ import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.UiUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.RichUser;
-import cz.metacentrum.perun.wui.model.beans.User;
+import cz.metacentrum.perun.wui.model.beans.Attribute;
+import cz.metacentrum.perun.wui.profile.model.beans.RichUserExtSource;
 import cz.metacentrum.perun.wui.model.beans.UserExtSource;
+import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
-import cz.metacentrum.perun.wui.widgets.PerunButton;
-import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
-import org.gwtbootstrap3.client.ui.Modal;
-import org.gwtbootstrap3.client.ui.ModalBody;
 
 import java.util.List;
 
@@ -42,14 +36,16 @@ import java.util.List;
  */
 public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, IdentitiesPresenter.MyProxy> implements IdentitiesUiHandlers {
 
-	private List<UserExtSource> userExtSources;
-
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
+
+	private static final String EMAIL_ATTRIBUTE = "urn:perun:ues:attribute-def:def:mail";
 
 	public interface MyView extends View, HasUiHandlers<IdentitiesUiHandlers> {
 		void loadingUserExtSourcesStart();
 		void loadingUserExtSourcesError(PerunException ex);
-		void setUserExtSources(List<UserExtSource> extSources);
+
+		void addUserExtSource(RichUserExtSource extSource);
+		void clearUserExtSources();
 
 		void removingUserExtSourceStart(UserExtSource userExtSource);
 		void removingUserExtSourceError(PerunException ex, UserExtSource userExtSource);
@@ -69,6 +65,7 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 
 	@Override
 	public void onReveal() {
+		getView().clearUserExtSources();
 		loadUserExtSources();
 	}
 
@@ -76,12 +73,47 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 
 	@Override
 	public void loadUserExtSources() {
-		UsersManager.getUserExtSources(getUserId(), new JsonEvents() {
+		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
+
+		if (userId == null) {
+			placeManager.revealErrorPlace(request.getNameToken());
+		} else {
+			getView().clearUserExtSources();
+
+			UsersManager.getUserExtSources(userId, new JsonEvents() {
+
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					List<UserExtSource> userExtSources = JsUtils.jsoAsList(result);
+
+					for (UserExtSource ues : userExtSources) {
+						loadEmail(ues);
+					}
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					getView().loadingUserExtSourcesError(error);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					getView().loadingUserExtSourcesStart();
+				}
+
+			});
+		}
+	}
+
+	private void loadEmail(UserExtSource ues) {
+		AttributesManager.getUesAttribute(ues.getId(), EMAIL_ATTRIBUTE, new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject result) {
-				userExtSources = JsUtils.jsoAsList(result.cast());
-				getView().setUserExtSources(userExtSources);
+				Attribute emailAttr = (Attribute) result;
+				RichUserExtSource rues = RichUserExtSource.mapUes(ues, emailAttr);
+				getView().addUserExtSource(rues);
 			}
 
 			@Override
@@ -93,59 +125,40 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 			public void onLoadingStart() {
 				getView().loadingUserExtSourcesStart();
 			}
-
 		});
 	}
 
 	@Override
 	public void removeUserExtSource(final UserExtSource userExtSource) {
+		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
-		UsersManager.removeUserExtSource(getUserId(), userExtSource.getId(), new JsonEvents() {
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
 
-			@Override
-			public void onFinished(JavaScriptObject result) {
-				userExtSources.remove(userExtSource);
-				getView().setUserExtSources(userExtSources);
-			}
+		if (userId == null) {
+			placeManager.revealErrorPlace(request.getNameToken());
+		} else {
+			UsersManager.removeUserExtSource(userId, userExtSource.getId(), new JsonEvents() {
 
-			@Override
-			public void onError(PerunException error) {
-				getView().removingUserExtSourceError(error, userExtSource);
-			}
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					loadUserExtSources();
+				}
 
-			@Override
-			public void onLoadingStart() {
-				getView().removingUserExtSourceStart(userExtSource);
-			}
-		});
+				@Override
+				public void onError(PerunException error) {
+					getView().removingUserExtSourceError(error, userExtSource);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					getView().removingUserExtSourceStart(userExtSource);
+				}
+			});
+		}
 	}
 
 	@Override
 	public void addUserExtSource() {
 		Window.Location.assign(Utils.getIdentityConsolidatorLink(true));
 	}
-
-
-	private Integer getUserId() {
-
-		try {
-
-			String userId = placeManager.getCurrentPlaceRequest().getParameter("id", null);
-			if (userId == null) {
-				userId = String.valueOf(PerunSession.getInstance().getUserId());
-			}
-
-			final int id = Integer.valueOf(userId);
-
-			if (id < 1) {
-				placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-			}
-
-			return id;
-		} catch (NumberFormatException e) {
-			placeManager.revealErrorPlace(placeManager.getCurrentPlaceRequest().getNameToken());
-		}
-		return null;
-	}
-
 }
