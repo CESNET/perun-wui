@@ -4,7 +4,6 @@ import com.google.gwt.cell.client.FieldUpdater;
 import com.google.gwt.core.client.GWT;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
-import cz.metacentrum.perun.wui.model.beans.RichPublication;
 import cz.metacentrum.perun.wui.model.beans.RichResource;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
@@ -93,7 +92,7 @@ public class ResourceColumnProvider extends ColumnProvider<RichResource> {
 						richResource -> String.valueOf(richResource.getName()), this.getFieldUpdater(table)
 				);
 				nameColumn.setSortable(true);
-				table.getColumnSortHandler().setComparator(nameColumn, new PerunComparator<RichPublication>(PerunColumnType.NAME));
+				table.getColumnSortHandler().setComparator(nameColumn, new PerunComparator<RichResource>(PerunColumnType.NAME));
 				nameColumn.setColumnType(column);
 				table.addColumn(nameColumn, translation.name());
 				if (widthInPixels > 0) {
@@ -107,7 +106,7 @@ public class ResourceColumnProvider extends ColumnProvider<RichResource> {
 						richResource -> String.valueOf(richResource.getDescription()), this.getFieldUpdater(table)
 				);
 				descriptionColumn.setSortable(true);
-				table.getColumnSortHandler().setComparator(descriptionColumn, new PerunComparator<RichPublication>(PerunColumnType.DESCRIPTION));
+				table.getColumnSortHandler().setComparator(descriptionColumn, new PerunComparator<RichResource>(PerunColumnType.DESCRIPTION));
 				descriptionColumn.setColumnType(column);
 				table.addColumn(descriptionColumn, translation.description());
 				if (widthInPixels > 0) {
