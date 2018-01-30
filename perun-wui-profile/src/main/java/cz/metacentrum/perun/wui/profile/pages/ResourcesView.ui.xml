@@ -12,7 +12,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.page}">
 
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="GLOBE" fixedWidth="true" />
@@ -26,6 +26,7 @@
 				<!--Vo select-->
 				<b:Row>
 					<select:Select ui:field="voSelect" visible="false"/>
+					<p:PerunLoader visible="false" ui:field="loader"/>
 				</b:Row>
 				<b.html:Div ui:field="resourceData" visible="false">
 					<b.html:Div ui:field="voHead">
@@ -39,20 +40,17 @@
 						<b:Column size="SM_12">
 							<b:Heading size="H4" ui:field="resourceLabel"/>
 
-							<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
-											ui:field="resourcesDataGrid"/>
 						</b:Column>
-					</b:Row>
-					<b:Row>
 					</b:Row>
 				</b.html:Div>
 
 			</b:Container>
-
-
+				<g:ResizeLayoutPanel addStyleNames="{res.gss.smallGrid}">
+					<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true"
+									ui:field="resourcesDataGrid"/>
+				</g:ResizeLayoutPanel>
 		</b.html:Div>
 
-		<p:PerunLoader visible="false" ui:field="loader" />
 
 	</b.html:Div>
 

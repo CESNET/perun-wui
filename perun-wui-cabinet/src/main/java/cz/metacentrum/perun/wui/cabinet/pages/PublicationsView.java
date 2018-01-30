@@ -32,8 +32,6 @@ public class PublicationsView extends ViewWithUiHandlers<PublicationsUiHandlers>
 
 	private PerunCabinetTranslation translation = GWT.create(PerunCabinetTranslation.class);
 
-	@UiField PerunLoader loader;
-
 	@UiField Button searchButton;
 	@UiField Div page;
 	@UiField Text pageName;
@@ -56,23 +54,20 @@ public class PublicationsView extends ViewWithUiHandlers<PublicationsUiHandlers>
 
 	@Override
 	public void loadingPublicationsStart() {
-		loader.onLoading(translation.loadingPublications());
-		loader.setVisible(true);
-		publicationsDataGrid.setVisible(false);
 		publicationsDataGrid.clearTable();
-		publicationsDataGrid.getLoaderWidget().onLoading();
+		publicationsDataGrid.getLoaderWidget().setVisible(true);
+		publicationsDataGrid.getLoaderWidget().onLoading(translation.loadingPublications());
 	}
 
 	@Override
 	public void setPublicationsError(PerunException ex) {
-		loader.onError(ex, event -> getUiHandlers().loadPublications());
+		publicationsDataGrid.getLoaderWidget().onError(ex, event -> getUiHandlers().loadPublications());
 	}
 
 	@Override
 	public void setPublications(List<RichPublication> publications) {
-		loader.onFinished();
-		loader.setVisible(false);
-		publicationsDataGrid.setVisible(true);
+		publicationsDataGrid.getLoaderWidget().onFinished();
+		publicationsDataGrid.getLoaderWidget().setVisible(false);
 		publicationsDataGrid.setList(publications);
 	}
 

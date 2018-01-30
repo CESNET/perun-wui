@@ -11,7 +11,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.page}">
 
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="BUILDING_O" fixedWidth="true" />
@@ -19,9 +19,10 @@
 			<b.html:Small text="" ui:field="subTitle"/>
 		</b:Heading>
 
-		<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
+		<g:ResizeLayoutPanel addStyleNames="{res.gss.grid}">
+		<b.gwt:DataGrid bordered="true" condensed="true" striped="true" hover="true"
 						ui:field="vosDataGrid"/>
-
+		</g:ResizeLayoutPanel>
 		<!--<p:PerunLoader visible="false" ui:field="loader" />-->
 
 	</b.html:Div>

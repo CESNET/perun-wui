@@ -11,7 +11,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.page}">
 
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="GROUP" fixedWidth="true" />
@@ -40,7 +40,9 @@
 						<b:Column size="SM_12">
 							<b:Heading size="H4" ui:field="memberGroupsLabel" marginTop="40"/>
 
-							<b.gwt:CellTable ui:field="memberGroupsTable" condensed="true"  bordered="true" striped="true" />
+							<b.html:Div addStyleNames="table-responsive">
+								<b.gwt:CellTable ui:field="memberGroupsTable" condensed="true"  bordered="true" striped="true" />
+							</b.html:Div>
 
 						</b:Column>
 					</b:Row>
@@ -48,8 +50,9 @@
 					<b:Row>
 						<b:Column size="SM_12">
 							<b:Heading size="H4" ui:field="adminGroupsLabel" marginTop="40"/>
-
-							<b.gwt:CellTable ui:field="adminGroupsTable" condensed="true" bordered="true" striped="true" />
+							<b.html:Div addStyleNames="table-responsive">
+								<b.gwt:CellTable ui:field="adminGroupsTable" condensed="true" bordered="true" striped="true" />
+							</b.html:Div>
 						</b:Column>
 					</b:Row>
 					<b:Row>

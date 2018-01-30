@@ -7,7 +7,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.cabinet.client.resources.PerunCabinetResources"/>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.page}">
 
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="BOOK" fixedWidth="true" />

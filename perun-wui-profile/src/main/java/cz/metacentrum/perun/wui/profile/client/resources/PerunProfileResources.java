@@ -15,13 +15,23 @@ public interface PerunProfileResources extends ClientBundle {
 
 	interface PerunProfileCss extends CssResource {
 
-		String app();
+		String webContent();
+
+		String pageWrapper();
+
+		String page();
+
+		String grid();
+
+		String smallGrid();
 
 		String logoWrapper();
 
 		String identities();
 
 		String personalInfoLabel();
+
+		String mobileContainer();
 	}
 
 	@Source("css/PerunProfile.gss")

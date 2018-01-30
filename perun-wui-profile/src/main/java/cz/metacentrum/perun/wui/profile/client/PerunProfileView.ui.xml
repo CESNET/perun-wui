@@ -15,7 +15,7 @@
 
 
 	<!-- MAIN LAYOUT -->
-	<b.html:Div addStyleNames="{res.gss.app}">
+	<b.html:Div addStyleNames="{res.gss.webContent}">
 
 		<!-- TOP MENU -->
 		<b:Navbar position="DEFAULT" ui:field="menuWrapper">
@@ -74,7 +74,7 @@
 		</b:Navbar>
 
 		<!-- MAIN CONTENT -->
-		<b:Container>
+		<b:Container	 addStyleNames="{res.gss.mobileContainer}">
 			<b:Row>
 
 				<!-- SIDE MENU -->
@@ -126,7 +126,7 @@
 				</b:Column>
 
 				<!-- PAGE CONTENT -->
-				<b:Column size="SM_9" ui:field="pageContent"/>
+				<b:Column size="SM_9" ui:field="pageContent" addStyleNames="{res.gss.pageWrapper}"/>
 
 			</b:Row>
 

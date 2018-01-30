@@ -118,6 +118,8 @@ public class OrganizationsView extends ViewWithUiHandlers<OrganizationsUiHandler
 		dataGrid.addColumn(nameCol, translation.vo());
 		dataGrid.addColumn(expirationCol, translation.membershipExpiration());
 		dataGrid.addColumn(membershipCol, translation.extendMembership());
-		dataGrid.setColumnWidth(dataGrid.getColumnCount()-1, "17%");
+		dataGrid.setColumnWidth(nameCol, "40%");
+		dataGrid.setColumnWidth(expirationCol, "25%");
+		dataGrid.setColumnWidth(membershipCol, "35%");
 	}
 }

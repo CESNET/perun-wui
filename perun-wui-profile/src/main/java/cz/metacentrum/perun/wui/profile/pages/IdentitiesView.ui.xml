@@ -8,41 +8,44 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
-	<b.html:Div styleName="{res.gss.identities}">
+	<b.html:Div addStyleNames="{res.gss.page}">
+		<b.html:Div styleName="{res.gss.identities}">
 
-		<b:Heading size="H2" ui:field="pageTitle">
-			<b:Icon ui:field="icon" type="EYE" fixedWidth="true" />
-			<b.html:Text text="" ui:field="text"/>
-			<b.html:Small text="" ui:field="small"/>
-		</b:Heading>
+			<b:Heading size="H2" ui:field="pageTitle">
+				<b:Icon ui:field="icon" type="EYE" fixedWidth="true" />
+				<b.html:Text text="" ui:field="text"/>
+				<b.html:Small text="" ui:field="small"/>
+			</b:Heading>
 
 
-		<p:PerunLoader ui:field="loader" visible="false"/>
+			<p:PerunLoader ui:field="loader" visible="false"/>
 
-		<b.html:Div paddingTop="20">
-			<b.gwt:CellTable ui:field="federatedIdentitiesTable" condensed="true" bordered="true" striped="false" />
-			<p:PerunButton ui:field="addFedBtn" icon="PLUS" type="SUCCESS"/>
+			<b.html:Div paddingTop="20">
+				<b.gwt:CellTable ui:field="federatedIdentitiesTable" condensed="true" bordered="true" striped="false" />
+				<p:PerunButton ui:field="addFedBtn" icon="PLUS" type="SUCCESS"/>
+			</b.html:Div>
+
+			<b.html:Div paddingTop="20">
+				<b.gwt:CellTable ui:field="x509IdentitiesTable" condensed="true" bordered="true" striped="false"/>
+				<p:PerunButton ui:field="addCertBtn" icon="PLUS" type="SUCCESS"/>
+			</b.html:Div>
+
+
+			<b.html:Div>
+				<b:Button ui:field="showOtherUesButton" type="LINK" size="SMALL" dataTarget="#otherUesModal" dataToggle="MODAL" />
+			</b.html:Div>
+
+
+			<b:Modal ui:field="otherUesModal" closable="true" fade="true"
+					 dataBackdrop="STATIC" dataKeyboard="true" b:id="otherUesModal">
+				<b:ModalBody>
+					<b.html:Div addStyleNames="table-responsive">
+						<b.gwt:CellTable ui:field="otherIdentitiesTable" condensed="true" bordered="true" striped="false"
+						/>
+					</b.html:Div>
+				</b:ModalBody>
+			</b:Modal>
 		</b.html:Div>
-
-		<b.html:Div paddingTop="20">
-			<b.gwt:CellTable ui:field="x509IdentitiesTable" condensed="true" bordered="true" striped="false"/>
-			<p:PerunButton ui:field="addCertBtn" icon="PLUS" type="SUCCESS"/>
-		</b.html:Div>
-
-
-		<b.html:Div>
-			<b:Button ui:field="showOtherUesButton" type="LINK" size="SMALL" dataTarget="#otherUesModal" dataToggle="MODAL" />
-		</b.html:Div>
-
-
-		<b:Modal ui:field="otherUesModal" closable="true" fade="true"
-				 dataBackdrop="STATIC" dataKeyboard="true" b:id="otherUesModal">
-			<b:ModalBody>
-				<b.gwt:CellTable ui:field="otherIdentitiesTable" condensed="true" bordered="true" striped="false" />
-
-			</b:ModalBody>
-		</b:Modal>
-
 	</b.html:Div>
 
 </ui:UiBinder>

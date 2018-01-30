@@ -15,7 +15,13 @@ public interface PerunCabinetResources extends ClientBundle {
 
 	interface PerunCabinetCss extends CssResource {
 
-		String app();
+		String grid();
+
+		String webContent();
+
+		String pageWrapper();
+
+		String page();
 
 		String logoWrapper();
 	}
