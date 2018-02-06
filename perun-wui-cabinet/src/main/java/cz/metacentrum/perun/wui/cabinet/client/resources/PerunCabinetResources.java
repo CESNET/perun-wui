@@ -24,6 +24,8 @@ public interface PerunCabinetResources extends ClientBundle {
 		String page();
 
 		String logoWrapper();
+
+		String mobileContainer();
 	}
 
 	@Source("css/PerunCabinet.gss")

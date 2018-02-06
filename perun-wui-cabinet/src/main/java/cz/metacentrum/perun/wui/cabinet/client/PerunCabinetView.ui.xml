@@ -52,7 +52,7 @@
 		</b:Navbar>
 
 		<!-- MAIN CONTENT -->
-		<b:Container>
+		<b:Container addStyleNames="{res.gss.mobileContainer}">
 			<b:Row>
 
 				<!-- SIDE MENU -->
