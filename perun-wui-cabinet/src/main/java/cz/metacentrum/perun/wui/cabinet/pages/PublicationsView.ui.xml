@@ -1,5 +1,6 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
+			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
 			 xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
 			 xmlns:b.gwt="urn:import:org.gwtbootstrap3.client.ui.gwt"
 			 xmlns:p.boxes="urn:import:cz.metacentrum.perun.wui.widgets.boxes"
@@ -8,7 +9,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.cabinet.client.resources.PerunCabinetResources"/>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.page}">
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="BOOK" fixedWidth="true" />
 			<b.html:Text text="" ui:field="pageName"/>
@@ -30,13 +31,13 @@
 				</p:PerunToolbar>
 			</b.gwt:FlowPanel>
 
-			<b.gwt:DataGrid visible="false" bordered="true" condensed="true" striped="true" hover="true" height="300px" width="100%"
-							ui:field="publicationsDataGrid"/>
+			<g:ResizeLayoutPanel addStyleNames="{res.gss.grid}">
+				<b.gwt:DataGrid visible="true" bordered="true" condensed="true" striped="true" hover="true" width="100%"
+								ui:field="publicationsDataGrid"/>
+			</g:ResizeLayoutPanel>
 
 
 		</b.html:Div>
-
-		<p:PerunLoader visible="false" ui:field="loader" />
 
 	</b.html:Div>
 

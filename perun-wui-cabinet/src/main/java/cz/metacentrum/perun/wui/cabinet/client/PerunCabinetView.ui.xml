@@ -12,7 +12,7 @@
 	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.cabinet.client.resources.PerunCabinetPlaceTokens"/>
 
 	<!-- MAIN LAYOUT -->
-	<b.html:Div addStyleNames="{res.gss.app}">
+	<b.html:Div addStyleNames="{res.gss.webContent}">
 
 		<!-- TOP MENU -->
 		<b:Navbar position="DEFAULT" ui:field="menuWrapper">
@@ -84,7 +84,7 @@
 				</b:Column>
 
 				<!-- PAGE CONTENT -->
-				<b:Column size="SM_9" ui:field="pageContent"/>
+				<b:Column size="SM_9" ui:field="pageContent" addStyleNames="{res.gss.pageWrapper}"/>
 
 			</b:Row>
 
