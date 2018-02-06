@@ -15,7 +15,15 @@ public interface PerunProfileResources extends ClientBundle {
 
 	interface PerunProfileCss extends CssResource {
 
-		String app();
+		String webContent();
+
+		String pageWrapper();
+
+		String page();
+
+		String grid();
+
+		String smallGrid();
 
 		String logoWrapper();
 
@@ -23,7 +31,8 @@ public interface PerunProfileResources extends ClientBundle {
 
 		String personalInfoLabel();
 
-		String dangerModal();
+		String mobileContainer();
+
 	}
 
 	@Source("css/PerunProfile.gss")

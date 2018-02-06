@@ -101,6 +101,7 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 			voSelect.refresh();
 
 			resourceData.setVisible(false);
+			resourcesDataGrid.setVisible(false);
 		}
 	}
 
@@ -108,6 +109,7 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 	public void setResourcesDataError(PerunException ex) {
 		voSelect.setEnabled(true);
 		resourceData.setVisible(false);
+		resourcesDataGrid.setVisible(false);
 		loader.onError(ex, event -> getUiHandlers()
 											.loadDataForVo(Integer.parseInt(voSelect.getSelectedItem().getValue())));
 	}
@@ -116,6 +118,7 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 	public void loadResourcesDataStart() {
 		voSelect.setEnabled(false);
 		resourceData.setVisible(false);
+		resourcesDataGrid.setVisible(false);
 
 		loader.onLoading(translation.loading());
 		loader.setVisible(true);
@@ -132,6 +135,7 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 		tableData.sort(Comparator.comparing(o -> o.getKey().getName()));
 		resourcesDataGrid.setRowData(tableData);
 		resourceData.setVisible(true);
+		resourcesDataGrid.setVisible(true);
 	}
 
 	private void initTable(DataGrid<Map.Entry<RichResource, List<Group>>> table) {
@@ -173,5 +177,8 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 		table.addColumn(nameCol, translation.name());
 		table.addColumn(descriptionCol, translation.description());
 		table.addColumn(groupsCol, translation.resourceGroups());
+		table.setColumnWidth(nameCol, "40%");
+		table.setColumnWidth(descriptionCol, "30%");
+		table.setColumnWidth(groupsCol, "30%");
 	}
 }

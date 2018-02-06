@@ -19,43 +19,6 @@ body {
     align-items: stretch;
 }
 
-.identities table {
-	margin-bottom: 6px;
-}
-.identities button {
-	margin-bottom: 15px;
-}
-.identities table button {
-	margin-bottom: 0px;
-}
-
-.personalInfoLabel {
-	font-weight: bold;
-	text-align: right;
-}
-
-@external modal-content;
-
-.dangerModal .modal-content {
-	background-color: #c9302c;
-	color: white;
-}
-
-.dangerModal .modal-content > div {
-	border-color: #ac2925;
-}
-
-/* Since we show left-menu on bigger screen, align header too */
-@media screen and (min-width: 768px) {
-	.logoWrapper {
-		text-align: center;
-		min-width: 250px;
-		display: inline-block;
-		margin-left: 15px;
-		/*margin-right: 15px;*/
-	}
-}
-
 .grid {
     height: 60vh;
 
@@ -63,20 +26,8 @@ body {
     overflow-x: auto;
 }
 .grid > div:last-child {
-    min-width: 300px;
+    min-width: 700px;
 }
-
-.smallGrid {
-    height: 50vh;
-
-    margin-bottom: 10px;
-    overflow-x: auto;
-}
-
-.smallGrid > div:last-child {
-    min-width: 300px;
-}
-
 
 /* MAIN CONTENT */
 
@@ -95,6 +46,16 @@ body {
    flex-grow: 1;
 }
 
+/* Since we show left-menu on bigger screen, align header too */
+@media screen and (min-width: 768px) {
+	.logoWrapper {
+		text-align: center;
+		min-width: 250px;
+		display: inline-block;
+		margin-left: 15px;
+		/*margin-right: 15px;*/
+	}
+}
 
 /* HACKS */
 @media screen and (max-width: 768px) {

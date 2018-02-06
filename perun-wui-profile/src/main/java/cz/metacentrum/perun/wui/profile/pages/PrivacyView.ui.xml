@@ -13,7 +13,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources"/>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.page}">
 
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="SHIELD" fixedWidth="true" />
@@ -30,9 +30,11 @@
 			<b:ListGroup ui:field="aupListGroup"/>
 		</b:Panel>
 
-		<b.html:Text ui:field="showAllInfoText" />
-		<g:InlineHyperlink ui:field="completeInfoLink" targetHistoryToken="{placeTokens.getCompleteInfo}"/>
-		<b.html:Text ui:field="showAupInfoText" />
+		<b.html:Div>
+			<b.html:Text ui:field="showAllInfoText" />
+			<g:InlineHyperlink ui:field="completeInfoLink" targetHistoryToken="{placeTokens.getCompleteInfo}"/>
+			<b.html:Text ui:field="showAupInfoText" />
+		</b.html:Div>
 
 		<p:PerunLoader visible="false" ui:field="loader" />
 
