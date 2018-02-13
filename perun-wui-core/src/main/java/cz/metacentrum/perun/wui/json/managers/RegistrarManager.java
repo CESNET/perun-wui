@@ -295,16 +295,14 @@ public class RegistrarManager {
 	/**
 	 * Verify Google ReCaptcha challenge-response
 	 *
-	 * @param challenge ReCaptcha challenge value
 	 * @param response Users response to ReCaptcha challenge
 	 * @param events Events done on callback
 	 *
 	 * @return Request unique request
 	 */
-	public static Request verifyCaptcha(String challenge, String response, JsonEvents events) {
+	public static Request verifyCaptcha(String response, JsonEvents events) {
 
 		JsonClient client = new JsonClient(true, events);
-		if (challenge != null) client.put("challenge", challenge);
 		if (response != null) client.put("response", response);
 		return client.call(REGISTRAR_MANAGER + "verifyCaptcha");
 

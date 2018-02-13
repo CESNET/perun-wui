@@ -14,7 +14,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Registrar")
 	public String registrarAppName();
 
-	@DefaultMessage("Please solve question below to continue")
+	@DefaultMessage("Please perform the confirmation below to continue")
 	public String pleaseVerifyCaptcha();
 
 	@DefaultMessage("Type text from the image...")
@@ -324,4 +324,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("We couldn`t verify your email address.")
 	public String emailWasNotVerified();
 
+	@DefaultMessage("Verification failed. Please perform the confirmation again.")
+	String captchaFailed();
+
+	@DefaultMessage("The server is probably being restarted. Please try it again later.")
+	String serverDown();
 }

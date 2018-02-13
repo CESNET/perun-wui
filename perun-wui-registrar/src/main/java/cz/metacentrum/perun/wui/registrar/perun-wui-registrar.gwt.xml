@@ -8,6 +8,7 @@
 	<!-- GWTP support -->
 	<inherits name="com.google.gwt.inject.Inject"/>
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
+
 	<!-- define gin module injector -->
 	<set-configuration-property name="gin.ginjector.modules" value="cz.metacentrum.perun.wui.registrar.client.PerunRegistrar"/>
 	<!-- bootstrap app before loading page -->
