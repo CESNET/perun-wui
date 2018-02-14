@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.profile.pages.settings.sshkeys;
+package cz.metacentrum.perun.wui.profile.pages.settings.preferredshells;
 
 
 import com.google.gwt.core.client.JavaScriptObject;
@@ -22,49 +22,77 @@ import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
-public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeysPresenter.MyProxy> implements SshKeysUiHandlers {
+public class PreferredShellsPresenter extends Presenter<PreferredShellsPresenter.MyView, PreferredShellsPresenter.MyProxy> implements PreferredShellsUiHandlers {
+
+	public interface MyView extends View, HasUiHandlers<PreferredShellsUiHandlers> {
+
+		void setPreferredShells(Attribute shells);
+
+		void setUpdatePreferredShellsStart();
+
+		void setRemovePreferredShellError(PerunException error, int index);
+
+		void setAddPreferredShellError(PerunException error);
+
+		void setChangePreferredShellError(PerunException error, String newValue, int index);
+
+		void setLoadPreferredShellsError(PerunException error);
+	}
+
+	private static final String A_U_D_PREFERRED_SHELLS = "urn:perun:user:attribute-def:def:preferredShells";
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
 
-	public interface MyView extends View, HasUiHandlers<SshKeysUiHandlers> {
-
-		void setSshKeys(Attribute attribute);
-
-		void setAdminSshKeys(Attribute attribute);
-
-		void setSshKeysError(PerunException error);
-
-		void setAdminSshKeysError(PerunException error);
-
-		void setSshKeysLoading();
-
-		void setAdminSshKeysLoading();
-
-		void setRemoveSshKeyError(PerunException error, int n);
-
-		void setRemoveAdminSshKeyError(PerunException error, int n);
-	}
-
-	@NameToken(PerunProfilePlaceTokens.SETTINGS_SSH)
+	@NameToken(PerunProfilePlaceTokens.SETTINGS_PREFERREDSHELLS)
 	@ProxyStandard
-	public interface MyProxy extends ProxyPlace<SshKeysPresenter> {
+	public interface MyProxy extends ProxyPlace<PreferredShellsPresenter> {
 
 	}
 
 	@Inject
-	public SshKeysPresenter(final EventBus eventBus, final MyView myView, final MyProxy myProxy) {
+	public PreferredShellsPresenter(final EventBus eventBus, final MyView myView, final MyProxy myProxy) {
 		super(eventBus, myView, myProxy, PerunPresenter.SLOT_MAIN_CONTENT);
 		getView().setUiHandlers(this);
 	}
 
 	@Override
 	protected void onReveal() {
-		loadSshKeys();
-		loadAdminSshKeys();
+		loadPreferredShells();
 	}
 
 	@Override
-	public void removeSshKey(Attribute attribute, int n) {
+	public void loadPreferredShells() {
+		Integer userId = PerunProfileUtils.getUserId(placeManager);
+
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
+
+		if (userId == null || userId < 1) {
+			placeManager.revealErrorPlace(request.getNameToken());
+			return;
+		}
+
+		if (PerunSession.getInstance().isSelf(userId)) {
+			AttributesManager.getUserAttribute(userId, A_U_D_PREFERRED_SHELLS, new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					getView().setPreferredShells((Attribute) result);
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					getView().setLoadPreferredShellsError(error);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					getView().setUpdatePreferredShellsStart();
+				}
+			});
+		}
+	}
+
+	@Override
+	public void changePreferredShell(Attribute attribute, String newValue, int index) {
 		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
@@ -76,11 +104,13 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 
 		if (PerunSession.getInstance().isSelf(userId)) {
 			JsArrayString values = attribute.getValueAsJsArray();
-			JsArrayString newValues = (JsArrayString)JsArrayString.createArray();
-			for(int i = 0; i < values.length(); ++i) {
+			JsArrayString newValues = (JsArrayString) JsArrayString.createArray();
+			for (int i = 0; i < values.length(); ++i) {
 				String value = values.get(i);
-				if (i != n) {
+				if (i != index) {
 					newValues.push(value);
+				} else {
+					newValues.push(newValue);
 				}
 			}
 			attribute.setValueAsJsArray(newValues);
@@ -88,24 +118,24 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 			AttributesManager.setUserAttribute(userId, attribute, new JsonEvents() {
 				@Override
 				public void onFinished(JavaScriptObject result) {
-					loadSshKeys();
+					loadPreferredShells();
 				}
 
 				@Override
 				public void onError(PerunException error) {
-					getView().setRemoveSshKeyError(error, n);
+					getView().setChangePreferredShellError(error, newValue, index);
 				}
 
 				@Override
 				public void onLoadingStart() {
-					// do nothing
+					getView().setUpdatePreferredShellsStart();
 				}
 			});
 		}
 	}
 
 	@Override
-	public void removeAdminSshKey(Attribute attribute, int n) {
+	public void removePreferredShell(Attribute attribute, int index) {
 		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
@@ -117,10 +147,10 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 
 		if (PerunSession.getInstance().isSelf(userId)) {
 			JsArrayString values = attribute.getValueAsJsArray();
-			JsArrayString newValues = (JsArrayString)JsArrayString.createArray();
-			for(int i = 0; i < values.length(); ++i) {
+			JsArrayString newValues = (JsArrayString) JsArrayString.createArray();
+			for (int i = 0; i < values.length(); ++i) {
 				String value = values.get(i);
-				if (i != n) {
+				if (i != index) {
 					newValues.push(value);
 				}
 			}
@@ -129,25 +159,24 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 			AttributesManager.setUserAttribute(userId, attribute, new JsonEvents() {
 				@Override
 				public void onFinished(JavaScriptObject result) {
-					loadAdminSshKeys();
+					loadPreferredShells();
 				}
 
 				@Override
 				public void onError(PerunException error) {
-					getView().setRemoveAdminSshKeyError(error, n);
+					getView().setRemovePreferredShellError(error, index);
 				}
 
 				@Override
 				public void onLoadingStart() {
-					// do nothing
+					getView().setUpdatePreferredShellsStart();
 				}
 			});
 		}
 	}
 
 	@Override
-	public void loadSshKeys() {
-
+	public void addPreferredShell(Attribute attribute) {
 		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
@@ -158,52 +187,27 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 		}
 
 		if (PerunSession.getInstance().isSelf(userId)) {
-			AttributesManager.getUserAttribute(userId, PerunProfileUtils.A_U_DEF_SSH_KEYS, new JsonEvents() {
+			JsArrayString values = attribute.getValueAsJsArray();
+			if (values == null) {
+				values = (JsArrayString)JsArrayString.createArray();
+			}
+			values.push(PerunProfileUtils.SHELL_OPTIONS.get(0));
+			attribute.setValueAsJsArray(values);
+
+			AttributesManager.setUserAttribute(userId, attribute, new JsonEvents() {
 				@Override
 				public void onFinished(JavaScriptObject result) {
-					getView().setSshKeys((Attribute)result);
+					loadPreferredShells();
 				}
 
 				@Override
 				public void onError(PerunException error) {
-					getView().setSshKeysError(error);
+					getView().setAddPreferredShellError(error);
 				}
 
 				@Override
 				public void onLoadingStart() {
-					getView().setSshKeysLoading();
-				}
-			});
-		}
-	}
-
-	@Override
-	public void loadAdminSshKeys() {
-
-		Integer userId = PerunProfileUtils.getUserId(placeManager);
-
-		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
-
-		if (userId == null || userId < 1) {
-			placeManager.revealErrorPlace(request.getNameToken());
-			return;
-		}
-
-		if (PerunSession.getInstance().isSelf(userId)) {
-			AttributesManager.getUserAttribute(userId, PerunProfileUtils.A_U_DEF_ADMIN_SSH_KEYS, new JsonEvents() {
-				@Override
-				public void onFinished(JavaScriptObject result) {
-					getView().setAdminSshKeys((Attribute)result);
-				}
-
-				@Override
-				public void onError(PerunException error) {
-					getView().setAdminSshKeysError(error);
-				}
-
-				@Override
-				public void onLoadingStart() {
-					getView().setAdminSshKeysLoading();
+					getView().setUpdatePreferredShellsStart();
 				}
 			});
 		}

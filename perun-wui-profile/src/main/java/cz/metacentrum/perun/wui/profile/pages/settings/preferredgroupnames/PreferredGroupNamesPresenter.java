@@ -1,8 +1,9 @@
-package cz.metacentrum.perun.wui.profile.pages.settings.sshkeys;
+package cz.metacentrum.perun.wui.profile.pages.settings.preferredgroupnames;
 
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -15,6 +16,7 @@ import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -22,49 +24,73 @@ import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
-public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeysPresenter.MyProxy> implements SshKeysUiHandlers {
+import java.util.List;
+
+public class PreferredGroupNamesPresenter extends Presenter<PreferredGroupNamesPresenter.MyView, PreferredGroupNamesPresenter.MyProxy> implements PreferredGroupNamesUiHandlers {
+
+	public interface MyView extends View, HasUiHandlers<PreferredGroupNamesUiHandlers> {
+
+		void setPreferredGroupNamesAttributes(List<Attribute> attributes);
+
+		void setUpdating();
+
+		void setError(PerunException error, ClickHandler retryAction);
+	}
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
 
-	public interface MyView extends View, HasUiHandlers<SshKeysUiHandlers> {
-
-		void setSshKeys(Attribute attribute);
-
-		void setAdminSshKeys(Attribute attribute);
-
-		void setSshKeysError(PerunException error);
-
-		void setAdminSshKeysError(PerunException error);
-
-		void setSshKeysLoading();
-
-		void setAdminSshKeysLoading();
-
-		void setRemoveSshKeyError(PerunException error, int n);
-
-		void setRemoveAdminSshKeyError(PerunException error, int n);
-	}
-
-	@NameToken(PerunProfilePlaceTokens.SETTINGS_SSH)
+	@NameToken(PerunProfilePlaceTokens.SETTINGS_PREFERREDGROUPNAMES)
 	@ProxyStandard
-	public interface MyProxy extends ProxyPlace<SshKeysPresenter> {
+	public interface MyProxy extends ProxyPlace<PreferredGroupNamesPresenter> {
 
 	}
 
 	@Inject
-	public SshKeysPresenter(final EventBus eventBus, final MyView myView, final MyProxy myProxy) {
+	public PreferredGroupNamesPresenter(final EventBus eventBus, final MyView myView, final MyProxy myProxy) {
 		super(eventBus, myView, myProxy, PerunPresenter.SLOT_MAIN_CONTENT);
 		getView().setUiHandlers(this);
 	}
 
 	@Override
 	protected void onReveal() {
-		loadSshKeys();
-		loadAdminSshKeys();
+		loadPreferredGroupNames();
 	}
 
 	@Override
-	public void removeSshKey(Attribute attribute, int n) {
+	public void loadPreferredGroupNames() {
+		Integer userId = PerunProfileUtils.getUserId(placeManager);
+
+		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
+
+		if (userId == null || userId < 1) {
+			placeManager.revealErrorPlace(request.getNameToken());
+			return;
+		}
+
+		if (PerunSession.getInstance().isSelf(userId)) {
+			List<String> namespaces = PerunProfileUtils.getPreferredGroupNamesAttrNames();
+			AttributesManager.getUserAttributes(userId, namespaces, new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					List<Attribute> attributes = JsUtils.jsoAsList(result);
+					getView().setPreferredGroupNamesAttributes(attributes);
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					getView().setError(error, clickEvent -> loadPreferredGroupNames());
+				}
+
+				@Override
+				public void onLoadingStart() {
+					getView().setUpdating();
+				}
+			});
+		}
+	}
+
+	@Override
+	public void changePreferredName(Attribute attribute, String newValue, int index) {
 		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
@@ -76,36 +102,38 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 
 		if (PerunSession.getInstance().isSelf(userId)) {
 			JsArrayString values = attribute.getValueAsJsArray();
-			JsArrayString newValues = (JsArrayString)JsArrayString.createArray();
-			for(int i = 0; i < values.length(); ++i) {
-				String value = values.get(i);
-				if (i != n) {
-					newValues.push(value);
+			JsArrayString newValues = JsArrayString.createArray().cast();
+			for (int i = 0; i < values.length(); i++) {
+				if (index == i) {
+					if (newValue != null && !newValue.isEmpty()) {
+						newValues.push(newValue);
+					}
+				} else {
+					newValues.push(values.get(i));
 				}
 			}
 			attribute.setValueAsJsArray(newValues);
-
 			AttributesManager.setUserAttribute(userId, attribute, new JsonEvents() {
 				@Override
 				public void onFinished(JavaScriptObject result) {
-					loadSshKeys();
+					loadPreferredGroupNames();
 				}
 
 				@Override
 				public void onError(PerunException error) {
-					getView().setRemoveSshKeyError(error, n);
+					getView().setError(error, clickEvent -> changePreferredName(attribute, newValue, index));
 				}
 
 				@Override
 				public void onLoadingStart() {
-					// do nothing
+					getView().setUpdating();
 				}
 			});
 		}
 	}
 
 	@Override
-	public void removeAdminSshKey(Attribute attribute, int n) {
+	public void newPreferredName(Attribute namespaceAttribute, String value) {
 		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
@@ -116,94 +144,27 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 		}
 
 		if (PerunSession.getInstance().isSelf(userId)) {
-			JsArrayString values = attribute.getValueAsJsArray();
-			JsArrayString newValues = (JsArrayString)JsArrayString.createArray();
-			for(int i = 0; i < values.length(); ++i) {
-				String value = values.get(i);
-				if (i != n) {
-					newValues.push(value);
-				}
+			JsArrayString values = namespaceAttribute.getValueAsJsArray();
+			if (values == null) {
+				values = JsArrayString.createArray().cast();
 			}
-			attribute.setValueAsJsArray(newValues);
+			values.push(value);
+			namespaceAttribute.setValueAsJsArray(values);
 
-			AttributesManager.setUserAttribute(userId, attribute, new JsonEvents() {
+			AttributesManager.setUserAttribute(userId, namespaceAttribute, new JsonEvents() {
 				@Override
 				public void onFinished(JavaScriptObject result) {
-					loadAdminSshKeys();
+					loadPreferredGroupNames();
 				}
 
 				@Override
 				public void onError(PerunException error) {
-					getView().setRemoveAdminSshKeyError(error, n);
+					getView().setError(error, clickEvent -> newPreferredName(namespaceAttribute, value));
 				}
 
 				@Override
 				public void onLoadingStart() {
-					// do nothing
-				}
-			});
-		}
-	}
-
-	@Override
-	public void loadSshKeys() {
-
-		Integer userId = PerunProfileUtils.getUserId(placeManager);
-
-		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
-
-		if (userId == null || userId < 1) {
-			placeManager.revealErrorPlace(request.getNameToken());
-			return;
-		}
-
-		if (PerunSession.getInstance().isSelf(userId)) {
-			AttributesManager.getUserAttribute(userId, PerunProfileUtils.A_U_DEF_SSH_KEYS, new JsonEvents() {
-				@Override
-				public void onFinished(JavaScriptObject result) {
-					getView().setSshKeys((Attribute)result);
-				}
-
-				@Override
-				public void onError(PerunException error) {
-					getView().setSshKeysError(error);
-				}
-
-				@Override
-				public void onLoadingStart() {
-					getView().setSshKeysLoading();
-				}
-			});
-		}
-	}
-
-	@Override
-	public void loadAdminSshKeys() {
-
-		Integer userId = PerunProfileUtils.getUserId(placeManager);
-
-		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
-
-		if (userId == null || userId < 1) {
-			placeManager.revealErrorPlace(request.getNameToken());
-			return;
-		}
-
-		if (PerunSession.getInstance().isSelf(userId)) {
-			AttributesManager.getUserAttribute(userId, PerunProfileUtils.A_U_DEF_ADMIN_SSH_KEYS, new JsonEvents() {
-				@Override
-				public void onFinished(JavaScriptObject result) {
-					getView().setAdminSshKeys((Attribute)result);
-				}
-
-				@Override
-				public void onError(PerunException error) {
-					getView().setAdminSshKeysError(error);
-				}
-
-				@Override
-				public void onLoadingStart() {
-					getView().setAdminSshKeysLoading();
+					getView().setUpdating();
 				}
 			});
 		}

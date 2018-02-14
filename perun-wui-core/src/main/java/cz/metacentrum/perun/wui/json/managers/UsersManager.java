@@ -142,6 +142,20 @@ public class UsersManager {
 	}
 
 	/**
+	 * Returns user by its id.
+	 *
+	 * @param userId Users ID
+	 * @param events Events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getUserById(int userId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (userId > 0) client.put("id", userId);
+		return client.call(USERS_MANAGER + "getUserById");
+	}
+
+	/**
 	 * Return list of VOs where user is a member (independent of membership status)
 	 *
 	 * @param userId Users ID

@@ -6,6 +6,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -148,5 +149,66 @@ public class AttributesManager {
 		if (user > 0) client.put("user", user);
 		if (attribute != null) client.put("attribute", attribute);
 		return client.call(ATTRIBUTES_MANAGER + "setAttribute");
+	}
+
+	/**
+	 * Returns all specified User attributes for selected User.
+	 *
+	 * @param user user id
+	 * @param attrNames List of attribute names
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getUserAttributes(int user, List<String> attrNames, JsonEvents events) {
+		JsonClient client = new JsonClient(events);
+		if (user > 0) client.put("user", user);
+		if (attrNames != null && !attrNames.isEmpty()) client.put("attrNames", attrNames);
+		return client.call(ATTRIBUTES_MANAGER + "getAttributes");
+	}
+
+	/**
+	 * Returns all non-empty Resource attributes for selected Resource.
+	 *
+	 * @param resource resource id
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getResourceAttributes(int resource, JsonEvents events) {
+		JsonClient client = new JsonClient(events);
+		if (resource > 0) client.put("resource", resource);
+		return client.call(ATTRIBUTES_MANAGER + "getAttributes");
+	}
+
+	/**
+	 * Returns required resource attributes.
+	 *
+	 * @param resource resource id
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getRequiredAttributes(int resource, JsonEvents events) {
+		JsonClient client = new JsonClient(events);
+		if (resource > 0) client.put("resource", resource);
+		return client.call(ATTRIBUTES_MANAGER + "getRequiredAttributes");
+	}
+
+	/**
+	 * Returns required resource attributes.
+	 *
+	 * @param resource
+	 * @param member
+	 * @param resourceToGetServicesFrom
+	 * @param workWithUserAttributes
+	 * @param events
+	 * @return
+	 */
+	public static Request getRequiredAttributes(int resource, int member, int resourceToGetServicesFrom,
+												boolean workWithUserAttributes, JsonEvents events) {
+		JsonClient client = new JsonClient(events);
+		if (resource > 0) client.put("resource", resource);
+		if (member > 0) client.put("member", member);
+		if (resourceToGetServicesFrom > 0) client.put("resourceToGetServicesFrom", resourceToGetServicesFrom);
+		client.put("workWithUserAttributes", workWithUserAttributes ? 1 : 0);
+		return client.call(ATTRIBUTES_MANAGER + "getRequiredAttributes");
 	}
 }

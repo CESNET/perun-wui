@@ -115,4 +115,9 @@ public class NewSshKeyPresenter extends Presenter<NewSshKeyPresenter.MyView, New
 			}
 		});
 	}
+
+	@Override
+	public void navigateBack() {
+		placeManager.navigateBack();
+	}
 }

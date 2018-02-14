@@ -38,6 +38,12 @@ import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newadminsshkey.Ne
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newadminsshkey.NewAdminSshKeyView;
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyView;
+import cz.metacentrum.perun.wui.profile.pages.settings.datalimits.DataQuotasPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.datalimits.DataQuotasView;
+import cz.metacentrum.perun.wui.profile.pages.settings.preferredgroupnames.PreferredGroupNamesPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.preferredgroupnames.PreferredGroupNamesView;
+import cz.metacentrum.perun.wui.profile.pages.settings.preferredshells.PreferredShellsPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.preferredshells.PreferredShellsView;
 
 /**
  * Entry point class and GWTP module for Perun WUI User profile.
@@ -69,6 +75,9 @@ public class PerunProfile extends AbstractPresenterModule implements EntryPoint 
 		bindPresenter(SettingsPresenter.class, SettingsPresenter.MyView.class, SettingsView.class, SettingsPresenter.MyProxy.class);
 		bindPresenter(NewSshKeyPresenter.class, NewSshKeyPresenter.MyView.class, NewSshKeyView.class, NewSshKeyPresenter.MyProxy.class);
 		bindPresenter(NewAdminSshKeyPresenter.class, NewAdminSshKeyPresenter.MyView.class, NewAdminSshKeyView.class, NewAdminSshKeyPresenter.MyProxy.class);
+		bindPresenter(PreferredGroupNamesPresenter.class, PreferredGroupNamesPresenter.MyView.class, PreferredGroupNamesView.class, PreferredGroupNamesPresenter.MyProxy.class);
+		bindPresenter(PreferredShellsPresenter.class, PreferredShellsPresenter.MyView.class, PreferredShellsView.class, PreferredShellsPresenter.MyProxy.class);
+		bindPresenter(DataQuotasPresenter.class, DataQuotasPresenter.MyView.class, DataQuotasView.class, DataQuotasPresenter.MyProxy.class);
 
 		// pre-defined places
 		bindConstant().annotatedWith(DefaultPlace.class).to(PerunProfilePlaceTokens.PERSONAL);

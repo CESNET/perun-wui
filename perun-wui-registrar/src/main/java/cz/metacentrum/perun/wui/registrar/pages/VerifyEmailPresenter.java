@@ -69,7 +69,6 @@ public class VerifyEmailPresenter extends Presenter<VerifyEmailPresenter.MyView,
 
 			@Override
 			public void onError(PerunException error) {
-				GWT.log("Error");
 				if (error.getName().equals("PrivilegeException")) {
 					getProxy().manualRevealFailed();
 					placeManager.revealUnauthorizedPlace(request.getNameToken());

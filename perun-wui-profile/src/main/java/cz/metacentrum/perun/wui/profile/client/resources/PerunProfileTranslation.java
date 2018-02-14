@@ -194,7 +194,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	String noAdminSshKey();
 
 	@DefaultMessage("SSH keys")
-	String sshKeysHeading();
+	String sshKeys();
 
 	@DefaultMessage("Admin SSH keys")
 	String adminSshKeysHeading();
@@ -243,4 +243,98 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("Bona fide status")
 	String bonaFideStatus();
+
+	@DefaultMessage("List of preferred shells ordered from the most preferred to least is used to determine your shell on provided resources. If none of preferred shells is available on resource (or no preferred shell is set), resource''s default is used.")
+	String preferredShellsInfo();
+
+	@DefaultMessage("Custom value")
+	String customValue();
+
+	@DefaultMessage("Enter custom shell")
+	String customShellValueHeader();
+
+	@DefaultMessage("Update value")
+	String updateValue();
+
+	@DefaultMessage("Change")
+	String change();
+
+	@DefaultMessage("Add preferred shell")
+	String addPreferredShell();
+
+	@DefaultMessage("Invalid shell value. Example: ''/bin/bash''.")
+	String invalidShellValue();
+
+	@DefaultMessage("Shell value can not be empty.")
+	String emptyShellValue();
+
+	@DefaultMessage("Preferred Unix group names")
+	String unixGroupNames();
+
+	@DefaultMessage("Group names in namespaces ''")
+	String preferredGroupNameHeaderText();
+
+	@DefaultMessage("Add preferred group name")
+	String addPreferredGroupName();
+
+	@DefaultMessage("Edit preferred group name")
+	String changePreferredGroupName();
+
+	@DefaultMessage("Enter new preferred group name")
+	String newPreferredGroupName();
+
+	@DefaultMessage("Data quotas")
+	String unixDataQuotas();
+
+	@DefaultMessage("Data quota")
+	String dataQuota();
+
+	@DefaultMessage("Files quota")
+	String filesQuota();
+
+	@DefaultMessage("Default")
+	String defaultValue();
+
+	@DefaultMessage("Using default")
+	String usingDefault();
+
+	@DefaultMessage("Request change")
+	String requestChange();
+
+	@DefaultMessage("Data quota change request")
+	String dataQuotaRequestChange();
+
+	@DefaultMessage("Files quota change request")
+	String filesQuotaRequestChange();
+
+	@DefaultMessage("Resource")
+	String resourceHeading();
+
+	@DefaultMessage("Current quota")
+	String currentQuota();
+
+	@DefaultMessage("Value can not be empty!")
+	String cannotBeEmpty();
+
+	@DefaultMessage("Value must be number!")
+	String mustBeNumber();
+
+	@DefaultMessage("No resources where you can request quota change were found.")
+	String noQuotaResources();
+
+	@DefaultMessage("RT ticket QUOTA: Change request sent. Responses will be sent to the e-mail address: ")
+	String rtMessageSuccess();
+
+	@DefaultMessage("Sending request")
+	String sendingRequest();
+
+	@DefaultMessage("Requested quota")
+	String requestedQuota();
+
+	@DefaultMessage("Reason")
+	String reason();
+
+	@DefaultMessage("Not set")
+	String notSet();
+
 }

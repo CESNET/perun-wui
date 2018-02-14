@@ -115,4 +115,9 @@ public class NewAdminSshKeyPresenter extends Presenter<NewAdminSshKeyPresenter.M
 			}
 		});
 	}
+
+	@Override
+	public void navigateBack() {
+		placeManager.navigateBack();
+	}
 }

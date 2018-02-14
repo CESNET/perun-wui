@@ -80,9 +80,9 @@ public class NewSshKeyView extends ViewWithUiHandlers<NewSshKeyUiHandlers> imple
 		getUiHandlers().addSshKey(keyValue);
 	}
 
-	@UiHandler("cancelButton")
+	@UiHandler("backButton")
 	public void cancelButtonAction(ClickEvent event) {
-		Window.Location.assign("#" + PerunProfilePlaceTokens.getSettingsSshKeys());
+		getUiHandlers().navigateBack();
 	}
 
 	@Override

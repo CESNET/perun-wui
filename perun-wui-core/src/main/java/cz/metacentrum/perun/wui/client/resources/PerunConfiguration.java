@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * This class allows to read configuration of Perun for WUI apps.
@@ -665,6 +666,23 @@ public final class PerunConfiguration {
 			String[] values = data.replaceAll("\\s+","").split(",");
 			attrNames.addAll(Arrays.asList(values));
 		}
+
+		return attrNames;
+	}
+
+	/**
+	 * Returns list of page names to be hidden in user profile settings page
+	 *
+	 * @return names of pages to hide
+	 */
+	public static List<String> getProfileSettingsPagesToHide() {
+		List<String> attrNames = new ArrayList<>();
+		String data = getConfigPropertyString("profile.settings.hidePages");
+		if (data != null) {
+			String[] values = data.replaceAll("\\s+","").split(",");
+			attrNames.addAll(Arrays.asList(values));
+		}
+		attrNames = attrNames.stream().map(s -> "settings_" + s).collect(Collectors.toList());
 
 		return attrNames;
 	}
