@@ -101,7 +101,8 @@ public class NewAdminSshKeyPresenter extends Presenter<NewAdminSshKeyPresenter.M
 			@Override
 			public void onFinished(JavaScriptObject result) {
 				getView().setAddAdminSshKeyFinish();
-				Window.Location.assign("#" + PerunProfilePlaceTokens.getSettingsSshKeys());
+
+				navigateBack();
 			}
 
 			@Override
@@ -114,5 +115,10 @@ public class NewAdminSshKeyPresenter extends Presenter<NewAdminSshKeyPresenter.M
 				// do nothing
 			}
 		});
+	}
+
+	@Override
+	public void navigateBack() {
+		placeManager.navigateBack();
 	}
 }

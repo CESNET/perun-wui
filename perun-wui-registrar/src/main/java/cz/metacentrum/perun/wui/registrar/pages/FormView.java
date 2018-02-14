@@ -157,7 +157,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 
 				if (registrar.getException() != null) {
-					GWT.log("Exception " + registrar.getException().getMessage());
 					if (registrar.getException().getName().equals("VoNotExistsException") ||
 							registrar.getException().getName().equals("GroupNotExistsException") ||
 							registrar.getException().getName().equals("FormNotExistsException")) {

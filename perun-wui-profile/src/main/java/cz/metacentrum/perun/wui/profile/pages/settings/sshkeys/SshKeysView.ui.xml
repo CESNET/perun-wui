@@ -18,8 +18,7 @@
 
 	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b:Heading size="H2" ui:field="pageTitle">
-
+		<b:Heading size="H2">
 			<b:Breadcrumbs addStyleNames="{res.gss.perunBreadcrumb}">
 				<b:AnchorListItem icon="GEAR" text="{trans.menuSettings}"
 								  targetHistoryToken="{placeTokens.getSettings}"/>
@@ -27,52 +26,23 @@
 			</b:Breadcrumbs>
 		</b:Heading>
 
+		<b.html:Div>
+			<b:Button ui:field="backButton" text="{trans.back}" icon="ARROW_LEFT" type="WARNING" marginBottom="10" marginTop="10"/>
+		</b.html:Div>
 
-		<b:Row>
-			<b:Column size="MD_12 SM_12">
-				<b:Heading size="H3" text="{trans.sshKeysHeading}"/>
-			</b:Column>
-		</b:Row>
-		<b:Row>
-			<b:Column size="MD_12 SM_12">
-				<b.html:Text text="{trans.sshKeysNote}"/>
-			</b:Column>
-		</b:Row>
-		<b:Row>
-			<b:Column size="MD_12 SM_12">
-				<b.gwt:CellTable ui:field="sshKeysTable" condensed="true" bordered="true" striped="true" addStyleNames="{res.gss.sshKeysTable}"/>
-			</b:Column>
-		</b:Row>
-		<b:Row>
-			<b:Column size="MD_12 SM_12">
-				<b.html:Div ui:field="newKeyButtonDiv">
-					<b:Button type="SUCCESS" icon="PLUS" text="{trans.newPublicKey}" marginTop="5" ui:field="newKeyButton"/>
-				</b.html:Div>
-			</b:Column>
-		</b:Row>
+		<b:Heading size="H3" text="{trans.sshKeys}"/>
+		<b.html:Text text="{trans.sshKeysNote}"/>
+		<b.gwt:CellTable ui:field="sshKeysTable" condensed="true" bordered="true" striped="true" addStyleNames="{res.gss.sshKeysTable}"/>
+		<b.html:Div ui:field="newKeyButtonDiv">
+			<b:Button type="SUCCESS" icon="PLUS" text="{trans.newPublicKey}" marginTop="5" ui:field="newKeyButton"/>
+		</b.html:Div>
 
-		<b:Row>
-			<b:Column size="MD_12 SM_12">
-				<b:Heading size="H3" text="{trans.adminSshKeysHeading}"/>
-			</b:Column>
-		</b:Row>
-		<b:Row>
-			<b:Column size="MD_12 SM_12">
-				<b.html:Text text="{trans.adminSshKeysNote}"/>
-			</b:Column>
-		</b:Row>
-		<b:Row>
-			<b:Column size="MD_12 SM_12">
-				<b.gwt:CellTable ui:field="adminSshKeysTable" condensed="true" bordered="true" striped="true" addStyleNames="{res.gss.sshKeysTable}" />
-			</b:Column>
-		</b:Row>
-		<b:Row>
-			<b:Column size="MD_12 SM_12">
-				<b.html:Div ui:field="newAdminKeyButtonDiv">
-					<b:Button type="SUCCESS" icon="PLUS" text="{trans.newPublicAdminKey}" marginTop="5" ui:field="newAdminKeyButton"/>
-				</b.html:Div>
-			</b:Column>
-		</b:Row>
+		<b:Heading size="H3" text="{trans.adminSshKeysHeading}"/>
+		<b.html:Text text="{trans.adminSshKeysNote}"/>
+		<b.gwt:CellTable ui:field="adminSshKeysTable" condensed="true" bordered="true" striped="true" addStyleNames="{res.gss.sshKeysTable}" />
+		<b.html:Div ui:field="newAdminKeyButtonDiv">
+			<b:Button type="SUCCESS" icon="PLUS" text="{trans.newPublicAdminKey}" marginTop="5" ui:field="newAdminKeyButton"/>
+		</b.html:Div>
 
 	</b.html:Div>
 

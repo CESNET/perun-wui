@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.json;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.PerunException;
 
 import java.util.ArrayList;
@@ -48,7 +49,11 @@ public abstract class AbstractRepeatingJsonEvent implements RepeatingJsonEvent {
 			throw new IllegalStateException("Event called more times than specified in constructor");
 		}
 
-		results.add(result);
+		if (JsUtils.isJsArray(result)) {
+			results.addAll(JsUtils.jsoAsList(result));
+		} else {
+			results.add(result);
+		}
 		counter++;
 
 		if (counter == repeatTimes) {

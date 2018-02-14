@@ -5,4 +5,6 @@ import com.gwtplatform.mvp.client.UiHandlers;
 public interface NewAdminSshKeyUiHandlers extends UiHandlers {
 
 	void addAdminSshKey(String value);
+
+	void navigateBack();
 }

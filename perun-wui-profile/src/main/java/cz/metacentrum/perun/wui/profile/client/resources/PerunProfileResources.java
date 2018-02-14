@@ -40,6 +40,26 @@ public interface PerunProfileResources extends ClientBundle {
 		String settings();
 
 		String sshKeysTable();
+
+		String shellsList();
+
+		String panelList();
+
+		String noPadding();
+
+		String preferredUnixGroupNamesPanel();
+
+		String requestQuotaChangeTable();
+
+		String requestQuotaChangeValueTextBox();
+
+		String requestQuotaChangeValueSelect();
+
+		String requestQuotaChangeValueTextArea();
+
+		String requestQuotaChangeDiv();
+
+		String invalid();
 	}
 
 	@Source("css/PerunProfile.gss")

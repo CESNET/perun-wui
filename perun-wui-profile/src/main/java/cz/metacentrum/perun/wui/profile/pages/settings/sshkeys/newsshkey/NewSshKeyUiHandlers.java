@@ -5,4 +5,6 @@ import com.gwtplatform.mvp.client.UiHandlers;
 public interface NewSshKeyUiHandlers extends UiHandlers {
 
 	void addSshKey(String value);
+
+	void navigateBack();
 }

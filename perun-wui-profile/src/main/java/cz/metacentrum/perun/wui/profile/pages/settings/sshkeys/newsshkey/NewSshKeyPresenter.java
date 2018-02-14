@@ -64,28 +64,26 @@ public class NewSshKeyPresenter extends Presenter<NewSshKeyPresenter.MyView, New
 			return;
 		}
 
+
 		if (PerunSession.getInstance().isSelf(userId)) {
 
-			if (PerunSession.getInstance().isSelf(userId)) {
+			AttributesManager.getUserAttribute(userId, PerunProfileUtils.A_U_DEF_SSH_KEYS, new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					Attribute attribute = (Attribute)result;
+					updateKeyAttribute(userId, attribute, value);
+				}
 
-				AttributesManager.getUserAttribute(userId, PerunProfileUtils.A_U_DEF_SSH_KEYS, new JsonEvents() {
-					@Override
-					public void onFinished(JavaScriptObject result) {
-						Attribute attribute = (Attribute)result;
-						updateKeyAttribute(userId, attribute, value);
-					}
+				@Override
+				public void onError(PerunException error) {
+					getView().setAddSshKeyError(error);
+				}
 
-					@Override
-					public void onError(PerunException error) {
-						getView().setAddSshKeyError(error);
-					}
-
-					@Override
-					public void onLoadingStart() {
-						// do nothing
-					}
-				});
-			}
+				@Override
+				public void onLoadingStart() {
+					// do nothing
+				}
+			});
 		}
 	}
 
@@ -101,7 +99,8 @@ public class NewSshKeyPresenter extends Presenter<NewSshKeyPresenter.MyView, New
 			@Override
 			public void onFinished(JavaScriptObject result) {
 				getView().setAddSshKeyFinish();
-				Window.Location.assign("#" + PerunProfilePlaceTokens.getSettingsSshKeys());
+
+				navigateBack();
 			}
 
 			@Override
@@ -114,5 +113,10 @@ public class NewSshKeyPresenter extends Presenter<NewSshKeyPresenter.MyView, New
 				// do nothing
 			}
 		});
+	}
+
+	@Override
+	public void navigateBack() {
+		placeManager.navigateBack();
 	}
 }
