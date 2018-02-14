@@ -16,20 +16,28 @@ import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.pages.*;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources;
-import cz.metacentrum.perun.wui.profile.pages.CompleteInfoPresenter;
-import cz.metacentrum.perun.wui.profile.pages.CompleteInfoView;
-import cz.metacentrum.perun.wui.profile.pages.GroupsPresenter;
-import cz.metacentrum.perun.wui.profile.pages.GroupsView;
-import cz.metacentrum.perun.wui.profile.pages.IdentitiesPresenter;
-import cz.metacentrum.perun.wui.profile.pages.IdentitiesView;
-import cz.metacentrum.perun.wui.profile.pages.OrganizationsPresenter;
-import cz.metacentrum.perun.wui.profile.pages.OrganizationsView;
-import cz.metacentrum.perun.wui.profile.pages.PersonalPresenter;
-import cz.metacentrum.perun.wui.profile.pages.PersonalView;
-import cz.metacentrum.perun.wui.profile.pages.PrivacyPresenter;
-import cz.metacentrum.perun.wui.profile.pages.PrivacyView;
-import cz.metacentrum.perun.wui.profile.pages.ResourcesPresenter;
-import cz.metacentrum.perun.wui.profile.pages.ResourcesView;
+import cz.metacentrum.perun.wui.profile.pages.completeinfo.CompleteInfoPresenter;
+import cz.metacentrum.perun.wui.profile.pages.completeinfo.CompleteInfoView;
+import cz.metacentrum.perun.wui.profile.pages.groups.GroupsPresenter;
+import cz.metacentrum.perun.wui.profile.pages.groups.GroupsView;
+import cz.metacentrum.perun.wui.profile.pages.identities.IdentitiesPresenter;
+import cz.metacentrum.perun.wui.profile.pages.identities.IdentitiesView;
+import cz.metacentrum.perun.wui.profile.pages.organizations.OrganizationsPresenter;
+import cz.metacentrum.perun.wui.profile.pages.organizations.OrganizationsView;
+import cz.metacentrum.perun.wui.profile.pages.personal.PersonalPresenter;
+import cz.metacentrum.perun.wui.profile.pages.personal.PersonalView;
+import cz.metacentrum.perun.wui.profile.pages.privacy.PrivacyPresenter;
+import cz.metacentrum.perun.wui.profile.pages.privacy.PrivacyView;
+import cz.metacentrum.perun.wui.profile.pages.resources.ResourcesPresenter;
+import cz.metacentrum.perun.wui.profile.pages.resources.ResourcesView;
+import cz.metacentrum.perun.wui.profile.pages.settings.SettingsPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.SettingsView;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysView;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newadminsshkey.NewAdminSshKeyPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newadminsshkey.NewAdminSshKeyView;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyView;
 
 /**
  * Entry point class and GWTP module for Perun WUI User profile.
@@ -57,6 +65,10 @@ public class PerunProfile extends AbstractPresenterModule implements EntryPoint 
 		bindPresenter(IdentitiesPresenter.class, IdentitiesPresenter.MyView.class, IdentitiesView.class, IdentitiesPresenter.MyProxy.class);
 		bindPresenter(GroupsPresenter.class, GroupsPresenter.MyView.class, GroupsView.class, GroupsPresenter.MyProxy.class);
 		bindPresenter(CompleteInfoPresenter.class, CompleteInfoPresenter.MyView.class, CompleteInfoView.class, CompleteInfoPresenter.MyProxy.class);
+		bindPresenter(SshKeysPresenter.class, SshKeysPresenter.MyView.class, SshKeysView.class, SshKeysPresenter.MyProxy.class);
+		bindPresenter(SettingsPresenter.class, SettingsPresenter.MyView.class, SettingsView.class, SettingsPresenter.MyProxy.class);
+		bindPresenter(NewSshKeyPresenter.class, NewSshKeyPresenter.MyView.class, NewSshKeyView.class, NewSshKeyPresenter.MyProxy.class);
+		bindPresenter(NewAdminSshKeyPresenter.class, NewAdminSshKeyPresenter.MyView.class, NewAdminSshKeyView.class, NewAdminSshKeyPresenter.MyProxy.class);
 
 		// pre-defined places
 		bindConstant().annotatedWith(DefaultPlace.class).to(PerunProfilePlaceTokens.PERSONAL);

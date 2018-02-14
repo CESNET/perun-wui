@@ -186,4 +186,55 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("No identities found")
 	String noIdentities();
+
+	@DefaultMessage("You have no SSH keys")
+	String noSshKey();
+
+	@DefaultMessage("You have no admin SSH keys")
+	String noAdminSshKey();
+
+	@DefaultMessage("SSH keys")
+	String sshKeysHeading();
+
+	@DefaultMessage("Admin SSH keys")
+	String adminSshKeysHeading();
+
+	@DefaultMessage("Here is a list of your SSH keys used for root access.")
+	String adminSshKeysNote();
+
+	@DefaultMessage("Here is a list of your SSH keys.")
+	String sshKeysNote();
+
+	@DefaultMessage("New key")
+	String newPublicKey();
+
+	@DefaultMessage("New admin key")
+	String newPublicAdminKey();
+
+	@DefaultMessage("SSH Keys")
+	String menuSettingsSshKeys();
+
+	@DefaultMessage("Key")
+	String key();
+
+	@DefaultMessage("Add SSH key")
+	String addPublicKey();
+
+	@DefaultMessage("Add admin SSH key")
+	String addAdminPublicKey();
+
+	@DefaultMessage("Begins with ''ssh-rsa'', ''ssh-ed25519'', ''ecdsa-sha2-nistp256'', ''ecdsa-sha2-nistp384'' or ''ecdsa-sha2-nistp521''.")
+	String newSshKeyInfoText();
+
+	@DefaultMessage("Invalid value given. Your key should begin with ''ssh-rsa'', ''ssh-ed25519'', ''ecdsa-sha2-nistp256'', ''ecdsa-sha2-nistp384'' or ''ecdsa-sha2-nistp521''.")
+	String sshInvalidPrefixText();
+
+	@DefaultMessage("Cancel")
+	String cancel();
+
+	@DefaultMessage("Key value cannot contain multiple lines.")
+	String sshInvalidNewLinesText();
+
+	@DefaultMessage("Public part of key")
+	String publicKey();
 }

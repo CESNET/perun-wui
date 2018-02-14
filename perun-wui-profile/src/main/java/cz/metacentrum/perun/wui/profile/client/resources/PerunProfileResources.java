@@ -33,6 +33,14 @@ public interface PerunProfileResources extends ClientBundle {
 
 		String mobileContainer();
 
+		String perunBreadcrumb();
+
+		String black();
+
+		String settings();
+
+		String sshKeysTable();
+
 	}
 
 	@Source("css/PerunProfile.gss")
