@@ -57,10 +57,10 @@
 									</b:AnchorListItem>
 									<!--<b:AnchorListItem visibleOn="XS" ui:field="loginsXS" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" >
 										<ui:text from='{trans.menuLoginsAndPasswords}'/>
-									</b:AnchorListItem>
+									</b:AnchorListItem>-->
 									<b:AnchorListItem visibleOn="XS" ui:field="settingsXS" icon="COG" iconFixedWidth="true" targetHistoryToken="{placeTokens.getSettings}" >
 										<ui:text from='{trans.menuSettings}'/>
-									</b:AnchorListItem>-->
+									</b:AnchorListItem>
 									<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">
 										<ui:text from='{trans.logout}'/>
 									</b:AnchorListItem>
@@ -113,10 +113,10 @@
 									</b:AnchorListItem>
 									<!--<b:AnchorListItem ui:field="logins" icon="KEY" iconFixedWidth="true" targetHistoryToken="{placeTokens.getLogins}" >
 										<ui:text from='{trans.menuLoginsAndPasswords}'/>
-									</b:AnchorListItem>
+									</b:AnchorListItem>-->
 									<b:AnchorListItem ui:field="settings" icon="COG" iconFixedWidth="true" targetHistoryToken="{placeTokens.getSettings}">
 										<ui:text from='{trans.menuSettings}'/>
-									</b:AnchorListItem>-->
+									</b:AnchorListItem>
 								</b:NavPills>
 							</b:PanelBody>
 						</b:Panel>

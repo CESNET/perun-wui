@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.json.managers;
 import com.google.gwt.http.client.Request;
 import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.model.beans.Attribute;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -115,5 +116,37 @@ public class AttributesManager {
 		if (vo > 0) client.put("vo", vo);
 		if (attrName != null && !attrName.isEmpty()) client.put("attributeName", attrName);
 		return client.call(ATTRIBUTES_MANAGER + "getAttribute");
+	}
+
+	/**
+	 * Returns an Attribute by its name. Returns only non-empty attributes.
+	 *
+	 * @param user user id
+	 * @param attrName Attribute name
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getUserAttribute(int user, String attrName, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (user > 0) client.put("user", user);
+		if (attrName != null && !attrName.isEmpty()) client.put("attributeName", attrName);
+		return client.call(ATTRIBUTES_MANAGER + "getAttribute");
+	}
+
+	/**
+	 * Sets an attribute.
+	 *
+	 * @param user user id
+	 * @param attribute Attribute
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request setUserAttribute(int user, Attribute attribute, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (user > 0) client.put("user", user);
+		if (attribute != null) client.put("attribute", attribute);
+		return client.call(ATTRIBUTES_MANAGER + "setAttribute");
 	}
 }

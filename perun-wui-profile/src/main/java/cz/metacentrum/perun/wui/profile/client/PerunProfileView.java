@@ -64,7 +64,7 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 	@UiField AnchorListItem resources;
 	@UiField AnchorListItem privacy;
 //	@UiField AnchorListItem logins;
-//	@UiField AnchorListItem settings;
+	@UiField AnchorListItem settings;
 	@UiField NavbarNav topMenu;
 
 	@UiField AnchorListItem personalXS;
@@ -74,7 +74,7 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 	@UiField AnchorListItem resourcesXS;
 	@UiField AnchorListItem privacyXS;
 //	@UiField AnchorListItem loginsXS;
-//	@UiField AnchorListItem settingsXS;
+	@UiField AnchorListItem settingsXS;
 
 	@UiField AnchorListItem logout;
 
@@ -92,7 +92,7 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 		for (int i=0; i < count; i++) {
 			if (menuPills.getWidget(i) instanceof AnchorListItem) {
 				AnchorListItem item = (AnchorListItem)menuPills.getWidget(i);
-				if (Objects.equals(anchor, item.getTargetHistoryToken())) {
+				if (anchor.startsWith(item.getTargetHistoryToken())) {
 					item.setActive(true);
 				} else {
 					item.setActive(false);
@@ -150,6 +150,7 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 		setPageVisibility(PerunProfilePlaceTokens.RESOURCES, resources, resourcesXS);
 		setPageVisibility(PerunProfilePlaceTokens.IDENTITIES, identities, identitiesXS);
 		setPageVisibility(PerunProfilePlaceTokens.PRIVACY, privacy, privacyXS);
+		setPageVisibility(PerunProfilePlaceTokens.SETTINGS_SSH, settings, settingsXS);
 	}
 
 	private void setPageVisibility(String name, Widget mainMenuItem, Widget topMenuItem) {
