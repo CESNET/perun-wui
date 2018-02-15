@@ -155,7 +155,7 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 		setPageVisibility(PerunProfilePlaceTokens.RESOURCES, resources, resourcesXS);
 		setPageVisibility(PerunProfilePlaceTokens.IDENTITIES, identities, identitiesXS);
 		setPageVisibility(PerunProfilePlaceTokens.PRIVACY, privacy, privacyXS);
-		setPageVisibility(PerunProfilePlaceTokens.SETTINGS_SSH, settings, settingsXS);
+		setPageVisibility(PerunProfilePlaceTokens.SETTINGS, settings, settingsXS);
 	}
 
 	private void setPageVisibility(String name, Widget mainMenuItem, Widget topMenuItem) {
@@ -164,8 +164,8 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 			GWT.log(s);
 		}
 		if (pagesToHide.contains(name)) {
+			topMenuItem.removeFromParent(); // hiding doesn't work since bootstraps "visibleOn" takes place -> remove from parent
 			mainMenuItem.setVisible(false);
-			topMenuItem.setVisible(false);
 		}
 	}
 
