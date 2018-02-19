@@ -48,6 +48,9 @@ body {
     min-width: 737px;
 }
 
+.captcha > div {
+    margin: 0 auto;
+}
 
 /* HACKS */
 

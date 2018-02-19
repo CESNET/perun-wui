@@ -36,7 +36,6 @@
 		<gwtPluginVersion>2.8.1</gwtPluginVersion>
 		<gwtp.version>1.6</gwtp.version>
 		<gin.version>2.1.2</gin.version>
-
 	</properties>
 
 	<!-- DEFAULT MAVEN BUILD SETTINGS

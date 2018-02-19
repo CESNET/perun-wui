@@ -33,6 +33,8 @@ public interface PerunRegistrarResources extends ClientBundle {
 		String logoWrapper();
 
 		String navbarFix();
+
+		String captcha();
 	}
 
 	@Source("css/PerunRegistrar.gss")
