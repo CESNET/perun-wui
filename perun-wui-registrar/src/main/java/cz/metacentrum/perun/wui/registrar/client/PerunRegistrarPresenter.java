@@ -1,13 +1,12 @@
 package cz.metacentrum.perun.wui.registrar.client;
 
-import com.google.gwt.core.client.*;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.KeyCodes;
-import com.google.gwt.event.dom.client.KeyDownEvent;
-import com.google.gwt.event.dom.client.KeyDownHandler;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources;
+import cz.metacentrum.perun.wui.widgets.recaptcha.ReCaptcha;
+
+import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Style;
 import com.google.gwt.http.client.URL;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.History;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
@@ -28,21 +27,13 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarPlaceTokens;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
-import cz.metacentrum.perun.wui.widgets.PerunButton;
-import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
-import cz.metacentrum.perun.wui.widgets.recaptcha.RecaptchaWidget;
-import org.gwtbootstrap3.client.ui.Form;
-import org.gwtbootstrap3.client.ui.FormGroup;
+import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
-import org.gwtbootstrap3.client.ui.ModalFooter;
 import org.gwtbootstrap3.client.ui.ModalHeader;
-import org.gwtbootstrap3.client.ui.constants.ButtonType;
-import org.gwtbootstrap3.client.ui.constants.FormType;
-import org.gwtbootstrap3.client.ui.constants.IconPosition;
-import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
-import org.gwtbootstrap3.client.ui.constants.ValidationState;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,7 +118,6 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 		});
 
 		// FIXME - very raw implementation to ensure back compatibility with old Registrar
-		// FIXME - we must implement re-captcha 2 widget
 
 		if (!captchaOK) {
 
@@ -137,103 +127,68 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 			if (voName != null && !voName.isEmpty() && reCaptchaPublicKey != null && !reCaptchaPublicKey.isEmpty()) {
 				if (!PerunConfiguration.getVosToSkipReCaptchaFor().contains(voName)) {
 
-					ScriptInjector.fromUrl("https://www.google.com/recaptcha/api/js/recaptcha_ajax.js").setCallback(
-							new Callback<Void, Exception>() {
-								public void onFailure(Exception reason) {
-									Window.alert("Script load failed.");
-								}
-								public void onSuccess(Void result) {
+					final Modal modal = new Modal();
+					modal.setRemoveOnHide(true);
+					modal.setDataBackdrop(ModalBackdrop.STATIC);
 
-									final Modal modal = new Modal();
-									modal.setRemoveOnHide(true);
-									modal.setDataBackdrop(ModalBackdrop.STATIC);
+					ModalHeader header = new ModalHeader();
+					header.setTitle(translation.pleaseVerifyCaptcha());
+					header.setClosable(false);
+					ModalBody body = new ModalBody();
 
-									ModalHeader header = new ModalHeader();
-									header.setTitle(translation.pleaseVerifyCaptcha());
-									header.setClosable(false);
-									ModalBody body = new ModalBody();
-									ModalFooter footer = new ModalFooter();
+					final PerunLoader loader = new PerunLoader();
+					loader.onLoading();
+					loader.setVisible(false);
+					loader.getElement().getStyle().setMarginTop(20, Style.Unit.PX);
 
-									final RecaptchaWidget captcha = new RecaptchaWidget(reCaptchaPublicKey, PerunConfiguration.getCurrentLocaleName(), "clean");
+					final ReCaptcha captcha = new ReCaptcha();
+					captcha.addStyleName(PerunRegistrarResources.INSTANCE.gss().captcha());
+					captcha.setSitekey(reCaptchaPublicKey);
 
-									final PerunButton verify = new PerunButton(translation.continueButton(), IconType.CHEVRON_RIGHT);
-									verify.setType(ButtonType.SUCCESS);
-									verify.setIconFixedWidth(true);
-									verify.setIconPosition(IconPosition.RIGHT);
+					final Alert alert = new Alert();
+					alert.setType(AlertType.DANGER);
+					alert.setVisible(false);
 
-									final ExtendedTextBox response = new ExtendedTextBox();
-									response.setPlaceholder(translation.captchaAnswer());
-									captcha.setOwnTextBox(response);
-									response.addStyleName("pull-left");
-									response.getElement().setAttribute("style", "margin-right: 5px; width: 70%;");
+					captcha.addResponseHandler(responseEvent ->
+											   RegistrarManager.verifyCaptcha(captcha.getResponse(), new JsonEvents() {
+						@Override
+						public void onFinished(JavaScriptObject result1) {
+							loader.setVisible(false);
 
-									Form form = new Form();
-									form.setType(FormType.INLINE);
-									form.setWidth("100%");
-									final FormGroup group = new FormGroup();
-									group.setWidth("100%");
-									group.add(response);
-									group.add(verify);
-									form.add(group);
+							BasicOverlayObject bt = result1.cast();
+							if (bt.getBoolean()) {
+								alert.setVisible(false);
+								modal.hide();
+							} else {
+								captcha.reset();
+								alert.setText(translation.captchaFailed());
+								alert.setVisible(true);
+							}
+						}
 
-									response.addKeyDownHandler(new KeyDownHandler() {
-										@Override
-										public void onKeyDown(KeyDownEvent event) {
-											if (event.getNativeKeyCode() == KeyCodes.KEY_ENTER) {
-												verify.click();
-											}
-										}
-									});
+						@Override
+						public void onError(PerunException error) {
+							loader.setVisible(true);
+							loader.onError(error, null);
+							captcha.reset();
+						}
 
-									verify.addClickHandler(new ClickHandler() {
-										@Override
-										public void onClick(ClickEvent event) {
-											RegistrarManager.verifyCaptcha(captcha.getChallenge(), captcha.getResponse(), new JsonEvents() {
-												@Override
-												public void onFinished(JavaScriptObject result) {
-													verify.setProcessing(false);
-													BasicOverlayObject bt = result.cast();
-													if (bt.getBoolean()) {
-														group.setValidationState(ValidationState.SUCCESS);
-														modal.hide();
-													} else {
-														group.setValidationState(ValidationState.ERROR);
-													}
-												}
+						@Override
+						public void onLoadingStart() {
+							alert.setVisible(false);
+							loader.setVisible(true);
+							loader.onLoading();
+						}
+					}));
 
-												@Override
-												public void onError(PerunException error) {
-													verify.setProcessing(false);
-												}
+					body.add(alert);
+					body.add(captcha);
+					body.add(loader);
 
-												@Override
-												public void onLoadingStart() {
-													verify.setProcessing(true);
-												}
-											});
-										}
-									});
+					modal.add(header);
+					modal.add(body);
 
-
-									body.add(captcha);
-
-									footer.add(form);
-
-									modal.add(header);
-									modal.add(body);
-									modal.add(footer);
-
-									modal.show();
-
-									Scheduler.get().scheduleDeferred(new Command() {
-										@Override
-										public void execute() {
-											response.setFocus(true);
-										}
-									});
-
-								}
-							}).setWindow(ScriptInjector.TOP_WINDOW).inject();
+					modal.show();
 
 				} else {
 					// this VO skips captcha
