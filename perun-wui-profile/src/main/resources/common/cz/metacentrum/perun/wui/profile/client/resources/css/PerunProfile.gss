@@ -34,17 +34,6 @@ body {
 	text-align: right;
 }
 
-@external modal-content;
-
-.dangerModal .modal-content {
-	background-color: #c9302c;
-	color: white;
-}
-
-.dangerModal .modal-content > div {
-	border-color: #ac2925;
-}
-
 /* Since we show left-menu on bigger screen, align header too */
 @media screen and (min-width: 768px) {
 	.logoWrapper {

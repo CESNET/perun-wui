@@ -1,9 +1,7 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.model.beans.User;
-import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 
 import java.util.ArrayList;
@@ -37,20 +35,20 @@ public class Author extends User {
 	 */
 	public final native String getFormattedName() /*-{
 
-        var fullName = "";
+		var fullName = "";
 
-        var firstName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "firstName");
-        var lastName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "lastName");
-        var middleName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "middleName");
+		var firstName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "firstName");
+		var lastName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "lastName");
+		var middleName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "middleName");
 
-        if (lastName !== null) fullName += lastName.toUpperCase();
-        if (firstName !== null) fullName += " " + firstName;
-        if (middleName !== null) fullName += " " + middleName;
+		if (lastName !== null) fullName += lastName.toUpperCase();
+		if (firstName !== null) fullName += " " + firstName;
+		if (middleName !== null) fullName += " " + middleName;
 
-        if (fullName.length > 0) return fullName;
-        return null;
+		if (fullName.length > 0) return fullName;
+		return null;
 
-    }-*/;
+	}-*/;
 
 	/**
 	 * Return count of Author's / User's publications based on count of his unique Authorships.

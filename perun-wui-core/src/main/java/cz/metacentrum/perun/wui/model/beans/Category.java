@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
@@ -21,8 +21,8 @@ public class Category extends GeneralObject {
 	 * @param id ID of Category to set
 	 */
 	public final native void setId(int id) /*-{
-        return this.id = id;
-    }-*/;
+		return this.id = id;
+	}-*/;
 
 	/**
 	 * Sets Category name
@@ -30,8 +30,8 @@ public class Category extends GeneralObject {
 	 * @param name Name of Category to set
 	 */
 	public final native void setName(String name) /*-{
-        this.name = name;
-    }-*/;
+		this.name = name;
+	}-*/;
 
 	/**
 	 * Get Category rank (rating coefficient)
@@ -48,8 +48,8 @@ public class Category extends GeneralObject {
 	 * @param rank double value
 	 */
 	public final native void setRank(double rank) /*-{
-        this.rank = rank;
-    }-*/;
+		this.rank = rank;
+	}-*/;
 
 	/**
 	 * Compares to another object

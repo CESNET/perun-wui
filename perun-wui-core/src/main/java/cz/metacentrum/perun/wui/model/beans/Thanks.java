@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
@@ -31,8 +31,8 @@ public class Thanks extends JavaScriptObject {
 	 * @param id ID of Thanks
 	 */
 	public final native void setId(int id) /*-{
-        this.id = id;
-    }-*/;
+		this.id = id;
+	}-*/;
 
 	/**
 	 * Get ID of Publication this Thanks is associated with
@@ -49,8 +49,8 @@ public class Thanks extends JavaScriptObject {
 	 * @param id ID of Publication this Thanks is associated with
 	 */
 	public final native void setPublicationId(int id) /*-{
-        this.publicationId = id;
-    }-*/;
+		this.publicationId = id;
+	}-*/;
 
 	/**
 	 * Get ID of Owner this Thanks is associated with
@@ -67,8 +67,8 @@ public class Thanks extends JavaScriptObject {
 	 * @param id ID of Owner this Thanks is associated with
 	 */
 	public final native void setOwnerId(int id) /*-{
-        this.ownerId = id;
-    }-*/;
+		this.ownerId = id;
+	}-*/;
 
 	/**
 	 * Get CreatedBy (login of user who created this Thanks)
@@ -96,8 +96,8 @@ public class Thanks extends JavaScriptObject {
 	 * @param uid ID of User who created this Thanks
 	 */
 	public final native void setCreatedByUid(int uid) /*-{
-        this.createdByUid = uid;
-    }-*/;
+		this.createdByUid = uid;
+	}-*/;
 
 	/**
 	 * Get Date of Thanks creation as milliseconds from 1.1.1970

@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
@@ -30,8 +30,8 @@ public class Authorship extends JavaScriptObject {
 	 * @param id ID to set
 	 */
 	public final native void setId(int id) /*-{
-        this.id = id;
-    }-*/;
+		this.id = id;
+	}-*/;
 
 	/**
 	 * Get ID of Publication
@@ -48,8 +48,8 @@ public class Authorship extends JavaScriptObject {
 	 * @param id ID to set
 	 */
 	public final native void setPublicationId(int id) /*-{
-        this.publicationId = id;
-    }-*/;
+		this.publicationId = id;
+	}-*/;
 
 	/**
 	 * Get User ID
@@ -66,8 +66,8 @@ public class Authorship extends JavaScriptObject {
 	 * @param id ID to set
 	 */
 	public final native void setUserId(int id) /*-{
-        this.userId = id;
-    }-*/;
+		this.userId = id;
+	}-*/;
 
 	/**
 	 * Get CreatedBy (login of user who created this Authorship)
@@ -95,8 +95,8 @@ public class Authorship extends JavaScriptObject {
 	 * @param uid ID of User who created this Authorship
 	 */
 	public final native void setCreatedByUid(int uid) /*-{
-        this.createdByUid = uid;
-    }-*/;
+		this.createdByUid = uid;
+	}-*/;
 
 	/**
 	 * Get Date of Authorship creation as milliseconds from 1.1.1970

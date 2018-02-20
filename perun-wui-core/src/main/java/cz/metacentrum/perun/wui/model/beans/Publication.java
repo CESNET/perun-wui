@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
@@ -17,13 +17,22 @@ public class Publication extends GeneralObject {
 	}
 
 	/**
+	 * Gets the title
+	 *
+	 * @return the title
+	 */
+	public final String getTitle() {
+		return JsUtils.getNativePropertyString(this, "title");
+	}
+
+	/**
 	 * Sets ID of Publication in Perun
 	 *
 	 * @param id ID of Publication in Perun
 	 */
 	public final native void setId(int id) /*-{
-        this.id = id;
-    }-*/;
+		this.id = id;
+	}-*/;
 
 	/**
 	 * Set name of Publication (title)
@@ -31,8 +40,8 @@ public class Publication extends GeneralObject {
 	 * @param title Name of Publication
 	 */
 	public final native void setName(String title) /*-{
-        this.title = title;
-    }-*/;
+		this.title = title;
+	}-*/;
 
 	/**
 	 * Get ID of Publication in external pub. system
@@ -49,8 +58,8 @@ public class Publication extends GeneralObject {
 	 * @param id ID of Publication in external pub. system
 	 */
 	public final native void setExternalId(int id) /*-{
-        this.externalId = id;
-    }-*/;
+		this.externalId = id;
+	}-*/;
 
 	/**
 	 * Get ID of external Publication system
@@ -67,8 +76,8 @@ public class Publication extends GeneralObject {
 	 * @param id ID of external Publication system
 	 */
 	public final native void setPublicationSystemId(int id) /*-{
-        this.publicationSystemId = id;
-    }-*/;
+		this.publicationSystemId = id;
+	}-*/;
 
 	/**
 	 * Get ID of Category this Publication belongs to.
@@ -85,8 +94,8 @@ public class Publication extends GeneralObject {
 	 * @param categoryId ID of Category this Publication belongs to
 	 */
 	public final native void setCategoryId(int categoryId) /*-{
-        this.categoryId = categoryId;
-    }-*/;
+		this.categoryId = categoryId;
+	}-*/;
 
 	/**
 	 * Get year when Publication was published
@@ -103,8 +112,8 @@ public class Publication extends GeneralObject {
 	 * @param year when Publication was published
 	 */
 	public final native void setYear(int year) /*-{
-        this.year = year;
-    }-*/;
+		this.year = year;
+	}-*/;
 
 	/**
 	 * Get full citation of Publication.
@@ -127,8 +136,8 @@ public class Publication extends GeneralObject {
 	 * @param citation
 	 */
 	public final native void setCitation(String citation) /*-{
-        this.main = citation;
-    }-*/;
+		this.main = citation;
+	}-*/;
 
 	/**
 	 * Get ISBN or ISSN of Publication.
@@ -149,8 +158,8 @@ public class Publication extends GeneralObject {
 	 * @param isbn ISBN or ISSN of Publication
 	 */
 	public final native void setIsbn(String isbn) /*-{
-        this.isbn = isbn;
-    }-*/;
+		this.isbn = isbn;
+	}-*/;
 
 	/**
 	 * Get Publication's DOI (digital object identifier)
@@ -167,8 +176,8 @@ public class Publication extends GeneralObject {
 	 * @param doi DOI to set to Publication
 	 */
 	public final native void setDoi(String doi) /*-{
-        return this.doi = doi;
-    }-*/;
+		return this.doi = doi;
+	}-*/;
 
 	/**
 	 * Get custom rank of Publication (rating coefficient).
@@ -188,8 +197,8 @@ public class Publication extends GeneralObject {
 	 * @param rank rating coefficient to set
 	 */
 	public final native void setRank(double rank) /*-{
-        this.rank = rank;
-    }-*/;
+		this.rank = rank;
+	}-*/;
 
 	/**
 	 * Return TRUE if Publication is locked for changes, FALSE otherwise.
@@ -206,8 +215,8 @@ public class Publication extends GeneralObject {
 	 * @param locked TRUE = locked / FALSE = unlocked
 	 */
 	public final native void setLocked(boolean locked) /*-{
-        this.locked = locked;
-    }-*/;
+		this.locked = locked;
+	}-*/;
 
 	/**
 	 * Get CreatedByUid (ID of user, who created this Publication)
@@ -226,8 +235,8 @@ public class Publication extends GeneralObject {
 	 * @param uid ID of User who created this Publication
 	 */
 	public final native void setCreatedByUid(int uid) /*-{
-        this.createdByUid = uid;
-    }-*/;
+		this.createdByUid = uid;
+	}-*/;
 
 	/**
 	 * Get Date of Publication creation as milliseconds from 1.1.1970

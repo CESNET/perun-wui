@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
@@ -21,8 +21,8 @@ public class PublicationSystem extends GeneralObject {
 	 * @param id ID of PublicationSystem to set
 	 */
 	public final native void setId(int id) /*-{
-        this.id = id;
-    }-*/;
+		this.id = id;
+	}-*/;
 
 	/**
 	 * Set name (friendlyName) of PublicationSystem
@@ -30,8 +30,8 @@ public class PublicationSystem extends GeneralObject {
 	 * @return name of PublicationSystem to set
 	 */
 	public final native void setName(String name) /*-{
-        this.friendlyName = name;
-    }-*/;
+		this.friendlyName = name;
+	}-*/;
 
 	/**
 	 * Get URL of PublicationSystem used to query for User's Publications.
@@ -51,8 +51,8 @@ public class PublicationSystem extends GeneralObject {
 	 * @param url URL of PublicationSystem API
 	 */
 	public final native void setUrl(String url) /*-{
-        this.url = url;
-    }-*/;
+		this.url = url;
+	}-*/;
 
 	/**
 	 * Get login-namespace of PublicationSystem used for User identification.
@@ -72,8 +72,8 @@ public class PublicationSystem extends GeneralObject {
 	 * @param namespace login-namespace of PublicationSystem
 	 */
 	public final native void setLoginNamespace(String namespace) /*-{
-        this.loginNamespace = namespace;
-    }-*/;
+		this.loginNamespace = namespace;
+	}-*/;
 
 	/**
 	 * Get type of PublicationSystem (class of xml parser)
@@ -93,8 +93,8 @@ public class PublicationSystem extends GeneralObject {
 	 * @param type full class name of xml parser
 	 */
 	public final native String setType(String type) /*-{
-        this.type = type;
-    }-*/;
+		this.type = type;
+	}-*/;
 
 	/**
 	 * Get username of PublicationSystem used to contact external PS if requires authentication.
@@ -114,8 +114,8 @@ public class PublicationSystem extends GeneralObject {
 	 * @param username username associated with this PS
 	 */
 	public final native void setUsername(String username) /*-{
-        this.username = username;
-    }-*/;
+		this.username = username;
+	}-*/;
 
 	/**
 	 * Get password of PublicationSystem used to contact external PS if requires authentication.
@@ -132,8 +132,8 @@ public class PublicationSystem extends GeneralObject {
 	 * @param password password associated with this PS
 	 */
 	public final native void setPassword(String password) /*-{
-        this.password = password;
-    }-*/;
+		this.password = password;
+	}-*/;
 
 	/**
 	 * Compares to another object

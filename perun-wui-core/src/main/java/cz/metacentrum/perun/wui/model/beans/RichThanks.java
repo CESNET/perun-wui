@@ -1,4 +1,4 @@
-package cz.metacentrum.perun.wui.cabinet.model;
+package cz.metacentrum.perun.wui.model.beans;
 
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
@@ -30,8 +30,8 @@ public class RichThanks extends Thanks {
 	 * @param name name of Owner
 	 */
 	public final native void setId(String name) /*-{
-        this.ownerName = name;
-    }-*/;
+		this.ownerName = name;
+	}-*/;
 
 	/**
 	 * Compares to another object
