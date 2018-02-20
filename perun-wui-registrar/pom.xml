@@ -193,10 +193,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>com.agnie.gwt</groupId>
-            <artifactId>recaptcha</artifactId>
-        </dependency>
     </dependencies>
 
     <profiles>

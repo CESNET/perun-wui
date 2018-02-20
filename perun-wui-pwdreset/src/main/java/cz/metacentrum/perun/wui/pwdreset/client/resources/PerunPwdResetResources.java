@@ -23,6 +23,9 @@ public interface PerunPwdResetResources extends ClientBundle {
 		String logoWrapper();
 
 		String navbarFix();
+
+		String captcha();
+
 	}
 
 	@Source("css/PerunPwdReset.gss")

@@ -14,11 +14,11 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("Password reset")
 	public String pwdresetAppName();
 
-	@DefaultMessage("Please solve question below to continue")
+	@DefaultMessage("Please perform the confirmation below to continue")
 	public String pleaseVerifyCaptcha();
 
-	@DefaultMessage("Type text from the image...")
-	public String captchaAnswer();
+	@DefaultMessage("Verification failed. Please perform the confirmation again.")
+	String captchaFailed();
 
 
 	// -------------- PWD-RESET PAGE ------------------------ //
