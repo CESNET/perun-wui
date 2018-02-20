@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -242,7 +243,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 		alert.setVisible(false);
 
 		if (Window.Location.getParameter("login-namespace") != null && !Window.Location.getParameter("login-namespace").isEmpty()) {
-			namespace = Window.Location.getParameter("login-namespace");
+			namespace = SafeHtmlUtils.fromString(Window.Location.getParameter("login-namespace")).asString();
 		} else {
 			namespace = "";
 		}

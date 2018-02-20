@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.admin.client;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.ui.IsWidget;
@@ -66,7 +67,7 @@ public class PerunAdminView extends ViewImpl implements PerunAdminPresenter.MyVi
 		bindSlot(PerunAdminPresenter.SLOT_MAIN_CONTENT, pageContent);
 
 		// TODO - more advanced footer
-		footerLeft.setHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+		footerLeft.setHTML(translation.supportAt(SafeHtmlUtils.fromString(PerunConfiguration.getBrandSupportMail()).asString()));
 		footerRight.setHTML(translation.credits(JsUtils.getCurrentYear()) + " | " +  translation.version(PerunWebConstants.INSTANCE.guiVersion()));
 
 	}

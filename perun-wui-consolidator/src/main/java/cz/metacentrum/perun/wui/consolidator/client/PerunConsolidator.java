@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.consolidator.client;
 
 import com.google.gwt.core.client.*;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.DOM;
@@ -120,7 +121,7 @@ public class PerunConsolidator implements EntryPoint{
 
 							Element elem = DOM.getElementById("perun-help");
 							if (elem != null) {
-								elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+								elem.setInnerHTML(translation.supportAt(SafeHtmlUtils.fromString(PerunConfiguration.getBrandSupportMail()).asString()));
 							}
 							Element elem2 = DOM.getElementById("perun-credits");
 							if (elem2 != null) {

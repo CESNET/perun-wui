@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -215,7 +216,8 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 							!item.getAssuranceLevel().equals("1")) {
 						found = true;
 
-						mailVerificationText.setHTML(translation.mailVerificationText(item.getValue()));
+						String val = SafeHtmlUtils.fromString((item.getValue()!=null) ? item.getValue() : "").asString();
+						mailVerificationText.setHTML(translation.mailVerificationText(val));
 						resendNotification.setText(translation.reSendMailVerificationButton());
 						resendNotification.addClickHandler(new ClickHandler() {
 							@Override

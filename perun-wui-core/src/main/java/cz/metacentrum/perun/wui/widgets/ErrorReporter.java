@@ -13,6 +13,7 @@ import com.google.gwt.event.logical.shared.ValueChangeHandler;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -257,7 +258,7 @@ public class ErrorReporter {
 		alert.setDismissable(false);
 
 		if (message.getMemberPreferredEmail() != null) {
-			alert.getElement().setInnerHTML(translation.reportErrorSuccess(message.getTicketNumber(), message.getMemberPreferredEmail()));
+			alert.getElement().setInnerHTML(translation.reportErrorSuccess(message.getTicketNumber(), SafeHtmlUtils.fromString(message.getMemberPreferredEmail()).asString()));
 		} else {
 			alert.getElement().setInnerHTML(translation.reportErrorSuccessNoMail(message.getTicketNumber()));
 		}
@@ -281,7 +282,7 @@ public class ErrorReporter {
 		Alert alert = new Alert();
 		alert.setType(AlertType.DANGER);
 		alert.setDismissable(false);
-		alert.getElement().setInnerHTML(translation.reportErrorFail(PerunConfiguration.getBrandSupportMail()));
+		alert.getElement().setInnerHTML(translation.reportErrorFail(SafeHtmlUtils.fromString(PerunConfiguration.getBrandSupportMail()).asString()));
 		modalBody.add(alert);
 		message.setText(text);
 		modalBody.add(message);

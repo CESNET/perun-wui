@@ -1,9 +1,9 @@
 package cz.metacentrum.perun.wui.json;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunErrorTranslation;
-import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -53,17 +53,17 @@ public class ErrorTranslator {
 
 			if (holder != null) {
 				if (!holder.getName().equalsIgnoreCase("undefined")) {
-					text += "<strong>" + holder.getObjectType() + ":</strong>&nbsp;" + holder.getName() + "<br />";
+					text += "<strong>" + SafeHtmlUtils.fromString(holder.getObjectType()).asString() + ":</strong>&nbsp;" + SafeHtmlUtils.fromString(holder.getName()).asString() + "<br />";
 				}
 			}
 			if (secondHolder != null) {
 				if (!secondHolder.getName().equalsIgnoreCase("undefined")) {
-					text += "<strong>" + secondHolder.getObjectType() + ":</strong>&nbsp;" + secondHolder.getName() + "<br />";
+					text += "<strong>" + SafeHtmlUtils.fromString(secondHolder.getObjectType()).asString() + ":</strong>&nbsp;" + SafeHtmlUtils.fromString(secondHolder.getName()).asString() + "<br />";
 				}
 			}
 			if (a != null) {
-				String attrName = a.getName();
-				String attrValue = a.getValue();
+				String attrName = SafeHtmlUtils.fromString(a.getName()).asString();
+				String attrValue = SafeHtmlUtils.fromString(a.getValue()).asString();
 				text += "<strong>Attribute:&nbsp;</strong>" + attrName + "<br /><strong>Value:&nbsp;</strong>" + attrValue;
 			} else {
 				text += "<i>Attribute is null</i>";
@@ -79,9 +79,9 @@ public class ErrorTranslator {
 			Attribute a2 = error.getReferenceAttribute();
 
 			if (a != null) {
-				String attrName = a.getName();
-				String attrValue = a.getValue();
-				String entity = a.getEntity();
+				String attrName = SafeHtmlUtils.fromString(a.getName()).asString();
+				String attrValue = SafeHtmlUtils.fromString(a.getValue()).asString();
+				String entity = SafeHtmlUtils.fromString(a.getEntity()).asString();
 				text += "<p><strong>Attribute&nbsp;1:</strong>&nbsp;" + attrName + " (" + entity + ")";
 				text += "<br/><strong>Value&nbsp;1:</strong>&nbsp;" + attrValue;
 			} else {
@@ -89,9 +89,9 @@ public class ErrorTranslator {
 			}
 
 			if (a2 != null) {
-				String attrName = a2.getName();
-				String attrValue = a2.getValue();
-				String entity = a2.getEntity();
+				String attrName = SafeHtmlUtils.fromString(a2.getName()).asString();
+				String attrValue = SafeHtmlUtils.fromString(a2.getValue()).asString();
+				String entity = SafeHtmlUtils.fromString(a2.getEntity()).asString();
 				text += "<p><strong>Attribute&nbsp;2:</strong>&nbsp;" + attrName + " (" + entity + ")";
 				text += "<br/><strong>Value&nbsp;2:</strong>&nbsp;" + attrValue;
 			} else {
@@ -104,7 +104,7 @@ public class ErrorTranslator {
 
 			Attribute a = error.getAttribute();
 			if (a != null) {
-				return "Attribute definition for attribute <i>" + a.getName() + "</i> doesn't exist.";
+				return "Attribute definition for attribute <i>" + SafeHtmlUtils.fromString(a.getName()).asString() + "</i> doesn't exist.";
 			} else {
 				return "Attribute definition for attribute <i>null</i> doesn't exist.";
 			}
@@ -124,16 +124,16 @@ public class ErrorTranslator {
 
 			String text = "";
 			if (error.getUser() != null) {
-				text = error.getUser().getFullName();
+				text = SafeHtmlUtils.fromString(error.getUser().getFullName()).asString();
 			} else {
 				text = "User";
 			}
 			if (error.getVo() != null) {
-				text += " is already manager of VO: " + error.getVo().getName();
+				text += " is already manager of VO: " + SafeHtmlUtils.fromString(error.getVo().getName()).asString();
 			} else if (error.getFacility() != null) {
-				text += " is already manager of Facility: " + error.getFacility().getName();
+				text += " is already manager of Facility: " + SafeHtmlUtils.fromString(error.getFacility().getName()).asString();
 			} else if (error.getGroup() != null) {
-				text += " is already manager of Group: " + error.getGroup().getName();
+				text += " is already manager of Group: " + SafeHtmlUtils.fromString(error.getGroup().getName()).asString();
 			}
 			/* TODO - add SecurityTeam bean
 			else if (error.getSecurityTeam() != null) {
@@ -151,16 +151,16 @@ public class ErrorTranslator {
 
 			String text = "";
 			if (error.getLogin() != null) {
-				text += "Login: " + error.getLogin();
+				text += "Login: " + SafeHtmlUtils.fromString(error.getLogin()).asString();
 				if (error.getNamespace() != null) {
-					text += " in namespace: " + error.getNamespace() + " is already reserved.";
+					text += " in namespace: " + SafeHtmlUtils.fromString(error.getNamespace()).asString() + " is already reserved.";
 				} else {
 					text += " is already reserved.";
 				}
 			} else {
 				text += "Login";
 				if (error.getNamespace() != null) {
-					text += " in namespace: " + error.getNamespace() + " is already reserved.";
+					text += " in namespace: " + SafeHtmlUtils.fromString(error.getNamespace()).asString() + " is already reserved.";
 				} else {
 					text += " is already reserved in selected namespace.";
 				}
@@ -170,7 +170,7 @@ public class ErrorTranslator {
 		} else if ("AttributeAlreadyAssignedException".equalsIgnoreCase(errorName)) {
 
 			if (error.getAttribute() != null) {
-				return "Attribute <i>" + error.getAttribute().getName() + "</i> is already set as required by service.";
+				return "Attribute <i>" + SafeHtmlUtils.fromString(error.getAttribute().getName()).asString() + "</i> is already set as required by service.";
 			} else {
 				return "Attribute is already set as required by service.";
 			}
@@ -182,7 +182,7 @@ public class ErrorTranslator {
 		} else if ("AttributeNotAssignedException".equalsIgnoreCase(errorName)) {
 
 			if (error.getAttribute() != null) {
-				return "Attribute <i>" + error.getAttribute().getName() + "</i> is already NOT required by service.";
+				return "Attribute <i>" + SafeHtmlUtils.fromString(error.getAttribute().getName()).asString() + "</i> is already NOT required by service.";
 			} else {
 				return "Attribute is already NOT required by service.";
 			}
@@ -190,12 +190,12 @@ public class ErrorTranslator {
 		} else if ("AttributeNotExistsException".equalsIgnoreCase(errorName)) {
 
 			// FIXME - attribute object inside is never used, but has good description
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("AttributeValueException".equalsIgnoreCase(errorName)) {
 
 			// FIXME - core always uses extensions of this exception
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("ApplicationNotCreatedException".equalsIgnoreCase(errorName)) {
 
@@ -245,7 +245,7 @@ public class ErrorTranslator {
 		} else if ("DiacriticNotAllowedException".equalsIgnoreCase(errorName)) {
 
 			// has meaningful info
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 			// FIXME - ENTITY exceptions are always extended - we will use specific types
 
@@ -267,8 +267,8 @@ public class ErrorTranslator {
 
 			if (error.getExtSource() != null) {
 				return "Same external source is already assigned to your VO." +
-						"<p><strong>Name:</strong> " + error.getExtSource().getName() + "</br>" +
-						"<strong>Type:</strong> " + error.getExtSource().getType();
+						"<p><strong>Name:</strong> " + SafeHtmlUtils.fromString(error.getExtSource().getName()).asString() + "</br>" +
+						"<strong>Type:</strong> " + SafeHtmlUtils.fromString(error.getExtSource().getType()).asString();
 			} else {
 				return "Same external source is already assigned to your VO.";
 			}
@@ -277,8 +277,8 @@ public class ErrorTranslator {
 
 			if (error.getExtSource() != null) {
 				return "Same external source was already removed from your VO." +
-						"<p><strong>Name:</strong> " + error.getExtSource().getName() + "</br>" +
-						"<strong>Type:</strong> " + error.getExtSource().getType();
+						"<p><strong>Name:</strong> " + SafeHtmlUtils.fromString(error.getExtSource().getName()).asString() + "</br>" +
+						"<strong>Type:</strong> " + SafeHtmlUtils.fromString(error.getExtSource().getType()).asString();
 			} else {
 				return "Same external source was already removed from your VO.";
 			}
@@ -287,8 +287,8 @@ public class ErrorTranslator {
 
 			if (error.getExtSource() != null) {
 				return "Same external source already exists." +
-						"<p><strong>Name:</strong> " + error.getExtSource().getName() + "</br>" +
-						"<strong>Type:</strong> " + error.getExtSource().getType();
+						"<p><strong>Name:</strong> " + SafeHtmlUtils.fromString(error.getExtSource().getName()).asString() + "</br>" +
+						"<strong>Type:</strong> " + SafeHtmlUtils.fromString(error.getExtSource().getType()).asString();
 			} else {
 				return "Same external source already exists.";
 			}
@@ -311,7 +311,7 @@ public class ErrorTranslator {
 		} else if ("ExtSourceUnsupportedOperationException".equalsIgnoreCase(errorName)) {
 
 			// TODO - probably is never thrown to GUI ??
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("FacilityAlreadyRemovedException".equalsIgnoreCase(errorName)) {
 
@@ -333,7 +333,7 @@ public class ErrorTranslator {
 
 			Group g = error.getGroup();
 			if (g != null) {
-				return "Group: " + g.getName() + " is already assigned to Resource.";
+				return "Group: " + SafeHtmlUtils.fromString(g.getName()).asString() + " is already assigned to Resource.";
 			} else {
 				return "Group is already assigned to Resource.";
 			}
@@ -418,7 +418,7 @@ public class ErrorTranslator {
 		} else if ("MaxSizeExceededException".equalsIgnoreCase(errorName)) {
 
 			// has meaningfull message
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("MemberAlreadyRemovedException".equalsIgnoreCase(errorName)) {
 
@@ -443,7 +443,7 @@ public class ErrorTranslator {
 
 		} else if ("MessageParsingFailException".equalsIgnoreCase(errorName)) {
 
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("ModuleNotExistsException".equalsIgnoreCase(errorName)) {
 
@@ -463,11 +463,11 @@ public class ErrorTranslator {
 
 		} else if ("NumberNotInRangeException".equalsIgnoreCase(errorName)) {
 
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("NumbersNotAllowedException".equalsIgnoreCase(errorName)) {
 
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("OwnerAlreadyAssignedException".equalsIgnoreCase(errorName)) {
 
@@ -515,12 +515,12 @@ public class ErrorTranslator {
 		} else if ("RelationExistsException".equalsIgnoreCase(errorName)) {
 
 			// FIXME - better text on core side
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("RelationNotExistsException".equalsIgnoreCase(errorName)) {
 
 			// FIXME - better text on core side
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("ResourceAlreadyRemovedException".equalsIgnoreCase(errorName)) {
 
@@ -543,7 +543,7 @@ public class ErrorTranslator {
 		} else if ("ResourceTagNotExistsException".equalsIgnoreCase(errorName)) {
 
 			// FIXME - must contain also resource
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("SecurityTeamAlreadyAssignedException".equalsIgnoreCase(errorName)) {
 
@@ -559,7 +559,7 @@ public class ErrorTranslator {
 
 			// FIXME - must contain also resource
 			if (error.getService() != null) {
-				return "Service " + error.getService().getName() + " is already assigned to resource.";
+				return "Service " + SafeHtmlUtils.fromString(error.getService().getName()).asString() + " is already assigned to resource.";
 			} else {
 				return "Same service is already assigned to resource.";
 			}
@@ -567,7 +567,7 @@ public class ErrorTranslator {
 		} else if ("ServiceAlreadyBannedException".equalsIgnoreCase(errorName)) {
 
 			if (error.getService() != null && error.getFacility() != null) {
-				return "Service " + error.getService().getName() + " is already banned on facility "+error.getFacility().getName()+".";
+				return "Service " + SafeHtmlUtils.fromString(error.getService().getName()).asString() + " is already banned on facility "+SafeHtmlUtils.fromString(error.getFacility().getName()).asString()+".";
 			} else {
 				return "Same service is already banned on facility.";
 			}
@@ -575,7 +575,7 @@ public class ErrorTranslator {
 		} else if ("ServiceExistsException".equalsIgnoreCase(errorName)) {
 
 			if (error.getService() != null) {
-				return "Service " + error.getService().getName() + " already exists in Perun. Choose different name.";
+				return "Service " + SafeHtmlUtils.fromString(error.getService().getName()).asString() + " already exists in Perun. Choose different name.";
 			} else {
 				return "Service with same name already exists in Perun.";
 			}
@@ -584,7 +584,7 @@ public class ErrorTranslator {
 
 			// FIXME - must contain also resource
 			if (error.getService() != null) {
-				return "Service " + error.getService().getName() + " is not assigned to resource.";
+				return "Service " + SafeHtmlUtils.fromString(error.getService().getName()).asString() + " is not assigned to resource.";
 			} else {
 				return "Service is not assigned to resource.";
 			}
@@ -600,7 +600,7 @@ public class ErrorTranslator {
 		} else if ("ServicesPackageExistsException".equalsIgnoreCase(errorName)) {
 
 			// TODO - we don't support service packages yet
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("ServiceAlreadyRemovedFromServicePackageException".equalsIgnoreCase(errorName)) {
 
@@ -628,15 +628,15 @@ public class ErrorTranslator {
 
 		} else if ("SpaceNotAllowedException".equalsIgnoreCase(errorName)) {
 
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("SpecialCharsNotAllowedException".equalsIgnoreCase(errorName)) {
 
-			return error.getMessage() + " You can use only letters, numbers and spaces.";
+			return SafeHtmlUtils.fromString(error.getMessage()).asString() + " You can use only letters, numbers and spaces.";
 
 		} else if ("SpecialCharsNotAllowedException".equalsIgnoreCase(errorName)) {
 
-			return error.getMessage() + " You can use only letters, numbers and spaces.";
+			return SafeHtmlUtils.fromString(error.getMessage()).asString() + " You can use only letters, numbers and spaces.";
 
 		} else if ("SubGroupCannotBeRemovedException".equalsIgnoreCase(errorName)) {
 
@@ -686,16 +686,16 @@ public class ErrorTranslator {
 
 		} else if ("WrongModuleTypeException".equalsIgnoreCase(errorName)) {
 
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("WrongRangeOfCountException".equalsIgnoreCase(errorName)) {
 
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("WrongPatternException".equalsIgnoreCase(errorName)) {
 
 			// meaningful message
-			return error.getMessage();
+			return SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 		} else if ("MissingRequiredDataException".equalsIgnoreCase(errorName)) {
 
@@ -704,7 +704,7 @@ public class ErrorTranslator {
 			String missingItems = "<p>";
 			for (ApplicationFormItemData item : error.getFormItems()) {
 				missingItems += "<strong>Missing attribute: </strong>";
-				missingItems += item.getFormItem().getFederationAttribute();
+				missingItems += SafeHtmlUtils.fromString(item.getFormItem().getFederationAttribute()).asString();
 				missingItems += "<br />";
 			}
 
@@ -720,7 +720,7 @@ public class ErrorTranslator {
 
 
 		//default text
-		return errorName + ": " + error.getMessage();
+		return errorName + ": " + SafeHtmlUtils.fromString(error.getMessage()).asString();
 
 	}
 
