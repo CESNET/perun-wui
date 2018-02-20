@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.registrar.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -88,7 +89,7 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 
 		Element elem = DOM.getElementById("perun-help");
 		if (elem != null) {
-			elem.setInnerHTML(" "+translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+			elem.setInnerHTML(" "+translation.supportAt(SafeHtmlUtils.fromString(PerunConfiguration.getBrandSupportMail()).asString()));
 		}
 		Element elem2 = DOM.getElementById("perun-credits");
 		if (elem2 != null) {
@@ -105,7 +106,7 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 
 			Element elem = DOM.getElementById("perun-help");
 			if (elem != null) {
-				elem.setInnerHTML(" "+translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+				elem.setInnerHTML(" "+translation.supportAt(SafeHtmlUtils.fromString(PerunConfiguration.getBrandSupportMail()).asString()));
 			}
 			Element elem2 = DOM.getElementById("perun-credits");
 			if (elem2 != null) {
@@ -119,7 +120,7 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 				elem.setInnerHTML(translation.supportAtMails());
 				for (String mail : contactEmail) {
 					Anchor mailto = new Anchor();
-					mailto.setText(mail+" ");
+					mailto.setText(SafeHtmlUtils.fromString(mail+" ").asString());
 					mailto.setHref("mailto:"+mail);
 					elem.appendChild(mailto.getElement());
 				}

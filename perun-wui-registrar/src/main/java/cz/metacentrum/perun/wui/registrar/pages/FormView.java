@@ -6,6 +6,7 @@ import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
@@ -375,8 +376,10 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		int row = 0;
 		for (Identity identity : similar) {
 
-			ft.setHTML(row, 0, "<strong>"+identity.getName()+"</strong><br />"+
-					((identity.getOrganization() != null) ? identity.getOrganization() : "<i style='color:grey'>N/A</i>") +"<br />"+identity.getEmail());
+			String name = SafeHtmlUtils.fromString((identity.getName()!=null) ? identity.getName() : "").asString();
+			String email = SafeHtmlUtils.fromString((identity.getEmail()!=null) ? identity.getEmail() : "").asString();
+			ft.setHTML(row, 0, "<strong>"+ name +"</strong><br />"+
+					((identity.getOrganization() != null) ? SafeHtmlUtils.fromString(identity.getOrganization()).asString() : "<i style='color:grey'>N/A</i>") +"<br />"+email);
 			ft.getFlexCellFormatter().setWidth(row, 0, "180px");
 
 			ButtonGroup certGroup = new ButtonGroup();
@@ -530,7 +533,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			if (sources.isEmpty() || (!idpFound && !certFound && !othersFound)) {
 
 				// no identity for joining
-				ft.setHTML(row, 1, translation.noIdentityForJoining(PerunConfiguration.getBrandSupportMail()));
+				ft.setHTML(row, 1, translation.noIdentityForJoining(SafeHtmlUtils.fromString(PerunConfiguration.getBrandSupportMail()).asString()));
 
 			}
 

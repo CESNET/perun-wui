@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.pwdreset.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -99,7 +100,7 @@ public class PerunPwdResetView extends ViewImpl implements PerunPwdResetPresente
 
 		Element elem = DOM.getElementById("perun-help");
 		if (elem != null) {
-			elem.setInnerHTML(translation.supportAt(PerunConfiguration.getBrandSupportMail()));
+			elem.setInnerHTML(translation.supportAt(SafeHtmlUtils.fromString(PerunConfiguration.getBrandSupportMail()).asString()));
 		}
 		Element elem2 = DOM.getElementById("perun-credits");
 		if (elem2 != null) {

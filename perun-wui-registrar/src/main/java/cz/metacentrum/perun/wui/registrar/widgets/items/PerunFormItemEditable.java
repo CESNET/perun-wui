@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources;
@@ -85,7 +86,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 			setValue(getItemData().getPrefilledValue());
 
 			String helpText = getItemData().getFormItem().getItemTexts(getLang()).getHelp();
-			help.setHTML(helpText);
+			help.setHTML(SafeHtmlUtils.fromString(helpText).asString());
 			help.setMarginTop(0);
 
 			widgetWithTexts.add(help);
@@ -169,7 +170,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		|| state.equals(ValidationState.WARNING)) {
 			Animate.animate(status, Animation.PULSE, 1, 400);
 		}
-		this.status.setHTML(text);
+		this.status.setHTML(SafeHtmlUtils.fromString(text).asString());
 		this.setValidationState(state);
 	}
 
