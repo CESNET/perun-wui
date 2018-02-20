@@ -17,9 +17,8 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Please perform the confirmation below to continue")
 	public String pleaseVerifyCaptcha();
 
-	@DefaultMessage("Type text from the image...")
-	public String captchaAnswer();
-
+	@DefaultMessage("Verification failed. Please perform the confirmation again.")
+	String captchaFailed();
 
 	// -------------- MAIN PAGE - MENU ------------------------ //
 
@@ -324,9 +323,4 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("We couldn`t verify your email address.")
 	public String emailWasNotVerified();
 
-	@DefaultMessage("Verification failed. Please perform the confirmation again.")
-	String captchaFailed();
-
-	@DefaultMessage("The server is probably being restarted. Please try it again later.")
-	String serverDown();
 }

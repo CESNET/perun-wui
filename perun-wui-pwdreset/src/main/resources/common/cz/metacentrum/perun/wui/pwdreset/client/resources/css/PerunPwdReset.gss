@@ -37,3 +37,8 @@ body {
 .pageWrapper {
     margin: 15px 15px 0px 15px;
 }
+
+/* CAPTCHA */
+.captcha > div {
+    margin: 0 auto;
+}
