@@ -163,21 +163,37 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	 * @param state
 	 */
 	public void setStatus(String text, ValidationState state) {
+		if (text != null) {
+			setRawStatus(SafeHtmlUtils.fromString(text).asString(), state);
+		} else {
+			setStatus(state);
+		}
+	}
+
+	public void setStatus(ValidationState state) {
+		setRawStatus("", state);
+	}
+
+	/**
+	 * Status of item means validationState and text.
+	 * Only sanitized input is allowed
+	 * This method display to (inform) user visually status of validation.
+	 *
+	 * @param text
+	 * @param state
+	 */
+	public void setRawStatus(String text, ValidationState state) {
 		if (text.isEmpty()) {
 			this.status.getParent().setVisible(false);
 		} else {
 			this.status.getParent().setVisible(true);
 		}
 		if (state.equals(ValidationState.ERROR)
-		|| state.equals(ValidationState.WARNING)) {
+				|| state.equals(ValidationState.WARNING)) {
 			Animate.animate(status, Animation.PULSE, 1, 400);
 		}
-		this.status.setHTML(SafeHtmlUtils.fromString(text).asString());
+		this.status.setHTML(text);
 		this.setValidationState(state);
-	}
-
-	public void setStatus(ValidationState state) {
-		setStatus("", state);
 	}
 
 	public void unsetStatus() {
