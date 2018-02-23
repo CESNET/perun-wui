@@ -21,7 +21,7 @@ public class Header extends PerunFormItemStatic {
 	@Override
 	protected Widget initFormItem() {
 		widget = new Legend();
-		widget.setHTML(SafeHtmlUtils.fromString(getLabelOrShortName()).asString());
+		widget.setHTML(getLabelOrShortName());
 		return widget;
 	}
 
