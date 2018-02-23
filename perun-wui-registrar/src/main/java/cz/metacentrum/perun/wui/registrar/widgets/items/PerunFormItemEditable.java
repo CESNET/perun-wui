@@ -86,7 +86,9 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 			setValue(getItemData().getPrefilledValue());
 
 			String helpText = getItemData().getFormItem().getItemTexts(getLang()).getHelp();
-			help.setHTML(SafeHtmlUtils.fromString(helpText).asString());
+			if (helpText != null) {
+				help.setHTML(SafeHtmlUtils.fromString(helpText).asString());
+			}
 			help.setMarginTop(0);
 
 			widgetWithTexts.add(help);
