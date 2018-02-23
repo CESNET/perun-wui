@@ -55,7 +55,7 @@ public class FromFederation extends PerunFormItemEditable {
 	protected Widget initWidgetOnlyPreview() {
 		widget = new Paragraph();
 		getPreview().addStyleName("form-control");
-		setStatus(getTranslation().federation(), ValidationState.NONE);
+		setRawStatus(getTranslation().federation(), ValidationState.NONE);
 		return widget;
 	}
 
