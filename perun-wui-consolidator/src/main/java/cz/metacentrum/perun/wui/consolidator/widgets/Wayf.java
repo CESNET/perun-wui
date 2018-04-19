@@ -245,7 +245,7 @@ public class Wayf extends Composite {
 														target = "&target_url=" + redirect;
 													}
 													String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", false) + URL.encodeQueryString("?token=" + token + target);
-													final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?entityID=" + usedKey + "&target=" + consolidatorUrl);
+													final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?authnContextClassRef=urn:cesnet:proxyidp:template:cesnet%20urn:cesnet:proxyidp:idpentityid:" + usedKey + "&target=" + consolidatorUrl);
 													Window.Location.assign(redirectUrl);
 												}
 											});
