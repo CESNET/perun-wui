@@ -41,6 +41,15 @@ public class AttributeDefinition extends GeneralObject {
 	}
 
 	/**
+	 * Gets display name of an attribute
+	 *
+	 * @return display name
+	 */
+	public final String getDisplayName() {
+		return JsUtils.getNativePropertyString(this, "displayName");
+	}
+
+	/**
 	 * Gets namespace of an attribute (first part of URN)
 	 *
 	 * @return namespace of an attribute
