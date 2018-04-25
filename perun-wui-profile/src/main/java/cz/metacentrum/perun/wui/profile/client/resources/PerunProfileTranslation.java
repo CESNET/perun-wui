@@ -237,4 +237,10 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("Public part of key")
 	String publicKey();
+
+	@DefaultMessage("Preferred shells")
+    String preferredShells();
+
+	@DefaultMessage("Bona fide status")
+	String bonaFideStatus();
 }
