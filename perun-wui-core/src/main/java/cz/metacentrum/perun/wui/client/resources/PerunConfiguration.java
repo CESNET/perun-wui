@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.client.resources;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.i18n.client.LocaleInfo;
@@ -170,11 +169,28 @@ public final class PerunConfiguration {
 	 *
 	 * @return names of attributes that should be hidden
 	 */
+	@Deprecated
 	public static List<String> getProfilePersonalAttributesToHide() {
 		List<String> attrNames = new ArrayList<>();
 		String data = getConfigPropertyString("profile.personal.hideAttributes");
 		if (data != null) {
 			String[] values = data.replaceAll("\\s+","").split(",");
+			attrNames.addAll(Arrays.asList(values));
+		}
+
+		return attrNames;
+	}
+
+	/**
+	 * Returns list of attributes that should be shown on user profile page
+	 *
+	 * @return names of attributes that should be shown
+	 */
+	public static List<String> getProfilePersonalAttributesToShow() {
+		List<String> attrNames = new ArrayList<>();
+		String data = getConfigPropertyString("profile.personal.showAttributes");
+		if (data != null) {
+			String[] values = data.replaceAll("\\s+", "").split(",");
 			attrNames.addAll(Arrays.asList(values));
 		}
 
