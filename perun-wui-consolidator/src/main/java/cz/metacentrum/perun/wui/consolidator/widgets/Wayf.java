@@ -120,10 +120,14 @@ public class Wayf extends Composite {
 						if (group.getIdpEntityID() != null && !group.getIdpEntityID().isEmpty()) {
 							authnContextClassRef += "%20urn:cesnet:proxyidp:idpentityid:"+group.getIdpEntityID();
 						}
-						// button is "filter" - pass it to the proxy
+						// button is "efilter" - pass it to the proxy
 						if (group.getEFilter() != null && !group.getEFilter().isEmpty()) {
-
 							authnContextClassRef += "%20urn:cesnet:proxyidp:efilter:"+Utils.getWayfEfilterURL(group.getEFilter());
+						}
+
+						// button is "filter" - pass it to the proxy
+						if (group.getFilter() != null && !group.getFilter().isEmpty()) {
+							authnContextClassRef += "%20urn:cesnet:proxyidp:filter:"+group.getFilter();
 						}
 
 						final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?authnContextClassRef=" + authnContextClassRef +"&target="+consolidatorUrl);
