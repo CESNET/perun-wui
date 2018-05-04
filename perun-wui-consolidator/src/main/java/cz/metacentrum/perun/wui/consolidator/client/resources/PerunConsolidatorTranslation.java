@@ -16,12 +16,6 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 
 	/* --  SELECT PAGE -- */
 
-	@DefaultMessage("Select your organization")
-	public String selectIdP();
-
-	@DefaultMessage("Search your organization name...")
-	public String searchYouOrganization();
-
 	@DefaultMessage("Your current identity is not registered. Now please select already registered identity (previously used to access Perun).")
 	public String notRegistered();
 
@@ -30,15 +24,6 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 
 	@DefaultMessage("Add new way of signing in...")
 	public String joinWith();
-
-	@DefaultMessage("at")
-	public String at();
-
-	@DefaultMessage("Loading organizations")
-	public String loadingOrganizations();
-
-	@DefaultMessage("No organization found")
-	public String noOrganizationFound();
 
 	@DefaultMessage("Your authorization token will expire in {0}s. Please make your choice before that.")
 	public String authorizationTokenWillExpire(int count);

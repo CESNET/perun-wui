@@ -78,21 +78,16 @@ public class WayfGroup extends JavaScriptObject {
 		return JsUtils.getNativePropertyString(this, "url");
 	}
 
-	public final String getFeeds() {
-		return JsUtils.getNativePropertyString(this, "feed");
+	public final String getFilter() {
+		return JsUtils.getNativePropertyString(this, "filter");
 	}
 
-	public final FeedEntities getFeedData() {
-		return JsUtils.getNativePropertyObject(this, "data").cast();
+	public final String getEFilter() {
+		return JsUtils.getNativePropertyString(this, "efilter");
 	}
 
-	/**
-	 * Get target entity IdP for SP to use (if not configured by SP based on URL)
-	 *
-	 * @return Target entity ID
-	 */
-	public final String getTargetEntity() {
-		return JsUtils.getNativePropertyString(this, "target");
+	public final String getIdpEntityID() {
+		return JsUtils.getNativePropertyString(this, "idpentityid");
 	}
 
 }

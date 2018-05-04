@@ -954,6 +954,19 @@ public class Utils {
 	}
 
 	/**
+	 * Return URL to CESNET wayf efilter files location
+	 *
+	 * @param urlPrefix URL prefix defining name of filter, if null or empty "fed" is used
+	 * @return URL to wayf filter
+	 */
+	public static String getWayfEfilterURL(String urlPrefix) {
+		if (urlPrefix == null || urlPrefix.isEmpty()) {
+			urlPrefix = "fed";
+		}
+		return Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/wayf/wayf-filter-" + urlPrefix + ".txt";
+	}
+
+	/**
 	 * Return URL to Password change GUI for selected namespace
 	 *
 	 * @param namespace namespace where we want to reset password

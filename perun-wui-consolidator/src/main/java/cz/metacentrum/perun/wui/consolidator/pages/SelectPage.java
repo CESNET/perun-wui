@@ -53,7 +53,7 @@ public class SelectPage {
 
 	public Widget draw() {
 
-		wayf = new Wayf(null, redirect);
+		wayf = new Wayf(redirect);
 
 		if (rootElement == null) {
 			rootElement = ourUiBinder.createAndBindUi(this);
