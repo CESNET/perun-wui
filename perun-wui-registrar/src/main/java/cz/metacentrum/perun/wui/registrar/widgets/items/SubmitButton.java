@@ -22,6 +22,7 @@ public class SubmitButton extends PerunFormItemStatic {
 	private boolean autoSubmit;
 	private PerunForm form;
 	private Row widget;
+	private PerunButton button;
 
 	public SubmitButton(ApplicationFormItemData item, String lang, PerunForm form, boolean autoSubmit) {
 		super(item, lang);
@@ -36,7 +37,7 @@ public class SubmitButton extends PerunFormItemStatic {
 		Column col = new Column(PerunForm.WIDGET_WITH_TEXT_SIZE);
 		col.setOffset(PerunForm.LABEL_OFFSET);
 
-		final PerunButton button = new PerunButton();
+		button = new PerunButton();
 		button.setIcon(IconType.CHEVRON_RIGHT);
 		button.setIconFixedWidth(true);
 		button.setTooltipText(getTranslation().checkAndSubmit());
@@ -61,26 +62,15 @@ public class SubmitButton extends PerunFormItemStatic {
 	@Override
 	public boolean focus() {
 		super.focus();
-		for (Widget button : widget) {
-			if (button instanceof PerunButton) {
-				((PerunButton) button).setFocus(true);
-				return true;
-			}
+		if (this.button != null) {
+			this.button.setFocus(true);
+			return true;
 		}
 		return false;
 	}
 
 	public PerunButton getButton() {
-		for (Widget col : widget) {
-			if (col instanceof Column) {
-				for (Widget btn : (Column) col) {
-					if (btn instanceof PerunButton) {
-						return (PerunButton) btn;
-					}
-				}
-			}
-		}
-		return null;
+		return this.button;
 	}
 
 	public boolean hasAutoSubmit() {
