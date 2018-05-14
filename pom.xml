@@ -32,8 +32,8 @@
 		<maven.test.skip>false</maven.test.skip>
 
 		<!-- Project wide GWT version -->
-		<gwtVersion>2.8.1</gwtVersion>
-		<gwtPluginVersion>2.8.1</gwtPluginVersion>
+		<gwtVersion>2.8.2</gwtVersion>
+		<gwtPluginVersion>2.8.2</gwtPluginVersion>
 		<gwtp.version>1.6</gwtp.version>
 		<gin.version>2.1.2</gin.version>
 	</properties>
