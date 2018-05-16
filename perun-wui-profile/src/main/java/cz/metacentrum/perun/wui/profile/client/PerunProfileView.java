@@ -33,7 +33,6 @@ import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Span;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Main View for Perun WUI User profile.
@@ -110,6 +109,11 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 
 		if (PerunConfiguration.isHeaderDisabled()) {
 			menuWrapper.setVisible(false);
+		}
+
+		// set Title from property if any
+		if (PerunConfiguration.getBrandProfileTitle() != null) {
+			brand.setText(PerunConfiguration.getBrandProfileTitle());
 		}
 
 		// put logo

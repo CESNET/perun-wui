@@ -82,7 +82,8 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 			@Override
 			public String getValue(RichUserExtSource userExtSource) {
 				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
-					if (userExtSource.getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth")) {
+					if (userExtSource.getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth") ||
+							userExtSource.getExtSource().getName().equals("https://login.elixir-czech.org/idp/")) {
 						// hack our social IdP so we can tell from where identity is
 						return Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
 					}

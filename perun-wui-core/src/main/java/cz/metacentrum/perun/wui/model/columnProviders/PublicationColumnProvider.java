@@ -11,11 +11,8 @@ import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumn;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
-import org.gwtbootstrap3.client.ui.constants.ButtonSize;
-import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
-import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 import org.gwtbootstrap3.extras.bootbox.client.Bootbox;
 
 import java.util.ArrayList;
@@ -77,7 +74,7 @@ public class PublicationColumnProvider extends ColumnProvider<RichPublication> {
 				if (columnType.equals(PerunColumnType.ID) && Integer.toString(object.getId()).contains(text)) {
 					return true;
 				} else if (columnType.equals(PerunColumnType.NAME) && object.getName() != null &&
-								   object.getName().toLowerCase().contains(text.toLowerCase())) {
+						object.getName().toLowerCase().contains(text.toLowerCase())) {
 					return true;
 				}
 			}

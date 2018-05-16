@@ -6,6 +6,7 @@ import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorTranslation;
@@ -60,7 +61,12 @@ public class SelectPage {
 		}
 
 		heading.setText(translation.currentIdentityIs());
-		joinHeading.setText(translation.joinWith());
+		String text = PerunConfiguration.getWayfLinkAnAccountText();
+		if (text == null || text.isEmpty()) {
+			joinHeading.setText(translation.joinWith());
+		} else {
+			joinHeading.setText(text);
+		}
 
 		// fixme on error loader.onError(error, null);
 
@@ -111,14 +117,13 @@ public class SelectPage {
 					if (PerunSession.getInstance().getUser() != null) {
 						login.setText(PerunSession.getInstance().getUser().getFullName());
 						login.setSubText("( " + PerunSession.getInstance().getPerunPrincipal().getActor() + " )");
-						login.setVisible(true);
 					} else {
 						login.setText(translatedActor);
-						login.setVisible(true);
 					}
+					login.setVisible(!PerunConfiguration.isWayfLinkAnAccountDisabled());
 					identity.setText(translatedExtSourceName);
 					identity.setVisible(true);
-					joinHeading.setVisible(true);
+					joinHeading.setVisible(!PerunConfiguration.isWayfLinkAnAccountDisabled());
 					identity.setTitle(translatedActor);
 
 					if (PerunSession.getInstance().getUser() == null) {
@@ -163,8 +168,8 @@ public class SelectPage {
 
 	private void setTimer() {
 
-		counter.setText(translation.authorizationTokenWillExpire(300));
-		counter.setVisible(true);
+		//counter.setText(translation.authorizationTokenWillExpire(300));
+		//counter.setVisible(true);
 
 		Timer t = new Timer() {
 			int count = 60 * 5;
@@ -173,6 +178,7 @@ public class SelectPage {
 				count--;
 				if (count < 0) {
 					counter.setType(AlertType.DANGER);
+					counter.setVisible(true);
 					counter.setText(translation.authorizationTokenHasExpired());
 					this.cancel();
 				}

@@ -16,13 +16,13 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 
 	/* --  SELECT PAGE -- */
 
-	@DefaultMessage("Your current identity is not registered. Now please select already registered identity (previously used to access Perun).")
+	@DefaultMessage("Your current identity is not registered. In next step please select already registered identity.")
 	public String notRegistered();
 
-	@DefaultMessage("Your are signed in by")
+	@DefaultMessage("Your are signed in with")
 	public String currentIdentityIs();
 
-	@DefaultMessage("Add new way of signing in...")
+	@DefaultMessage("Link new account")
 	public String joinWith();
 
 	@DefaultMessage("Your authorization token will expire in {0}s. Please make your choice before that.")
@@ -39,10 +39,10 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Leave")
 	public String finishButtonLeave();
 
-	@DefaultMessage("Add another way of signing in")
+	@DefaultMessage("Link another account")
 	public String backButton();
 
-	@DefaultMessage("Your identities were successfully joined.")
+	@DefaultMessage("Your identities were successfully linked.")
 	public String joinedMessage();
 
 	@DefaultMessage("You have following registered identities")

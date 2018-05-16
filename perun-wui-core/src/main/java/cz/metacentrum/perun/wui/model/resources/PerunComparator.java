@@ -6,7 +6,6 @@ import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.beans.*;
 import cz.metacentrum.perun.wui.widgets.resources.PerunColumnType;
 
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

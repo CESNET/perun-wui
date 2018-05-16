@@ -14,8 +14,10 @@ import org.gwtbootstrap3.client.ui.Image;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This class allows to read configuration of Perun for WUI apps.
@@ -146,55 +148,6 @@ public final class PerunConfiguration {
 		// can't be stored globally
 		return null;
 
-	}
-
-	/**
-	 * Returns list of page names to be hidden in user profile
-	 *
-	 * @return names of pages to hide
-	 */
-	public static List<String> getProfilePagesToHide() {
-		List<String> attrNames = new ArrayList<>();
-		String data = getConfigPropertyString("profile.hidePages");
-		if (data != null) {
-			String[] values = data.replaceAll("\\s+","").split(",");
-			attrNames.addAll(Arrays.asList(values));
-		}
-
-		return attrNames;
-	}
-
-	/**
-	 * Returns list of attributes that should be hide on user profile page
-	 *
-	 * @return names of attributes that should be hidden
-	 */
-	@Deprecated
-	public static List<String> getProfilePersonalAttributesToHide() {
-		List<String> attrNames = new ArrayList<>();
-		String data = getConfigPropertyString("profile.personal.hideAttributes");
-		if (data != null) {
-			String[] values = data.replaceAll("\\s+","").split(",");
-			attrNames.addAll(Arrays.asList(values));
-		}
-
-		return attrNames;
-	}
-
-	/**
-	 * Returns list of attributes that should be shown on user profile page
-	 *
-	 * @return names of attributes that should be shown
-	 */
-	public static List<String> getProfilePersonalAttributesToShow() {
-		List<String> attrNames = new ArrayList<>();
-		String data = getConfigPropertyString("profile.personal.showAttributes");
-		if (data != null) {
-			String[] values = data.replaceAll("\\s+", "").split(",");
-			attrNames.addAll(Arrays.asList(values));
-		}
-
-		return attrNames;
 	}
 
 	/**
@@ -536,6 +489,38 @@ public final class PerunConfiguration {
 		return Utils.stringToList(value, ",");
 	}
 
+	/**
+	 * Returns URL to the Logout endpoint of Perun SP
+	 * If not set, current hostname is used, replacing path with "/Shibboleth.sso/Logout"
+	 *
+	 * @return SP logout URL
+	 */
+	public static String getPerunSpLogoutUrl() {
+		String SPlogout = getConfigPropertyString("spLogoutUrl");
+		if (SPlogout == null || SPlogout.isEmpty()) {
+			// backup to current hostname
+			SPlogout = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/Logout";
+		}
+		return SPlogout;
+	}
+
+	/**
+	 * Returns URL to the Login endpoint of Perun SP
+	 * If not set, current hostname is used, replacing path with "/Shibboleth.sso/Login"
+	 *
+	 * @return SP login URL
+	 */
+	public static String getPerunSpLoginUrl() {
+
+		String SPlogin = getConfigPropertyString("spLoginUrl");
+		if (SPlogin == null || SPlogin.isEmpty()) {
+			// backup to current hostname
+			SPlogin = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/Login";
+		}
+		return SPlogin;
+
+	}
+
 	// ---------------------------   WAYF   ---------------------------- //
 
 	/**
@@ -545,24 +530,6 @@ public final class PerunConfiguration {
 	 */
 	public static ArrayList<WayfGroup> getWayfGroups() {
 		return JsUtils.jsoAsList(getConfigPropertyArray("wayf.groups"));
-	}
-
-	/**
-	 * Returns URL to feeds for Identity Consolidator webapp
-	 *
-	 * @return URL to feeds
-	 */
-	public static String getWayfFeedUrl() {
-		return getConfigPropertyString("wayf.feedUrl");
-	}
-
-	/**
-	 * Returns URL to feed images for Identity Consolidator webapp
-	 *
-	 * @return URL to feed images
-	 */
-	public static String getWayfFeedImagesUrl() {
-		return getConfigPropertyString("wayf.feedImagesUrl");
 	}
 
 	/**
@@ -577,26 +544,25 @@ public final class PerunConfiguration {
 	}
 
 	/**
-	 * Returns URL to the Discovery service of consolidator SP
-	 * If not set, current hostname is used, replacing path with "/Shibboleth.sso/DS"
+	 * Returns URL to the Login endpoint of Consolidator SP
+	 * If not set, current hostname is used, replacing path with "/Consolidator.sso/Login"
 	 *
 	 * @return SP login URL
 	 */
 	public static String getWayfSpLoginUrl() {
 
-		// TODO - rename property in a config too
-		String SPlogin = getConfigPropertyString("wayf.spDsUrl");
+		String SPlogin = getConfigPropertyString("wayf.spLoginUrl");
 		if (SPlogin == null || SPlogin.isEmpty()) {
 			// backup to current hostname
-			SPlogin = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/Login";
+			SPlogin = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Consolidator.sso/Login";
 		}
 		return SPlogin;
 
 	}
 
 	/**
-	 * Returns logout URL from consolidator SP
-	 * If not set, current hostname is used, replacing path with "/Shibboleth.sso/Logout"
+	 * Returns URL to the Logout endpoint of Consolidator SP
+	 * If not set, current hostname is used, replacing path with "/Consolidator.sso/Logout"
 	 *
 	 * @return SP logout URL
 	 */
@@ -604,9 +570,113 @@ public final class PerunConfiguration {
 		String SPlogout = getConfigPropertyString("wayf.spLogoutUrl");
 		if (SPlogout == null || SPlogout.isEmpty()) {
 			// backup to current hostname
-			SPlogout = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Shibboleth.sso/Logout";
+			SPlogout = Window.Location.getProtocol() + "//" + Window.Location.getHostName() + "/Consolidator.sso/Logout";
 		}
 		return SPlogout;
+	}
+
+	/**
+	 * Return TRUE if user should be offered to link another account at the end of consolidation process.
+	 *
+	 * @return TRUE button visible / FALSE otherwise
+	 */
+	public static boolean isWayfLinkAnotherButtonDisabled() {
+		return getConfigPropertyBoolean("wayf.linkAnotherButton.disabled");
+	}
+
+	/**
+	 * Return custom text displayed on BACK->AGAIN button at the end of consolidation process.
+	 * Allows user to add another account/identity.
+	 *
+	 * @return Customized button text
+	 */
+	public static String getWayfLinkAnotherButtonText() {
+		String value = getConfigPropertyString("wayf.linkAnotherButton."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("wayf.linkAnotherButton.en");
+		return value;
+	}
+
+	/**
+	 * Return custom text displayed on OK->LEAVE button at the end of consolidation process.
+	 *
+	 * @return Customized button text
+	 */
+	public static String getWayfLeaveButtonText() {
+		String value = getConfigPropertyString("wayf.leaveButton."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("wayf.leaveButton.en");
+		return value;
+	}
+
+	/**
+	 * Return customizable text for "Link an account" message on joining account selection page of Consolidator.
+	 *
+	 * @return Custom text for current local
+	 */
+	public static String getWayfLinkAnAccountText() {
+		String value = getConfigPropertyString("wayf.linkAnAccount."+getCurrentLocaleName());
+		if (value == null || value.isEmpty()) value = getConfigPropertyString("wayf.linkAnAccount.en");
+		return value;
+	}
+
+	/**
+	 * Return map of customized IdP (or ext source) translations.
+	 *
+	 * @return map of translated IdPs
+	 */
+	public static Map<String,String> getCustomIdpTranslations() {
+		String value = getConfigPropertyString("wayf.idpTranslations");
+
+		Map<String,String> translation = new HashMap<>();
+		List<String> couples = Utils.stringToList(value, "#");
+		for (String couple : couples) {
+			String[] cp = couple.split("\\|");
+			translation.put(cp[0],cp[1]);
+		}
+		return translation;
+
+	}
+
+	/**
+	 * Return TRUE if "Link an account" heading should be hidden
+	 *
+	 * @return TRUE if "Link an account" heading should be hidden
+	 */
+	public static boolean isWayfLinkAnAccountDisabled() {
+		return getConfigPropertyBoolean("wayf.linkAnAccount.disabled");
+	}
+
+	// ---------------- PROFILE ------------------- //
+
+	/**
+	 * Returns list of page names to be hidden in user profile
+	 *
+	 * @return names of pages to hide
+	 */
+	public static List<String> getProfilePagesToHide() {
+		List<String> attrNames = new ArrayList<>();
+		String data = getConfigPropertyString("profile.hidePages");
+		if (data != null) {
+			String[] values = data.replaceAll("\\s+","").split(",");
+			attrNames.addAll(Arrays.asList(values));
+		}
+
+		return attrNames;
+	}
+
+	/**
+	 * Returns list of attributes that should be shown on user profile page
+	 *
+	 * @return names of attributes that should be shown
+	 */
+	public static List<String> getProfilePersonalAttributesToShow() {
+		List<String> attrNames = new ArrayList<>();
+		String data = getConfigPropertyString("profile.personal.showAttributes");
+		if (data != null) {
+			String[] values = data.replaceAll("\\s+", "").split(",");
+			attrNames.addAll(Arrays.asList(values));
+		}
+
+		return attrNames;
 	}
 
 	private void PerunConfiguration() {
