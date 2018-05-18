@@ -237,11 +237,19 @@
 			margin-top: 3em;
 			background-color: #f8f8f8;
 			border-top: 1px solid #e7e7e7;
+		}
+		#perun-credits {
 			padding-top: 1em;
 			padding-bottom: 1em;
 		}
-		#perun-credits {
-			text-align: right;
+		@media(min-width:992px) {
+			#perun-credits {
+				text-align: right;
+			}
+		}
+		#perun-help {
+			padding-top: 1em;
+			padding-bottom: 1em;
 		}
 
 	</style>
@@ -267,8 +275,8 @@
 <div id="perun-footer">
 	<div class="container">
 		<div class="row">
-			<span id="perun-help" class="col col-sm-6"></span>
-			<span id="perun-credits" class="col col-sm-6"></span>
+			<div id="perun-help" class="col col-md-6 col-lg-6 col-sm-6 col-xs-12"></div>
+			<div id="perun-credits" class="col col-md-6 col-lg-6 col-sm-6 col-xs-12"></div>
 		</div>
 	</div>
 </div>
