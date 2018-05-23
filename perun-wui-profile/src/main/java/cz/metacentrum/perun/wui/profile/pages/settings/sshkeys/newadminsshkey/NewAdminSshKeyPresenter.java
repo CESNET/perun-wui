@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newadminsshkey;
 
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.user.client.Window;

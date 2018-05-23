@@ -14,7 +14,7 @@
 
 	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b:Heading size="H2" ui:field="pageTitle">
+		<b:Heading size="H2" ui:field="pageTitle" marginTop="5" >
 			<b:Icon ui:field="icon" type="GLOBE" fixedWidth="true" />
 			<b.html:Text text="" ui:field="title"/>
 			<b.html:Small text="" ui:field="subTitle"/>

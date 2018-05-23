@@ -15,10 +15,10 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
+import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ButtonGroup;
 import org.gwtbootstrap3.client.ui.DropDownMenu;
 import org.gwtbootstrap3.client.ui.ListGroup;
@@ -26,6 +26,7 @@ import org.gwtbootstrap3.client.ui.ListGroupItem;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Span;
 import org.gwtbootstrap3.client.ui.html.Strong;
@@ -43,7 +44,7 @@ public class PreferredShellsView extends ViewWithUiHandlers<PreferredShellsUiHan
 	@UiField ListGroup shellsListGroup;
 	@UiField Modal customPreferredShellModal;
 	@UiField TextBox customShellValueTextBox;
-	@UiField Button customShellValueButton;
+	@UiField PerunButton customShellValueButton;
 	@UiField Alert customShellAlert;
 	@UiField PerunLoader preferredShellsLoader;
 
@@ -82,12 +83,12 @@ public class PreferredShellsView extends ViewWithUiHandlers<PreferredShellsUiHan
 
 			ButtonGroup buttonGroup = new ButtonGroup();
 
-			Button editButton = new Button(translation.change());
-			editButton.setType(ButtonType.INFO);
+			PerunButton editButton = new PerunButton(translation.change());
+			editButton.setType(ButtonType.DEFAULT);
 			editButton.setToggleCaret(true);
 			editButton.setDataToggle(Toggle.DROPDOWN);
 
-			Button removeButton = new Button(translation.remove());
+			PerunButton removeButton = new PerunButton(translation.remove());
 			removeButton.setType(ButtonType.DANGER);
 			removeButton.addClickHandler((clickEvent -> getUiHandlers().removePreferredShell(preferredShellsAttribute,
 					finalI)));
@@ -134,6 +135,18 @@ public class PreferredShellsView extends ViewWithUiHandlers<PreferredShellsUiHan
 			buttonGroup.add(editButton);
 			buttonGroup.add(editShellMenu);
 
+
+			ButtonGroup grp = new ButtonGroup();
+			PerunButton btn = new PerunButton();
+			btn.setIcon(IconType.CHEVRON_UP);
+
+			PerunButton btn2 = new PerunButton();
+			btn2.setIcon(IconType.CHEVRON_DOWN);
+
+			grp.add(btn);
+			grp.add(btn2);
+
+			span.add(grp);
 			span.add(buttonGroup);
 			span.add(removeButton);
 

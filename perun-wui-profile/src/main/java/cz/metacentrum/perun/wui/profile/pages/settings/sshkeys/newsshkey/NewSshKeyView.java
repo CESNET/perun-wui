@@ -5,17 +5,15 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
-import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
+import cz.metacentrum.perun.wui.widgets.PerunButton;
 import org.gwtbootstrap3.client.ui.Alert;
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Progress;
 import org.gwtbootstrap3.client.ui.TextArea;
 
@@ -26,7 +24,7 @@ public class NewSshKeyView extends ViewWithUiHandlers<NewSshKeyUiHandlers> imple
 
 	private PerunProfileTranslation translation = GWT.create(PerunProfileTranslation.class);
 
-	@UiField Button addSshKeyButton;
+	@UiField PerunButton addSshKeyButton;
 	@UiField Progress addSshKeyProgress;
 	@UiField TextArea newSshKeyTextArea;
 	@UiField Alert addSshKeyAlert;

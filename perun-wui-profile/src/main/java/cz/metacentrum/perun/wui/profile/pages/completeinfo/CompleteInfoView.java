@@ -16,10 +16,10 @@ import cz.metacentrum.perun.wui.model.beans.RichUser;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.columnProviders.AttributeColumnProvider;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
+import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Alert;
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.Panel;
@@ -42,7 +42,7 @@ public class CompleteInfoView extends ViewWithUiHandlers<CompleteInfoUiHandlers>
 	private PerunProfileTranslation translation = GWT.create(PerunProfileTranslation.class);
 
 	@UiField Heading userLabel;
-	@UiField Button backButton;
+	@UiField PerunButton backButton;
 	@UiField Column membersColumn;
 	@UiField Column userColumn;
 	@UiField PerunLoader loader;

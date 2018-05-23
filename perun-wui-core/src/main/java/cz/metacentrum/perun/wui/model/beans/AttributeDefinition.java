@@ -145,6 +145,24 @@ public class AttributeDefinition extends GeneralObject {
 	}
 
 	/**
+	 * Return TRUE if attribute value is checked on uniqueness, FALSE otherwise.
+	 *
+	 * @return TRUE if unique
+	 */
+	public final boolean isUnique() {
+		return JsUtils.getNativePropertyBoolean(this, "unique");
+	}
+
+	/**
+	 * Set TRUE if attribute value should be checked on uniqueness, FALSE otherwise.
+	 *
+	 * @param unique TRUE = should be unique / FALSE not unique
+	 */
+	public final native void setUnique(boolean unique) /*-{
+		this.unique = unique;
+	}-*/;
+
+	/**
 	 * Check if attribute value is writable for user or not (authz is provided and determined by Perun's server side)
 	 *
 	 * @return TRUE if writable / FALSE otherwise

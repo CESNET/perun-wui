@@ -19,7 +19,7 @@
 
 	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b:Heading size="H2" ui:field="pageTitle">
+		<b:Heading size="H2" ui:field="pageTitle" marginTop="5" >
 
 			<b:Breadcrumbs addStyleNames="{res.gss.perunBreadcrumb}">
 				<b:AnchorListItem icon="GEAR" text="{trans.menuSettings}"
@@ -29,7 +29,7 @@
 		</b:Heading>
 
 		<b.html:Div>
-			<b:Button ui:field="backButton" text="{trans.back}" icon="ARROW_LEFT" type="WARNING" marginBottom="10" marginTop="10"/>
+			<p:PerunButton ui:field="backButton" text="{trans.back}" icon="CHEVRON_LEFT" type="DEFAULT" marginBottom="10" marginTop="10"/>
 		</b.html:Div>
 
 		<b:Heading size="H3" text="{trans.unixGroupNames}"/>
@@ -71,8 +71,10 @@
 				<b:ModalBody>
 					<b:Alert ui:field="editPreferredNameAlert" type="DANGER" visible="false"/>
 					<b:TextBox ui:field="editPreferredNameTextBox"/>
-					<b:Button ui:field="editPreferredNameButton" type="SUCCESS" text="{trans.add}" marginTop="10"/>
 				</b:ModalBody>
+				<b:ModalFooter>
+					<p:PerunButton ui:field="editPreferredNameButton" type="SUCCESS" text="{trans.add}" marginTop="10" pull="RIGHT" />
+				</b:ModalFooter>
 			</b:Modal>
 			<b:Modal ui:field="newPreferredNameModal" closable="true" fade="true"
 					 dataBackdrop="STATIC" dataKeyboard="true">
@@ -80,8 +82,17 @@
 				<b:ModalBody>
 					<b:Alert ui:field="newPreferredNameAlert" type="DANGER" visible="false"/>
 					<b:TextBox ui:field="newPreferredNameTextBox"/>
-					<b:Button ui:field="newPreferredNameButton" type="SUCCESS" text="{trans.add}" marginTop="10"/>
 				</b:ModalBody>
+				<b:ModalFooter>
+					<b:ButtonToolBar>
+						<b:ButtonGroup pull="RIGHT">
+							<p:PerunButton type="DEFAULT" icon="CLOSE" ui:field="cancelButton" text="{trans.cancel}" />
+						</b:ButtonGroup>
+						<b:ButtonGroup pull="RIGHT">
+							<p:PerunButton ui:field="newPreferredNameButton" type="SUCCESS" text="{trans.add}" pull="RIGHT" />
+						</b:ButtonGroup>
+					</b:ButtonToolBar>
+				</b:ModalFooter>
 			</b:Modal>
 		</b.html:Div>
 

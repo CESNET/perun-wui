@@ -18,7 +18,7 @@
 
 	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b:Heading size="H2">
+		<b:Heading size="H2" marginTop="5" >
 			<b:Breadcrumbs addStyleNames="{res.gss.perunBreadcrumb}">
 				<b:ListItem addStyleNames="{res.gss.black}" >
 					<b:Icon type="GEAR" fixedWidth="true" />

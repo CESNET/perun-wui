@@ -11,7 +11,7 @@
 	<b.html:Div addStyleNames="{res.gss.page}">
 		<b.html:Div styleName="{res.gss.identities}">
 
-			<b:Heading size="H2" ui:field="pageTitle">
+			<b:Heading size="H2" ui:field="pageTitle" marginTop="5" >
 				<b:Icon ui:field="icon" type="EYE" fixedWidth="true" />
 				<b.html:Text text="" ui:field="text"/>
 				<b.html:Small text="" ui:field="small"/>

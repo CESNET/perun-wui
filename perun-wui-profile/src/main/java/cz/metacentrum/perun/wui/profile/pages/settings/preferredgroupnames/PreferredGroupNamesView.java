@@ -16,8 +16,8 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
+import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ListGroup;
 import org.gwtbootstrap3.client.ui.ListGroupItem;
 import org.gwtbootstrap3.client.ui.Modal;
@@ -41,8 +41,8 @@ public class PreferredGroupNamesView extends ViewWithUiHandlers<PreferredGroupNa
 	private PerunProfileTranslation translation = GWT.create(PerunProfileTranslation.class);
 
 	@UiField Div panelsDiv;
-	@UiField Button editPreferredNameButton;
-	@UiField Button newPreferredNameButton;
+	@UiField PerunButton editPreferredNameButton;
+	@UiField PerunButton newPreferredNameButton;
 	@UiField TextBox editPreferredNameTextBox;
 	@UiField TextBox newPreferredNameTextBox;
 	@UiField Modal editPreferredNameModal;
@@ -102,7 +102,7 @@ public class PreferredGroupNamesView extends ViewWithUiHandlers<PreferredGroupNa
 	 * Adds the edit button to preferred group name item
 	 */
 	private void addNamespaceListItemEditButton(Span span, Attribute attribute, String name, int index) {
-		Button editButton = new Button();
+		PerunButton editButton = new PerunButton();
 		editButton.setType(ButtonType.INFO);
 		editButton.setText(translation.edit());
 		editButton.addClickHandler(clickEvent -> {
@@ -144,7 +144,7 @@ public class PreferredGroupNamesView extends ViewWithUiHandlers<PreferredGroupNa
 	 * Adds the remove button to span of a preferred name list item
 	 */
 	private void addNamespaceLIstItemRemoveButton(Span span, Attribute attribute, int index) {
-		Button removeButton = new Button();
+		PerunButton removeButton = new PerunButton();
 		removeButton.setType(ButtonType.DANGER);
 		removeButton.setText(translation.remove());
 		removeButton.setMarginLeft(10);
@@ -198,7 +198,7 @@ public class PreferredGroupNamesView extends ViewWithUiHandlers<PreferredGroupNa
 	 * Adds the 'new' button to add preferred group name
 	 */
 	private void addNamespaceDivAddButton(Attribute attribute) {
-		Button addNameButton = new Button();
+		PerunButton addNameButton = new PerunButton();
 		addNameButton.setType(ButtonType.SUCCESS);
 		addNameButton.setText(translation.addPreferredGroupName());
 		addNameButton.setMarginTop(5);

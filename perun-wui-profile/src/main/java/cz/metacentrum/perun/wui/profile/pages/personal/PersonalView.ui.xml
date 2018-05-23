@@ -14,7 +14,7 @@
 
 	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b:Heading size="H2" ui:field="pageTitle">
+		<b:Heading size="H2" ui:field="pageTitle" marginTop="5" >
 			<b:Icon ui:field="icon" type="USER" fixedWidth="true" />
 			<b.html:Text text="" ui:field="text"/>
 			<b.html:Small text="" ui:field="small"/>
@@ -38,7 +38,7 @@
 
 						<b:FormGroup ui:field="updateEmailFormGroup">
 							<b:FormLabel ui:field="updateEmailLabel" for="formEmail">new e-mail</b:FormLabel>
-							<b:Input type="EMAIL" b:id="formEmail" ui:field="newUpdateEmail" />
+							<b:Input type="EMAIL" b:id="formEmail" ui:field="newUpdateEmail" focus="true" />
 							<b:HelpBlock ui:field="updateEmailHelpBlock"/>
 						</b:FormGroup>
 
