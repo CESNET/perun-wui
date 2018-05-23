@@ -521,6 +521,11 @@ public final class PerunConfiguration {
 
 	}
 
+	public static List<String> getRegistrarEnforcedProxies() {
+		String value = getConfigPropertyString("registrar.enforceProxy");
+		return Utils.stringToList(value, ",");
+	}
+
 	// ---------------------------   WAYF   ---------------------------- //
 
 	/**

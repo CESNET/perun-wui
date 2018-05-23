@@ -403,6 +403,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				}
 			});
 
+			List<String> proxies = PerunConfiguration.getRegistrarEnforcedProxies();
+
 			for (final ExtSource source : sources) {
 
 				if (source.getType().equals(ExtSource.ExtSourceType.X509.getType())) {
@@ -440,6 +442,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					String entityId = source.getName();
 					String originalIdP = source.getName();
 
+					// IF Perun is behind proxy, offer only allowed proxies !!!
+					if (proxies != null && !proxies.isEmpty() && proxies.contains(entityId)) {
+
 					/*
 					WE NO LONGER WANT TO SPECIFY source IdPs for ELIXIR, just reference the proxy itself
 					if (source.getName().startsWith("https://login.elixir-czech.org/idp/")) {
@@ -449,38 +454,40 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					}
 					*/
 
-					final String finalEntityId = entityId;
+						final String finalEntityId = entityId;
 
-					AnchorListItem link = new AnchorListItem(Utils.translateIdp(originalIdP));
-					menu2.add(link);
-					link.addClickHandler(new ClickHandler() {
-						@Override
-						public void onClick(ClickEvent event) {
+						AnchorListItem link = new AnchorListItem(Utils.translateIdp(originalIdP));
+						menu2.add(link);
+						link.addClickHandler(new ClickHandler() {
+							@Override
+							public void onClick(ClickEvent event) {
 
-							RegistrarManager.getConsolidatorToken(new JsonEvents() {
-								@Override
-								public void onFinished(JavaScriptObject jso) {
-									// FINAL URL must logout from SP, login to SP using specified IdP, redirect to IC and after that return to application form
-									String token = ((BasicOverlayObject) jso).getString();
-									String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true)+URL.encodeQueryString("&token="+token);
-									String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?authnContextClassRef=urn:cesnet:proxyidp:template:cesnet%20urn:cesnet:proxyidp:idpentityid:" + finalEntityId +"&target="+consolidatorUrl);
-									Window.Location.assign(redirectUrl);
-								}
+								RegistrarManager.getConsolidatorToken(new JsonEvents() {
+									@Override
+									public void onFinished(JavaScriptObject jso) {
+										// FINAL URL must logout from SP, login to SP using specified IdP, redirect to IC and after that return to application form
+										String token = ((BasicOverlayObject) jso).getString();
+										String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true) + URL.encodeQueryString("&token=" + token);
+										String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?authnContextClassRef=urn:cesnet:proxyidp:template:cesnet%20urn:cesnet:proxyidp:idpentityid:" + finalEntityId + "&target=" + consolidatorUrl);
+										Window.Location.assign(redirectUrl);
+									}
 
-								@Override
-								public void onError(PerunException error) {
+									@Override
+									public void onError(PerunException error) {
 
-								}
+									}
 
-								@Override
-								public void onLoadingStart() {
+									@Override
+									public void onLoadingStart() {
 
-								}
-							});
-						}
-					});
-					if (!idpFound) ft.setWidget(row, 2, idpGroup);
-					idpFound = true;
+									}
+								});
+							}
+						});
+						if (!idpFound) ft.setWidget(row, 2, idpGroup);
+						idpFound = true;
+
+					}
 
 				} else if (source.getType().equals(ExtSource.ExtSourceType.KERBEROS.getType())) {
 

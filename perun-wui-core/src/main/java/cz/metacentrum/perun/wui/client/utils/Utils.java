@@ -74,6 +74,11 @@ public class Utils {
 		organizationsTranslation.put("https://mojeid.cz/saml/idp.xml", "MojeID");
 		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI SSO");
 
+		organizationsTranslation.put("https://login.ceitec.cz/idp/", "CEITEC");
+		organizationsTranslation.put("https://login.cesnet.cz/google-idp/", "Google (CESNET gateway)");
+		organizationsTranslation.put("https://login.cesnet.cz/linkedin-idp/", "LinkedIn (CESNET gateway)");
+		organizationsTranslation.put("https://login.cesnet.cz/orcid-idp/", "ORCID (CESNET gateway)");
+
 		// Handle social identities
 
 		organizationsTranslation.put("https://extidp.cesnet.cz/idp/shibboleth", "Social");
