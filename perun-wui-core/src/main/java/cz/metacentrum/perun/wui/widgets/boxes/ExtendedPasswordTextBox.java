@@ -150,7 +150,7 @@ public class ExtendedPasswordTextBox extends Input {
 
 	@Override
 	public String getValue() {
-		return (super.getValue() != null) ? super.getValue().trim() : "";
+		return (super.getValue() != null) ? super.getValue() : "";
 	}
 
 	/**
