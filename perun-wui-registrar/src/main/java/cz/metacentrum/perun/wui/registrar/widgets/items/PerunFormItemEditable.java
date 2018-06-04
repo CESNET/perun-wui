@@ -1,9 +1,11 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.FormLabel;
@@ -28,6 +30,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	private HelpBlock status;
 	private HelpBlock help;
 	private final boolean onlyPreview;
+	public PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	public PerunFormItemEditable(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang);
@@ -89,7 +92,13 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 			if (helpText != null) {
 				help.setHTML(SafeHtmlUtils.fromString(helpText).asString());
 			}
-			help.setMarginTop(0);
+			help.setMarginTop(5);
+			// enforce gray color on help text instead of taking validation color.
+			help.addStyleName(PerunRegistrarResources.INSTANCE.gss().help());
+
+			if (this instanceof Password) {
+				help.setHTML(help.getHTML() + "<p>" + translation.dontUseAccents());
+			}
 
 			widgetWithTexts.add(help);
 

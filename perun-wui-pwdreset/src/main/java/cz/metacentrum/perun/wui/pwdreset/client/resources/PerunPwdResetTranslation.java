@@ -50,6 +50,9 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("You can`t reset password. You don`t have login in namespace <i>{0}</i>.")
 	public String dontHaveLogin(String namespace);
 
+	@DefaultMessage("Please <b>avoid using accented characters</b>. It might not be supported by all backend components and services.")
+	public String dontUseAccents();
+
 	// -------------- ACTIVATE ACCOUNT TRANSLATION ------------------------ //
 
 	@DefaultMessage("Activate account")

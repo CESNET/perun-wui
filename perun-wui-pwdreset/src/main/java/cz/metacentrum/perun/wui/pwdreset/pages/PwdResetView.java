@@ -74,6 +74,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	@UiField FormLabel passLabel;
 	@UiField FormGroup passItem;
 	@UiField HelpBlock itemStatus;
+	@UiField HelpBlock help;
 	@UiField AlertErrorReporter alert;
 
 	@Inject
@@ -84,6 +85,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 		text.setText((isAccountActivation) ? translation.activateAppName() : translation.pwdresetAppName());
 		submit.setText((isAccountActivation) ? translation.submitActivateButton() : translation.submitPwdResetButton());
 		passLabel.setText(translation.pwdresetLabel());
+
+		help.setHTML(translation.dontUseAccents());
 
 		passwordTextBox.addBlurHandler(new BlurHandler() {
 			@Override

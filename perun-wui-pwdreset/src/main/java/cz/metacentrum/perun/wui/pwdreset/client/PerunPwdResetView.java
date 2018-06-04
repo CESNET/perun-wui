@@ -71,7 +71,6 @@ public class PerunPwdResetView extends ViewImpl implements PerunPwdResetPresente
 		History.newItem("logout");
 	}
 
-
 	@Override
 	public void hideNavbar() {
 		collapse.hide();

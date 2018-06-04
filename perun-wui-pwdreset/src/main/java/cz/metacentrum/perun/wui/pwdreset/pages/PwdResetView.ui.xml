@@ -38,6 +38,7 @@
 								</b:InputGroup>
 								<b:HelpBlock ui:field="itemStatus" />
 							</b:FormGroup>
+							<b:HelpBlock ui:field="help" />
 
 						</b:FieldSet>
 

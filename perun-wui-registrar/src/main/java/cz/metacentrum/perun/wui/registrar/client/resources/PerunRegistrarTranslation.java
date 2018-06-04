@@ -77,6 +77,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("It seems you want to submit application for membership in group {0}. However you are already registered.")
 	public String groupFailedAlreadyRegistered(String groupName);
 
+	@DefaultMessage("Please <b>avoid using accented characters</b>. It might not be supported by all backend components and services.")
+	public String dontUseAccents();
+
 	// OTHERS
 
 	@DefaultMessage("Do you want to extend a membership?")
