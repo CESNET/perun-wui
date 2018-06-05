@@ -80,7 +80,7 @@ public class SummaryStep implements Step {
 				msg.setText(translation.registered(res.getBean().getName()));
 			} else {
 				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForAcceptation(res.getBean().getName()));
+				msg.setText(translation.waitForAcceptation());
 			}
 
 			messages.add(msg);
@@ -91,7 +91,7 @@ public class SummaryStep implements Step {
 			title.add(successIcon());
 			ListGroupItem msg = new ListGroupItem();
 			title.add(new Text(" "+translation.initTitle()));
-			msg.setText(translation.waitForAcceptation(res.getBean().getName()));
+			msg.setText(translation.waitForAcceptation());
 			messages.add(msg);
 			verifyMailMessage(summary, messages);
 
@@ -123,7 +123,7 @@ public class SummaryStep implements Step {
 				msg.setText(translation.extended(res.getBean().getName()));
 			} else {
 				title.add(new Text(" "+translation.extendTitle()));
-				msg.setText(translation.waitForExtAcceptation(res.getBean().getName()));
+				msg.setText(translation.waitForExtAcceptation());
 			}
 
 			messages.add(msg);
@@ -135,7 +135,7 @@ public class SummaryStep implements Step {
 			title.add(successIcon());
 			ListGroupItem msg = new ListGroupItem();
 			title.add(new Text(" "+translation.extendTitle()));
-			msg.setText(translation.waitForExtAcceptation(res.getBean().getName()));
+			msg.setText(translation.waitForExtAcceptation());
 			messages.add(msg);
 			verifyMailMessage(summary, messages);
 
@@ -176,7 +176,7 @@ public class SummaryStep implements Step {
 				}
 			} else {
 				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
+				msg.setText(translation.waitForAcceptation());
 			}
 
 			messages.add(msg);
@@ -189,7 +189,7 @@ public class SummaryStep implements Step {
 			ListGroupItem msg = new ListGroupItem();
 
 			title.add(new Text(" "+translation.initTitle()));
-			msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
+			msg.setText(translation.waitForAcceptation());
 
 			messages.add(msg);
 			verifyMailMessage(summary, messages);
@@ -232,7 +232,7 @@ public class SummaryStep implements Step {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
 			ListGroupItem msg = new ListGroupItem();
-			msg.setText(translation.waitForAcceptation(resVo.getBean().getName()));
+			msg.setText(translation.waitForAcceptation());
 			messages.add(msg);
 
 		} else {
@@ -256,7 +256,7 @@ public class SummaryStep implements Step {
 				}
 			} else {
 				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
+				msg.setText(translation.waitForAcceptation());
 			}
 
 			messages.add(msg);
@@ -268,7 +268,7 @@ public class SummaryStep implements Step {
 			ListGroupItem msg = new ListGroupItem();
 
 			title.add(new Text(" "+translation.initTitle()));
-			msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
+			msg.setText(translation.waitForAcceptation());
 
 			messages.add(msg);
 
@@ -301,7 +301,7 @@ public class SummaryStep implements Step {
 			if (resVo.hasAutoApproval()) {
 				msg.setText(translation.extended(resVo.getBean().getName()));
 			} else {
-				msg.setText(translation.waitForExtAcceptation(resVo.getBean().getName()));
+				msg.setText(translation.waitForExtAcceptation());
 			}
 
 			messages.add(msg);
@@ -310,7 +310,7 @@ public class SummaryStep implements Step {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
 			ListGroupItem msg = new ListGroupItem();
-			msg.setText(translation.waitForExtAcceptation(resVo.getBean().getName()));
+			msg.setText(translation.waitForExtAcceptation());
 			messages.add(msg);
 
 		} else {
@@ -329,7 +329,7 @@ public class SummaryStep implements Step {
 				msg.setText(translation.registered(((Group) res.getBean()).getShortName()));
 			} else {
 				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
+				msg.setText(translation.waitForAcceptation());
 			}
 
 			messages.add(msg);
@@ -340,7 +340,7 @@ public class SummaryStep implements Step {
 			ListGroupItem msg = new ListGroupItem();
 
 			title.add(new Text(" "+translation.initTitle()));
-			msg.setText(translation.waitForAcceptation(((Group) res.getBean()).getShortName()));
+			msg.setText(translation.waitForAcceptation());
 
 			messages.add(msg);
 

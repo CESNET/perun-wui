@@ -56,13 +56,13 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 			"Without verification it is not possible to approve your application.")
 	public String verifyMail(String mail);
 
-	@DefaultMessage("Please wait until your application to {0} will be approved.")
-	public String waitForAcceptation(String voOrGroupName);
+	@DefaultMessage("Please wait until your application will be approved.")
+	public String waitForAcceptation();
 
-	@DefaultMessage("Please wait until your application for membership extension to {0} will be approved.")
-	public String waitForExtAcceptation(String voOrGroupName);
+	@DefaultMessage("Please wait until your application for membership extension will be approved.")
+	public String waitForExtAcceptation();
 
-	@DefaultMessage("After acceptation you will become member of {0} automatically.")
+	@DefaultMessage("After acceptation you will become member of \"{0}\" automatically.")
 	String waitForVoAcceptation(String groupName);
 
 	@DefaultMessage("You are now a member of {0}.")
