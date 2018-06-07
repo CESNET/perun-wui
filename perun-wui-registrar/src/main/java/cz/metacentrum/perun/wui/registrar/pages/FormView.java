@@ -11,6 +11,7 @@ import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -373,7 +374,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		FlexTable ft = new FlexTable();
 		ft.setWidth("100%");
-		ft.setCellSpacing(5);
+		ft.addStyleName("table");
+		ft.addStyleName("table-striped"); // bootstrap3 style
 
 		int row = 0;
 		for (Identity identity : similar) {
@@ -438,8 +440,10 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 						}
 					});
 
-					if (!certFound) ft.setWidget(row, 1, certGroup);
 					certFound = true;
+					ft.setWidget(row, 1, certGroup);
+					ft.getFlexCellFormatter().setVerticalAlignment(row, 1, HasVerticalAlignment.ALIGN_MIDDLE);
+
 
 				} else if (source.getType().equals(ExtSource.ExtSourceType.IDP.getType())) {
 
@@ -501,8 +505,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 								});
 							}
 						});
-						if (!idpFound) ft.setWidget(row, 2, idpGroup);
 						idpFound = true;
+						ft.setWidget(row, 2, idpGroup);
+						ft.getFlexCellFormatter().setVerticalAlignment(row, 2, HasVerticalAlignment.ALIGN_MIDDLE);
 
 					}
 
@@ -545,8 +550,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 							}
 						});
 
-						if (!othersFound) ft.setWidget(row, 3, othersGroup);
 						othersFound = true;
+						ft.setWidget(row, 3, othersGroup);
+						ft.getFlexCellFormatter().setVerticalAlignment(row, 3, HasVerticalAlignment.ALIGN_MIDDLE);
 
 					}
 
@@ -558,7 +564,12 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				// no identity for joining
 				ft.setHTML(row, 1, translation.noIdentityForJoining(SafeHtmlUtils.fromString(PerunConfiguration.getBrandSupportMail()).asString()));
+				ft.getFlexCellFormatter().setColSpan(row, 1, 3);
 
+			} else {
+				if (!certFound) ft.setText(row, 1, "");
+				if (!idpFound) ft.setText(row, 2, "");
+				if (!othersFound) ft.setText(row, 3, "");
 			}
 
 			row++;
