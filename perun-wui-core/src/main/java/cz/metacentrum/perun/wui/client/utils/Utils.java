@@ -7,7 +7,6 @@ import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.regexp.shared.SplitResult;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
-import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.model.beans.Vo;
@@ -70,9 +69,10 @@ public class Utils {
 		organizationsTranslation.put("https://marisa.uochb.cas.cz/simplesaml/saml2/idp/metadata.php", "Institute of Organic Chemistry and Biochemistry AS CR");
 		organizationsTranslation.put("https://shibboleth.utb.cz/idp/shibboleth", "Tomas Bata University in Zlin");
 		organizationsTranslation.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
-		organizationsTranslation.put("https://login.elixir-czech.org/idp", "Elixir Czech");
+		organizationsTranslation.put("https://login.elixir-czech.org/idp/", "ELIXIR AAI");
 		organizationsTranslation.put("https://mojeid.cz/saml/idp.xml", "MojeID");
 		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI SSO");
+		organizationsTranslation.put("https://aai.egi.eu/proxy/saml2/idp/metadata.php", "EGI AAI");
 
 		organizationsTranslation.put("https://login.ceitec.cz/idp/", "CEITEC");
 		organizationsTranslation.put("https://login.cesnet.cz/google-idp/", "Google (CESNET gateway)");
@@ -111,9 +111,9 @@ public class Utils {
 		// kerberos
 		organizationsTranslation.put("META", "MetaCentrum");
 		organizationsTranslation.put("EINFRA", "CESNET eInfrastructure");
+		organizationsTranslation.put("EINFRA-SERVICES", "CESNET eInfrastructure (service account)");
 		organizationsTranslation.put("SITOLA.FI.MUNI.CZ", "Sitola");
 		organizationsTranslation.put("ICS.MUNI.CZ", "Masaryk University");
-		organizationsTranslation.put("SAGRID", "SAGrid");
 
 	}
 
