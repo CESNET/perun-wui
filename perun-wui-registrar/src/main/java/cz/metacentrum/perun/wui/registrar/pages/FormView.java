@@ -64,7 +64,9 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * View for displaying registration form of VO / Group
@@ -404,6 +406,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			});
 
 			List<String> proxies = PerunConfiguration.getRegistrarEnforcedProxies();
+			// just to make list unique (no more duplicate entries from same IdP).
+			Set<String> offeredIdPs = new HashSet<>();
 
 			for (final ExtSource source : sources) {
 
@@ -442,9 +446,21 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					String entityId = source.getName();
 					String originalIdP = source.getName();
 
+					// skip more identities from same IdP
+					if (offeredIdPs.contains(entityId)) continue;
+
 					// IF Perun is behind proxy, offer only allowed proxies !!!
 					// IF not proxy, show all
 					if ((!proxies.isEmpty() && proxies.contains(entityId)) || proxies.isEmpty()) {
+
+						if (entityId.equals("https://auth.west-life.eu/proxy/saml2/idp/metadata.php") ||
+								entityId.equals("https://login.cesnet.cz/idp/")) {
+							/* FIXME - SKIP invalid joining entries -> PROXY identities themselves */
+							// do not not ban Elixir, since its used on CESNET and ELIXIR (wrong ExtSource on all identities)
+							continue;
+						}
+
+						offeredIdPs.add(entityId);
 
 					/*
 					WE NO LONGER WANT TO SPECIFY source IdPs for ELIXIR, just reference the proxy itself
