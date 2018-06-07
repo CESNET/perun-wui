@@ -443,7 +443,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					String originalIdP = source.getName();
 
 					// IF Perun is behind proxy, offer only allowed proxies !!!
-					if (proxies != null && !proxies.isEmpty() && proxies.contains(entityId)) {
+					// IF not proxy, show all
+					if ((!proxies.isEmpty() && proxies.contains(entityId)) || proxies.isEmpty()) {
 
 					/*
 					WE NO LONGER WANT TO SPECIFY source IdPs for ELIXIR, just reference the proxy itself
