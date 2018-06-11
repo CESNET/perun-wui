@@ -19,10 +19,10 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunErrorTranslation;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
-import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.client.resources.PerunWebConstants;
 import cz.metacentrum.perun.wui.json.managers.UtilsManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -247,6 +247,10 @@ public class JsonClient {
 
 		// we do use POST every time in order to use JSON deserializer on server side
 		RequestBuilder builder = new RequestBuilder(RequestBuilder.POST, requestUrl);
+
+		if (Cookies.getCookie("XSRF-TOKEN") != null) {
+			builder.setHeader("X-XSRF-TOKEN", Cookies.getCookie("XSRF-TOKEN"));
+		}
 
 		try {
 
