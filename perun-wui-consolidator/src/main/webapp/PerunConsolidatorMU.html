@@ -8,11 +8,6 @@
 	<!-- Mobile device support -->
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<!-- No caching -->
-	<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-	<meta http-equiv="Pragma" content="no-cache" />
-	<meta http-equiv="Expires" content="0" />
-
 	<!-- Default GWT locale	-->
 	<meta id="meta-lang" name="gwt:property" content="locale=en">
 
@@ -27,28 +22,17 @@
 	<script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha384-nvAa0+6Qg9clwYCGGPpDQLVpLNn0fRaROjHqs13t4Ggj3Ez50XnGQqc/r8MhnRDZ sha512-jGsMH83oKe9asCpkOVkBnUrDDTp8wl+adkB2D+//JtlxO4SrLoJdhbOysIFQJloQFD+C4Fl1rMsQZF76JjV0eQ==" crossorigin="anonymous"></script>
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-916EbMg70RQy9LHiGkXzG8hSg9EdNy97GazNG/aiY1w= sha512-6MXa8B6uaO18Hid6blRMetEIoPqHf7Ux1tnyIQdpt9qI5OACx7C+O3IVTr98vwGnlcg0LOLa02i9Y1HpVhlfiw==" crossorigin="anonymous">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha256-KXn5puMvxCw+dAYznun+drMdG1IFl3agK0p/pqT9KAo= sha512-iztkobsvnjKfAtTNdHkGVjAYTrrtlC7mGp/54c40wowO7LhURYl3gVzzcEqGl/qKXQltJ2HwMrdLcNUdo+N/RQ==" crossorigin="anonymous"></script>
-	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha256-3dkvEK0WLHRJ7/Csr0BZjAWxERc5WH7bdeUya2aXxdU= sha512-+L4yy6FRcDGbXJ9mPG8MT/3UCDzwR9gPeyFNMCtInsol++5m3bk2bXWKdZjvybmohrAsn3Ua5x8gfLnbE1YkOg==" crossorigin="anonymous">
-
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0= sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN sha512-SfTiTlX6kk+qitfevl/7LibUOeJWlt9rbyDn92a1DqWOw9vWG2MFoays0sgObmWazO5BQPiFucnnEAjpAB+/Sw==" crossorigin="anonymous">
 
 	<!--  RPC definition -->
 	<script type="text/javascript" language="javascript" >
 
 		RPC_SERVER = window.location.pathname.split("/")[1];
 
-		// Skip on Chrome 1+, Firefox 3.5+, IE 8+, Opera 10+, Safari 3.2
-		if (document.all && !document.querySelector) {
-			// Is IE < 8
-			alert("Unsupported browser. Please use either: Internet Explorer 8+, Firefox, Chrome, Opera or Safari");
-		}
-		var isOperaBefore15 = (window.opera && navigator.userAgent.indexOf(' OPR/') == -1);
-		if (isOperaBefore15) {
-			alert("Unsupported browser. Please use either: Internet Explorer 8+, Firefox, Chrome, Opera 15+ or Safari");
-		}
-
 		// get URL param function
 		function getURLParameter(name) {
 			return decodeURI(
-					(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,'default'])[1]
+				(RegExp(name + '=' + '(.+?)(&|$)').exec(location.search)||[,'default'])[1]
 			);
 		}
 
@@ -56,9 +40,9 @@
 		l_lang = getURLParameter('locale');
 
 		// if no locale set in URL
-		if (l_lang == 'default') {
+		if (l_lang === 'default') {
 
-			if (typeof(Storage) != "undefined") {
+			if (typeof(Storage) !== "undefined") {
 
 				l_lang = localStorage.getItem("urn:perun:gui:preferences:language")
 
@@ -68,7 +52,7 @@
 			if (l_lang == null) {
 
 				if (navigator.userLanguage) // Explorer
-					l_lang = navigator.userLanguage;
+					l_lang = navigator.userLanguage.split("-")[0];
 				else if (navigator.language) // FF
 					l_lang = navigator.language;
 				else
@@ -81,6 +65,33 @@
 		var ele = document.getElementById("meta-lang");
 		ele.setAttribute('content', 'locale='+l_lang);
 
+		// determine version of IE
+		function getIEVersion() {
+			var sAgent = window.navigator.userAgent;
+			var Idx = sAgent.indexOf("MSIE");
+
+			// If IE, return version number.
+			if (Idx > 0)
+				return parseInt(sAgent.substring(Idx+ 5, sAgent.indexOf(".", Idx)));
+
+			// If IE 11 then look for Updated user agent string.
+			else if (!!navigator.userAgent.match(/Trident\/7\./))
+				return 11;
+
+			else
+				return 0; //It is not IE
+		}
+
+		// Skip on Chrome 1+, Firefox 3.5+, IE 8+, Opera 10+, Safari 3.2
+		if (getIEVersion() !== 0 && getIEVersion() < 10) {
+			// Is IE < 10
+			alert("Unsupported browser. Please use either: Internet Explorer 10+ or Edge, Firefox, Chrome, Opera 15+ or Safari");
+		}
+		var isOperaBefore15 = (window.opera && navigator.userAgent.indexOf(' OPR/') === -1);
+		if (isOperaBefore15) {
+			alert("Unsupported browser. Please use either: Internet Explorer 10+ or Edge, Firefox, Chrome, Opera 15+ or Safari");
+		}
+
 		$(document).ready(function() {
 			// Methods which check if the Perun connection is OK, run only on startup
 			executeQuery();
@@ -88,9 +99,9 @@
 
 		function reloadMsg() {
 
-			if (l_lang == "en" || l_lang == "default") {
+			if (l_lang === "en" || l_lang === "default") {
 				alert("Data connection lost. Server is probably being restarted or URL \"/"+RPC_SERVER+"/rpc/\" is not valid. Click OK to reload the page.");
-			} else if (l_lang == "cs") {
+			} else if (l_lang === "cs") {
 				alert("Aplikace ztratila spojení. Server se pravděpodobně právě restartuje nebo URL \"/"+RPC_SERVER+"/rpc/\" není platná. Klikněte na OK pro obnovení stránky.");
 			} else {
 				alert("Data connection lost. Server is probably being restarted or URL \"/"+RPC_SERVER+"/rpc/\" is not valid. Click OK to reload the page.");
@@ -103,7 +114,7 @@
 			$.ajax({
 				url: "/"+RPC_SERVER+"/rpc/",
 				success: function(data) {
-					if (!(data.indexOf("OK!") == 0)) {
+					if (!(data.indexOf("OK!") === 0)) {
 						reloadMsg();
 					}
 				},
@@ -122,9 +133,9 @@
 					}
 				},
 				error: function(jqXHR, textStatus, errorThrown) {
-					if (jqXHR.status == 0) {
+					if (jqXHR.status === 0) {
 						window.location.reload(true);
-					} else if (jqXHR.status == 302) {
+					} else if (jqXHR.status === 302) {
 						window.location.reload(true);
 					} else {
 						reloadMsg();
@@ -228,7 +239,7 @@
 
 <!-- OPTIONAL: include this if you want history support -->
 <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
-        style="position: absolute; width: 0; height: 0; border: 0"></iframe>
+		style="position: absolute; width: 0; height: 0; border: 0"></iframe>
 
 <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
 <noscript>
