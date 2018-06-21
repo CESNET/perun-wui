@@ -50,7 +50,7 @@ public class UsernameValidator extends PerunFormItemValidatorImpl<Username> {
 			events.onFinished(false);
 			return;
 		}
-		if (username.getValue() == null) {
+		if (username.getValue() == null || username.getValue().equals("")) {
 			events.onFinished(true);
 			return;
 		}
