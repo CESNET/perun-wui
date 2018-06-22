@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.registrar.pages.steps;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.GeneralObject;
@@ -12,13 +13,18 @@ import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTransla
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
+import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.ListGroup;
 import org.gwtbootstrap3.client.ui.ListGroupItem;
+import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
+import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
+import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ListGroupItemType;
+import org.gwtbootstrap3.client.ui.constants.Pull;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 /**
@@ -378,12 +384,12 @@ public class SummaryStep implements Step {
 		}
 	}
 
-	private void displaySummary(Heading title, ListGroup messgaes, PerunButton continueButton) {
+	private void displaySummary(Heading title, ListGroup messages, PerunButton continueButton) {
 		if (title != null || title.getWidgetCount() != 0 || !title.getText().isEmpty()) {
 			formView.getForm().add(title);
 		}
-		if (messgaes != null || messgaes.getWidgetCount() != 0) {
-			formView.getForm().add(messgaes);
+		if (messages != null || messages.getWidgetCount() != 0) {
+			formView.getForm().add(messages);
 		}
 		if (continueButton != null) {
 			formView.getForm().add(continueButton);
@@ -395,12 +401,42 @@ public class SummaryStep implements Step {
 
 		if (Window.Location.getParameter(urlParameter) != null) {
 
-			return PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
+			PerunButton continueButton = PerunButton.getButton(PerunButtonType.CONTINUE);
+
+			continueButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-					Window.Location.assign(Window.Location.getParameter(urlParameter));
+
+					formView.getForm().clear();
+
+					Heading head = new Heading(HeadingSize.H4, translation.redirectingBackToService());
+					Icon spin = new Icon(IconType.SPINNER);
+					spin.setSpin(true);
+					spin.setSize(IconSize.LARGE);
+					spin.setPull(Pull.LEFT);
+					spin.setMarginTop(10);
+
+					Column column = new Column(ColumnSize.MD_8, ColumnSize.LG_6, ColumnSize.SM_10, ColumnSize.XS_12);
+					column.setOffset(ColumnOffset.MD_2,ColumnOffset.LG_3,ColumnOffset.SM_1,ColumnOffset.XS_0);
+
+					column.add(spin);
+					column.add(head);
+					column.setMarginTop(30);
+
+					formView.getForm().add(column);
+
+					// WAIT 4 SEC BEFORE REDIRECT
+					Timer timer = new Timer() {
+						@Override
+						public void run() {
+							Window.Location.assign(Window.Location.getParameter(urlParameter));
+						}
+					};
+					timer.schedule(4000);
 				}
 			});
+			return continueButton;
+
 		}
 		return null;
 	}

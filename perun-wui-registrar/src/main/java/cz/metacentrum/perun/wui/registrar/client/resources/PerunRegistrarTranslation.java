@@ -97,6 +97,10 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("<i>User don`t have identity suitable for automatic joining. If it`s you, <b>please contact support at: <a href=\"mailto:{0}\">{0}</a></b>.</i>")
 	public String noIdentityForJoining(String mailAddress);
 
+	@DefaultMessage("Please wait, redirecting you back to the service ...")
+	public String redirectingBackToService();
+
+
 	// -------------- REGISTRATION FORM WIDGETS ------------------------ //
 
 	@DefaultMessage("Text is too long!")
