@@ -432,7 +432,7 @@ public class SummaryStep implements Step {
 							Window.Location.assign(Window.Location.getParameter(urlParameter));
 						}
 					};
-					timer.schedule(4000);
+					timer.schedule(7000);
 				}
 			});
 			return continueButton;
