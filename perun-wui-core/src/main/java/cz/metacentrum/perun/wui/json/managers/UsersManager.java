@@ -258,4 +258,33 @@ public class UsersManager {
 		if (vo > 0) client.put("vo", vo);
 		return client.call(USERS_MANAGER + "getGroupsWhereUserIsAdmin");
 	}
+
+	/**
+	 * Returns all groups of specific user where the given user is admin.
+	 *
+	 * @param user user to be used.
+	 * @param events events done on callback.
+	 * @return Request unique request.
+	 */
+	public static Request getGroupsWhereUserIsAdmin(int user, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (user > 0) client.put("user", user);
+		return client.call(USERS_MANAGER + "getGroupsWhereUserIsAdmin");
+	}
+
+
+	/**
+	 * Returns all vos of specific user where the given user is admin.
+	 *
+	 * @param user user to be used.
+	 * @param events events done on callback.
+	 * @return Request unique request.
+	 */
+	public static Request getVosWhereUserIsAdmin(int user, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (user > 0) client.put("user", user);
+		return client.call(USERS_MANAGER + "getVosWhereUserIsAdmin");
+	}
 }

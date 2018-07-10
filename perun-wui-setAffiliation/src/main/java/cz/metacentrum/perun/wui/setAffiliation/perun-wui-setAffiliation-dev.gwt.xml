@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module rename-to='PerunSetAffiliation'>
+
+	<inherits name="cz.metacentrum.perun.wui.setAffiliation.perun-wui-setAffiliation"/>
+
+	<!--  Support only these browsers for devel -->
+	<set-property name="user.agent" value="gecko1_8"/>
+
+</module>

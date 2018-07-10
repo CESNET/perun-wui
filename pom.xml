@@ -18,6 +18,7 @@
 		<module>perun-wui-consolidator</module>
 		<module>perun-wui-pwdreset</module>
 		<module>perun-wui-profile</module>
+		<module>perun-wui-setAffiliation</module>
 	</modules>
 
 	<!-- common environmental and version properties-->
