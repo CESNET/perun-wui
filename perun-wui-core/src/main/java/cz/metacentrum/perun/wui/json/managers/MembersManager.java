@@ -4,6 +4,8 @@ import com.google.gwt.http.client.Request;
 import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 
+import java.util.List;
+
 /**
  * Manager with standard callbacks to Perun's API (MembersManager).
  * <p/>
@@ -61,5 +63,38 @@ public class MembersManager {
 		JsonClient client = new JsonClient(events);
 		if (memberId > 0) client.put("id", memberId);
 		return client.call(MEMBERS_MANAGER + "getRichMemberWithAttributes");
+	}
+
+	/**
+	 * Get complete Rich members from group and their attributes
+	 * @param groupId id of group
+	 * @param attrsNames names of attributes to be fetched
+	 * @param lookingInParentGroup look into parent group
+	 * @param events Events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getCompleteRichMembers(int groupId, List<String> attrsNames,
+												 boolean lookingInParentGroup, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (groupId > 0) client.put("group", groupId);
+		if (! attrsNames.isEmpty()) client.put("attrsNames", attrsNames);
+		client.put("lookingInParentGroup", lookingInParentGroup);
+		return client.call(MEMBERS_MANAGER + "getCompleteRichMembers");
+	}
+
+	/**
+	 * Get complete Rich members from vo and their attributes
+	 * @param voId id of vo
+	 * @param attrsNames names of attributes to be fetched
+	 * @param events Events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getCompleteRichMembers(int voId, List<String> attrsNames, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (voId > 0) client.put("vo", voId);
+		if (! attrsNames.isEmpty()) client.put("attrsNames", attrsNames);
+		return client.call(MEMBERS_MANAGER + "getCompleteRichMembers");
 	}
 }
