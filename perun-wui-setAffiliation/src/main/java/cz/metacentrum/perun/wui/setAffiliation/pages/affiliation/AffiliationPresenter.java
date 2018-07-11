@@ -52,14 +52,12 @@ public class AffiliationPresenter extends Presenter<AffiliationPresenter.MyView,
 
 		void storeAssignedAffiliationsUiCallback();
 
-		void loadAdminGroups(List<Group> groups);
-
-		void loadAdminVos(List<Vo> vos);
-
 		void loadAdminPerun();
 
         void unauthorizedUiCallback();
-    }
+
+		void loadVoGroupsAdmin(List<Vo> vos, List<Group> groups);
+	}
 
 	@NameToken(PerunSetAffiliationPlaceTokens.AFFILIATION)
 	@ProxyStandard
@@ -84,6 +82,9 @@ public class AffiliationPresenter extends Presenter<AffiliationPresenter.MyView,
 
 		if (roles.hasRole(PerunSession.PERUN_ADMIN_PRINCIPAL_ROLE)) {
 			perunAdminSetup();
+		} else if (roles.hasRole(PerunSession.VO_ADMIN_PRINCIPAL_ROLE)
+				&& roles.hasRole(PerunSession.GROUP_ADMIN_PRINCIPAL_ROLE)) {
+			voAndGroupAdminSetup(uid);
 		} else if (roles.hasRole(PerunSession.VO_ADMIN_PRINCIPAL_ROLE)){
 			voAdminSetup(uid);
 		} else if (roles.hasRole(PerunSession.GROUP_ADMIN_PRINCIPAL_ROLE)) {
@@ -113,32 +114,46 @@ public class AffiliationPresenter extends Presenter<AffiliationPresenter.MyView,
 				});
 	}
 
-    @Override
+	@Override
     public void loadUsers(String searchString) {
-        final PlaceRequest request = placeManager.getCurrentPlaceRequest();
-
-        if (searchString == null) {
-            placeManager.revealErrorPlace(request.getNameToken());
-        }
-
         ArrayList<String> attrs = new ArrayList<>();
-        attrs.add("urn:perun:user:attribute-def:def:preferredMail");
-        UsersManager.findRichUsersWithAttributes(searchString, attrs, new JsonEvents() {
-            @Override
-            public void onFinished(JavaScriptObject result) {
-                getView().loadUsersUiCallback(JsUtils.jsoAsList(result));
-            }
+		attrs.add("urn:perun:user:attribute-def:def:preferredMail");
 
-            @Override
-            public void onError(PerunException error) {
-                getView().onError(error);
-            }
+		if (searchString == null || searchString.isEmpty()) {
+			UsersManager.getRichUsersWithAttributes(attrs, false, new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					getView().loadUsersUiCallback(JsUtils.jsoAsList(result));
+				}
 
-            @Override
-            public void onLoadingStart() {
-                getView().onLoadingStart();
-            }
-        });
+				@Override
+				public void onError(PerunException error) {
+					getView().onError(error);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					getView().onLoadingStart();
+				}
+			});
+		} else {
+			UsersManager.findRichUsersWithAttributes(searchString, attrs, new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					getView().loadUsersUiCallback(JsUtils.jsoAsList(result));
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					getView().onError(error);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					getView().onLoadingStart();
+				}
+			});
+		}
     }
 
     @Override
@@ -262,7 +277,7 @@ public class AffiliationPresenter extends Presenter<AffiliationPresenter.MyView,
         UsersManager.getVosWhereUserIsAdmin(uid, new JsonEvents() {
             @Override
             public void onFinished(JavaScriptObject result) {
-                getView().loadAdminVos(JsUtils.jsoAsList(result));
+                getView().loadVoGroupsAdmin(JsUtils.jsoAsList(result), null);
             }
 
             @Override
@@ -277,11 +292,46 @@ public class AffiliationPresenter extends Presenter<AffiliationPresenter.MyView,
         });
     }
 
+
+	private void voAndGroupAdminSetup(int uid) {
+		UsersManager.getVosWhereUserIsAdmin(uid, new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject vos) {
+				UsersManager.getGroupsWhereUserIsAdmin(uid, new JsonEvents() {
+					@Override
+					public void onFinished(JavaScriptObject groups) {
+						getView().loadVoGroupsAdmin(JsUtils.jsoAsList(vos), JsUtils.jsoAsList(groups));
+					}
+
+					@Override
+					public void onError(PerunException error) {
+						getView().onError(error);
+					}
+
+					@Override
+					public void onLoadingStart() {
+						getView().onLoadingStart();
+					}
+				});
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				getView().onError(error);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				getView().onLoadingStart();
+			}
+		});
+	}
+
     private void groupAdminSetup(int uid) {
         UsersManager.getGroupsWhereUserIsAdmin(uid, new JsonEvents() {
             @Override
             public void onFinished(JavaScriptObject result) {
-                getView().loadAdminGroups(JsUtils.jsoAsList(result));
+                getView().loadVoGroupsAdmin(null, JsUtils.jsoAsList(result));
             }
 
             @Override

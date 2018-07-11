@@ -30,21 +30,12 @@
 				</b:Row>
 				<b:Row ui:field="form">
 					<!-- VO SELECT -->
-					<b:Column size="SM_8" ui:field="voSel" addStyleNames="col-sm-offset-2 {res.gss.mb1}" visible="false">
+					<b:Column size="SM_8" ui:field="voGroupSel" addStyleNames="col-sm-offset-2 {res.gss.mb1}" visible="false">
 						<b:Column size="SM_12">
-							<b.html:Paragraph ui:field="voSelectLabel" />
+							<b.html:Paragraph ui:field="voGroupSelectLabel" />
 						</b:Column>
 						<b:Column size="SM_12">
-							<select:Select ui:field="voSelect"/>
-						</b:Column>
-					</b:Column>
-					<!-- GROUP SELECT -->
-					<b:Column size="SM_8" ui:field="groupSel" addStyleNames="col-sm-offset-2 {res.gss.mb1}" visible="false">
-						<b:Column size="SM_12">
-							<b.html:Paragraph ui:field="groupSelectLabel" />
-						</b:Column>
-						<b:Column size="SM_12">
-							<select:Select ui:field="groupSelect"/>
+							<select:Select ui:field="voGroupSelect"/>
 						</b:Column>
 					</b:Column>
 					<!-- USER SEARCHBAR -->

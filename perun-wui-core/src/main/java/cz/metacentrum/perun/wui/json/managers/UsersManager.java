@@ -90,6 +90,24 @@ public class UsersManager {
 	}
 
 	/**
+	 * Get all RichUsers with specified attributes
+	 *
+	 * @param attrNames list of attributes name
+	 * @param includedSpecificUsers if you want to or don't want to get specificUsers too
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getRichUsersWithAttributes(ArrayList<String> attrNames, boolean includedSpecificUsers, JsonEvents events){
+
+		JsonClient client = new JsonClient(events);
+		client.put("attrsNames", attrNames);
+		client.put("includedSpecificUsers", includedSpecificUsers);
+		return client.call(USERS_MANAGER + "getRichUsersWithAttributes");
+
+	}
+
+	/**
 	 * Remove UserExtSource from User
 	 *
 	 * @param userId Users ID

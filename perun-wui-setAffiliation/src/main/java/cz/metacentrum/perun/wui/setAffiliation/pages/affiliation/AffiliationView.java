@@ -20,6 +20,7 @@ import org.gwtbootstrap3.client.ui.html.Text;
 import org.gwtbootstrap3.extras.select.client.ui.Option;
 import org.gwtbootstrap3.extras.select.client.ui.Select;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -33,18 +34,18 @@ public class AffiliationView extends ViewWithUiHandlers<AffiliationUiHandlers> i
 	interface AffiliationViewUiBinder extends UiBinder<Widget, AffiliationView> {}
 
 	private PerunSetAffiliationTranslation translation = GWT.create(PerunSetAffiliationTranslation.class);
+	private static final String PREFIX_DELIMITER = ":";
+	private static final String GROUP_PREFIX = "G";
+	private static final String VO_PREFIX = "VO";
 
 	@UiField Text title;
 	@UiField PerunLoader loader;
 	@UiField Row unauthorized;
 	@UiField Row form;
 	@UiField Heading unauthorizedText;
-	@UiField Column voSel;
-	@UiField Paragraph voSelectLabel;
-	@UiField Select voSelect;
-	@UiField Column groupSel;
-	@UiField Paragraph groupSelectLabel;
-	@UiField Select groupSelect;
+	@UiField Column voGroupSel;
+	@UiField Paragraph voGroupSelectLabel;
+	@UiField Select voGroupSelect;
 	@UiField Paragraph userSearchbarLabel;
 	@UiField TextBox userSearchbar;
 	@UiField PerunButton searchUserBtn;
@@ -65,8 +66,7 @@ public class AffiliationView extends ViewWithUiHandlers<AffiliationUiHandlers> i
 
 		//texts
 		title.setText(translation.setAffiliationTitle());
-		groupSelectLabel.setText(translation.groupSelectLabel());
-		voSelectLabel.setText(translation.voSelectLabel());
+		voGroupSelectLabel.setText(translation.voGroupSelectLabel());
 		userSearchbarLabel.setText(translation.userSearchbarLabel());
 		userSearchbar.setPlaceholder(translation.userSearchbarPlaceholder());
 		userSelectLabel.setText(translation.userSelectLabel());
@@ -107,10 +107,14 @@ public class AffiliationView extends ViewWithUiHandlers<AffiliationUiHandlers> i
 	}
 
 	private void searchUserCallback() {
-		if (voSel.isVisible()) {
-			getUiHandlers().loadUsersFromVo(userSearchbar.getText(),Integer.parseInt(voSelect.getValue()));
-		} else if (groupSel.isVisible()) {
-			getUiHandlers().loadUsersFromGroup(userSearchbar.getText(), Integer.parseInt(groupSelect.getValue()));
+		if (voGroupSel.isVisible()) {
+			String selection = voGroupSelect.getValue();
+			String[] parts = selection.split(PREFIX_DELIMITER, 2);
+			if (parts[0].equals(VO_PREFIX)) {
+				getUiHandlers().loadUsersFromVo(userSearchbar.getText(), Integer.parseInt(parts[1]));
+			} else if (parts[0].equals(GROUP_PREFIX)) {
+				getUiHandlers().loadUsersFromGroup(userSearchbar.getText(), Integer.parseInt(parts[1]));
+			}
 		} else {
 			getUiHandlers().loadUsers(userSearchbar.getText());
 		}
@@ -186,8 +190,9 @@ public class AffiliationView extends ViewWithUiHandlers<AffiliationUiHandlers> i
 			return;
 		}
 
-		for (int i = 0; i < userSelect.getItems().size(); i++) {
-			userSelect.remove(i);
+		List<Option> opts = userSelect.getItems();
+		for (Option opt : opts) {
+			userSelect.remove(opt);
 		}
 
 		for (RichMember m: members) {
@@ -242,49 +247,41 @@ public class AffiliationView extends ViewWithUiHandlers<AffiliationUiHandlers> i
 	}
 
 	@Override
-	public void loadAdminGroups(List<Group> groups) {
-		groupSel.setVisible(true);
-		onLoadingFinished(false);
-		userSelect.setEnabled(false);
-		if(groups.isEmpty()) {
+	public void loadVoGroupsAdmin(List<Vo> vos, List<Group> groups) {
+		if (vos == null && groups == null) {
 			unauthorized();
 			return;
+			/*-{ console.log() }-*/
 		}
 
-		for (Group group: groups) {
-			Option o = new Option();
-			o.setValue(String.valueOf(group.getId()));
-			o.setText(group.getShortName());
-			groupSelect.add(o);
-		}
-
-		groupSelect.refresh();
-	}
-
-	@Override
-	public void loadAdminVos(List<Vo> vos) {
-		voSel.setVisible(true);
+		voGroupSel.setVisible(true);
 		onLoadingFinished(false);
 		userSelect.setEnabled(false);
-		if(vos.isEmpty()) {
-			unauthorized();
-			return;
+
+		if (vos != null) {
+			for (Vo vo : vos) {
+				Option o = new Option();
+				o.setValue(VO_PREFIX + PREFIX_DELIMITER + String.valueOf(vo.getId()));
+				o.setText("VO: " + vo.getShortName());
+				voGroupSelect.add(o);
+			}
 		}
 
-		for (Vo vo: vos) {
-			Option o = new Option();
-			o.setValue(String.valueOf(vo.getId()));
-			o.setText(vo.getShortName());
-			voSelect.add(o);
+		if (groups != null) {
+			for (Group group: groups) {
+				Option o = new Option();
+				o.setValue(GROUP_PREFIX + PREFIX_DELIMITER + String.valueOf(group.getId()));
+				o.setText("GROUP: " + group.getShortName());
+				voGroupSelect.add(o);
+			}
 		}
 
-		voSelect.refresh();
+		voGroupSelect.refresh();
 	}
 
 	@Override
 	public void loadAdminPerun() {
-		voSel.setVisible(false);
-		groupSel.setVisible(false);
+		voGroupSel.setVisible(false);
 	}
 
 	@Override
