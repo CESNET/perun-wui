@@ -1,5 +1,6 @@
 Perun WUI
 =========
+[![Build Status](https://travis-ci.org/zlamalp/perun-wui.svg?branch=master)](https://travis-ci.org/zlamalp/perun-wui)
 
 ### Web interface for Perun using GWT and Bootstrap3 ###
 
