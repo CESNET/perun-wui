@@ -54,12 +54,9 @@ public interface PerunSetAffiliationTranslation extends PerunTranslation {
 	@DefaultMessage("You are not authorized to assign affiliations")
 	String unauthorizedMessage();
 
-	@DefaultMessage("Select the group to search in")
-    String groupSelectLabel();
-
 	@DefaultMessage("No user has been found")
 	String noUsersFound();
 
-	@DefaultMessage("Select virtual organization to search in")
-	String voSelectLabel();
+	@DefaultMessage("Select VO or group to search in")
+	String voGroupSelectLabel();
 }
