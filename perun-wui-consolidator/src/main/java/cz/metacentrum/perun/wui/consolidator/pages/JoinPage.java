@@ -27,6 +27,7 @@ import org.gwtbootstrap3.client.ui.constants.*;
 import org.gwtbootstrap3.client.ui.html.Div;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * Single page used by consolidator to display it's state
@@ -196,7 +197,7 @@ public class JoinPage {
 					translatedExtSourceName = translatedActor.split("@")[1];// Utils.translateIdp(translatedExtSourceName);
 
 					// social identity
-					if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org") || translatedExtSourceName.equals("https://login.elixir-czech.org/idp/")) {
+					if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org") || Objects.equals(translatedExtSourceName, "https://login.elixir-czech.org/idp/")) {
 						translatedExtSourceName = Utils.translateIdp("@"+translatedActor.split("@")[1]);
 						translatedActor = translatedActor.split("@")[0];
 					}
