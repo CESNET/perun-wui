@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.model.beans;
 
+import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 
@@ -12,7 +13,24 @@ public class UserExtSource extends GeneralObject {
 
 	protected UserExtSource() { }
 
-	// TODO - add createNew() method
+	/**
+	 *
+	 * @param source     ExtSource definition
+	 * @param login		 User's login in concrete ExtSource
+	 * @param userId     ID of User this UES belongs to
+	 * @param loa		 level of assurance
+	 * @param persistent persistent flag of this UserExtSource
+	 * @return
+	 */
+	public static final UserExtSource createNew(ExtSource source, String login, int userId, int loa, boolean persistent){
+		UserExtSource ues = new JSONObject().getJavaScriptObject().cast();
+		ues.setExtSource(source);
+		ues.setLogin(login);
+		ues.setUserId(userId);
+		ues.setLoa(loa);
+		ues.setPersistent(persistent);
+		return ues;
+	}
 
 	/**
 	 * Sets ID of ExtSource definition
@@ -49,6 +67,15 @@ public class UserExtSource extends GeneralObject {
 	public final ExtSource getExtSource() {
 		return (ExtSource)JsUtils.getNativePropertyObject(this, "extSource");
 	}
+
+	/**
+	 * Set ExtSource definition
+	 *
+	 * @param source ExtSource definition
+	 */
+	public final native void setExtSource(ExtSource source)/*-{
+    	this.extSource = source;
+	}-*/;
 
 	/**
 	 * Get Level of Assurance this UserExtSource (User's identity) provides.
@@ -110,6 +137,14 @@ public class UserExtSource extends GeneralObject {
 	public final int getUserId() {
 		return JsUtils.getNativePropertyInt(this, "userId");
 	}
+
+	/**
+	 * Set ID of User this UserExtSource belongs.
+	 * @param id ID of User this UES belongs to
+	 */
+	public final native void setUserId(int id)/*-{
+    	this.userId = id;
+	}-*/;
 
 	/**
 	 * Compares to another object

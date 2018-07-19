@@ -248,6 +248,22 @@ public class Publication extends GeneralObject {
 	}
 
 	/**
+	 * Returns the value of the database column PUBLICATION.main
+	 *
+	 * @return the value of PUBLICATION.main
+	 */
+	public final String getMain(){ return JsUtils.getNativePropertyString(this, "main"); }
+
+	/**
+	 * Sets the value of the database column PUBLICATION.main
+	 *
+	 * @param main the value for PUBLICATION.main
+	 */
+	public final native void setMain(String main)/*-{
+    	this.main = main;
+	}-*/;
+
+	/**
 	 * Compares to another object
 	 *
 	 * @param o Object to compare

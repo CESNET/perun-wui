@@ -24,10 +24,11 @@ public class User extends GeneralObject {
 	 * @param titleBefore   titleBefore of User
 	 * @param titleAfter    titleAfter of User
 	 * @param isServiceUser TRUE = is service user / FALSE = is normal user
+	 * @param sponsoredUser TRUE = is sponsored user / FALSE = is normal user
 	 * @return User object
 	 */
 	public static final User createNew(int id, String firstName, String middleName, String lastName, String titleBefore,
-	                                   String titleAfter, boolean isServiceUser) {
+	                                   String titleAfter, boolean isServiceUser, boolean sponsoredUser) {
 
 		User user = new JSONObject().getJavaScriptObject().cast();
 		user.setId(id);
@@ -37,6 +38,7 @@ public class User extends GeneralObject {
 		user.setTitleBefore(titleBefore);
 		user.setTitleAfter(titleAfter);
 		user.setServiceUser(isServiceUser);
+		user.setSponsoredUser(sponsoredUser);
 		user.setObjectType("User");
 		return user;
 
@@ -168,6 +170,28 @@ public class User extends GeneralObject {
     }-*/;
 
 	/**
+	 * Get common name of the user, without academic titles
+	 *
+	 * @return firs + middle + last name
+	 */
+	public final native String getCommonName() /*-{
+
+        var commonName = "";
+
+        var firstName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "firstName");
+        var lastName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "lastName");
+        var middleName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "middleName");
+
+        if (firstName !== null) commonName = firstName;
+        if (middleName !== null) commonName += " " + middleName;
+        if (lastName !== null) commonName += " " + lastName;
+
+        if (commonName.length > 0) return commonName;
+        return null;
+
+    }-*/;
+
+	/**
 	 * Return TRUE if user is "service user".
 	 *
 	 * @return TRUE = service user / FALSE = standard user
@@ -184,6 +208,24 @@ public class User extends GeneralObject {
 	public final native void setServiceUser(boolean service) /*-{
         return this.serviceUser = service;
     }-*/;
+
+	/**
+	 * Return TRUE if user is "sponsored user".
+	 *
+	 * @return TRUE = sponsored user / FALSE = standard user
+	 */
+	public final boolean isSponsoredUser(){
+		return JsUtils.getNativePropertyBoolean(this, "sponsoredUser");
+	}
+
+	/**
+	 * Mark user as sponsored account
+	 *
+	 * @param sponsored
+	 */
+	public final native void setSponsoredUser(boolean sponsored) /*-{
+		this.sponsoredUser = sponsored;
+	}-*/;
 
 	/**
 	 * Compares to another object

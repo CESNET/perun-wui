@@ -2,6 +2,9 @@ package cz.metacentrum.perun.wui.model.beans;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.json.client.JSONArray;
+import com.google.gwt.json.client.JSONObject;
+import com.google.gwt.json.client.JSONString;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
 import java.util.ArrayList;
@@ -39,7 +42,36 @@ public class ApplicationFormItem extends JavaScriptObject {
 
 	protected ApplicationFormItem() {}
 
-	// TODO - create method
+	/**
+	 * Return new instance of ApplicationFormItem with basic properties set.
+	 *
+	 * @param id
+	 * @param shortname shortName of form item
+	 * @param required TRUE = item is required / FALSE = item is optional
+	 * @param type ApplicationFormItemType of form item
+	 * @param federationAttribute Name of IdP federation attribute
+	 * @param perunDestinationAttribute URN of linked attribute definition
+	 * @param regex Regular expression to set
+	 * @param applicationTypes List<Application.ApplicationType> List of application types this form item is used on
+	 * @param ordnum Ordering number
+	 * @param forDelete TRUE = marked for delete / FALSE = not marked for delete
+	 * @return
+	 */
+	static public ApplicationFormItem createNew(int id, String shortname, boolean required, ApplicationFormItemType type,
+												String federationAttribute, String perunDestinationAttribute, String regex,
+												List<Application.ApplicationType> applicationTypes, Integer ordnum, boolean forDelete)	{
+		ApplicationFormItem afi = new JSONObject().getJavaScriptObject().cast();
+		afi.setId(id);
+		afi.setShortname(shortname);
+		afi.setRequired(required);
+		afi.setType(type);
+		afi.setFederationAttribute(federationAttribute);
+		afi.setPerunAttribute(perunDestinationAttribute);
+		afi.setRegex(regex);
+		afi.setApplicationTypes(applicationTypes);
+		afi.setOrdnum(ordnum);
+		afi.setForDelete(forDelete);
+		return afi;}
 
 	/**
 	 * Get form item's ID.
@@ -238,14 +270,20 @@ public class ApplicationFormItem extends JavaScriptObject {
 	 *
 	 * @param applicationTypes List of application types this form item is used on.
 	 */
-	public final void setApplicationTypes(ArrayList<Application.ApplicationType> applicationTypes) {
-
-		// TODO - implementation
-
+	public final void setApplicationTypes(List<Application.ApplicationType> applicationTypes){
+		JSONArray array = new JSONArray();
+		for(int i = 0; i < applicationTypes.size(); i++){
+			array.set(i, new JSONString(applicationTypes.get(i).toString().toUpperCase()));
+		}
+		this.setApplicationTypes(array.getJavaScriptObject());
 	}
 
 	public final native void setApplicationTypes(JsArrayString applicationTypes) /*-{
 		this.applicationTypes = applicationTypes;
+	}-*/;
+
+	private final native void setApplicationTypes(JavaScriptObject object)/*-{
+        this.applicationTypes = applicationTypes;
 	}-*/;
 
 	// TODO - item texts

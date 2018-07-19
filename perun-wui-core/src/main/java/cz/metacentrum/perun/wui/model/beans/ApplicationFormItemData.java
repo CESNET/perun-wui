@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.model.beans;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.json.client.JSONObject;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
 /**
  * Overlay type for ApplicationFormItemData from Perun-Registrar.
@@ -18,6 +19,7 @@ public class ApplicationFormItemData extends JavaScriptObject {
 	 * @param formItem
 	 * @param shortname
 	 * @param value
+	 * @param prefilled
 	 * @param assuranceLevel
 	 * @return
 	 */
@@ -33,6 +35,23 @@ public class ApplicationFormItemData extends JavaScriptObject {
 		return obj;
 	}
 
+
+	/**
+	 * Get ID
+	 * @return id
+	 */
+	public final int getId(){
+    	return JsUtils.getNativePropertyInt(this, "id");
+	}
+
+
+	/**
+	 * Set id
+	 * @param id
+	 */
+	public final native void setId(int id) /*-{
+    	this.id = id;
+	}-*/;
 
 	/**
 	 * Get formItem

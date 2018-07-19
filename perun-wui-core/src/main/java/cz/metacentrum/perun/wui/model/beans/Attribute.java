@@ -3,8 +3,11 @@ package cz.metacentrum.perun.wui.model.beans;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
 import com.google.gwt.json.client.JSONValue;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.JsonUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -127,6 +130,27 @@ public class Attribute extends AttributeDefinition {
 	public native final void setAttributeValid(boolean valid) /*-{
         this.attributeValid = valid;
     }-*/;
+
+	/**
+	 * @return value as int
+	 */
+	public final int getValueAsInteger(){
+    	return JsUtils.getNativePropertyInt(this, "value");
+	}
+
+	/**
+	 * @return value as boolean
+	 */
+	public final boolean getvalueAsBoolean() {
+        return JsUtils.getNativePropertyBoolean(this, "value");
+	}
+
+	/**
+	 * @return value as ArrayList of String
+	 */
+	public final List<String> getValueAsList(){
+		return JsUtils.listFromJsArrayString(JsUtils.getNativePropertyArrayString(this, "value"));
+	}
 
 	/**
 	 * Returns unique ID for GUI

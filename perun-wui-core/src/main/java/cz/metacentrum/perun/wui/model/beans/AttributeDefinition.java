@@ -169,6 +169,24 @@ public class AttributeDefinition extends GeneralObject {
     }-*/;
 
 	/**
+	 * @return true if the attribute values must be unique. For multivalued types like java.util.ArrayList, each value
+	 * in the list for a given object must be unique among all values for all objects.
+	 *
+	 * Entityless attributes cannot be unique.
+	 */
+	public final boolean isUnique(){
+    	return JsUtils.getNativePropertyBoolean(this, "unique");
+	}
+
+	/**
+	 * Set uniqe
+	 * @param unique
+	 */
+	public final native void setUnique(boolean unique)/*-{
+    this.unique = unique
+	}-*/;
+
+	/**
 	 * Compares to another object
 	 *
 	 * @param o Object to compare

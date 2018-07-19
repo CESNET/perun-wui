@@ -1,9 +1,11 @@
 package cz.metacentrum.perun.wui.model.beans;
 
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Overlay type for RichResource object from Perun
@@ -25,7 +27,7 @@ public class RichResource extends Resource {
 	 * @param vo          VO this Resource is associated with
 	 * @return RichResource object
 	 */
-	public static final RichResource createNew(int id, String name, String description, Facility facility, Vo vo) {
+	public static final RichResource createNew(int id, String name, String description, Facility facility, Vo vo, List<ResourceTag> resourceTags) {
 		RichResource resource = new JSONObject().getJavaScriptObject().cast();
 		resource.setId(id);
 		resource.setName(name);
@@ -35,6 +37,7 @@ public class RichResource extends Resource {
 		resource.setFacilityId(facility.getId());
 		resource.setFacility(facility);
 		resource.setObjectType("RichResource");
+		resource.setResourcesTags(resourceTags);
 		return resource;
 	}
 
@@ -83,7 +86,18 @@ public class RichResource extends Resource {
 		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "resourceTags"));
 	}
 
-	// TODO - Are methods for setting Tags necessary ??
+	/**
+	 * Set list of associated ResourceTags with this resource
+	 *
+	 * @param resourceTags ResourceTags associated with resource
+	 */
+	public final void setResourcesTags(List<ResourceTag> resourceTags){
+		setResourcesTags(JsUtils.listToJsArray(resourceTags));
+	}
+
+	private native final void setResourcesTags(JsArray<ResourceTag> resourceTags)/*-{
+		this.resourceTags = resourceTags;
+	}-*/;
 
 	/**
 	 * Compares to another object

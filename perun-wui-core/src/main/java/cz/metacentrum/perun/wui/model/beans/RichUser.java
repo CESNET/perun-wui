@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.model.beans;
 
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -7,6 +8,7 @@ import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Overlay type for RichUser object
@@ -29,10 +31,12 @@ public class RichUser extends User {
 	 * @param titleAfter     titleAfter of User
 	 * @param isServiceUser  TRUE = is service user / FALSE = is normal user
 	 * @param userAttributes list of user attributes (can be null)
+	 * @param userExtSources list of users external sources
 	 * @return RichUser object
 	 */
 	public static final RichUser createNew(int id, String firstName, String middleName, String lastName, String titleBefore,
-	                                       String titleAfter, boolean isServiceUser, ArrayList<Attribute> userAttributes) {
+	                                       String titleAfter, boolean isServiceUser, ArrayList<Attribute> userAttributes,
+										   ArrayList<UserExtSource> userExtSources) {
 
 		RichUser user = new JSONObject().getJavaScriptObject().cast();
 		user.setId(id);
@@ -44,6 +48,7 @@ public class RichUser extends User {
 		user.setServiceUser(isServiceUser);
 		if (userAttributes != null) user.setUserAttributes(userAttributes);
 		user.setObjectType("RichUser");
+		user.setUserExtSources(userExtSources);
 		return user;
 
 	}
@@ -200,6 +205,28 @@ public class RichUser extends User {
 		}
 		return null;
 	}
+
+	/**
+	 * Get user external sources
+	 *
+	 * @return UserExtSources
+	 */
+	public final List<UserExtSource> getUserExtSources(){
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "userExtSources"));
+	}
+
+	/**
+	 * Set user external sources
+	 *
+	 * @param sources UserExtSources to set
+	 */
+	public final void setUserExtSources(List<UserExtSource> sources){
+		setUserExtSources(JsUtils.listToJsArray(sources));
+	}
+
+	private final native void setUserExtSources(JsArray<UserExtSource> userExtSources)/*-{
+    	this.userExtSources = userExtSources;
+	}-*/;
 
 	/**
 	 * Compares to another object

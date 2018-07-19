@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.model.beans;
 
+import com.google.gwt.core.client.JsArray;
 import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -7,6 +8,7 @@ import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Overlay type for RichMember object
@@ -28,7 +30,8 @@ public class RichMember extends Member {
 	 * @param user             User this RichMember is associated with
 	 * @return RichMember object
 	 */
-	public static final RichMember createNew(int id, int voId, String membershipType, String membershipStatus, User user) {
+	public static final RichMember createNew(int id, int voId, String membershipType, String membershipStatus, User user,
+											 List<UserExtSource> userExtSources ,List<Attribute> userAttributes, List<Attribute> memberAttributes) {
 		RichMember member = new JSONObject().getJavaScriptObject().cast();
 		member.setId(id);
 		member.setUser(user);
@@ -37,6 +40,9 @@ public class RichMember extends Member {
 		member.setMembershipType(membershipType);
 		member.setMembershipStatus(membershipStatus);
 		member.setObjectType("RichMember");
+		member.setUserExtSources(userExtSources);
+		member.setUserAttributes(userAttributes);
+		member.setMemberAttributes(memberAttributes);
 		return member;
 	}
 
@@ -71,6 +77,19 @@ public class RichMember extends Member {
 	}
 
 	/**
+	 * Set User attributes stored in RichMember
+	 *
+	 * @param userAttributes list of attributes to set
+	 */
+	public final void setUserAttributes(List<Attribute> userAttributes){
+		setUserAttributes(JsUtils.listToJsArray(userAttributes));
+	}
+
+	private native final void setUserAttributes(JsArray<Attribute> attributes)/*-{
+        this.userAttributes = userAttributes;
+	}-*/;
+
+	/**
 	 * Get Member attributes stored in RichMember. If none present, return empty list.
 	 * <p/>
 	 * Included attributes can be specified on RichMember retrieval (see RPC API).
@@ -81,6 +100,19 @@ public class RichMember extends Member {
 	public final ArrayList<Attribute> getMemberAttributes() {
 		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "memberAttributes"));
 	}
+
+	/**
+	 * Set Member attributes stored in RichMember
+	 *
+	 * @param memberAttributes list of attributes to set
+	 */
+	public final void setMemberAttributes(List<Attribute> memberAttributes){
+		setMemberAttributes(JsUtils.listToJsArray(memberAttributes));
+	}
+
+	private native final void setMemberAttributes(JsArray<Attribute> attributes)/*-{
+        this.memberAttributes = attributes;
+    }-*/;
 
 	/**
 	 * Return User or Member attribute from RichMember or NULL if attribute is not present.
@@ -171,6 +203,27 @@ public class RichMember extends Member {
 		return Utils.join(list, ", ");
 
 	}
+
+	/**
+	 * Get user external sources
+	 *
+	 * @return UserExtSources
+	 */
+	public final List<UserExtSource> getUserExtSources(){
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "userExtSources"));
+	}
+
+	/**
+	 * Set user external sources
+	 * @param sources
+	 */
+	public final void setUserExtSources(List<UserExtSource> sources){
+		setUserExtSources(JsUtils.listToJsArray(sources));
+	}
+
+	private native final void setUserExtSources(JsArray<UserExtSource> sources) /*-{
+    	this.userExtSources = sources;
+	}-*/;
 
 	/**
 	 * Compares to another object

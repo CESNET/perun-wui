@@ -44,6 +44,7 @@ public class Application extends JavaScriptObject {
 	 * @param extSourceName name of authz backend of user submitting the application
 	 * @param extSourceType type of authz backend of user submitting the application
 	 * @param extSourceLoa level of assurance of user in external source
+	 * @param user User who submitted this application
 	 * @return Application object to submit to Perun.
 	 */
 	static public Application createNew(Vo vo, Group group, ApplicationType type, String fedInfo, String actor, String extSourceName, String extSourceType, int extSourceLoa, User user) {

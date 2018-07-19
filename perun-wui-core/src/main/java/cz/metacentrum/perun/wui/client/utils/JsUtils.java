@@ -314,4 +314,18 @@ public class JsUtils {
 
 		return converted;
 	}
+
+	/**
+	 * Converts List to JsArray
+	 * @param list list to be converted to JsArray
+	 * @param <T> Descendant of JavaScriptObject
+	 * @return
+	 */
+	public static <T extends JavaScriptObject> JsArray<T>  listToJsArray(List<T> list){
+		JsArray<T> array = JsArray.createArray().cast();
+		for (T t : list) {
+			array.push(t);
+		}
+		return array;
+	}
 }
