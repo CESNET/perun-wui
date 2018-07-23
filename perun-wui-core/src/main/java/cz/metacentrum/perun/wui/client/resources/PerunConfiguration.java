@@ -1,9 +1,11 @@
 package cz.metacentrum.perun.wui.client.resources;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
+import cz.metacentrum.perun.wui.client.resources.beans.PersonalAttribute;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -673,15 +675,54 @@ public final class PerunConfiguration {
 	 *
 	 * @return names of attributes that should be shown
 	 */
-	public static List<String> getProfilePersonalAttributesToShow() {
-		List<String> attrNames = new ArrayList<>();
+	public static List<PersonalAttribute> getProfilePersonalAttributesToShow() {
+		List<PersonalAttribute> attributes = new ArrayList<>();
 		String data = getConfigPropertyString("profile.personal.showAttributes");
 		if (data != null) {
-			String[] values = data.replaceAll("\\s+", "").split(",");
-			attrNames.addAll(Arrays.asList(values));
+			String[] values = data.split(",");
+			for (String value : values) {
+				attributes.add(parsePersonalAttribute(value));
+			}
 		}
 
-		return attrNames;
+		return attributes;
+	}
+
+	/**
+	 * Parse single PersonalAttribute from raw String format.
+	 * Expected format is: {urn} [ {englishDescription} | {czech description} ]
+	 * Descriptions are optional
+	 *
+	 * @param value value to be parsed
+	 * @return parsed personal attribute
+	 */
+	private static PersonalAttribute parsePersonalAttribute(String value) {
+		PersonalAttribute attribute = new PersonalAttribute();
+		String split[] = value.split("\\[");
+		String name = split[0].trim();
+		attribute.setUrn(name);
+
+		if (split.length == 1) {
+			return attribute;
+		}
+		GWT.log(value);
+
+		String[] nextSplit = split[1].split("\\|");
+
+		String enDescription = nextSplit[0].trim();
+		attribute.addDescription("en", enDescription);
+		GWT.log(enDescription);
+		if (nextSplit.length == 1) {
+			return attribute;
+		}
+
+		GWT.log(nextSplit[1]);
+		String csDescription = nextSplit[1].replace("]", "").trim();
+		GWT.log(csDescription);
+
+		attribute.addDescription("cs", csDescription);
+
+		return attribute;
 	}
 
 	private void PerunConfiguration() {

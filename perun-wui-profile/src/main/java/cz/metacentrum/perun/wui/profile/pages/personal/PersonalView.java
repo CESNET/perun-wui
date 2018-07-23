@@ -8,6 +8,8 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.resources.beans.PersonalAttribute;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
@@ -15,6 +17,7 @@ import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Alert;
+import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Form;
@@ -30,6 +33,7 @@ import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Small;
+import org.gwtbootstrap3.client.ui.html.Span;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.HashMap;
@@ -128,15 +132,17 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 		text.setText(user.getFullName());
 
-		List<String> additionalAttributes = PerunConfiguration.getProfilePersonalAttributesToShow();
+		List<PersonalAttribute> additionalAttributes = PerunConfiguration.getProfilePersonalAttributesToShow();
 
-		for (String attributeUrn : additionalAttributes) {
+		for (PersonalAttribute personalAttribute : additionalAttributes) {
 			String value;
 			String defaultName;
-			Attribute attribute = user.getAttribute(attributeUrn);
+
+			Attribute attribute = user.getAttribute(personalAttribute.getUrn());
 			value = attribute == null ? null : attribute.getValue();
 			defaultName = attribute == null ? null : attribute.getDisplayName();
-			addPersonalData(attributeUrn, value, defaultName);
+
+			addPersonalData(personalAttribute, value, defaultName);
 		}
 	}
 
@@ -217,21 +223,77 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 	/**
 	 * Adds user data to overview. If the given value is null then
-	 * '-' is shown. If there is a translated name for given urn,
+	 * '-' is shown. If there is a translated name for urn of given personal attribute,
 	 * then it is used. If there is not, the defaultName is shown.
 	 * If there is not a translated name and the default name is null,
 	 * the name is obtained from given urn.
 	 *
-	 * @param urn attribute urn
+	 * @param personalAttribute personal attribute
 	 * @param value value to be shown
 	 * @param defaultName default name used when there is not a translated name for given urn
 	 */
-	private void addPersonalData(String urn, String value, String defaultName) {
+	private void addPersonalData(PersonalAttribute personalAttribute, String value, String defaultName) {
 		Row row = new Row();
 		row.setPaddingBottom(10);
-		Column nameColumn = new Column(ColumnSize.SM_4, ColumnSize.XS_4);
+
+		Column labelColumn = createLabelColumn(personalAttribute, defaultName);
+		Column valueColumn = createValueColumn(value);
+
+		// if it is preferred email, add change button
+		if (URN_PREFERRED_EMAIL.matches(personalAttribute.getUrn())) {
+			addEmailChangeButton(valueColumn);
+		}
+
+		addDescription(valueColumn, personalAttribute);
+
+		row.add(labelColumn);
+		row.add(valueColumn);
+
+		personalInfo.add(row);
+	}
+
+	private void addEmailChangeButton(Column column) {
+			Button updateButton = new Button();
+			updateButton.setSize(ButtonSize.EXTRA_SMALL);
+			updateButton.setMarginLeft(10);
+			updateButton.setText(translation.updateEmail());
+			updateButton.setDataTarget("#updateEmailModal");
+			updateButton.setDataToggle(Toggle.MODAL);
+
+			column.add(updateButton);
+	}
+
+	private void addDescription(Column column, PersonalAttribute personalAttribute) {
+		String descriptionString = personalAttribute.getLocalizedDescription(Utils.getLocale());
+		Widget descriptionWidget = getWidgetForText(descriptionString);
+
+		Span descriptionSpan = new Span();
+
+		descriptionSpan.add(descriptionWidget);
+		descriptionSpan.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
+
+		column.add(descriptionSpan);
+	}
+
+	/**
+	 * If the given String starts with http, then anchor widget is created.
+	 * Text widget is returned otherwise
+	 *
+	 * @param text text
+	 * @return appropriate widget for given text
+	 */
+	private Widget getWidgetForText(String text) {
+		if (text.startsWith("http")) {
+			return new Anchor(text, text);
+		} else {
+			return new Text(text);
+		}
+	}
+
+	private Column createLabelColumn(PersonalAttribute personalAttribute, String defaultName) {
+		Column nameColumn = new Column(ColumnSize.SM_3, ColumnSize.XS_3);
 		nameColumn.addStyleName(PerunProfileResources.INSTANCE.gss().personalInfoLabel());
-		Column valueColumn = new Column(ColumnSize.SM_8, ColumnSize.XS_8);
+		String urn = personalAttribute.getUrn();
 
 		// check if translated name is available
 		String translatedName = attributeNamesTranslations.get(urn);
@@ -242,39 +304,34 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 				// parse name from urn
 				String[] split = urn.split(":");
 				if (split.length < 1) {
-					return;
+					return nameColumn;
 				}
 				translatedName = split[split.length - 1];
 			}
 		}
 
 		Text nameText = new Text(translatedName);
-		Text valueText = new Text();
-
-		if (value == null) {
-			valueText.setText("-");
-		} else {
-			valueText.setText(value);
-		}
 
 		nameColumn.add(nameText);
-		valueColumn.add(valueText);
 
-		row.add(nameColumn);
-		row.add(valueColumn);
+		return nameColumn;
+	}
 
-		// if it is preferred email, add change button
-		if (URN_PREFERRED_EMAIL.matches(urn)) {
-			Button updateButton = new Button();
-			updateButton.setSize(ButtonSize.EXTRA_SMALL);
-			updateButton.setMarginLeft(10);
-			updateButton.setText(translation.updateEmail());
-			updateButton.setDataTarget("#updateEmailModal");
-			updateButton.setDataToggle(Toggle.MODAL);
+	private Column createValueColumn(String value) {
+		Column valueColumn = new Column(ColumnSize.SM_6, ColumnSize.XS_6);
 
-			valueColumn.add(updateButton);
+		String valueText;
+
+		if (value == null) {
+			valueText = "-";
+		} else {
+			valueText = value;
 		}
 
-		personalInfo.add(row);
+		Widget valueWidget = getWidgetForText(valueText);
+
+		valueColumn.add(valueWidget);
+
+		return valueColumn;
 	}
 }
