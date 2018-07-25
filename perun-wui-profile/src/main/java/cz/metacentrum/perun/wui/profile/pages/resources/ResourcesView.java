@@ -91,7 +91,6 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 
 			loader.setVisible(false);
 			for (Vo vo : vos) {
-				GWT.log(vo.getName());
 				Option option = new Option();
 				option.setText(vo.getName());
 				option.setValue(String.valueOf(vo.getId()));
