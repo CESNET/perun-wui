@@ -160,9 +160,6 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 
 	private void setPageVisibility(String name, Widget mainMenuItem, Widget topMenuItem) {
 		List<String> pagesToHide = PerunConfiguration.getProfilePagesToHide();
-		for (String s : pagesToHide) {
-			GWT.log(s);
-		}
 		if (pagesToHide.contains(name)) {
 			topMenuItem.removeFromParent(); // hiding doesn't work since bootstraps "visibleOn" takes place -> remove from parent
 			mainMenuItem.setVisible(false);

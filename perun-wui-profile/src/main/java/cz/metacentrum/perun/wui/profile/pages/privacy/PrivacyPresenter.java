@@ -106,7 +106,6 @@ public class PrivacyPresenter extends Presenter<PrivacyPresenter.MyView, Privacy
 		getView().clearVos();
 
 		for (Vo vo : vos) {
-			GWT.log("Called: " + vo.getName());
 			AttributesManager.getVoAttribute(vo.getId(), ATTRIBUTE_NAME, new JsonEvents() {
 				@Override
 				public void onFinished(JavaScriptObject result) {
