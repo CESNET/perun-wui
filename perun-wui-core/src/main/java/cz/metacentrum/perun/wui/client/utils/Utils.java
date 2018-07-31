@@ -1,6 +1,8 @@
 package cz.metacentrum.perun.wui.client.utils;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.dom.client.Document;
+import com.google.gwt.dom.client.Element;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
@@ -1447,5 +1449,15 @@ public class Utils {
 
 		return name;
 
+	}
+
+	/**
+	 * Returns content of element meta-lang withou the starting "locale=" string
+	 *
+	 * @return
+	 */
+	public static String getLocale() {
+		Element ele = Document.get().getElementById("meta-lang");
+		return ele.getAttribute("content").replace("locale=", "");
 	}
 }
