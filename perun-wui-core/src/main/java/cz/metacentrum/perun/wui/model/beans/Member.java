@@ -16,6 +16,7 @@ public class Member extends GeneralObject {
 
 	/**
 	 * Return new instance of Member with basic properties set.
+	 * Sets sponsored to False
 	 *
 	 * @param id               ID of Member
 	 * @param voId             ID of VO member is associated with
@@ -26,12 +27,29 @@ public class Member extends GeneralObject {
 	 * @return Member object
 	 */
 	public static final Member createNew(int id, int voId, int userId, String membershipType, String membershipStatus) {
+		return createNew(id, voId, userId, membershipType, membershipStatus, false);
+	}
+
+	/**
+	 * Return new instance of Member with basic properties set.
+	 *
+	 * @param id               ID of Member
+	 * @param voId             ID of VO member is associated with
+	 * @param userId           ID of user member is associated with
+	 * @param voId             ID of VO this group belongs to
+	 * @param membershipType   type of Membership
+	 * @param membershipStatus status of Membership
+	 * @param sponsored
+	 * @return Member object
+	 */
+	public static final Member createNew(int id, int voId, int userId, String membershipType, String membershipStatus, boolean sponsored) {
 		Member member = new JSONObject().getJavaScriptObject().cast();
 		member.setId(id);
-		member.setUserId(userId);
 		member.setVoId(voId);
+		member.setUserId(userId);
 		member.setMembershipType(membershipType);
 		member.setMembershipStatus(membershipStatus);
+		member.setSponsored(sponsored);
 		member.setObjectType("Member");
 		return member;
 	}
@@ -138,6 +156,22 @@ public class Member extends GeneralObject {
 	public final native void setMembershipStatus(String status) /*-{
         this.status = status;
     }-*/;
+
+	/**
+	 * Is sponsored
+	 * @return TRUE if is sponsored, FALSE otherwise
+	 */
+	public final boolean isSponsored(){
+    	return JsUtils.getNativePropertyBoolean(this, "sponsored");
+    }
+
+	/**
+	 * Set sponsored
+	 * @param sponsored
+	 */
+	public final native void setSponsored(boolean sponsored)/*-{
+    	this.sponsored = sponsored;
+	}-*/;
 
 	/**
 	 * Compares to another object

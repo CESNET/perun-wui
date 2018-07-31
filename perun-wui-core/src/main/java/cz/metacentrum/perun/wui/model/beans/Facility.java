@@ -25,6 +25,7 @@ public class Facility extends GeneralObject {
 	 *
 	 * @param id   ID of Facility
 	 * @param name name of Facility
+	 * @param description description of Facility
 	 * @return Facility object
 	 */
 	public static final Facility createNew(int id, String name, String description) {

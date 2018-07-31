@@ -1,11 +1,14 @@
 package cz.metacentrum.perun.wui.model.beans;
 
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.json.client.JSONObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Overlay type for Cabinet API: Author
@@ -24,7 +27,32 @@ public class Author extends User {
 	protected Author() {
 	}
 
-	// TODO - add createNew() method
+	/**
+	 * Return new instance of Author with basic properties set.
+	 *
+	 * @param id            ID of User
+	 * @param firstName     firstName of User
+	 * @param middleName    middleName of User
+	 * @param lastName      lastName of User
+	 * @param titleBefore   titleBefore of User
+	 * @param titleAfter    titleAfter of User
+	 * @param attributes	attributes related to Author
+	 * @param authorships   all Author's authorships
+	 * @return new instance of Author with basic properties set
+	 */
+	static public Author createNew(int id, String firstName, String lastName, String middleName, String titleBefore, String titleAfter,
+								   List<Attribute> attributes, List<Authorship> authorships){
+		Author author = new JSONObject().getJavaScriptObject().cast();
+		author.setId(id);
+		author.setFirstName(firstName);
+		author.setLastName(lastName);
+		author.setMiddleName(middleName);
+		author.setTitleBefore(titleBefore);
+		author.setTitleAfter(titleAfter);
+		author.setAttributes(attributes);
+		author.setAuthorships(authorships);
+		return author;
+	}
 
 	/**
 	 * Get Author's name is format expected in citations, like: "LAST_NAME First_name Middle_name"
@@ -58,6 +86,20 @@ public class Author extends User {
 	public final int getPublicationsCount() {
 		return JsUtils.getNativePropertyArray(this, "authorships").length();
 	}
+
+	/**
+	 * Authorships related to this author.
+	 *
+	 * @param authorships List<Authorship> related to this author
+	 */
+	public final void setAuthorships(List<Authorship> authorships){
+		setAuthorships(JsUtils.listToJsArray(authorships));
+	}
+
+	private final native void setAuthorships(JsArray<Authorship> authorships)/*-{
+		this.authorships = authorships;
+	}-*/;
+
 
 	/**
 	 * Get Authorship entries associated with Author.
@@ -110,6 +152,26 @@ public class Author extends User {
 	 */
 	private final ArrayList<UserExtSource> getUserExtSources() {
 		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "logins"));
+	}
+
+	/**
+	 * Set attributes related to Author
+	 * @param attributes
+	 */
+	public final void setAttributes(List<Attribute> attributes){
+    	setAttributes(JsUtils.listToJsArray(attributes));
+	}
+
+	private native final void setAttributes(JsArray<Attribute> attributes)/*-{
+		this.attributes = attributes;
+	}-*/;
+
+	/**
+	 * Get all attributes related to Author
+	 * @return All attributes related to Author
+	 */
+	public final List<Attribute> getAttributes(){
+        return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "attributes"));
 	}
 
 	/**
