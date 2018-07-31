@@ -50,7 +50,7 @@ public class ResourcesView extends ViewWithUiHandlers<ResourcesUiHandlers> imple
 
 		title.setText(translation.menuMyResources());
 
-		voSelect.setTitle(translation.selectVo() + ":");
+		voSelect.setTitle(translation.select());
 
 		voSelect.addValueChangeHandler(valueChangeEvent -> {
 			// set heading with vo name

@@ -19,7 +19,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	String memberDetails();
 
 	@DefaultMessage("Choose:")
-	String selectVo();
+	String select();
 
 	@DefaultMessage("User profile")
 	public String appName();
