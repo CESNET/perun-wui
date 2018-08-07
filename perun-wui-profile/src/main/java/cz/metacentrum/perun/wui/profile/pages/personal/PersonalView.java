@@ -283,11 +283,25 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	 * @return appropriate widget for given text
 	 */
 	private Widget getWidgetForText(String text) {
-		if (text.startsWith("http")) {
-			return new Anchor(text, text);
-		} else {
-			return new Text(text);
+		Span descriptionSpan = new Span();
+
+		Text textEl = new Text();
+
+		for (String s : text.split("\\s+")) {
+			if (s.startsWith("http")) {
+				descriptionSpan.add(textEl);
+				textEl = new Text(" ");
+				descriptionSpan.add(new Anchor(s, s));
+			} else {
+				textEl.setText(textEl.getText() + s + " ");
+			}
 		}
+
+		if (textEl.getText().trim().length() > 0) {
+			descriptionSpan.add(textEl);
+		}
+
+		return descriptionSpan;
 	}
 
 	private Column createLabelColumn(PersonalAttribute personalAttribute, String defaultName) {

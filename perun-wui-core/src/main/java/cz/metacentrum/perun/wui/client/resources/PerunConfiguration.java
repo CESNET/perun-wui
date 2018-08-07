@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.client.resources;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.i18n.client.LocaleInfo;
@@ -705,20 +704,18 @@ public final class PerunConfiguration {
 		if (split.length == 1) {
 			return attribute;
 		}
-		GWT.log(value);
 
 		String[] nextSplit = split[1].split("\\|");
 
 		String enDescription = nextSplit[0].trim();
-		attribute.addDescription("en", enDescription);
-		GWT.log(enDescription);
 		if (nextSplit.length == 1) {
+			enDescription = enDescription.replace("]", "");
+			attribute.addDescription("en", enDescription);
 			return attribute;
 		}
+		attribute.addDescription("en", enDescription);
 
-		GWT.log(nextSplit[1]);
 		String csDescription = nextSplit[1].replace("]", "").trim();
-		GWT.log(csDescription);
 
 		attribute.addDescription("cs", csDescription);
 
