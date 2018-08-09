@@ -237,14 +237,7 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		row.setPaddingBottom(10);
 
 		Column labelColumn = createLabelColumn(personalAttribute, defaultName);
-		Column valueColumn = createValueColumn(value);
-
-		// if it is preferred email, add change button
-		if (URN_PREFERRED_EMAIL.matches(personalAttribute.getUrn())) {
-			addEmailChangeButton(valueColumn);
-		}
-
-		addDescription(valueColumn, personalAttribute);
+		Column valueColumn = createValueColumn(value, personalAttribute);
 
 		row.add(labelColumn);
 		row.add(valueColumn);
@@ -263,16 +256,19 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 			column.add(updateButton);
 	}
 
-	private void addDescription(Column column, PersonalAttribute personalAttribute) {
+	private Column createDescriptionColumn(PersonalAttribute personalAttribute) {
+		Column column = new Column(ColumnSize.SM_6, ColumnSize.XS_6);
+
 		String descriptionString = personalAttribute.getLocalizedDescription(Utils.getLocale());
 		Widget descriptionWidget = getWidgetForText(descriptionString);
 
 		Span descriptionSpan = new Span();
 
 		descriptionSpan.add(descriptionWidget);
-		descriptionSpan.getElement().getStyle().setMarginLeft(10, Style.Unit.PX);
 
 		column.add(descriptionSpan);
+
+		return column;
 	}
 
 	/**
@@ -284,14 +280,39 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	 */
 	private Widget getWidgetForText(String text) {
 		Span descriptionSpan = new Span();
-
 		Text textEl = new Text();
 
 		for (String s : text.split("\\s+")) {
+			// if the given substring is link
 			if (s.startsWith("http")) {
 				descriptionSpan.add(textEl);
 				textEl = new Text(" ");
-				descriptionSpan.add(new Anchor(s, s));
+
+				String href;
+				String hrefText;
+				GWT.log(s.trim());
+				// check if the link contains text
+				if (s.trim().matches(".*\\{.*}.*")) {
+					String[] split = s.split("}");
+
+					GWT.log(split[0]);
+					// append the text after the link text
+					if (split.length > 1) {
+						textEl.setText("");
+						for(int i = 1; i < split.length; i++) {
+							textEl.setText(textEl.getText() + split[i]);
+						}
+					}
+
+					split = s.split("\\{");
+
+					href = split[0];
+					hrefText = split[1].substring(0, split[1].indexOf("}"));
+				} else {
+					href = s;
+					hrefText = s;
+				}
+				descriptionSpan.add(new Anchor(hrefText, href));
 			} else {
 				textEl.setText(textEl.getText() + s + " ");
 			}
@@ -331,8 +352,11 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		return nameColumn;
 	}
 
-	private Column createValueColumn(String value) {
-		Column valueColumn = new Column(ColumnSize.SM_6, ColumnSize.XS_6);
+	private Column createValueColumn(String value, PersonalAttribute personalAttribute) {
+		Column valueColumn = new Column(ColumnSize.SM_9, ColumnSize.XS_9);
+		Column innerValueColumn = new Column(ColumnSize.SM_6, ColumnSize.XS_6);
+
+		Row innerRow = new Row();
 
 		String valueText;
 
@@ -344,7 +368,19 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 		Widget valueWidget = getWidgetForText(valueText);
 
-		valueColumn.add(valueWidget);
+		innerValueColumn.add(valueWidget);
+
+		// if it is preferred email, add change button
+		if (URN_PREFERRED_EMAIL.matches(personalAttribute.getUrn())) {
+			addEmailChangeButton(innerValueColumn);
+		}
+
+		Column innerDescriptionColumn = createDescriptionColumn(personalAttribute);
+
+		innerRow.add(innerValueColumn);
+		innerRow.add(innerDescriptionColumn);
+
+		valueColumn.add(innerRow);
 
 		return valueColumn;
 	}
