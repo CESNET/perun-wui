@@ -38,6 +38,8 @@
 					</p:PerunToolbar>
 				</b:Alert>
 
+				<p:AlertErrorReporter ui:field="alertErrorReporter" type="DANGER" visible="false"/>
+
 				<b:Form type="HORIZONTAL" ui:field="formWrapper">
 
 					<b:Heading size="H3" text="Form data" ui:field="formTitle"/>

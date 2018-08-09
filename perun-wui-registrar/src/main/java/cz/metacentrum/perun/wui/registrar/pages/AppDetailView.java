@@ -14,6 +14,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -22,6 +23,7 @@ import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
+import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.*;
@@ -119,6 +121,9 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 	Paragraph mailVerificationText;
 
 	@UiField Alert mailVerificationAlert;
+
+	@UiField
+	AlertErrorReporter alertErrorReporter;
 
 	private Application app;
 
@@ -232,16 +237,16 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 									@Override
 									public void onError(PerunException error) {
+										alertErrorReporter.setVisible(true);
+										alertErrorReporter.setHTML(ErrorTranslator.getTranslatedMessage(error));
+										alertErrorReporter.setReportInfo(error);
 										resendNotification.setProcessing(false);
-										NotifySettings settings = NotifySettings.newSettings();
-										settings.setDelay(0);
-										settings.setType(NotifyType.DANGER);
-										Notify.notify(error.getMessage(), settings);
 									}
 
 									@Override
 									public void onLoadingStart() {
 										resendNotification.setProcessing(true);
+										alertErrorReporter.setVisible(false);
 									}
 								});
 
