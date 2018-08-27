@@ -18,7 +18,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Member details")
 	String memberDetails();
 
-	@DefaultMessage("Choose:")
+	@DefaultMessage("Choose")
 	String select();
 
 	@DefaultMessage("User profile")

@@ -33,7 +33,7 @@
 			<b:Button ui:field="backButton" text="{trans.back}" icon="CHEVRON_LEFT" type="DEFAULT" marginBottom="10" marginTop="10"/>
 		</b.html:Div>
 
-		<select:Select ui:field="voSelect" visible="false" title="{trans.select}:"/>
+		<select:Select ui:field="voSelect" visible="false" title="{trans.select}"/>
 
 
 		<b.html:Div>

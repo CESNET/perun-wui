@@ -146,6 +146,9 @@ public class AttributeDefinition extends GeneralObject {
 
 	/**
 	 * Return TRUE if attribute value is checked on uniqueness, FALSE otherwise.
+	 * For multivalued types like java.util.ArrayList, each value
+	 * in the list for a given object must be unique among all values for all objects.
+	 * Entityless and virtual attributes cannot be unique.
 	 *
 	 * @return TRUE if unique
 	 */
@@ -185,24 +188,6 @@ public class AttributeDefinition extends GeneralObject {
 	public final native void setWritable(boolean write) /*-{
         this.writable = write;
     }-*/;
-
-	/**
-	 * @return true if the attribute values must be unique. For multivalued types like java.util.ArrayList, each value
-	 * in the list for a given object must be unique among all values for all objects.
-	 *
-	 * Entityless attributes cannot be unique.
-	 */
-	public final boolean isUnique(){
-    	return JsUtils.getNativePropertyBoolean(this, "unique");
-	}
-
-	/**
-	 * Set uniqe
-	 * @param unique
-	 */
-	public final native void setUnique(boolean unique)/*-{
-    this.unique = unique
-	}-*/;
 
 	/**
 	 * Compares to another object
