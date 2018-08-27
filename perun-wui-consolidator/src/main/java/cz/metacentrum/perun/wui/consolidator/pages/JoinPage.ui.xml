@@ -15,7 +15,7 @@
 
 	<ui:with field="res" type="cz.metacentrum.perun.wui.consolidator.client.resources.PerunConsolidatorResources"/>
 	<!-- Import Translation -->
-	<ui:with field='trans' type='cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation'/>
+	<ui:with field='trans' type='cz.metacentrum.perun.wui.client.resources.PerunTranslation'/>
 
 	<b.html:Div addStyleNames="{res.gss.page}">
 
