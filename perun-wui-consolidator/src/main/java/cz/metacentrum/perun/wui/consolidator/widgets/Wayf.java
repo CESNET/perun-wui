@@ -79,17 +79,15 @@ public class Wayf extends Composite {
 					@Override
 					public void onClick(ClickEvent clickEvent) {
 						// if we are on cert already, change hostname
-						if (Window.Location.getPath().startsWith("/"+group.getUrl()+"/")) {
-							for (String hostname : PerunConfiguration.getWayfCertHostnames()) {
-								if (!hostname.equals(Window.Location.getProtocol() + "//" + Window.Location.getHost())) {
+						for (String hostname : PerunConfiguration.getWayfCertHostnames()) {
+							if (!hostname.equals(Window.Location.getProtocol() + "//" + Window.Location.getHost())) {
 
-									String url = hostname + "/"+group.getUrl()+"/ic/?token=" + token;
-									if (redirect != null && !redirect.isEmpty()) {
-										url = url + "&target_url=" + URL.encodeQueryString(redirect);
-									}
-									Window.Location.assign(url);
-									return;
+								String url = hostname + "/"+group.getUrl()+"/ic/?token=" + token;
+								if (redirect != null && !redirect.isEmpty()) {
+									url = url + "&target_url=" + URL.encodeQueryString(redirect);
 								}
+								Window.Location.assign(url);
+								return;
 							}
 						}
 
