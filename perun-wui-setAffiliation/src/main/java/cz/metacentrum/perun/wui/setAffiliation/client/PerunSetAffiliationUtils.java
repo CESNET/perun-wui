@@ -4,7 +4,8 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 
-import java.util.Date;
+import java.sql.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Class with utility methods
@@ -28,8 +29,11 @@ public class PerunSetAffiliationUtils {
 	public static Attribute createAssignedAffiliationsAttribute(Attribute attr, boolean member, boolean faculty,
 																boolean affiliate, String organization ) {
 		JavaScriptObject value = attr.getValueAsJso();
-		DateTimeFormat dateFormat = DateTimeFormat.getFormat("yyyy-MM-dd HH:mm:ss.SSSSSS");
-		Date date = new Date();
+		// format has to match the format in Perun attribute module for
+		// urn:perun:user:attribute-def:def:eduPersonScopedAffiliationsManuallyAssigned
+		DateTimeFormat dateFormat = DateTimeFormat.getFormat("yyyy-MM-dd");
+		long expiration = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(365L);
+		Date date = new Date(expiration);
 
 		attr.setValueAsJso(updateAffiliations(value, organization, member, faculty, affiliate, dateFormat.format(date)));
 
@@ -42,25 +46,25 @@ public class PerunSetAffiliationUtils {
 	public static native JavaScriptObject updateAffiliations(JavaScriptObject jso, String organization, boolean member,
 															 boolean faculty, boolean affiliate, String date)
 	/*-{
-    	if (jso === undefined || jso === null) {
-    	    jso = {};
-		}
+        if (jso === undefined || jso === null) {
+            jso = {};
+        }
 
         delete jso["member@" + organization];
         delete jso["faculty@" + organization];
         delete jso["affiliate@" + organization];
 
-		if (member) {
+        if (member) {
             jso["member@" + organization] = date;
-		}
-		if (faculty) {
+        }
+        if (faculty) {
             jso["faculty@" + organization] = date;
-		}
-		if (affiliate) {
+        }
+        if (affiliate) {
             jso["affiliate@" + organization] = date;
-		}
+        }
 
-		return jso;
-	}-*/;
+        return jso;
+    }-*/;
 
 }

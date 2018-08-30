@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.setAffiliation.pages.affiliation;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -10,17 +11,25 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.model.PerunException;
-import cz.metacentrum.perun.wui.model.beans.*;
+import cz.metacentrum.perun.wui.model.beans.Attribute;
+import cz.metacentrum.perun.wui.model.beans.Group;
+import cz.metacentrum.perun.wui.model.beans.RichMember;
+import cz.metacentrum.perun.wui.model.beans.RichUser;
+import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.setAffiliation.client.resources.PerunSetAffiliationTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
-import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.CheckBox;
+import org.gwtbootstrap3.client.ui.Column;
+import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.Row;
+import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Text;
 import org.gwtbootstrap3.extras.select.client.ui.Option;
 import org.gwtbootstrap3.extras.select.client.ui.Select;
 
-import java.util.Iterator;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -198,7 +207,7 @@ public class AffiliationView extends ViewWithUiHandlers<AffiliationUiHandlers> i
 		for (RichMember m: members) {
 			Option option = new Option();
 			//we have fetched only user email - it has to be the first and only attribute we have received
-			option.setText(m.getUser().getFullName() + " < " + m.getUserAttributes().get(0).getValue() + ">");
+			option.setText(m.getUser().getFullName() + " <" + m.getUserAttributes().get(0).getValue().trim() + ">");
 			option.setValue(String.valueOf(m.getUserId()));
 			userSelect.add(option);
 		}
@@ -218,6 +227,14 @@ public class AffiliationView extends ViewWithUiHandlers<AffiliationUiHandlers> i
 		setupCheckboxes(false, true);
 		Map<String, JSONValue> attributeMap = assignedAffiliations.getValueAsMap();
 		for (Map.Entry<String, JSONValue> attr: attributeMap.entrySet()) {
+			DateTimeFormat dateFormat = DateTimeFormat.getFormat("yyyy-MM-dd");
+			Date expiration = dateFormat.parse(attr.getValue().isString().stringValue());
+			Date now = new Date();
+
+			if (now.after(expiration)) {
+				continue;
+			}
+
 			String[] parts = attr.getKey().replaceAll("\"", "").split("@");
 			switch (parts[0]) {
 				case "member": {
@@ -251,7 +268,6 @@ public class AffiliationView extends ViewWithUiHandlers<AffiliationUiHandlers> i
 		if (vos == null && groups == null) {
 			unauthorized();
 			return;
-			/*-{ console.log() }-*/
 		}
 
 		voGroupSel.setVisible(true);
