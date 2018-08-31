@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.setAffiliation.pages.affiliation;
 
-
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -35,6 +34,8 @@ public class AffiliationPresenter extends Presenter<AffiliationPresenter.MyView,
 		implements AffiliationUiHandlers {
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
+
+	private static final String PREFERRED_MAIL_ATTR = "urn:perun:user:attribute-def:def:preferredMail";
 
 	public interface MyView extends View, HasUiHandlers<AffiliationUiHandlers> {
 
@@ -117,7 +118,7 @@ public class AffiliationPresenter extends Presenter<AffiliationPresenter.MyView,
 	@Override
     public void loadUsers(String searchString) {
         ArrayList<String> attrs = new ArrayList<>();
-		attrs.add("urn:perun:user:attribute-def:def:preferredMail");
+		attrs.add(PREFERRED_MAIL_ATTR);
 
 		if (searchString == null || searchString.isEmpty()) {
 			UsersManager.getRichUsersWithAttributes(attrs, false, new JsonEvents() {
@@ -165,7 +166,7 @@ public class AffiliationPresenter extends Presenter<AffiliationPresenter.MyView,
         }
 
         List<String> attrs = new ArrayList<>();
-        attrs.add("urn:perun:user:attribute-def:def:preferredMail");
+        attrs.add(PREFERRED_MAIL_ATTR);
         MembersManager.getCompleteRichMembers(groupId, attrs, false, new JsonEvents(){
             @Override
             public void onFinished(JavaScriptObject result) {
@@ -193,7 +194,7 @@ public class AffiliationPresenter extends Presenter<AffiliationPresenter.MyView,
         }
 
         List<String> attrs = new ArrayList<>();
-        attrs.add("urn:perun:user:attribute-def:def:preferredMail");
+        attrs.add(PREFERRED_MAIL_ATTR);
         MembersManager.getCompleteRichMembers(voId, attrs, new JsonEvents(){
             @Override
             public void onFinished(JavaScriptObject result) {
