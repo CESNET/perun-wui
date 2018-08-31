@@ -104,7 +104,75 @@ body {
     table-layout: fixed !important;
 }
 
+.shellsList li {
+    float: left;
+    width: 100%;
+}
 
+.panelList li {
+    float: left;
+    width: 100%;
+    border-width: 1px 0px 0px 0px !important;
+}
+
+.panelList li:first-child {
+    border-width: 0px 0px 0px 0px !important;
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
+}
+
+.noPadding {
+    padding: 0px !important;
+}
+
+.preferredUnixGroupNamesPanel {
+    margin-bottom: 0px !important;
+}
+
+.requestQuotaChangeTable {
+    width: 100%;
+}
+
+.requestQuotaChangeDiv {
+    display: grid;
+    color: red;
+}
+
+.requestQuotaChangeDiv textArea {
+    color: #333;
+}
+
+.requestQuotaChangeTable td {
+    vertical-align: top;
+    padding-top: 25px;
+}
+
+.requestQuotaChangeValueTextBox {
+    width: 70% !important;
+    margin-right: 2px;
+}
+
+.requestQuotaChangeValueTextArea {
+    min-height: 100px;
+    max-height: 500px;
+    width: 100%;
+    resize: vertical;
+}
+
+.invalid {
+    border-color: rgba(220, 0, 0, 0.8);
+    outline: 0 none;
+}
+
+.invalid:focus {
+    border-color: rgba(220, 0, 0, 0.8);
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset, 0 0 8px rgba(220, 0, 0, 0.6);
+    outline: 0 none;
+}
+
+.requestQuotaChangeValueSelect {
+    width: 20%;
+}
 /* HACKS */
 @media screen and (max-width: 768px) {
     .mobileContainer {

@@ -12,4 +12,6 @@ public interface SshKeysUiHandlers extends UiHandlers {
 	void loadSshKeys();
 
 	void loadAdminSshKeys();
+
+	void navigateBack();
 }

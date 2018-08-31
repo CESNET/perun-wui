@@ -56,7 +56,7 @@ public class GroupsView extends ViewWithUiHandlers<GroupsUiHandlers> implements 
 		memberGroupsLabel.setText(translation.memberGroups());
 		adminGroupsLabel.setText(translation.adminGroups());
 
-		voSelect.setTitle(translation.select());
+		voSelect.setTitle(translation.choose());
 
 		voSelect.addValueChangeHandler(valueChangeEvent -> {
 			// set heading with vo name

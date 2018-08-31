@@ -17,9 +17,9 @@
 	<!-- Import place tokens -->
 	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens"/>
 
-	<b.html:Div>
+	<b.html:Div addStyleNames="{res.gss.page}">
 
-		<b:Heading size="H2" ui:field="pageTitle">
+		<b:Heading size="H2">
 
 			<b:Breadcrumbs addStyleNames="{res.gss.perunBreadcrumb}">
 				<b:AnchorListItem icon="GEAR" text="{trans.menuSettings}"
@@ -32,16 +32,20 @@
 			</b:Breadcrumbs>
 		</b:Heading>
 
-		<b:Alert ui:field="invalidValueAlert" type="DANGER" visible="false"/>
-		<b.html:Strong text="{trans.publicKey}"/>
-		<b:TextArea ui:field="newSshKeyTextArea" height="200px" placeholder="{trans.newSshKeyInfoText}"/>
-		<b:Button ui:field="addSshKeyButton" type="SUCCESS" text="{trans.addPublicKey}" marginRight="5" marginTop="20" />
-		<b:Button ui:field="cancelButton" type="DANGER" text="{trans.cancel}" addStyleNames="pull-right" marginTop="20"/>
-		<b:Progress ui:field="addSshKeyProgress" type="STRIPED" active="true"  visible="false">
-			<b:ProgressBar percent="100"/>
-		</b:Progress>
-		<b:Alert ui:field="addSshKeyAlert" type="DANGER" visible="false"/>
-		<p:PerunLoader ui:field="loader" visible="false" />
+		<b.html:Div>
+			<b:Button ui:field="backButton" text="{trans.back}" icon="ARROW_LEFT" type="WARNING" marginBottom="10" marginTop="10"/>
+		</b.html:Div>
+		<b.html:Div>
+			<b:Alert ui:field="invalidValueAlert" type="DANGER" visible="false"/>
+			<b.html:Strong text="{trans.publicKey}"/>
+			<b:TextArea ui:field="newSshKeyTextArea" height="200px" placeholder="{trans.newSshKeyInfoText}"/>
+			<b:Button ui:field="addSshKeyButton" type="SUCCESS" text="{trans.addPublicKey}" marginRight="5" marginTop="20" />
+			<b:Progress ui:field="addSshKeyProgress" type="STRIPED" active="true"  visible="false">
+				<b:ProgressBar percent="100"/>
+			</b:Progress>
+			<b:Alert ui:field="addSshKeyAlert" type="DANGER" visible="false"/>
+			<p:PerunLoader ui:field="loader" visible="false" />
+		</b.html:Div>
 
 	</b.html:Div>
 

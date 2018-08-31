@@ -18,17 +18,13 @@
 	<ui:with field="placeTokens" type="cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens"/>
 
 	<b.html:Div addStyleNames="{res.gss.page}">
-
-		<b:Heading size="H2">
+		<b:Heading size="H2" ui:field="pageTitle">
 
 			<b:Breadcrumbs addStyleNames="{res.gss.perunBreadcrumb}">
 				<b:AnchorListItem icon="GEAR" text="{trans.menuSettings}"
 								  targetHistoryToken="{placeTokens.getSettings}"/>
-				<b:ListItem addStyleNames="{res.gss.black}" >
-					<g:InlineHyperlink text="{trans.menuSettingsSshKeys}"
-									   targetHistoryToken="{placeTokens.getSettingsSshKeys}"/>
-				</b:ListItem>
-				<b:ListItem text="{trans.newPublicAdminKey}" />
+
+				<b:ListItem text="{trans.preferredShells}" />
 			</b:Breadcrumbs>
 		</b:Heading>
 
@@ -36,17 +32,23 @@
 			<b:Button ui:field="backButton" text="{trans.back}" icon="ARROW_LEFT" type="WARNING" marginBottom="10" marginTop="10"/>
 		</b.html:Div>
 
-		<b.html:Div>
-			<b:Alert ui:field="invalidValueAlert" type="DANGER" visible="false"/>
-			<b.html:Strong text="{trans.publicKey}"/>
-			<b:TextArea ui:field="newAdminSshKeyTextArea" height="200px" placeholder="{trans.newSshKeyInfoText}"/>
-			<b:Button ui:field="addAdminSshKeyButton" type="SUCCESS" text="{trans.addAdminPublicKey}" marginRight="5" marginTop="20" />
-			<b:Progress ui:field="addAdminSshKeyProgress" type="STRIPED" active="true"  visible="false">
-				<b:ProgressBar percent="100"/>
-			</b:Progress>
-			<b:Alert ui:field="addAdminSshKeyAlert" type="DANGER" visible="false"/>
-			<p:PerunLoader ui:field="loader" visible="false" />
-		</b.html:Div>
+		<b:html.Div>
+			<b:Alert text="{trans.preferredShellsInfo}" type="INFO"/>
+
+			<b:ListGroup ui:field="shellsListGroup" addStyleNames="{res.gss.shellsList}"/>
+			<p:PerunLoader ui:field="preferredShellsLoader" visible="false" />
+
+			<b:Button ui:field="addPreferredShellButton" type="SUCCESS" text="{trans.addPreferredShell}" icon="PLUS" marginTop="10"/>
+			<b:Modal ui:field="customPreferredShellModal" closable="true" fade="true"
+					 dataBackdrop="STATIC" dataKeyboard="true">
+				<b:ModalHeader title="{trans.customShellValueHeader}"/>
+				<b:ModalBody>
+					<b:Alert ui:field="customShellAlert" type="DANGER" visible="false"/>
+					<b:TextBox ui:field="customShellValueTextBox"/>
+					<b:Button ui:field="customShellValueButton" type="SUCCESS" text="{trans.updateValue}" marginTop="5"/>
+				</b:ModalBody>
+			</b:Modal>
+		</b:html.Div>
 
 	</b.html:Div>
 
