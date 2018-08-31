@@ -1,5 +1,4 @@
 <ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
-			 xmlns:g='urn:import:com.google.gwt.user.client.ui'
 			 xmlns:b='urn:import:org.gwtbootstrap3.client.ui'
 			 xmlns:b.html='urn:import:org.gwtbootstrap3.client.ui.html'
 			 xmlns:p='urn:import:cz.metacentrum.perun.wui.widgets'
@@ -35,35 +34,6 @@
 		<b:Heading size="H3" text="{trans.unixGroupNames}"/>
 
 		<b.html:Div ui:field="panelsDiv">
-			<!--<b:Panel addStyleNames="{res.gss.preferredUnixGroupNamesPanel}">-->
-				<!--<b:PanelHeader text="Group names in namespaces 'einfra'"/>-->
-				<!--<b:PanelBody addStyleNames="{res.gss.noPadding}">-->
-					<!--<b:ListGroup addStyleNames="{res.gss.panelList}">-->
-						<!--<b:ListGroupItem>-->
-							<!--<b.html:Strong text="administrators"/>-->
-							<!--<b.html:Span addStyleNames="pull-right">-->
-								<!--<b:Button type="INFO" text="Change"/>-->
-								<!--<b:Button type="DANGER" text="Remove"/>-->
-							<!--</b.html:Span>-->
-						<!--</b:ListGroupItem>-->
-						<!--<b:ListGroupItem>-->
-							<!--<b.html:Strong text="users"/>-->
-							<!--<b.html:Span addStyleNames="pull-right">-->
-								<!--<b:Button type="INFO" text="Change"/>-->
-								<!--<b:Button type="DANGER" text="Remove"/>-->
-							<!--</b.html:Span>-->
-						<!--</b:ListGroupItem>-->
-						<!--<b:ListGroupItem>-->
-							<!--<b.html:Strong text="members"/>-->
-							<!--<b.html:Span addStyleNames="pull-right">-->
-								<!--<b:Button type="INFO" text="Change"/>-->
-								<!--<b:Button type="DANGER" text="Remove"/>-->
-							<!--</b.html:Span>-->
-						<!--</b:ListGroupItem>-->
-					<!--</b:ListGroup>-->
-				<!--</b:PanelBody>-->
-			<!--</b:Panel>-->
-			<!--<b:Button type="SUCCESS" text="{trans.addPreferredShell}" icon="PLUS" marginTop="10" marginBottom="30"/>-->
 
 			<b:Modal ui:field="editPreferredNameModal" closable="true" fade="true"
 					 dataBackdrop="STATIC" dataKeyboard="true">

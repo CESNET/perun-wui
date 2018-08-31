@@ -89,11 +89,6 @@ public class DataQuotasPresenter extends Presenter<DataQuotasPresenter.MyView, D
 	}
 
 	@Override
-	protected void onReveal() {
-		GWT.log("REVEAL");
-	}
-
-	@Override
 	public void loadVos() {
 		Integer userId = PerunProfileUtils.getUserId(placeManager);
 

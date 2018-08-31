@@ -210,8 +210,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 
 				for (JavaScriptObject result : results) {
 					List<Group> groups = JsUtils.jsoAsList(result);
-					GWT.log(groups.toString());
-					resourcesGroups.add(JsUtils.jsoAsList(result));
+					resourcesGroups.add(groups);
 
 				}
 				Map<RichResource, List<Group>> resourceWithGroups = new HashMap<>();
