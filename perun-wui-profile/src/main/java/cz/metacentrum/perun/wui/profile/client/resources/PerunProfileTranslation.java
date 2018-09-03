@@ -244,7 +244,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Bona fide status")
 	String bonaFideStatus();
 
-	@DefaultMessage("List of preferred shells ordered from the most preferred to least is used to determine your shell on provided resources. If none of preferred shells is available on resource (or no preferred shell is set), resource''s default is used.")
+	@DefaultMessage("List of preferred shells (ordered from the most preferred to least) is used to determine your shell on provided resources. If none of preferred shells is available on resource (or no preferred shell is set), resource`s default is used.")
 	String preferredShellsInfo();
 
 	@DefaultMessage("Custom value")

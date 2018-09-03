@@ -90,7 +90,6 @@ public class DataQuotasPresenter extends Presenter<DataQuotasPresenter.MyView, D
 
 	@Override
 	protected void onReveal() {
-		GWT.log("REVEAL");
 	}
 
 	@Override

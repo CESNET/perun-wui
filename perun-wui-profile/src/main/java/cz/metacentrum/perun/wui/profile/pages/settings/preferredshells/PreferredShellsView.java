@@ -135,18 +135,6 @@ public class PreferredShellsView extends ViewWithUiHandlers<PreferredShellsUiHan
 			buttonGroup.add(editButton);
 			buttonGroup.add(editShellMenu);
 
-
-			ButtonGroup grp = new ButtonGroup();
-			PerunButton btn = new PerunButton();
-			btn.setIcon(IconType.CHEVRON_UP);
-
-			PerunButton btn2 = new PerunButton();
-			btn2.setIcon(IconType.CHEVRON_DOWN);
-
-			grp.add(btn);
-			grp.add(btn2);
-
-			span.add(grp);
 			span.add(buttonGroup);
 			span.add(removeButton);
 

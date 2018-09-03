@@ -290,12 +290,10 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 				String href;
 				String hrefText;
-				GWT.log(s.trim());
 				// check if the link contains text
 				if (s.trim().matches(".*\\{.*}.*")) {
 					String[] split = s.split("}");
 
-					GWT.log(split[0]);
 					// append the text after the link text
 					if (split.length > 1) {
 						textEl.setText("");

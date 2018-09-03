@@ -146,8 +146,8 @@ public class DataQuotasView extends ViewWithUiHandlers<DataQuotasUiHandlers> imp
 
 			// FIXME: Hack used HERE
 			// This anonymous class remembers value of previous valueChangeEvent to
-			// disable calling the same operation multiple times. Basically it this
-			// should not happen, when value is changed it should be only fired when
+			// disable calling the same operation multiple times. Although, this
+			// should not happen. When the value is changed it should be only fired when
 			// the current value is different than the previous one, but it happens.
 			// This hack fixes the 'Bug?'
 			private String previousValue;
