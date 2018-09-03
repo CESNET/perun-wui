@@ -7,12 +7,12 @@
     <parent>
         <artifactId>wui</artifactId>
         <groupId>cz.metacentrum.perun</groupId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.1.0</version>
     </parent>
 
     <groupId>cz.metacentrum.perun.wui</groupId>
     <artifactId>perun-wui-cabinet</artifactId>
-    <version>3.0.1-SNAPSHOT-${perun.build.type}</version>
+    <version>3.1.0</version>
     <packaging>war</packaging>
 
     <name>perun-wui-cabinet</name>
@@ -28,7 +28,7 @@
         <!-- Convenience property to set the GWT version
         <gwtVersion>2.7.0-SNAPSHOT</gwtVersion>
         <gwtPluginVersion>2.7.0-beta1</gwtPluginVersion>-->
-        <webappDirectory>${project.build.directory}/${project.build.finalName}</webappDirectory>
+        <webappDirectory>${project.build.directory}/${project.name}</webappDirectory>
     </properties>
 
     <build>
@@ -99,7 +99,7 @@
                 </executions>
                 <configuration>
                     <webappDirectory>${webappDirectory}</webappDirectory>
-                    <warName>perun-wui-cabinet-${perun.build.type}</warName>
+                    <warName>perun-wui-cabinet</warName>
                 </configuration>
             </plugin>
 
@@ -118,12 +118,10 @@
                 <!-- Plugin configuration. There are many available options, see
                   gwt-maven-plugin documentation at codehaus.org -->
                 <configuration>
-                    <module>cz.metacentrum.perun.wui.cabinet.perun-cabinet-dev</module>
+                    <module>cz.metacentrum.perun.wui.cabinet.perun-cabinet</module>
                     <runTarget>PerunCabinet.html</runTarget>
                     <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <!-- skip code optimization for devel not necessary -->
-                    <draftCompile>true</draftCompile>
-                    <persistentunitcache>false</persistentunitcache>
+                    <outputDirectory>${webappDirectory}</outputDirectory>
                 </configuration>
 
             </plugin>
@@ -132,15 +130,8 @@
 
         <resources>
             <resource>
-                <directory>src/main/resources/devel/</directory>
+                <directory>src/main/resources/</directory>
                 <filtering>true</filtering>
-                <includes>
-                    <include>**/*.properties</include>
-                    <include>**/*.gwt.xml</include>
-                </includes>
-            </resource>
-            <resource>
-                <directory>src/main/resources/common/</directory>
             </resource>
         </resources>
     </build>
@@ -194,67 +185,5 @@
         </dependency>
 
     </dependencies>
-
-    <profiles>
-
-        <profile>
-
-            <id>production</id>
-
-	        <activation>
-		        <property>
-			        <name>production</name>
-		        </property>
-	        </activation>
-
-            <properties>
-                <perun.build.type>production</perun.build.type>
-                <maven.test.skip>true</maven.test.skip>
-            </properties>
-
-            <build>
-
-                <plugins>
-
-                    <!-- GWT Maven Plugin -->
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>gwt-maven-plugin</artifactId>
-                        <version>${gwtPluginVersion}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <!-- Plugin configuration. There are many available options, see
-                          gwt-maven-plugin documentation at codehaus.org -->
-                        <configuration>
-                            <module>cz.metacentrum.perun.wui.cabinet.perun-cabinet</module>
-                            <runTarget>PerunCabinet.html</runTarget>
-                            <hostedWebapp>${webappDirectory}</hostedWebapp>
-                        </configuration>
-                    </plugin>
-
-                </plugins>
-
-                <resources>
-                    <resource>
-                        <directory>src/main/resources/production/</directory>
-                        <filtering>true</filtering>
-                        <includes>
-                            <include>**/*.properties</include>
-                        </includes>
-                    </resource>
-                    <resource>
-                        <directory>src/main/resources/common/</directory>
-                    </resource>
-                </resources>
-
-            </build>
-        </profile>
-
-    </profiles>
 
 </project>
