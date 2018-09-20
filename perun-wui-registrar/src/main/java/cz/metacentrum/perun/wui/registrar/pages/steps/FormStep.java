@@ -23,7 +23,7 @@ public abstract class FormStep implements Step {
 	protected Result result;
 
 	enum Type {
-		GROUP, VO_INIT, VO_EXT;
+		GROUP_INIT, GROUP_EXT, VO_INIT, VO_EXT;
 	}
 
 	public FormStep(RegistrarObject registrar, PerunForm form) {

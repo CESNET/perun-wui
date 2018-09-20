@@ -298,6 +298,8 @@ public class ErrorReporter {
 	 */
 	private static void clearPasswords(JSONObject object) {
 
+		if (object == null) return;
+
 		for (String key : object.keySet()) {
 			if (key.equals("oldPassword") || key.equals("newPassword") || key.equals("password")) {
 				object.put(key, new JSONString(""));

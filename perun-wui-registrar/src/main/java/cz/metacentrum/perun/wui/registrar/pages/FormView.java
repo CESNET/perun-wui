@@ -36,6 +36,7 @@ import cz.metacentrum.perun.wui.registrar.client.ExceptionResolverImpl;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.pages.steps.FormStepManager;
+import cz.metacentrum.perun.wui.registrar.pages.steps.GroupExtStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.GroupInitStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.StepManager;
 import cz.metacentrum.perun.wui.registrar.pages.steps.Summary;
@@ -228,6 +229,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			if (voInitialFormExists(registrar)) {
 
+				// vo initial can't have group extension
 				stepManager.addStep(new VoInitStep(registrar, form));
 				stepManager.addStep(new GroupInitStep(registrar, form));
 				stepManager.addStep(new SummaryStep(formView));
@@ -235,7 +237,12 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			} else if (voExtensionFormExists(registrar)) {
 
-				stepManager.addStep(new GroupInitStep(registrar, form));
+				if (isMemberOfGroup(registrar)) {
+					// only members with correct extension form can extend
+					stepManager.addStep(new GroupExtStep(registrar, form));
+				} else {
+					stepManager.addStep(new GroupInitStep(registrar, form));
+				}
 				for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
 					if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
 							!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
@@ -252,7 +259,13 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				// Because vo initial form can be empty (admin did not create it).
 				if (!isMemberOfVo(registrar) && !appliedToVo(registrar))
 					stepManager.addStep(new VoInitStep(registrar, form));
-				stepManager.addStep(new GroupInitStep(registrar, form));
+
+				if (isMemberOfGroup(registrar)) {
+					// only members with correct extension form can extend
+					stepManager.addStep(new GroupExtStep(registrar, form));
+				} else {
+					stepManager.addStep(new GroupInitStep(registrar, form));
+				}
 				stepManager.addStep(new SummaryStep(formView));
 				stepManager.begin();
 
@@ -301,6 +314,10 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		return !ro.getGroupFormInitial().isEmpty();
 	}
 
+	private boolean groupExtensionFormExists(RegistrarObject ro) {
+		return !ro.getGroupFormExtension().isEmpty();
+	}
+
 	private boolean isMemberOfVo(RegistrarObject ro) {
 		if (ro.getVoFormInitialException() == null) {
 			return false;
@@ -311,6 +328,18 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			return false;
 		}
 	}
+
+	private boolean isMemberOfGroup(RegistrarObject ro) {
+		if (ro.getGroupFormInitialException() == null) {
+			return false;
+		}
+		if (ro.getGroupFormInitialException().getName().equals("AlreadyRegisteredException")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	private boolean appliedToVo(RegistrarObject ro) {
 		if (ro.getVoFormInitialException() == null) {
 			return false;

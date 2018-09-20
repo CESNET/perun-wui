@@ -9,32 +9,38 @@ package cz.metacentrum.perun.wui.registrar.pages.steps;
  */
 public interface Summary {
 
-    void addResult(Result result);
+	void addResult(Result result);
 
-    boolean containsGroupResult();
+	boolean containsGroupInitResult();
 
-    boolean containsVoExtResult();
+	boolean containsGroupExtResult();
 
-    boolean containsVoInitResult();
+	boolean containsVoExtResult();
 
-    Result getGroupResult();
+	boolean containsVoInitResult();
 
-    Result getVoExtResult();
+	Result getGroupInitResult();
 
-    Result getVoInitResult();
+	Result getGroupExtResult();
 
-    boolean alreadyAppliedToVo();
+	Result getVoExtResult();
 
-    boolean alreadyAppliedToGroup();
+	Result getVoInitResult();
 
-    boolean alreadyAppliedForExtension();
+	boolean alreadyAppliedToVo();
 
-    boolean alreadyMemberOfVo();
+	boolean alreadyAppliedToGroup();
 
-    boolean alreadyMemberOfGroup();
+	boolean alreadyAppliedForVoExtension();
 
-    boolean isEmpty();
+	boolean alreadyAppliedForGroupExtension();
 
-    String mustRevalidateEmail();
+	boolean alreadyMemberOfVo();
+
+	boolean alreadyMemberOfGroup();
+
+	boolean isEmpty();
+
+	String mustRevalidateEmail();
 
 }

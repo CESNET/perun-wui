@@ -8,15 +8,15 @@ import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 
 /**
- * Represents group initial application form step.
+ * Represents group extension application form step.
  *
- * @author Ondrej Velisek <ondrejvelisek@gmail.com>
+ * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
-public class GroupInitStep extends FormStep {
+public class GroupExtStep extends FormStep {
 
-	public GroupInitStep(RegistrarObject registrar, PerunForm form) {
+	public GroupExtStep(RegistrarObject registrar, PerunForm form) {
 		super(registrar, form);
-		this.result = new Result(Type.GROUP_INIT, registrar.getGroup(), registrar.hasGroupFormAutoApproval());
+		this.result = new Result(Type.GROUP_EXT, registrar.getGroup(), registrar.hasGroupFormAutoApprovalExtension());
 	}
 
 	@Override
@@ -24,22 +24,22 @@ public class GroupInitStep extends FormStep {
 
 		events.onLoadingStart();
 
-		if (registrar.getGroupFormInitialException() != null) {
-			result.setException(registrar.getGroupFormInitialException());
+		if (registrar.getGroupFormExtensionException() != null) {
+			result.setException(registrar.getGroupFormExtensionException());
 			events.onFinished(getResult());
 			return;
 		}
 
-		form.setFormItems(registrar.getGroupFormInitial());
+		form.setFormItems(registrar.getGroupFormExtension());
 
 		if (!form.containsSubmitButton()) {
-			PerunException ex = PerunException.createNew("0", "FormWrongFormedException", "Registration group form is wrong formed.");
+			PerunException ex = PerunException.createNew("0", "FormWrongFormedException", "Group extension form is wrongly formed.");
 			result.setException(ex);
 			events.onError(ex);
 			return;
 		}
 
-		form.setApp(Application.createNew(registrar.getVo(), registrar.getGroup(), Application.ApplicationType.INITIAL,
+		form.setApp(Application.createNew(registrar.getVo(), registrar.getGroup(), Application.ApplicationType.EXTENSION,
 				getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa(), pp.getUser()));
 
 		form.setOnSubmitEvent(getOnSubmitEvent(events));

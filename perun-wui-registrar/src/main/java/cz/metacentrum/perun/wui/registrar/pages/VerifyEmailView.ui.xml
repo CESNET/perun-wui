@@ -11,7 +11,7 @@
 
 	<b:Container>
 		<b:Row>
-			<b:Column size="MD_12">
+			<b:Column size="MD_12" ui:field="content">
 
 				<b:Heading size="H2" ui:field="pageTitle">
 					<b:Icon ui:field="icon" type="ENVELOPE" fixedWidth="true" />
@@ -23,6 +23,8 @@
 				</b:Alert>
 
 				<p:PerunLoader ui:field="loader" />
+
+				<p:PerunButton ui:field="continueButton" icon="CHEVRON_RIGHT" type="SUCCESS" visible="false" iconPosition="RIGHT" />
 
 			</b:Column>
 		</b:Row>
