@@ -66,6 +66,15 @@ public class RegistrarObject extends JavaScriptObject {
 	}
 
 	/**
+	 * Check if group has automatic approval of extension application
+	 *
+	 * @return true if automatic approval is activated
+	 */
+	public final boolean hasGroupFormAutoApprovalExtension() {
+		return JsUtils.getNativePropertyBoolean(JsUtils.getNativePropertyObject(this, "groupForm"), "automaticApprovalExtension");
+	}
+
+	/**
 	 * Get group
 	 *
 	 * @return Group
@@ -136,6 +145,27 @@ public class RegistrarObject extends JavaScriptObject {
 	public final PerunException getGroupFormInitialException() {
 		if (JsUtils.getNativePropertyObject(this, "groupFormInitialException") != null) {
 			return JsUtils.getNativePropertyObject(this, "groupFormInitialException").cast();
+		}
+		return null;
+	}
+
+	/**
+	 * Get groups extension form
+	 *
+	 * @return groups extension form
+	 */
+	public final ArrayList<ApplicationFormItemData> getGroupFormExtension() {
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "groupFormExtension"));
+	}
+
+	/**
+	 * Get group extension form exception if any
+	 *
+	 * @return Group extension form exception if any
+	 */
+	public final PerunException getGroupFormExtensionException() {
+		if (JsUtils.getNativePropertyObject(this, "groupFormExtensionException") != null) {
+			return JsUtils.getNativePropertyObject(this, "groupFormExtensionException").cast();
 		}
 		return null;
 	}

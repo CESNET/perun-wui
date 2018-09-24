@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
@@ -13,9 +14,19 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
+import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import org.gwtbootstrap3.client.ui.Alert;
+import org.gwtbootstrap3.client.ui.Column;
+import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
+import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
+import org.gwtbootstrap3.client.ui.constants.ColumnSize;
+import org.gwtbootstrap3.client.ui.constants.HeadingSize;
+import org.gwtbootstrap3.client.ui.constants.IconSize;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.constants.Pull;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 /**
@@ -27,6 +38,7 @@ public class VerifyEmailView extends ViewImpl implements VerifyEmailPresenter.My
 
 	private String i;
 	private String m;
+	private String target;
 
 	@UiField
 	Alert result;
@@ -36,6 +48,11 @@ public class VerifyEmailView extends ViewImpl implements VerifyEmailPresenter.My
 
 	@UiField
 	Text text;
+
+	@UiField
+	PerunButton continueButton;
+
+	@UiField Column content;
 
 	interface VerifyEmailViewUiBinder extends UiBinder<Widget, VerifyEmailView> {
 	}
@@ -49,6 +66,7 @@ public class VerifyEmailView extends ViewImpl implements VerifyEmailPresenter.My
 
 		i = Window.Location.getParameter("i");
 		m = Window.Location.getParameter("m");
+		target = Window.Location.getParameter("target");
 
 	}
 
@@ -59,11 +77,53 @@ public class VerifyEmailView extends ViewImpl implements VerifyEmailPresenter.My
 		loader.onFinished();
 
 		if (verified) {
+
 			result.setType(AlertType.SUCCESS);
 			result.setText(translation.emailWasVerified());
+
+			if (target != null && !target.isEmpty()) {
+
+				continueButton.setText(translation.continueButton());
+				continueButton.setVisible(true);
+				continueButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+
+						Heading head = new Heading(HeadingSize.H4, translation.redirectingBackToService());
+						Icon spin = new Icon(IconType.SPINNER);
+						spin.setSpin(true);
+						spin.setSize(IconSize.LARGE);
+						spin.setPull(Pull.LEFT);
+						spin.setMarginTop(10);
+
+						Column column = new Column(ColumnSize.MD_8, ColumnSize.LG_6, ColumnSize.SM_10, ColumnSize.XS_12);
+						column.setOffset(ColumnOffset.MD_2,ColumnOffset.LG_3,ColumnOffset.SM_1,ColumnOffset.XS_0);
+
+						column.add(spin);
+						column.add(head);
+						column.setMarginTop(30);
+
+						content.add(column);
+						continueButton.setVisible(false);
+
+						// WAIT 4 SEC BEFORE REDIRECT
+						Timer timer = new Timer() {
+							@Override
+							public void run() {
+								Window.Location.assign(target);
+							}
+						};
+						timer.schedule(7000);
+					}
+				});
+
+			}
+
 		} else {
+
 			result.setType(AlertType.DANGER);
 			result.setText(translation.emailWasNotVerified());
+
 		}
 
 	}

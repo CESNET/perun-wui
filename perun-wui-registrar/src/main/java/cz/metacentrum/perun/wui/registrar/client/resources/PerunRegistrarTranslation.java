@@ -56,14 +56,17 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 			"Without verification it is not possible to approve your application.")
 	public String verifyMail(String mail);
 
-	@DefaultMessage("Please wait until your application will be approved.")
+	@DefaultMessage("Please wait until your application will be approved. You will be informed by email once your application is either approved or rejected.")
 	public String waitForAcceptation();
 
-	@DefaultMessage("Please wait until your application for membership extension will be approved.")
+	@DefaultMessage("Please wait until your application for membership extension will be approved. You will be informed by email once your application is either approved or rejected.")
 	public String waitForExtAcceptation();
 
 	@DefaultMessage("After acceptation you will become member of \"{0}\" automatically.")
 	String waitForVoAcceptation(String groupName);
+
+	@DefaultMessage("After acceptation you will become member of \"{0}\" automatically.")
+	String waitForVoExtension(String groupName);
 
 	@DefaultMessage("You are now a member of {0}.")
 	public String registered(String voOrGroupName);
@@ -250,8 +253,8 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You can`t extend membership right now")
 	public String cantExtendMembership();
 
-	@DefaultMessage("<b>Your membership is valid until {0}.</b> Membership can be extended only in a short time before membership expiration or after. ")
-	public String cantExtendMembershipOutside(String expirationDate);
+	@DefaultMessage("<b>Your membership in <i>{1}</i> is valid until {0}.</b> Membership can be extended only in a short time before membership expiration or after. ")
+	public String cantExtendMembershipOutside(String expirationDate, String name);
 
 	@DefaultMessage("You don`t have required Level of Assurance (LoA) to extend membership. Contact your IDP ({0}) and prove your identity to him by official ID card (passport, driving license). If you have another identity with higher Level of Assurance, try to use it instead.")
 	public String cantExtendMembershipInsufficientLoa(String idpName);

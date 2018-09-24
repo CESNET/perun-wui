@@ -10,6 +10,7 @@ import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Group;
+import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 
 import java.util.Objects;
@@ -170,7 +171,14 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			String exceptionText = "<i>unlimited</i>";
 			if (exception.getExpirationDate() != null) exceptionText = exception.getExpirationDate().split(" ")[0];
-			setInfo(trans.cantExtendMembership(), trans.cantExtendMembershipOutside(exceptionText));
+			String entityName = "";
+			if ("Group".equals(getBean().getObjectType())) {
+				entityName = ((Group)getBean()).getShortName();
+			} else {
+				entityName = ((Vo)getBean()).getName();
+			}
+
+			setInfo(trans.cantExtendMembership(), trans.cantExtendMembershipOutside(exceptionText, entityName));
 
 		} else if (exception.getReason().equals("NOUSERLOA")) {
 
