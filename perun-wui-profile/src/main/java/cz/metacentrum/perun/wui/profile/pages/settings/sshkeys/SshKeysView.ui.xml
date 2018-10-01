@@ -20,7 +20,7 @@
 	<b.html:Div addStyleNames="{res.gss.page}">
 
 		<b:Heading size="H2" marginTop="5" >
-			<b:Button ui:field="backButton" text="{trans.back}" icon="CHEVRON_LEFT" type="DEFAULT" pull="LEFT" marginRight="10" />
+
 			<b:Breadcrumbs addStyleNames="{res.gss.perunBreadcrumb}">
 				<b:AnchorListItem icon="GEAR" text="{trans.menuSettings}"
 								  targetHistoryToken="{placeTokens.getSettings}"/>
@@ -29,7 +29,7 @@
 		</b:Heading>
 
 		<b.html:Div>
-
+			<b:Button ui:field="backButton" text="{trans.back}" icon="CHEVRON_LEFT" type="DEFAULT" marginBottom="10" marginTop="10" />
 		</b.html:Div>
 
 		<b:Heading size="H3" text="{trans.sshKeys}"/>
