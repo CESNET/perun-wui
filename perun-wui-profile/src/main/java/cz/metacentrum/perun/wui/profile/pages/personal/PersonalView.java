@@ -282,37 +282,39 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		Span descriptionSpan = new Span();
 		Text textEl = new Text();
 
-		for (String s : text.split("\\s+")) {
-			// if the given substring is link
-			if (s.startsWith("http")) {
-				descriptionSpan.add(textEl);
-				textEl = new Text(" ");
+		if (text != null) {
+			for (String s : text.split("\\s+")) {
+				// if the given substring is link
+				if (s.startsWith("http")) {
+					descriptionSpan.add(textEl);
+					textEl = new Text(" ");
 
-				String href;
-				String hrefText;
-				// check if the link contains text
-				if (s.trim().matches(".*\\{.*}.*")) {
-					String[] split = s.split("}");
+					String href;
+					String hrefText;
+					// check if the link contains text
+					if (s.trim().matches(".*\\{.*}.*")) {
+						String[] split = s.split("}");
 
-					// append the text after the link text
-					if (split.length > 1) {
-						textEl.setText("");
-						for(int i = 1; i < split.length; i++) {
-							textEl.setText(textEl.getText() + split[i]);
+						// append the text after the link text
+						if (split.length > 1) {
+							textEl.setText("");
+							for(int i = 1; i < split.length; i++) {
+								textEl.setText(textEl.getText() + split[i]);
+							}
 						}
+
+						split = s.split("\\{");
+
+						href = split[0];
+						hrefText = split[1].substring(0, split[1].indexOf("}"));
+					} else {
+						href = s;
+						hrefText = s;
 					}
-
-					split = s.split("\\{");
-
-					href = split[0];
-					hrefText = split[1].substring(0, split[1].indexOf("}"));
+					descriptionSpan.add(new Anchor(hrefText, href));
 				} else {
-					href = s;
-					hrefText = s;
+					textEl.setText(textEl.getText() + s + " ");
 				}
-				descriptionSpan.add(new Anchor(hrefText, href));
-			} else {
-				textEl.setText(textEl.getText() + s + " ");
 			}
 		}
 
@@ -327,23 +329,31 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		Column nameColumn = new Column(ColumnSize.SM_3, ColumnSize.XS_3);
 		nameColumn.addStyleName(PerunProfileResources.INSTANCE.gss().personalInfoLabel());
 		String urn = personalAttribute.getUrn();
+		String name;
 
-		// check if translated name is available
-		String translatedName = attributeNamesTranslations.get(urn);
-		if (translatedName == null) {
-			if (defaultName != null) {
-				translatedName = defaultName;
-			} else {
-				// parse name from urn
-				String[] split = urn.split(":");
-				if (split.length < 1) {
-					return nameColumn;
+		// check if there is name from configuration for current locale
+		String configName = personalAttribute.getLocalizedName(Utils.getLocale());
+		if (configName != null) {
+			name = configName;
+		} else {
+			// check if translated name is available
+			String translatedName = attributeNamesTranslations.get(urn);
+			if (translatedName == null) {
+				if (defaultName != null) {
+					translatedName = defaultName;
+				} else {
+					// parse name from urn
+					String[] split = urn.split(":");
+					if (split.length == 1) {
+						translatedName = split[split.length - 1];
+					}
 				}
-				translatedName = split[split.length - 1];
 			}
+
+			name = translatedName;
 		}
 
-		Text nameText = new Text(translatedName);
+		Text nameText = new Text(name);
 
 		nameColumn.add(nameText);
 
