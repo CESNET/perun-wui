@@ -32,6 +32,8 @@ import cz.metacentrum.perun.wui.profile.pages.resources.ResourcesPresenter;
 import cz.metacentrum.perun.wui.profile.pages.resources.ResourcesView;
 import cz.metacentrum.perun.wui.profile.pages.settings.SettingsPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.SettingsView;
+import cz.metacentrum.perun.wui.profile.pages.settings.altPasswords.AltPasswordsPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.altPasswords.AltPasswordsView;
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysView;
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newadminsshkey.NewAdminSshKeyPresenter;
@@ -78,6 +80,7 @@ public class PerunProfile extends AbstractPresenterModule implements EntryPoint 
 		bindPresenter(PreferredGroupNamesPresenter.class, PreferredGroupNamesPresenter.MyView.class, PreferredGroupNamesView.class, PreferredGroupNamesPresenter.MyProxy.class);
 		bindPresenter(PreferredShellsPresenter.class, PreferredShellsPresenter.MyView.class, PreferredShellsView.class, PreferredShellsPresenter.MyProxy.class);
 		bindPresenter(DataQuotasPresenter.class, DataQuotasPresenter.MyView.class, DataQuotasView.class, DataQuotasPresenter.MyProxy.class);
+		bindPresenter(AltPasswordsPresenter.class, AltPasswordsPresenter.MyView.class, AltPasswordsView.class, AltPasswordsPresenter.MyProxy.class);
 
 		// pre-defined places
 		bindConstant().annotatedWith(DefaultPlace.class).to(PerunProfilePlaceTokens.PERSONAL);

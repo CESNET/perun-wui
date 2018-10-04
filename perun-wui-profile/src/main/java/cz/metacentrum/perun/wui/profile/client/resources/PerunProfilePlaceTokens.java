@@ -25,6 +25,7 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 	public static final String SETTINGS_PREFERREDSHELLS = SETTINGS + "_preferredshells";
 	public static final String SETTINGS_PREFERREDGROUPNAMES = SETTINGS + "_preferredgroupnames";
 	public static final String SETTINGS_DATAQUOTAS = SETTINGS + "_dataquotas";
+	public static final String SETTINGS_ALTPASSWORDS = SETTINGS + "_altpasswords";
 
 	public static String getCompleteInfo() {
 		return COMPLETE_INFO;
@@ -85,5 +86,9 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 
 	public static String getSettingsDataquotas() {
 		return SETTINGS_DATAQUOTAS;
+	}
+
+	public static String getSettingsAltPasswords() {
+		return SETTINGS_ALTPASSWORDS;
 	}
 }

@@ -319,4 +319,40 @@ public class UsersManager {
 		if (user > 0) client.put("user", user);
 		return client.call(USERS_MANAGER + "getVosWhereUserIsAdmin");
 	}
+
+	/**
+	 * Creates alernative password for specified user.
+	 *
+	 * @param user password will be set for this user
+	 * @param description description of the password
+	 * @param loginNamespace
+	 * @param password password itself
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request createAltPassword(int user, String description, String loginNamespace, String password, JsonEvents events){
+		JsonClient client = new JsonClient(events);
+		if (user > 0) client.put("user", user);
+		if (description != null && !description.isEmpty()) client.put("description", description);
+		if (loginNamespace != null && !loginNamespace.isEmpty()) client.put("loginNamespace", loginNamespace);
+		if (password != null && !password.isEmpty()) client.put("password", password);
+		return client.call(USERS_MANAGER + "createAlternativePassword");
+	}
+
+	/**
+	 * Deletes alernative password for specified user.
+	 *
+	 * @param user password will be set for this user
+	 * @param loginNamespace
+	 * @param passwordId Id of the password to be deleted
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request deleteAltPassword(int user, String loginNamespace, String passwordId, JsonEvents events){
+		JsonClient client = new JsonClient(events);
+		if (user > 0) client.put("user", user);
+		if (loginNamespace != null && !loginNamespace.isEmpty()) client.put("loginNamespace", loginNamespace);
+		if (passwordId != null && !passwordId.isEmpty()) client.put("passwordId", passwordId);
+		return client.call(USERS_MANAGER + "deleteAlternativePassword");
+	}
 }
