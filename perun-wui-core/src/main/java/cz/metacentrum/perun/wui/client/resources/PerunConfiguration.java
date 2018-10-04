@@ -4,6 +4,7 @@ import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.i18n.client.LocaleInfo;
 import com.google.gwt.user.client.Window;
+import cz.metacentrum.perun.wui.client.resources.beans.Locale;
 import cz.metacentrum.perun.wui.client.resources.beans.PersonalAttribute;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -715,6 +716,10 @@ public final class PerunConfiguration {
 	 */
 	private static PersonalAttribute parsePersonalAttribute(String value) {
 		PersonalAttribute attribute = new PersonalAttribute();
+		value = value.trim();
+		if (value.startsWith("[")) {
+			value = parseLocalizedNames(value, attribute);
+		}
 		String split[] = value.split("\\[");
 		String name = split[0].trim();
 		attribute.setUrn(name);
@@ -728,16 +733,48 @@ public final class PerunConfiguration {
 		String enDescription = nextSplit[0].trim();
 		if (nextSplit.length == 1) {
 			enDescription = enDescription.replace("]", "");
-			attribute.addDescription("en", enDescription);
+			attribute.addDescription(Locale.EN, enDescription);
 			return attribute;
 		}
-		attribute.addDescription("en", enDescription);
+		attribute.addDescription(Locale.EN, enDescription);
 
 		String csDescription = nextSplit[1].replace("]", "").trim();
 
-		attribute.addDescription("cs", csDescription);
+		attribute.addDescription(Locale.CS, csDescription);
 
 		return attribute;
+	}
+
+	/**
+	 * Parse name values from given value and returns the rest of the String.
+	 * E.g.: if '[EnName,CzName]urn:perun:user:attribute-def:def:organization[EnDescription|CzDescription]'
+	 * is given, then EnName and CzName are parsed and 
+	 * 'urn:perun:user:attribute-def:def:organization[EnDescription|CzDescription]'
+	 * is returned.
+	 * 
+	 * @param value String starting with [EnName{|CzName}] where the cz name is optional.
+	 * @param attribute personal attribute where the data are being stored.
+	 * @return rest of the string without name part
+	 */
+	private static String parseLocalizedNames(String value, PersonalAttribute attribute) {
+		String namesPart = value.substring(0, value.indexOf("]") + 1);
+		String rest = value.substring(namesPart.length());
+
+		String[] split = namesPart
+				.trim()
+				.replaceFirst("\\[", "")
+				.replaceFirst("]", "")
+				.split("\\|");
+		
+		String enName = split[0];
+		attribute.addName(Locale.EN, enName);
+
+		if (split.length > 1) {
+			String czName = split[1];
+			attribute.addName(Locale.CS, czName);
+		}
+
+		return rest;
 	}
 
 	private void PerunConfiguration() {

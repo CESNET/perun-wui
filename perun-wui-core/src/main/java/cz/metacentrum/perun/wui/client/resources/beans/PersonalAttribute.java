@@ -11,7 +11,8 @@ import java.util.Map;
 public class PersonalAttribute {
 
 	private String urn;
-	private Map<String, String> localizedDescriptions = new HashMap<>();
+	private Map<Locale, String> localizedDescriptions = new HashMap<>();
+	private Map<Locale, String> localizedNames = new HashMap<>();
 
 	public String getUrn() {
 		return urn;
@@ -21,21 +22,35 @@ public class PersonalAttribute {
 		this.urn = urn;
 	}
 
-	public void addDescription(String language, String description) {
-		this.localizedDescriptions.put(language, description);
+	public void addDescription(Locale locale, String description) {
+		this.localizedDescriptions.put(locale, description);
 	}
 
-	public Map<String, String> getLocalizedDescriptions() {
+	public Map<Locale, String> getLocalizedDescriptions() {
 		return localizedDescriptions;
 	}
 
-	public String getLocalizedDescription(String locale) {
-		for (String descriptionLocale : localizedDescriptions.keySet()) {
-			if (locale.contains(descriptionLocale)) {
+	public void addName(Locale locale, String description) {
+		this.localizedNames.put(locale, description);
+	}
+
+	public String getLocalizedName(Locale locale) {
+		for (Locale nameLocale : localizedNames.keySet()) {
+			if (locale == nameLocale) {
+				return localizedNames.get(nameLocale);
+			}
+		}
+
+		return null;
+	}
+
+	public String getLocalizedDescription(Locale locale) {
+		for (Locale descriptionLocale : localizedDescriptions.keySet()) {
+			if (locale == descriptionLocale) {
 				return localizedDescriptions.get(descriptionLocale);
 			}
 		}
 
-		return "";
+		return null;
 	}
 }

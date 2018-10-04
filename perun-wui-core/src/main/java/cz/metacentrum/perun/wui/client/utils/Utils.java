@@ -11,11 +11,19 @@ import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
+import cz.metacentrum.perun.wui.client.resources.beans.Locale;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import org.gwtbootstrap3.extras.animate.client.ui.constants.Animation;
 import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
 
 /**
  * Class with support methods used in GUI code
@@ -1452,12 +1460,17 @@ public class Utils {
 	}
 
 	/**
-	 * Returns content of element meta-lang withou the starting "locale=" string
+	 * Returns Locale parsed from element meta-lang. If there is unknown locale, EN is returned.
 	 *
-	 * @return
+	 * @return Locale
 	 */
-	public static String getLocale() {
+	public static Locale getLocale() {
 		Element ele = Document.get().getElementById("meta-lang");
-		return ele.getAttribute("content").replace("locale=", "");
+		String localeString = ele.getAttribute("content").replace("locale=", "");
+		Locale locale = Locale.fromString(localeString);
+		if (locale == null) {
+			locale = Locale.EN;
+		}
+		return locale;
 	}
 }
