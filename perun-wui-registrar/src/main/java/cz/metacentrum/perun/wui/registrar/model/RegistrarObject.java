@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.registrar.model;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.*;
@@ -192,5 +193,44 @@ public class RegistrarObject extends JavaScriptObject {
 	public final ArrayList<Identity> getSimilarUsers() {
 		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "similarUsers"));
 	}
+
+	/**
+	 * Set Group initial form content to the registrar object
+	 *
+	 * @param form form to be set
+	 */
+	public final void setGroupFormInitial(ArrayList<ApplicationFormItemData> form) {
+
+		JsArray<ApplicationFormItemData> arr = JavaScriptObject.createArray().cast();
+		if (form != null) {
+			for (ApplicationFormItemData d : form) {
+				arr.push(d);
+			}
+		}
+		if (arr.length() > 0) {
+			setGroupFormInitialInternal(arr);
+		} else {
+			setGroupFormInitialInternal(null);
+		}
+
+	}
+
+	/**
+	 * Set native JS array of ApplicationFormItems.
+	 *
+	 * @param data
+	 */
+	private final native void setGroupFormInitialInternal(JsArray<ApplicationFormItemData> data) /*-{
+		this.groupFormInitial = data;
+	}-*/;
+
+	/**
+	 * Set group initial form exception
+	 *
+	 * @param ex Group initial form exception
+	 */
+	public final native PerunException setGroupFormInitialException(PerunException ex) /*-{
+		this.groupFormInitialException = ex;
+	}-*/;
 
 }

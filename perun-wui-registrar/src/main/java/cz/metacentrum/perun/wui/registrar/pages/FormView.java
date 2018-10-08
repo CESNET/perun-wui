@@ -150,12 +150,12 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				ArrayList<Attribute> attrList = registrar.getVoAttributes();
 				for (Attribute a : attrList) {
 					if (a.getFriendlyName().equals("voLogoURL")) {
-						logo.setUrl(a.getValue());
-						logo.setVisible(true);
+						if (a.getValue() != null) {
+							logo.setUrl(a.getValue());
+							logo.setVisible(true);
+						}
 					}
 				}
-
-
 
 				if (registrar.getException() != null) {
 					if (registrar.getException().getName().equals("VoNotExistsException") ||

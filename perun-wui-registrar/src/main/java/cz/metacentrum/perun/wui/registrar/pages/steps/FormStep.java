@@ -36,6 +36,14 @@ public abstract class FormStep implements Step {
 		return result;
 	}
 
+	public RegistrarObject getRegistrar() {
+		return registrar;
+	}
+
+	public PerunForm getForm() {
+		return form;
+	}
+
 	protected String getUnknownMail() {
 		for (PerunFormItem item : form.getPerunFormItems()) {
 			if (item instanceof ValidatedEmail) {

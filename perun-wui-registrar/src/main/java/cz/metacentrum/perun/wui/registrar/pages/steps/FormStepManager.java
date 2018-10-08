@@ -13,6 +13,8 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 /**
+ * Handles users going through all steps of registration.
+ *
  * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
 public class FormStepManager implements StepManager {
