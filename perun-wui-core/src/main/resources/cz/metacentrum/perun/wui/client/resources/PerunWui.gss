@@ -132,6 +132,10 @@ th.gwtb3-d {
 	right: 0;
 	left: auto;
 }
+div.emailFormItem {
+	/* fix selection of pre-filled mails to be above username and other composed field (made from group-buttons) */
+	z-index: inherit !important;
+}
 
 .passwordFormItemFirst {
 	border-top-right-radius: 4px !important;
