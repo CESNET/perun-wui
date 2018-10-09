@@ -113,6 +113,12 @@ public abstract class PerunFormItem extends FormGroup {
 					return getItemData().getFormItem().getItemTexts(getLang()).getLabel();
 				}
 			}
+			if (getItemData().getFormItem().getItemTexts("en") != null) {
+				if ((getItemData().getFormItem().getItemTexts("en").getLabel() != null)
+						&& (!getItemData().getFormItem().getItemTexts("en").getLabel().isEmpty())) {
+					return getItemData().getFormItem().getItemTexts("en").getLabel();
+				}
+			}
 			if ((getItemData().getFormItem().getShortname() != null)
 					&& (!getItemData().getFormItem().getShortname().isEmpty())) {
 				return getItemData().getFormItem().getShortname();
