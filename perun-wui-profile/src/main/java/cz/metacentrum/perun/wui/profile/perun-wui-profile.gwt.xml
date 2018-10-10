@@ -10,9 +10,6 @@
 	<inherits name='com.gwtplatform.mvp.MvpWithEntryPoint'/>
 	<inherits name="org.gwtbootstrap3.extras.select.Select"/>
     <inherits name="org.gwtbootstrap3.extras.slider.Slider"/>
-	<inherits name="org.gwtbootstrap3.extras.slider.Slider"/>
-	<inherits name="org.gwtbootstrap3.extras.slider.Slider"/>
-	<inherits name="org.gwtbootstrap3.extras.slider.Slider"/>
 	<!-- define gin module injector -->
 	<set-configuration-property name="gin.ginjector.modules" value="cz.metacentrum.perun.wui.profile.client.PerunProfile"/>
 	<!-- bootstrap app before loading page -->

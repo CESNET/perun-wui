@@ -3,18 +3,16 @@ package cz.metacentrum.perun.wui.profile.pages.settings.altPasswords;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.KeyUpEvent;
-import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.cellview.client.Column;
 import com.google.gwt.user.cellview.client.TextColumn;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
@@ -84,7 +82,10 @@ public class AltPasswordsView extends ViewWithUiHandlers<AltPasswordsUiHandlers>
 
 	@UiHandler("copyPasswordButton")
 	public void copyPasswordButtonAction(ClickEvent event) {
-		//todo copy to clipboard
+		generatedPasswordBox.setFocus(true);
+		generatedPasswordBox.selectAll();
+		jSCopy();
+		generatedPasswordBox.setFocus(false);
 	}
 
 	@Inject
@@ -160,8 +161,8 @@ public class AltPasswordsView extends ViewWithUiHandlers<AltPasswordsUiHandlers>
 		pl.getElement().getStyle().setMarginTop(20, Style.Unit.PX);
 		dataGrid.setEmptyTableWidget(pl);
 		dataGrid.addColumn(nameCol, translation.description());
-		dataGrid.addColumn(deleteCol, "");
-		if (Window.Location.getHref().contains("locale=cs")) {
+		dataGrid.addColumn(deleteCol, translation.delete());
+		if (PerunConfiguration.getCurrentLocaleName().equals("cs")) {
 			dataGrid.setColumnWidth(nameCol, "89%");
 			dataGrid.setColumnWidth(deleteCol, "11%");
 		} else {
@@ -187,4 +188,8 @@ public class AltPasswordsView extends ViewWithUiHandlers<AltPasswordsUiHandlers>
 		}
 		return password.toString();
 	}
+
+	private static native void jSCopy() /*-{
+		$doc.execCommand('copy')
+	}-*/;
 }

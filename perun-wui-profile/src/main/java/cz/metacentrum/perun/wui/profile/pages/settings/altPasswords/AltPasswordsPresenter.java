@@ -2,7 +2,6 @@ package cz.metacentrum.perun.wui.profile.pages.settings.altPasswords;
 
 
 import com.google.gwt.core.client.JavaScriptObject;
-import com.google.gwt.dev.json.JsonValue;
 import com.google.gwt.json.client.JSONValue;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
