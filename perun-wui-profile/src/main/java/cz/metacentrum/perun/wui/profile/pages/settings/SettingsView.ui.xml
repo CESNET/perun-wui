@@ -36,6 +36,8 @@
 							  targetHistoryToken="{placeTokens.getSettingsPreferredShells}"/>
 			<b:AnchorListItem ui:field="dataQuotas" icon="HDD_O" text="{trans.unixDataQuotas}"
 							  targetHistoryToken="{placeTokens.getSettingsDataquotas}"/>
+			<b:AnchorListItem ui:field="alternativePasswords" icon="UNLOCK" text="{trans.menuAltPasswords}"
+							  targetHistoryToken="{placeTokens.getSettingsAltPasswords}"/>
 		</b:Nav>
 
 		<p:PerunLoader visible="false" ui:field="loader" />

@@ -337,4 +337,52 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Not set")
 	String notSet();
 
+	@DefaultMessage("Alternative passwords")
+	String menuAltPasswords();
+
+	@DefaultMessage("Description")
+	String description();
+
+	@DefaultMessage("Generate")
+	String addAltPassword();
+
+	@DefaultMessage("Delete")
+	String delete();
+
+	@DefaultMessage("No passwords found")
+	String noPasswords();
+
+	@DefaultMessage("Your generated alternative password is")
+	String generatedPassword();
+
+	@DefaultMessage("Generate new alternative password")
+	String generatePassword();
+
+	@DefaultMessage("Your alternative passwords")
+	String yourAlternativePasswords();
+
+	@DefaultMessage("Password description")
+	String passwordDescription();
+
+	@DefaultMessage("Please copy the password now. It will not be shown again.")
+	String generatedPasswordHint();
+
+	@DefaultMessage("You do not have any alternative passwords yet")
+	String noAlternativePasswords();
+
+	@DefaultMessage("Examples of password descriptions: “email on mobile phone” or “teleconferences on tablet”.")
+	String alternativePasswordsExample();
+
+	@DefaultMessage("Copy to clipbord")
+	String copyPassword();
+
+	@DefaultMessage("Close")
+	String close();
+
+	@DefaultMessage("You have to type description into box below")
+	String errorMissingDescription();
+
+	@DefaultMessage("You already have password with this description")
+	String errorDuplicateDescription();
+
 }
