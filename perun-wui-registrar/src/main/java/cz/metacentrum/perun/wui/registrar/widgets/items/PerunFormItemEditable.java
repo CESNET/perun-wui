@@ -89,6 +89,10 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 			setValue(getItemData().getPrefilledValue());
 
 			String helpText = getItemData().getFormItem().getItemTexts(getLang()).getHelp();
+			if (helpText == null) {
+				// fallback to english
+				helpText = getItemData().getFormItem().getItemTexts("en").getHelp();
+			}
 			if (helpText != null) {
 				help.setHTML(SafeHtmlUtils.fromString(helpText).asString());
 			}
@@ -223,6 +227,9 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	public Map<String, String> parseItemOptions(){
 
 		String options = getItemData().getFormItem().getItemTexts(getLang()).getOptions();
+		if (options == null || options.isEmpty()) {
+			options = getItemData().getFormItem().getItemTexts("en").getOptions();
+		}
 
 		Map<String, String> map = new HashMap<String, String>();
 

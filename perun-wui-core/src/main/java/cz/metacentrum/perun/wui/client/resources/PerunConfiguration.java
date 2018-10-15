@@ -748,10 +748,10 @@ public final class PerunConfiguration {
 	/**
 	 * Parse name values from given value and returns the rest of the String.
 	 * E.g.: if '[EnName,CzName]urn:perun:user:attribute-def:def:organization[EnDescription|CzDescription]'
-	 * is given, then EnName and CzName are parsed and 
+	 * is given, then EnName and CzName are parsed and
 	 * 'urn:perun:user:attribute-def:def:organization[EnDescription|CzDescription]'
 	 * is returned.
-	 * 
+	 *
 	 * @param value String starting with [EnName{|CzName}] where the cz name is optional.
 	 * @param attribute personal attribute where the data are being stored.
 	 * @return rest of the string without name part
@@ -765,7 +765,7 @@ public final class PerunConfiguration {
 				.replaceFirst("\\[", "")
 				.replaceFirst("]", "")
 				.split("\\|");
-		
+
 		String enName = split[0];
 		attribute.addName(Locale.EN, enName);
 

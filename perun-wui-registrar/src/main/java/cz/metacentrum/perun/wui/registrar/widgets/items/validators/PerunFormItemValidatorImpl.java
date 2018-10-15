@@ -36,6 +36,9 @@ public abstract class PerunFormItemValidatorImpl<T extends PerunFormItem> implem
 
 	public String getErrorMsgOrDefault(T item) {
 		String errorText = item.getItemData().getFormItem().getItemTexts(item.getLang()).getErrorText();
+		if (errorText == null || errorText.isEmpty()) {
+			errorText = item.getItemData().getFormItem().getItemTexts("en").getErrorText();
+		}
 
 		if (errorText == null || errorText.isEmpty()) {
 			return translation.incorrectFormat();
