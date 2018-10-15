@@ -480,7 +480,7 @@ public class SummaryStep implements Step {
 	private void caseVoExtGroupExt(Summary summary, Heading title, ListGroup messages) {
 
 		Result resultVo = summary.getVoExtResult();
-		Result resultGroup = summary.getGroupInitResult();
+		Result resultGroup = summary.getGroupExtResult();
 
 		// Show summary about extension application to VO
 		if (resultVo.isOk()) {
