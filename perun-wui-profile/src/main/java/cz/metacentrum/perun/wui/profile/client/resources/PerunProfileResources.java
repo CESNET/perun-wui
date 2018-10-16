@@ -47,6 +47,8 @@ public interface PerunProfileResources extends ClientBundle {
 
 		String noPadding();
 
+		String noTopAndBottomPadding();
+
 		String preferredUnixGroupNamesPanel();
 
 		String requestQuotaChangeTable();
@@ -60,6 +62,14 @@ public interface PerunProfileResources extends ClientBundle {
 		String requestQuotaChangeDiv();
 
 		String invalid();
+
+		String respectNewLine();
+
+		String personalCellTableHeader();
+
+		String personalCellTableBody();
+
+		String personalDescriptionLabel();
 	}
 
 	@Source("css/PerunProfile.gss")
