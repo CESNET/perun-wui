@@ -70,6 +70,11 @@ public class PreferredGroupNamesView extends ViewWithUiHandlers<PreferredGroupNa
 		newPreferredNameModal.addShownHandler(modalShownEvent -> newPreferredNameTextBox.setFocus(true));
 	}
 
+	@UiHandler("cancelButton")
+	public void closeModalButtonAction(ClickEvent event) {
+		newPreferredNameModal.hide();
+	}
+
 	@Override
 	public void setPreferredGroupNamesAttributes(List<Attribute> attributes) {
 		panelsDiv.clear();
