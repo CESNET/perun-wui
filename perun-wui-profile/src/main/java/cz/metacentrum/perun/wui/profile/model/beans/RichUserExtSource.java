@@ -1,40 +1,65 @@
 package cz.metacentrum.perun.wui.profile.model.beans;
 
-import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Extended UserExtSource entity containing the original ues and its email Attribute.
+ * Extended UserExtSource entity containing the original ues and its attributes
  *
  * @author Vojtech Sassmann &lt;vojtech.sassmann@gmail.com&gt;
  */
-public class RichUserExtSource extends UserExtSource {
+public class RichUserExtSource {
 
-	protected RichUserExtSource() {}
+	UserExtSource ues;
+	Map<String,Attribute> attributes = new HashMap<>();
 
-	/**
-	 * Get User's email
-	 *
-	 * @return User's email
-	 */
-	public final String getEmail() {
-		return JsUtils.getNativePropertyString(this, "email");
+	public RichUserExtSource(UserExtSource ues) {
+		this.ues = ues;
+	}
+
+	public RichUserExtSource(UserExtSource ues, ArrayList<Attribute> attrs) {
+		this(ues);
+		setAttributes(attrs);
+	}
+
+	public UserExtSource getUes() {
+		return ues;
+	}
+
+	public void setUes(UserExtSource ues) {
+		this.ues = ues;
 	}
 
 	/**
-	 * Set User's email in concrete ExtSource
+	 * Set attributes to RichUserExtSource object.
 	 *
-	 * @param email User's email
+	 * If attribute present, update it's value
+	 * If attribute not present, add to attr list
+	 *
+	 * @param attributes to set to RichUserExtSource object
 	 */
-	public final native void setEmail(String email) /*-{
-        this.email = email;
-    }-*/;
-
-	public static RichUserExtSource mapUes(UserExtSource ues, Attribute mailAttribute) {
-		RichUserExtSource richUserExtSource = (RichUserExtSource) ues;
-		richUserExtSource.setEmail(mailAttribute.getValue());
-
-		return richUserExtSource;
+	public final void setAttributes(ArrayList<Attribute> attributes) {
+		if (attributes != null) {
+			for (Attribute a : attributes) {
+				if (a != null) {
+					this.attributes.put(a.getURN(), a);
+				}
+			}
+		}
 	}
+
+	/**
+	 * Get specified user ext source attribute stored in rich user ext source
+	 *
+	 * @param urn URN of attribute to get
+	 * @return user ext source attribute or null if not present
+	 */
+	public final Attribute getAttribute(String urn) {
+		return this.attributes.get(urn);
+	}
+
 }

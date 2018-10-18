@@ -14,7 +14,6 @@ import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ExtSource.ExtSourceType;
 import cz.metacentrum.perun.wui.profile.model.beans.RichUserExtSource;
-import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
@@ -57,10 +56,13 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 	private List<RichUserExtSource> x509Identities = new ArrayList<>();
 	private List<RichUserExtSource> otherIdentities = new ArrayList<>();
 
+	private static final String EMAIL_ATTRIBUTE = "urn:perun:ues:attribute-def:def:mail";
+	private static final String ORIGIN_ENTITY_ID_ATTRIBUTE = "urn:perun:ues:attribute-def:def:authenticating-authority";
+	private static final String EPPN_ATTRIBUTE = "urn:perun:ues:attribute-def:def:eppn";
+
 	@Inject
 	public IdentitiesView(IdentitiesViewUiBinder binder) {
 		initWidget(binder.createAndBindUi(this));
-
 
 		text.setText(translation.menuMyIdentities());
 		addFedBtn.setText(translation.addFed());
@@ -71,41 +73,61 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		TextColumn<RichUserExtSource> emailCol = new TextColumn<RichUserExtSource>() {
 			@Override
 			public String getValue(RichUserExtSource rues) {
-				if (rues.getEmail() == null || rues.getEmail().isEmpty()) {
+				if (rues.getAttribute(EMAIL_ATTRIBUTE) == null || rues.getAttribute(EMAIL_ATTRIBUTE).isEmpty()) {
 					return "N/A";
 				} else {
-					return rues.getEmail();
+					return rues.getAttribute(EMAIL_ATTRIBUTE).getValue();
 				}
 			}
 		};
 		TextColumn<RichUserExtSource> nameCol = new TextColumn<RichUserExtSource>() {
 			@Override
 			public String getValue(RichUserExtSource userExtSource) {
-				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
-					if (userExtSource.getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth") ||
-							userExtSource.getExtSource().getName().equals("https://login.elixir-czech.org/idp/")) {
+				if (ExtSourceType.IDP.getType().equals(userExtSource.getUes().getExtSource().getType())) {
+					if (userExtSource.getUes().getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth") ||
+							userExtSource.getUes().getExtSource().getName().equals("https://login.elixir-czech.org/idp/")) {
 						// hack our social IdP so we can tell from where identity is
-						return Utils.translateIdp("@"+userExtSource.getLogin().split("@")[1]);
+						return Utils.translateIdp("@"+userExtSource.getUes().getLogin().split("@")[1]);
 					}
-					return Utils.translateIdp(userExtSource.getExtSource().getName());
-				} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
-					return getCertParam(userExtSource.getExtSource().getName(), "O") +
+
+					// show source entityId for proxy of EduTeams
+					if (userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE) != null &&
+							userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE).getValue() != null) {
+						return Utils.translateIdp(userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE).getValue());
+					}
+
+					return Utils.translateIdp(userExtSource.getUes().getExtSource().getName());
+
+				} else if (ExtSourceType.X509.getType().equals(userExtSource.getUes().getExtSource().getType())) {
+					return getCertParam(userExtSource.getUes().getExtSource().getName(), "O") +
 							", " +
-							getCertParam(userExtSource.getExtSource().getName(), "CN");
+							getCertParam(userExtSource.getUes().getExtSource().getName(), "CN");
 				} else {
-					return userExtSource.getExtSource().getName();
+					return userExtSource.getUes().getExtSource().getName();
 				}
 			}
 		};
 		TextColumn<RichUserExtSource> loginCol = new TextColumn<RichUserExtSource>() {
 			@Override
 			public String getValue(RichUserExtSource userExtSource) {
-				if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
-					return userExtSource.getLogin().split("@")[0];
-				} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
-					return Utils.convertCertCN(userExtSource.getLogin());
+				if (ExtSourceType.IDP.getType().equals(userExtSource.getUes().getExtSource().getType())) {
+
+					// show source EPPN for proxy of EduTeams
+					if (userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE) != null &&
+							userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE).getValue() != null) {
+						// get eppn if available
+						if (userExtSource.getAttribute(EPPN_ATTRIBUTE) != null &&
+								userExtSource.getAttribute(EPPN_ATTRIBUTE).getValue() != null) {
+							return userExtSource.getAttribute(EPPN_ATTRIBUTE).getValue().split("@")[0];
+						}
+					}
+
+					return userExtSource.getUes().getLogin().split("@")[0];
+
+				} else if (ExtSourceType.X509.getType().equals(userExtSource.getUes().getExtSource().getType())) {
+					return Utils.convertCertCN(userExtSource.getUes().getLogin());
 				} else {
-					return userExtSource.getLogin();
+					return userExtSource.getUes().getLogin();
 				}
 			}
 		};
@@ -114,7 +136,7 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 				new ButtonCell(ButtonType.DANGER, ButtonSize.EXTRA_SMALL)) {
 			@Override
 			public String getValue(final RichUserExtSource extSource) {
-				((ButtonCell) this.getCell()).setEnabled(!extSource.getPersistent());
+				((ButtonCell) this.getCell()).setEnabled(!extSource.getUes().getPersistent());
 				return "✖";
 			}
 		};
@@ -159,10 +181,10 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 
 	@Override
 	public void addUserExtSource(RichUserExtSource es) {
-		if (ExtSourceType.IDP.getType().equals(es.getExtSource().getType())) {
+		if (ExtSourceType.IDP.getType().equals(es.getUes().getExtSource().getType())) {
 			federatedIdentities.add(es);
 			federatedIdentitiesTable.setRowData(federatedIdentities);
-		} else if (ExtSourceType.X509.getType().equals(es.getExtSource().getType())) {
+		} else if (ExtSourceType.X509.getType().equals(es.getUes().getExtSource().getType())) {
 			x509Identities.add(es);
 			x509IdentitiesTable.setRowData(x509Identities);
 		} else {
@@ -197,24 +219,24 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 	}
 
 	@Override
-	public void removingUserExtSourceStart(UserExtSource userExtSource) {
-		if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
+	public void removingUserExtSourceStart(RichUserExtSource userExtSource) {
+		if (ExtSourceType.IDP.getType().equals(userExtSource.getUes().getExtSource().getType())) {
 			federatedIdentitiesTable.setRowData(new ArrayList<>());
 			((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).onLoading(translation.removingIdentity());
-		} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
+		} else if (ExtSourceType.X509.getType().equals(userExtSource.getUes().getExtSource().getType())) {
 			x509IdentitiesTable.setRowData(new ArrayList<>());
 			((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onLoading(translation.removingIdentity());
 		}
 	}
 
 	@Override
-	public void removingUserExtSourceError(PerunException ex, final UserExtSource userExtSource) {
+	public void removingUserExtSourceError(PerunException ex, final RichUserExtSource userExtSource) {
 		ClickHandler retry = clickEvent -> getUiHandlers().removeUserExtSource(userExtSource);
 
-		if (ExtSourceType.IDP.getType().equals(userExtSource.getExtSource().getType())) {
+		if (ExtSourceType.IDP.getType().equals(userExtSource.getUes().getExtSource().getType())) {
 			federatedIdentitiesTable.setRowData(new ArrayList<>());
 			((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).onError(ex, retry);
-		} else if (ExtSourceType.X509.getType().equals(userExtSource.getExtSource().getType())) {
+		} else if (ExtSourceType.X509.getType().equals(userExtSource.getUes().getExtSource().getType())) {
 			x509IdentitiesTable.setRowData(new ArrayList<>());
 			((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).onError(ex, retry);
 		} else {

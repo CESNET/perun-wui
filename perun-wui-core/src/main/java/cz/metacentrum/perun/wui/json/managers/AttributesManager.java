@@ -104,6 +104,20 @@ public class AttributesManager {
 	}
 
 	/**
+	 * Returns all non-empty UserExtSource attributes for selected UserExtSource.
+	 *
+	 * @param uesId UserExtSource id
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getUesAttributes(int uesId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (uesId > 0) client.put("userExtSource", uesId);
+		return client.call(ATTRIBUTES_MANAGER + "getAttributes");
+	}
+
+	/**
 	 * Returns an Attribute by its name. Returns only non-empty attributes.
 	 *
 	 * @param vo Vo id
