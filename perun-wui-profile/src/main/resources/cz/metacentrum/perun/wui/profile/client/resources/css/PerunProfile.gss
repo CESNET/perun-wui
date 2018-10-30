@@ -125,6 +125,11 @@ body {
     padding: 0px !important;
 }
 
+.noTopAndBottomPadding{
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
 .preferredUnixGroupNamesPanel {
     margin-bottom: 0px !important;
 }
@@ -173,6 +178,30 @@ body {
 .requestQuotaChangeValueSelect {
     width: 20%;
 }
+
+.respectNewLine{
+    white-space: pre;
+}
+
+.personalCellTableHeader{
+    font-weight: bold !important;
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    word-break: break-all;
+    line-height: 150% !important;
+}
+
+.personalCellTableBody{
+    padding-top: 2px !important;
+    padding-bottom: 2px !important;
+    word-break: break-all;
+    line-height: 150% !important;
+}
+
+.personalDescriptionLabel{
+    word-break: break-all !important;
+}
+
 /* HACKS */
 @media screen and (max-width: 768px) {
     .mobileContainer {

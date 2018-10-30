@@ -2,8 +2,10 @@ package cz.metacentrum.perun.wui.profile.pages.personal;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.user.cellview.client.TextColumn;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -31,11 +33,13 @@ import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
+import org.gwtbootstrap3.client.ui.gwt.CellTable;
 import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Small;
 import org.gwtbootstrap3.client.ui.html.Span;
 import org.gwtbootstrap3.client.ui.html.Text;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -61,6 +65,8 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	}
 
 	private PerunProfileTranslation translation = GWT.create(PerunProfileTranslation.class);
+
+	private PerunProfileResources resources = GWT.create(PerunProfileResources.class);
 
 	@UiField
 	PerunLoader loader;
@@ -135,14 +141,8 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		List<PersonalAttribute> additionalAttributes = PerunConfiguration.getProfilePersonalAttributesToShow();
 
 		for (PersonalAttribute personalAttribute : additionalAttributes) {
-			String value;
-			String defaultName;
-
 			Attribute attribute = user.getAttribute(personalAttribute.getUrn());
-			value = attribute == null ? null : attribute.getValue();
-			defaultName = attribute == null ? null : attribute.getDisplayName();
-
-			addPersonalData(personalAttribute, value, defaultName);
+			addPersonalData(personalAttribute, attribute);
 		}
 	}
 
@@ -229,15 +229,16 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	 * the name is obtained from given urn.
 	 *
 	 * @param personalAttribute personal attribute
-	 * @param value value to be shown
-	 * @param defaultName default name used when there is not a translated name for given urn
+	 * @param attribute attribute to be shown
 	 */
-	private void addPersonalData(PersonalAttribute personalAttribute, String value, String defaultName) {
+	private void addPersonalData(PersonalAttribute personalAttribute, Attribute attribute) {
+		String defaultName = attribute == null ? null : attribute.getDisplayName();
 		Row row = new Row();
 		row.setPaddingBottom(10);
 
 		Column labelColumn = createLabelColumn(personalAttribute, defaultName);
-		Column valueColumn = createValueColumn(value, personalAttribute);
+
+		Column valueColumn = createValueColumn(attribute, personalAttribute);
 
 		row.add(labelColumn);
 		row.add(valueColumn);
@@ -261,6 +262,7 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 		String descriptionString = personalAttribute.getLocalizedDescription(Utils.getLocale());
 		Widget descriptionWidget = getWidgetForText(descriptionString);
+		descriptionWidget.addStyleName(resources.gss().personalDescriptionLabel());
 
 		Span descriptionSpan = new Span();
 
@@ -325,6 +327,81 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		return descriptionSpan;
 	}
 
+	private Widget getWidgetForMap(Map<String, JSONValue> map, String description) {
+		Div div = new Div();
+
+		//table for description
+		if(description != null && !description.equals("")) {
+			CellTable<String> header = new CellTable<>();
+			TextColumn<String> headerData = new TextColumn<String>() {
+				@Override
+				public String getValue(String s) {
+					return description;
+				}
+			};
+			header.addColumn(headerData);
+			header.setBordered(true);
+			header.setCondensed(true);
+			headerData.setCellStyleNames(resources.gss().noTopAndBottomPadding());
+			headerData.setCellStyleNames(resources.gss().personalCellTableHeader());
+			ArrayList<String> al = new ArrayList<>();
+			al.add(description);
+			header.setRowData(al);
+			div.add(header);
+		}
+
+		//table for data
+		CellTable<Map.Entry<String, String>> table = new CellTable<>();
+
+		TextColumn<Map.Entry<String, String>> data0 = new TextColumn<Map.Entry<String, String>>() {
+			@Override
+			public String getValue(Map.Entry<String, String> entry) {
+				return entry.getKey();
+			}
+		};
+		table.addColumn(data0);
+
+		TextColumn<Map.Entry<String, String>> data1 = new TextColumn<Map.Entry<String, String>>() {
+			@Override
+			public String getValue(Map.Entry<String, String> entry) {
+				return entry.getValue();
+			}
+		};
+		table.addColumn(data1);
+
+		Map<String, String> transformedMap = new HashMap<>();
+		for (Map.Entry<String, JSONValue> entry : map.entrySet()) {
+			transformedMap.put(entry.getKey(), entry.getValue().toString());
+		}
+
+		table.setBordered(true);
+		table.setCondensed(true);
+		table.setStriped(true);
+		table.setRowData(new ArrayList<>(transformedMap.entrySet()));
+		data0.setCellStyleNames(resources.gss().personalCellTableBody());
+		data1.setCellStyleNames(resources.gss().personalCellTableBody());
+		table.setColumnWidth(0, "40%");
+		table.setColumnWidth(1, "60%");
+		div.add(table);
+		return div;
+	}
+
+	private Widget getWidgetForList(List<String> list) {
+		Span span = new Span();
+		span.addStyleName(resources.gss().respectNewLine());
+		Text text = new Text("");
+
+		for (String s : list) {
+			if (text.getText().equals("")) {
+				text.setText(s);
+			} else {
+				text.setText(text.getText() + "\n" + s);
+			}
+		}
+		span.add(text);
+		return span;
+	}
+
 	private Column createLabelColumn(PersonalAttribute personalAttribute, String defaultName) {
 		Column nameColumn = new Column(ColumnSize.SM_3, ColumnSize.XS_3);
 		nameColumn.addStyleName(PerunProfileResources.INSTANCE.gss().personalInfoLabel());
@@ -360,21 +437,47 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		return nameColumn;
 	}
 
-	private Column createValueColumn(String value, PersonalAttribute personalAttribute) {
+	private Column createValueColumn(Attribute attribute, PersonalAttribute personalAttribute) {
 		Column valueColumn = new Column(ColumnSize.SM_9, ColumnSize.XS_9);
+
+		if (attribute == null) {
+			valueColumn.add(attributeIsString("-", personalAttribute));
+			return valueColumn;
+		}
+
+		if (attribute.getType().equals("java.util.ArrayList")) {
+
+			Column innerValueColumn = new Column(ColumnSize.SM_6, ColumnSize.XS_6);
+			innerValueColumn.setPaddingLeft(0);
+			innerValueColumn.add(getWidgetForList(attribute.getValueAsList()));
+			Column innerDescriptionColumn = createDescriptionColumn(personalAttribute);
+			valueColumn.add(innerValueColumn);
+			valueColumn.add(innerDescriptionColumn);
+			return valueColumn;
+
+		}
+
+		if (attribute.getType().equals("java.util.LinkedHashMap")) {
+
+			Column innerValueColumn = new Column(ColumnSize.SM_12, ColumnSize.XS_12);
+			innerValueColumn.setPaddingLeft(0);
+			innerValueColumn.add(getWidgetForMap(attribute.getValueAsMap(),
+					personalAttribute.getLocalizedDescription(Utils.getLocale())));
+			valueColumn.add(innerValueColumn);
+			return valueColumn;
+		}
+
+		//if it is string or number
+		valueColumn.add(attributeIsString(attribute.getValue(), personalAttribute));
+		return valueColumn;
+	}
+
+	private Row attributeIsString(String value, PersonalAttribute personalAttribute) {
 		Column innerValueColumn = new Column(ColumnSize.SM_6, ColumnSize.XS_6);
 
 		Row innerRow = new Row();
 
-		String valueText;
-
-		if (value == null) {
-			valueText = "-";
-		} else {
-			valueText = value;
-		}
-
-		Widget valueWidget = getWidgetForText(valueText);
+		Widget valueWidget = getWidgetForText(value);
 
 		innerValueColumn.add(valueWidget);
 
@@ -388,8 +491,6 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		innerRow.add(innerValueColumn);
 		innerRow.add(innerDescriptionColumn);
 
-		valueColumn.add(innerRow);
-
-		return valueColumn;
+		return innerRow;
 	}
 }
