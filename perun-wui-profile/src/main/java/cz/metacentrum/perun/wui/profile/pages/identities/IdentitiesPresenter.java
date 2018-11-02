@@ -26,6 +26,7 @@ import cz.metacentrum.perun.wui.model.beans.UserExtSource;
 import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,8 +38,6 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 
 	private PlaceManager placeManager = PerunSession.getPlaceManager();
 
-	private static final String EMAIL_ATTRIBUTE = "urn:perun:ues:attribute-def:def:mail";
-
 	public interface MyView extends View, HasUiHandlers<IdentitiesUiHandlers> {
 		void loadingUserExtSourcesStart();
 		void loadingUserExtSourcesError(PerunException ex);
@@ -46,8 +45,8 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 		void addUserExtSource(RichUserExtSource extSource);
 		void clearUserExtSources();
 
-		void removingUserExtSourceStart(UserExtSource userExtSource);
-		void removingUserExtSourceError(PerunException ex, UserExtSource userExtSource);
+		void removingUserExtSourceStart(RichUserExtSource userExtSource);
+		void removingUserExtSourceError(PerunException ex, RichUserExtSource userExtSource);
 	}
 
 	@NameToken(PerunProfilePlaceTokens.IDENTITIES)
@@ -88,7 +87,7 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 					List<UserExtSource> userExtSources = JsUtils.jsoAsList(result);
 
 					for (UserExtSource ues : userExtSources) {
-						loadEmail(ues);
+						loadAttributes(ues);
 					}
 				}
 
@@ -106,12 +105,12 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 		}
 	}
 
-	private void loadEmail(UserExtSource ues) {
-		AttributesManager.getUesAttribute(ues.getId(), EMAIL_ATTRIBUTE, new JsonEvents() {
+	private void loadAttributes(UserExtSource ues) {
+		AttributesManager.getUesAttributes(ues.getId(), new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject result) {
-				Attribute emailAttr = (Attribute) result;
-				RichUserExtSource rues = RichUserExtSource.mapUes(ues, emailAttr);
+				ArrayList<Attribute> attributes = JsUtils.jsoAsList(result);
+				RichUserExtSource rues = new RichUserExtSource(ues, attributes);
 				getView().addUserExtSource(rues);
 			}
 
@@ -128,7 +127,7 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 	}
 
 	@Override
-	public void removeUserExtSource(final UserExtSource userExtSource) {
+	public void removeUserExtSource(final RichUserExtSource userExtSource) {
 		Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
@@ -136,7 +135,7 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 		if (userId == null) {
 			placeManager.revealErrorPlace(request.getNameToken());
 		} else {
-			UsersManager.removeUserExtSource(userId, userExtSource.getId(), new JsonEvents() {
+			UsersManager.removeUserExtSource(userId, userExtSource.getUes().getId(), new JsonEvents() {
 
 				@Override
 				public void onFinished(JavaScriptObject result) {

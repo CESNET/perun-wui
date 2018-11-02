@@ -192,6 +192,11 @@ public class JoinPage {
 				String translatedExtSourceName = PerunSession.getInstance().getPerunPrincipal().getExtSource();
 				String translatedActor = PerunSession.getInstance().getPerunPrincipal().getActor();
 
+				// check if identity is sourced from foreign proxy
+				String aa = PerunSession.getInstance().getPerunPrincipal().getAdditionInformation("authenticating-authority");
+				boolean foreignProxy = (aa != null && !aa.isEmpty());
+				String foreignEppn = "";
+
 				if (extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
 
 					translatedExtSourceName = translatedActor.split("@")[1];// Utils.translateIdp(translatedExtSourceName);
@@ -203,6 +208,17 @@ public class JoinPage {
 					}
 
 					translatedActor = translatedActor.split("@")[0];
+
+					if (foreignProxy) {
+						// get source identity EPPN value
+						String eppn = PerunSession.getInstance().getPerunPrincipal().getAdditionInformation("eppn");
+						if (eppn != null && !eppn.isEmpty()) {
+							translatedActor = eppn.split("@")[0];
+							foreignEppn = eppn;
+						}
+						// get source identity EntityId
+						translatedExtSourceName = Utils.translateIdp(aa);
+					}
 
 					// get actor from attributes if present
 					String displayName = PerunSession.getInstance().getPerunPrincipal().getAdditionInformation("displayName");
@@ -226,7 +242,7 @@ public class JoinPage {
 				heading.setVisible(true);
 				if (PerunSession.getInstance().getUser() != null) {
 					login.setText(PerunSession.getInstance().getUser().getFullName());
-					login.setSubText("( " + PerunSession.getInstance().getPerunPrincipal().getActor() + " )");
+					login.setSubText("( " + ((foreignProxy) ? foreignEppn : PerunSession.getInstance().getPerunPrincipal().getActor()) + " )");
 				} else {
 					login.setText(translatedActor);
 				}
