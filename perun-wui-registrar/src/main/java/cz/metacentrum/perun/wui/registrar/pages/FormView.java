@@ -237,7 +237,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			} else if (voExtensionFormExists(registrar)) {
 
-				if (isMemberOfGroup(registrar)) {
+				if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
 					// only members with correct extension form can extend
 					stepManager.addStep(new GroupExtStep(registrar, form));
 				} else {
@@ -260,7 +260,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				if (!isMemberOfVo(registrar) && !appliedToVo(registrar))
 					stepManager.addStep(new VoInitStep(registrar, form));
 
-				if (isMemberOfGroup(registrar)) {
+				if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
 					// only members with correct extension form can extend
 					stepManager.addStep(new GroupExtStep(registrar, form));
 				} else {
