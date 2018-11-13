@@ -47,10 +47,10 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Approved")
 	public String applicationApproved();
 
-	@DefaultMessage("New")
+	@DefaultMessage("Waiting for verification")
 	public String applicationNew();
 
-	@DefaultMessage("Verified")
+	@DefaultMessage("Waiting for approval")
 	public String applicationVerified();
 
 	@DefaultMessage("Rejected")
