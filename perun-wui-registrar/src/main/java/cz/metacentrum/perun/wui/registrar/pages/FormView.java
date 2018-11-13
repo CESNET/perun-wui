@@ -238,19 +238,33 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			} else if (voExtensionFormExists(registrar)) {
 
 				if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
+
+					for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
+						if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+								!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
+							// offer only when VO doesn't have empty or "You are registered" form.
+							stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
+							break;
+						}
+					}
+
 					// only members with correct extension form can extend
 					stepManager.addStep(new GroupExtStep(registrar, form));
+
 				} else {
+
 					stepManager.addStep(new GroupInitStep(registrar, form));
-				}
-				for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
-					if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
-							!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
-						// offer only when VO doesn't have empty or "You are registered" form.
-						stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
-						break;
+
+					for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
+						if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+								!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
+							// offer only when VO doesn't have empty or "You are registered" form.
+							stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
+							break;
+						}
 					}
 				}
+
 				stepManager.addStep(new SummaryStep(formView));
 				stepManager.begin();
 
