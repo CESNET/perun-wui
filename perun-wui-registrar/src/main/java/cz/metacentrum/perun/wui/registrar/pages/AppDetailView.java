@@ -35,6 +35,7 @@ import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -255,7 +256,11 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 					}
 				}
 
-				mailVerificationAlert.setVisible(found);
+				// mail verification is relevant only for new applications, already
+				// approved/rejected or verified apps doesn't need another verification.
+				if (Application.ApplicationState.NEW.equals(app.getState())) {
+					mailVerificationAlert.setVisible(found);
+				}
 
 				form.setFormItems(list);
 			}

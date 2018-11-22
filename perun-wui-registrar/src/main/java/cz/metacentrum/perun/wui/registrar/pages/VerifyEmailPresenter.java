@@ -73,9 +73,9 @@ public class VerifyEmailPresenter extends Presenter<VerifyEmailPresenter.MyView,
 					getProxy().manualRevealFailed();
 					placeManager.revealUnauthorizedPlace(request.getNameToken());
 				} else {
-					getProxy().manualRevealFailed();
-					placeManager.revealErrorPlace(request.getNameToken());
+					// if verification fails because of an error, display it
 					getView().onError(error, retry);
+					getProxy().manualReveal(presenter);
 				}
 			}
 
