@@ -1022,7 +1022,7 @@ public class Utils {
 			} else {
 
 				// VALID URL FOR DEVEL
-				baseUrl += "/PasswordResetKrb.html";
+				baseUrl += "/pwd-reset/";
 
 			}
 

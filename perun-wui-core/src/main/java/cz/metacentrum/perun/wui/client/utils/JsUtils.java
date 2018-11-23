@@ -299,6 +299,18 @@ public class JsUtils {
 	}-*/;
 
 	/**
+	 * Return current date as string YYYY-MM-DD
+	 * @return current date
+	 */
+	public static final native String getCurrentDateString() /*-{
+		var currentDate = new Date();
+		var day = currentDate.getDate();
+		var month = currentDate.getMonth() + 1;
+		var year = currentDate.getFullYear();
+		return year + "-" + month + "-" + day;
+	}-*/;
+
+	/**
 	 * Converts List of JavaScriptObject to List of some specific bean
 	 *
 	 * @param list List of objects to be converted

@@ -1,31 +1,50 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.HTML;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
+import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.Events;
+import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.Group;
+import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.ListGroup;
 import org.gwtbootstrap3.client.ui.ListGroupItem;
+import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
+import org.gwtbootstrap3.client.ui.ModalFooter;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
+import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ListGroupItemType;
+import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Pull;
 import org.gwtbootstrap3.client.ui.html.Text;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Represents a final step in registration process. Show info.
@@ -76,6 +95,113 @@ public class SummaryStep implements Step {
 				// Steps should not be empty.
 			}
 		}
+
+		/**
+		 * FIXME - Temporary change forcing all extending Metacentrum users to change their password due to need to re-sign all keys in kerberos database
+		 */
+		if (summary.containsVoExtResult()) {
+
+			if (summary.getVoExtResult().isOk()) {
+
+				AttributesManager.getUserAttributes(pp.getUserId(), Arrays.asList("urn:perun:user:attribute-def:def:login-namespace:einfra",
+						"urn:perun:user:attribute-def:def:changedPassMeta"), new JsonEvents() {
+					@Override
+					public void onFinished(JavaScriptObject result) {
+
+						ArrayList<Attribute> list = JsUtils.jsoAsList(result);
+						boolean hasEinfraLogin = false;
+						if (list != null) {
+							for (Attribute a : list) {
+								if (Objects.equals("login-namespace:einfra", a.getFriendlyName())) {
+									if (a.getValue() != null) {
+										hasEinfraLogin = true;
+										break;
+									}
+								}
+							}
+
+							if (hasEinfraLogin) {
+								for (Attribute a : list) {
+									if (Objects.equals("changedPassMeta", a.getFriendlyName())) {
+										if (a.getValue() == null) {
+											displayMetaCentrumWarning();
+										}
+									}
+								}
+							}
+						}
+					}
+
+					@Override
+					public void onError(PerunException error) {
+						// display anyway
+						if (((Vo)summary.getVoExtResult().getBean()).getShortName().equals("meta") ||
+						((Vo)summary.getVoExtResult().getBean()).getShortName().equals("einfra") ||
+						((Vo)summary.getVoExtResult().getBean()).getShortName().equals("storage")) {
+							displayMetaCentrumWarning();
+						}
+					}
+
+					@Override
+					public void onLoadingStart() {
+
+					}
+				});
+
+			}
+
+		}
+
+
+	}
+
+	private void displayMetaCentrumWarning() {
+
+		final Modal modal = new Modal();
+		modal.setTitle(translation.metaResetHeading());
+		modal.setFade(true);
+		modal.setDataKeyboard(false);
+		modal.setDataBackdrop(ModalBackdrop.STATIC);
+		modal.setClosable(false);
+
+		ModalBody body = new ModalBody();
+		body.add(new HTML(translation.metaResetText()));
+
+		ModalFooter footer = new ModalFooter();
+
+		final Button reset = new Button(translation.metaResetButton(), new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				modal.hide();
+				Window.Location.assign(Utils.getPasswordResetLink("einfra"));
+			}
+		});
+		reset.setType(ButtonType.SUCCESS);
+		reset.setIcon(IconType.CHEVRON_RIGHT);
+		reset.setIconPosition(IconPosition.RIGHT);
+		reset.setIconFixedWidth(true);
+
+		final Button no = new Button(translation.offerMembershipExtensionNoThanks(), new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				modal.hide();
+			}
+		});
+		no.setType(ButtonType.DANGER);
+
+		footer.add(no);
+		footer.add(reset);
+
+		modal.add(body);
+		modal.add(footer);
+
+		Timer timer = new Timer() {
+			@Override
+			public void run() {
+				modal.show();
+			}
+		};
+		timer.schedule(500);
 
 	}
 
