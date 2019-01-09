@@ -333,4 +333,26 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("We couldn`t verify your email address.")
 	public String emailWasNotVerified();
 
+	/* ------------ TEMPORARY METACENTRUM PASSWORD CHANGE--------------- */
+
+	@DefaultMessage("Please reset your password")
+	public String metaResetHeading();
+
+	@DefaultMessage("<p>Dear user,"+
+			"<p>CESNET e-Infrastructure is changing to a newer encryption algorithm used to authenticate the users. The new algorithm is much more secure and increase compatiblity with newer devices and operating systems (MacOS, etc.)." +
+			"<p>Because we are not storing your password in a clear text form, it must be re-entered in the password reset application in order to be ciphered by the new encryption algorithm." +
+			"<p>Within the process, you can choose a new password or enter the old password." +
+			"<p>You can also change/reset your password at any time later. In such case, the original password remains valid, but will remain encrypted with the older encryption algorithm." +
+			"<p>If you have any questions, please contact <a href=\"mailto:support@metacentrum.cz\">support@metacentrum.cz</a>.")
+	public String metaResetText();
+
+	@DefaultMessage("Go to password reset")
+	public String metaResetButton();
+
+	@DefaultMessage("Password must be at least 8 characters long.")
+	public String metaLength();
+
+	@DefaultMessage("Password can contain only printable (not accented) characters. It must contain min. 3 uppercase or/and lowercase letters and min. 1 number or symbol.")
+	public String metaStrength();
+
 }

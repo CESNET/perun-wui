@@ -5,12 +5,15 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.items.validators.EinfraPasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
 import org.gwtbootstrap3.client.ui.InputGroup;
 import org.gwtbootstrap3.client.ui.InputGroupAddon;
 import org.gwtbootstrap3.client.ui.constants.IconType;
+
+import java.util.Objects;
 
 /**
  * Represents TextField for password and his check (repeat it).
@@ -26,7 +29,12 @@ public class Password extends PerunFormItemEditable {
 
 	public Password(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang, onlyPreview);
-		this.validator = new PasswordValidator();
+		// FIXME - specific per-namespace validation
+		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunAttribute())) {
+				this.validator = new EinfraPasswordValidator();
+		} else {
+			this.validator = new PasswordValidator();
+		}
 	}
 
 	protected Widget initWidget() {

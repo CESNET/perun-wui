@@ -8,6 +8,8 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.regexp.shared.MatchResult;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -55,6 +57,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	private PerunPwdResetTranslation translation = GWT.create(PerunPwdResetTranslation.class);
 	private ArrayList<Attribute> logins;
 	private String namespace = "";
+	private String login = ""; // resolved login in namespace
 
 	private boolean isAccountActivation = Window.Location.getParameterMap().containsKey("activation");
 
@@ -201,11 +204,37 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 								alert.setType(AlertType.SUCCESS);
 								alert.setText((isAccountActivation) ? translation.activateSuccess() : translation.resetSuccess());
 								alert.setVisible(true);
+
+								/**
+								 * FIXME - Temporary change forcing all extending Metacentrum users to change their password due to need to re-sign all keys in kerberos database
+								 */
+								// For authorized reset in EINFRA (meta) namespace set sign to not bother users again in registrar
+								if (Objects.equals("einfra", namespace) && PerunSession.getInstance().getUserId() > 0) {
+									AttributesManager.getUserAttribute(PerunSession.getInstance().getUserId(), "urn:perun:user:attribute-def:def:changedPassMeta", new JsonEvents() {
+										@Override
+										public void onFinished(JavaScriptObject result) {
+											Attribute attribute = result.cast();
+											if (attribute.isEmpty()) {
+												attribute.setValue(JsUtils.getCurrentDateString());
+												AttributesManager.setUserAttribute(PerunSession.getInstance().getUserId(), attribute, null);
+											}
+										}
+										@Override
+										public void onError(PerunException error) {
+										}
+
+										@Override
+										public void onLoadingStart() {
+										}
+									});
+								}
+
 								if (Window.Location.getParameterMap().containsKey("target_url")) {
 									alert.getToolbar().setVisible(true);
 									continueButton.setType(ButtonType.SUCCESS);
 									continueButton.setVisible(true);
 								}
+
 							}
 
 							@Override
@@ -278,6 +307,12 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 										translation.activateFor(a.getValue() + "@" + namespace.toUpperCase()) :
 										translation.passwordResetFor(a.getValue() + "@" + namespace.toUpperCase()));
 								form.setVisible(true);
+								login = a.getValue();
+
+								if (Objects.equals(namespace, "einfra")) {
+									help.setHTML("<p>" + translation.metaHelp());
+								}
+
 								return;
 							}
 						}
@@ -327,16 +362,55 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	 */
 	private boolean validate() {
 
+
+		if (passwordTextBox.getValue() == null || passwordTextBox.getValue().isEmpty()) {
+			passItem.setValidationState(ValidationState.ERROR);
+			itemStatus.setText(translation.passwordCantBeEmpty());
+			return false;
+		}
+
+
 		// TODO - per-namespace regex validation
+		if (Objects.equals(namespace, "einfra")) {
+
+			// check length
+			if (passwordTextBox.getValue().length() < 8) {
+				itemStatus.setText(translation.metaLength());
+				passItem.setValidationState(ValidationState.ERROR);
+				return false;
+			}
+
+			// Check format with three chars and at least one non-char in some place
+			RegExp regExp = RegExp.compile("^((([^a-zA-Z].*[a-zA-Z].*[a-zA-Z].*[a-zA-Z].*)|([a-zA-Z].*[^a-zA-Z].*[a-zA-Z].*[a-zA-Z].*)|([a-zA-Z].*[a-zA-Z].*[^a-zA-Z].*[a-zA-Z].*)|([a-zA-Z].*[a-zA-Z].*[a-zA-Z].*[^a-zA-Z].*)))$");
+			MatchResult matcher = regExp.exec(passwordTextBox.getValue());
+			boolean matchFound = (matcher != null);
+			if(!matchFound){
+				itemStatus.setText(translation.metaStrength());
+				passItem.setValidationState(ValidationState.ERROR);
+				return false;
+			}
+
+			// limit only to ASCII
+			RegExp regExp2 = RegExp.compile("^[\\x20-\\x7E]{8,}$");
+			MatchResult matcher2 = regExp2.exec(passwordTextBox.getValue());
+			boolean matchFound2 = (matcher2 != null);
+			if(!matchFound2){
+				itemStatus.setText(translation.metaStrength());
+				passItem.setValidationState(ValidationState.ERROR);
+				return false;
+			}
+
+			if (login.equalsIgnoreCase(passwordTextBox.getValue()) || passwordTextBox.getValue().contains(login)) {
+				itemStatus.setText(translation.metaStrength());
+				passItem.setValidationState(ValidationState.ERROR);
+				return false;
+			}
+
+		}
 
 		if (!Objects.equals(passwordTextBox.getValue(), passwordTextBox2.getValue())) {
 			passItem.setValidationState(ValidationState.ERROR);
 			itemStatus.setText(translation.passwordsDoesnMatch());
-			return false;
-		}
-		if (passwordTextBox.getValue() == null || passwordTextBox.getValue().isEmpty()) {
-			passItem.setValidationState(ValidationState.ERROR);
-			itemStatus.setText(translation.passwordCantBeEmpty());
 			return false;
 		}
 
