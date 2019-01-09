@@ -250,10 +250,10 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You can check state of your application in <a href=\"{0}#submitted\">{1}</a>.")
 	public String visitSubmitted(String url, String title);
 
-	@DefaultMessage("You can`t extend membership right now")
+	@DefaultMessage("You are already registered")
 	public String cantExtendMembership();
 
-	@DefaultMessage("<b>Your membership in <i>{1}</i> is valid until {0}.</b> Membership can be extended only in a short time before membership expiration or after. ")
+	@DefaultMessage("<br/>Your membership in <i>{1}<i> is valid until <b>{0}</b>.")
 	public String cantExtendMembershipOutside(String expirationDate, String name);
 
 	@DefaultMessage("You don`t have required Level of Assurance (LoA) to extend membership. Contact your IDP ({0}) and prove your identity to him by official ID card (passport, driving license). If you have another identity with higher Level of Assurance, try to use it instead.")
