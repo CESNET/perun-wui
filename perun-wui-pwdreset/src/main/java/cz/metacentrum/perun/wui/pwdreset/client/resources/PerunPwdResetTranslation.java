@@ -53,10 +53,10 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("Please <b>avoid using accented characters</b>. It might not be supported by all backend components and services.")
 	public String dontUseAccents();
 
-	@DefaultMessage("Password must be from 8 up to 20 characters long and contain only printable (not accented) characters. It must contain min. 3 uppercase or/and lowercase letters and min. 1 number or symbol.")
+	@DefaultMessage("Password must be at least 8 characters long and contain only printable (not accented) characters. It must contain min. 3 uppercase or/and lowercase letters and min. 1 number or symbol.")
 	public String metaHelp();
 
-	@DefaultMessage("Password must be from 8 to 20 characters long.")
+	@DefaultMessage("Password must be at least 8 characters long.")
 	public String metaLength();
 
 	@DefaultMessage("Password can contain only printable (not accented) characters. It must contain min. 3 uppercase or/and lowercase letters and min. 1 number or symbol.")

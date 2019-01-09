@@ -374,7 +374,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 		if (Objects.equals(namespace, "einfra")) {
 
 			// check length
-			if (passwordTextBox.getValue().length() < 8 || passwordTextBox.getValue().length() > 20) {
+			if (passwordTextBox.getValue().length() < 8) {
 				itemStatus.setText(translation.metaLength());
 				passItem.setValidationState(ValidationState.ERROR);
 				return false;
@@ -391,7 +391,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			}
 
 			// limit only to ASCII
-			RegExp regExp2 = RegExp.compile("^[\\x20-\\x7E]{8,20}$");
+			RegExp regExp2 = RegExp.compile("^[\\x20-\\x7E]{8,}$");
 			MatchResult matcher2 = regExp2.exec(passwordTextBox.getValue());
 			boolean matchFound2 = (matcher2 != null);
 			if(!matchFound2){

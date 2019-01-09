@@ -30,7 +30,7 @@ public class EinfraPasswordValidator extends PasswordValidator {
 		*/
 
 		// check length
-		if (password.getValue().length() < 8 || password.getValue().length() > 20) {
+		if (password.getValue().length() < 8) {
 			setResult(Result.INVALID_FORMAT);
 			password.setStatus(getTransl().metaLength(), ValidationState.ERROR);
 			return false;
@@ -47,7 +47,7 @@ public class EinfraPasswordValidator extends PasswordValidator {
 		}
 
 		// limit only to ASCII
-		RegExp regExp2 = RegExp.compile("^[\\x20-\\x7E]{8,20}$");
+		RegExp regExp2 = RegExp.compile("^[\\x20-\\x7E]{8,}$");
 		MatchResult matcher2 = regExp2.exec(password.getValue());
 		boolean matchFound2 = (matcher2 != null);
 		if(!matchFound2){
