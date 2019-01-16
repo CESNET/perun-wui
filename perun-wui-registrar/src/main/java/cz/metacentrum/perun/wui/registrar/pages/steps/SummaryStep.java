@@ -305,7 +305,17 @@ public class SummaryStep implements Step {
 			continueBtn = getContinueButton(TARGET_EXISTING);
 		}
 
+		// FIXME: HACK for ELIXIR - if is member and link should go out of registrar, leave immediatelly
+		if (summary.alreadyMemberOfVo()) {
+			String url = Window.Location.getParameter(TARGET_EXISTING);
+			if (url != null && !url.isEmpty()) {
+				Window.Location.assign(url);
+			}
+		}
+
+		// for others display summary
 		displaySummary(title, messages, continueBtn);
+
 	}
 
 	/**
