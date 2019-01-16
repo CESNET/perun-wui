@@ -69,67 +69,67 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 	private void resolve() {
 
-		if (exception.getName().equalsIgnoreCase("ExtendMembershipException")) {
+		if ("ExtendMembershipException".equalsIgnoreCase(exception.getName())) {
 
 			resolveExtendMembershipException();
 
-		} else if (exception.getName().equalsIgnoreCase("AlreadyRegisteredException")) {
+		} else if ("AlreadyRegisteredException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.alreadyRegistered(getBeanName()), null);
 
-		} else if (exception.getName().equalsIgnoreCase("DuplicateRegistrationAttemptException")) {
+		} else if ("DuplicateRegistrationAttemptException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.alreadySubmitted(getBeanName()),
 					trans.visitSubmitted(Window.Location.getHref().split("#")[0], trans.submittedTitle()));
 
-		} else if (exception.getName().equalsIgnoreCase("DuplicateExtensionAttemptException")) {
+		} else if ("DuplicateExtensionAttemptException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.alreadySubmittedExtension(getBeanName()),
 					trans.visitSubmitted(Window.Location.getHref().split("#")[0], trans.submittedTitle()));
 
-		} else if (exception.getName().equalsIgnoreCase("MissingRequiredDataException")) {
+		} else if ("MissingRequiredDataException".equalsIgnoreCase(exception.getName())) {
 
 			resolveMissingRequiredDataException();
 
-		} else if (exception.getName().equalsIgnoreCase("VoNotExistsException")) {
+		} else if ("VoNotExistsException".equalsIgnoreCase(exception.getName())) {
 
 			String voName = (Window.Location.getParameter("vo") != null) ? URL.decodeQueryString(Window.Location.getParameter("vo")) : null;
 			setInfo(trans.voNotExistsException(voName), null);
 
-		} else if (exception.getName().equalsIgnoreCase("GroupNotExistsException")) {
+		} else if ("GroupNotExistsException".equalsIgnoreCase(exception.getName())) {
 
 			String groupName = (Window.Location.getParameter("group") != null) ? URL.decodeQueryString(Window.Location.getParameter("group")) : null;
 			setInfo(trans.groupNotExistsException(groupName), null);
 
-		} else if (exception.getName().equalsIgnoreCase("WrongURL")) {
+		} else if ("WrongURL".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.missingVoInURL(), null);
 
-		} else if (exception.getName().equalsIgnoreCase("FormNotExistsException")) {
+		} else if ("FormNotExistsException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.formNotExist(), null, false);
 
-		} else if (exception.getName().equalsIgnoreCase("FormWrongFormedException")) {
+		} else if ("FormWrongFormedException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.formWrongFormed(), null, false);
 
-		} else if (exception.getName().equalsIgnoreCase("ApplicationNotCreatedException")) {
+		} else if ("ApplicationNotCreatedException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.applicationNotCreatedBecauseLogin(), null, false);
 
-		} else if (exception.getName().equalsIgnoreCase("CantBeSubmittedException")) {
+		} else if ("CantBeSubmittedException".equalsIgnoreCase(exception.getName())) {
 
 			resolveCantBeSubmittedException();
 
-		} else if (exception.getName().equalsIgnoreCase("CantBeApprovedException")) {
+		} else if ("CantBeApprovedException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.cantBeApproved(getBeanName()), null, true);
 
-		} else if (exception.getName().equalsIgnoreCase("RpcException")) {
+		} else if ("RpcException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.applicationNotCreated(), null, false);
 
-		}  else if (exception.getName().equalsIgnoreCase("RegistrarException")) {
+		}  else if ("RegistrarException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.registrarException(getBeanName()), null);
 
@@ -167,7 +167,7 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 	private void resolveExtendMembershipException() {
 
-		if (exception.getReason().equals("OUTSIDEEXTENSIONPERIOD")) {
+		if ("OUTSIDEEXTENSIONPERIOD".equals(exception.getReason())) {
 
 			String exceptionText = "<i>unlimited</i>";
 			if (exception.getExpirationDate() != null) exceptionText = exception.getExpirationDate().split(" ")[0];
@@ -180,15 +180,15 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			setInfo(trans.cantExtendMembership(), trans.cantExtendMembershipOutside(exceptionText, entityName));
 
-		} else if (exception.getReason().equals("NOUSERLOA")) {
+		} else if ("NOUSERLOA".equals(exception.getReason())) {
 
 			setInfo(trans.cantBecomeMember(getBeanName()), trans.cantBecomeMemberLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 
-		} else if (exception.getReason().equals("INSUFFICIENTLOA")) {
+		} else if ("INSUFFICIENTLOA".equals(exception.getReason())) {
 
 			setInfo(trans.cantBecomeMember(getBeanName()), trans.cantBecomeMemberInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 
-		} else if (exception.getReason().equals("INSUFFICIENTLOAFOREXTENSION")) {
+		} else if ("INSUFFICIENTLOAFOREXTENSION".equals(exception.getReason())) {
 
 			setInfo(trans.cantExtendMembership(), trans.cantExtendMembershipInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 
