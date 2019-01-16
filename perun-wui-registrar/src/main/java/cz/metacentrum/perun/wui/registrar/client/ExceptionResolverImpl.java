@@ -215,14 +215,14 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 		this.isSoft = isSoft;
 	}
 	private String getBeanName() {
-		if (bean == null) {
-			return "unknown";
+		if (bean != null) {
+			if (bean instanceof Vo) {
+				return bean.getName();
+			} else if (bean instanceof Group) {
+				return ((Group) bean).getShortName();
+			}
 		}
-		if (bean instanceof Group) {
-			return ((Group) bean).getShortName();
-		} else {
-			return bean.getName();
-		}
+		return "unknown";
 	}
 
 }
