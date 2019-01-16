@@ -30,6 +30,7 @@ import org.gwtbootstrap3.client.ui.ListGroupItem;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.ModalFooter;
+import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
@@ -721,6 +722,9 @@ public class SummaryStep implements Step {
 		if (Window.Location.getParameter(urlParameter) != null) {
 
 			PerunButton continueButton = PerunButton.getButton(PerunButtonType.CONTINUE);
+			// make button more visible to the users
+			continueButton.setSize(ButtonSize.LARGE);
+			continueButton.setType(ButtonType.SUCCESS);
 
 			continueButton.addClickHandler(new ClickHandler() {
 				@Override

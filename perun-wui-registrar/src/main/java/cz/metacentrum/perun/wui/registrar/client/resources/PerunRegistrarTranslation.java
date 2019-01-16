@@ -247,7 +247,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You have already submitted extension application to {0}")
 	public String alreadySubmittedExtension(String voName);
 
-	@DefaultMessage("You can check state of your application in <a href=\"{0}#submitted\">{1}</a>.")
+	@DefaultMessage("<br/>You can check state of your application in <a href=\"{0}#submitted\">{1}</a>.")
 	public String visitSubmitted(String url, String title);
 
 	@DefaultMessage("You are already registered")
@@ -262,13 +262,13 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You can`t register to {0}")
 	public String cantBecomeMember(String voOrGroupName);
 
-	@DefaultMessage("The Identity Provider you used to log-in ({0}) doesn`t provide information about your Level of Assurance (LoA). Please ask your IDP to publish such information or use different IDP.")
+	@DefaultMessage("<br/>The Identity Provider you used to log-in ({0}) doesn`t provide information about your Level of Assurance (LoA). Please ask your IDP to publish such information or use different IDP.")
 	public String cantBecomeMemberLoa(String idpName);
 
-	@DefaultMessage("You don`t have required Level of Assurance (LoA) to display registration form. Contact your IDP ({0}) and prove your identity to him by official ID card (passport, driving license). If you have another identity with higher Level of Assurance, try to use it instead.")
+	@DefaultMessage("<br/>You don`t have required Level of Assurance (LoA) to display registration form. Contact your IDP ({0}) and prove your identity to him by official ID card (passport, driving license). If you have another identity with higher Level of Assurance, try to use it instead.")
 	public String cantBecomeMemberInsufficientLoa(String idpName);
 
-	@DefaultMessage("<h4>You can`t submit the registration</h4><p>The Identity Provider you used to log-in ({0}) doesn`t provide data required by the registration form. Please ask your IDP to publish following attributes or use different IDP.")
+	@DefaultMessage("<h4>You can`t submit the registration</h4><p><br/>The Identity Provider you used to log-in ({0}) doesn`t provide data required by the registration form. Please ask your IDP to publish following attributes or use different IDP.")
 	public String missingRequiredData(String idpName);
 
 	@DefaultMessage("Missing attribute: {0}")

@@ -109,17 +109,6 @@ public class GeneralObject extends JavaScriptObject {
                 if (result.length > 0) return result;
                 return null;
 
-            } else if (this.beanName === "ExecService") {
-
-                var service = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyObject(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "service");
-	            if (service !== null) {
-                    var serviceName = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(service, "name");
-                    var execType = @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "execServiceType");
-		            return serviceName + "("+execType+")";
-                } else {
-		            return null;
-	            }
-
             } else if (this.beanName === "AttributeDefinition") {
 
                 return @cz.metacentrum.perun.wui.client.utils.JsUtils::getNativePropertyString(Lcom/google/gwt/core/client/JavaScriptObject;Ljava/lang/String;)(this, "displayName");
