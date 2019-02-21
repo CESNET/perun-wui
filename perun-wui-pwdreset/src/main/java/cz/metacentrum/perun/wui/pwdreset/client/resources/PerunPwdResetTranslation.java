@@ -56,11 +56,23 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("Password must be at least 8 characters long and contain only printable (not accented) characters. It must contain min. 3 uppercase or/and lowercase letters and min. 1 number or symbol.")
 	public String metaHelp();
 
-	@DefaultMessage("Password must be at least 8 characters long.")
-	public String metaLength();
+	@DefaultMessage("Password must be at least {0} characters long.")
+	public String passwordLength(int length);
 
 	@DefaultMessage("Password can contain only printable (not accented) characters. It must contain min. 3 uppercase or/and lowercase letters and min. 1 number or symbol.")
 	public String metaStrength();
+
+	@DefaultMessage("<ul><li>the minimum password length is 8 characters</li><li>must contain characters of at least three sets of characters</li><li>character sets are: [a-z], [A-Z], [0-9], [!#%&()[]*+,./:;<=>?@^_&#96;&#123;&#125;&#124;~-]</li><li>letters must not contain diacritics, the space is allowed</li><li>may not include your name, surname, personal number or username</li></ul>")
+	public String vsupHelp();
+
+	@DefaultMessage("Password must contain characters from at least 3 of 4 character sets: {0}")
+	public String passwordStrength4(String characterSets);
+
+	@DefaultMessage("Password may not include your name, surname, personal number or username!")
+	public String passwordStrength2();
+
+	@DefaultMessage("Password can`t contain accented characters (diacritics)!")
+	public String passwordStrength3();
 
 	// -------------- ACTIVATE ACCOUNT TRANSLATION ------------------------ //
 

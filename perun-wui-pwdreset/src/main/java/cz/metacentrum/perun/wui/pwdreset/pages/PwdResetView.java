@@ -26,6 +26,7 @@ import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
+import cz.metacentrum.perun.wui.pwdreset.client.resources.PerunPwdResetResources;
 import cz.metacentrum.perun.wui.pwdreset.client.resources.PerunPwdResetTranslation;
 import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
@@ -36,12 +37,16 @@ import org.gwtbootstrap3.client.ui.Form;
 import org.gwtbootstrap3.client.ui.FormGroup;
 import org.gwtbootstrap3.client.ui.FormLabel;
 import org.gwtbootstrap3.client.ui.HelpBlock;
+import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
+import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -79,6 +84,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	@UiField HelpBlock itemStatus;
 	@UiField HelpBlock help;
 	@UiField AlertErrorReporter alert;
+	@UiField
+	Div namespaceLogoWrapper;
 
 	@Inject
 	public PwdResetView(PwdResetUiBinder binder) {
@@ -280,6 +287,16 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			namespace = "";
 		}
 
+		if (namespace.equals("vsup")) {
+
+			Image logo = new Image(PerunPwdResetResources.INSTANCE.getVsupLogo());
+			logo.setWidth("auto");
+			logo.setHeight("200px");
+			namespaceLogoWrapper.add(logo);
+			namespaceLogoWrapper.setVisible(true);
+
+		}
+
 		AttributesManager.getLogins(PerunSession.getInstance().getUserId(), new JsonEvents() {
 
 			final JsonEvents events = this;
@@ -311,6 +328,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 								if (Objects.equals(namespace, "einfra")) {
 									help.setHTML("<p>" + translation.metaHelp());
+								} else if (Objects.equals(namespace, "vsup")) {
+									help.setHTML("<p>"+translation.vsupHelp());
 								}
 
 								return;
@@ -362,20 +381,18 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	 */
 	private boolean validate() {
 
-
 		if (passwordTextBox.getValue() == null || passwordTextBox.getValue().isEmpty()) {
 			passItem.setValidationState(ValidationState.ERROR);
 			itemStatus.setText(translation.passwordCantBeEmpty());
 			return false;
 		}
 
-
 		// TODO - per-namespace regex validation
 		if (Objects.equals(namespace, "einfra")) {
 
 			// check length
 			if (passwordTextBox.getValue().length() < 8) {
-				itemStatus.setText(translation.metaLength());
+				itemStatus.setText(translation.passwordLength(8));
 				passItem.setValidationState(ValidationState.ERROR);
 				return false;
 			}
@@ -402,6 +419,49 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 			if (login.equalsIgnoreCase(passwordTextBox.getValue()) || passwordTextBox.getValue().contains(login)) {
 				itemStatus.setText(translation.metaStrength());
+				passItem.setValidationState(ValidationState.ERROR);
+				return false;
+			}
+
+		} else if (Objects.equals(namespace, "vsup")) {
+
+			// check length
+			if (passwordTextBox.getValue().length() < 8) {
+				itemStatus.setText(translation.passwordLength(8));
+				passItem.setValidationState(ValidationState.ERROR);
+				return false;
+			}
+
+			int limit = 3;
+			int counter = 0;
+			List<String> regexes = Arrays.asList("^(.*[0-9].*)$","^.*[a-z].*$","^.*[A-Z].*$","^.*([!#%&()\\]\\[*+,./:;<=>?@^_`{|}~-]).*$");
+			for (String regex : regexes) {
+				RegExp regExp = RegExp.compile(regex);
+				MatchResult matcher = regExp.exec(passwordTextBox.getValue());
+				if (matcher != null) counter=counter+1;
+			}
+			if (counter < limit) {
+				itemStatus.setText(translation.passwordStrength4("[a-z], [A-Z], [0-9], [!#%&()[]*+,./:;<=>?@^_`{}|~-]"));
+				passItem.setValidationState(ValidationState.ERROR);
+				return false;
+			}
+
+			// can't contain login
+			if (!login.isEmpty()) {
+				// only if known to the app
+				if (login.equalsIgnoreCase(passwordTextBox.getValue()) || passwordTextBox.getValue().contains(login)) {
+					itemStatus.setText(translation.passwordStrength2());
+					passItem.setValidationState(ValidationState.ERROR);
+					return false;
+				}
+			}
+
+			// limit only to ASCII
+			RegExp regExp2 = RegExp.compile("^[\\x20-\\x7E]{8,}$");
+			MatchResult matcher2 = regExp2.exec(passwordTextBox.getValue());
+			boolean matchFound2 = (matcher2 != null);
+			if(!matchFound2){
+				itemStatus.setText(translation.passwordStrength3());
 				passItem.setValidationState(ValidationState.ERROR);
 				return false;
 			}

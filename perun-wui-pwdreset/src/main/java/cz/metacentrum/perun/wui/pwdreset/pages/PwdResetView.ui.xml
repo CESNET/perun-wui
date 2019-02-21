@@ -17,6 +17,8 @@
 			<b:Row>
 				<b:Column size="MD_8" offset="MD_2">
 
+					<b.html:Div ui:field="namespaceLogoWrapper" visible="false"/>
+
 					<b:Heading size="H2" ui:field="pageTitle">
 						<b:Icon ui:field="icon" type="KEY" fixedWidth="true" />
 						<b.html:Text text="Password reset" ui:field="text"/>

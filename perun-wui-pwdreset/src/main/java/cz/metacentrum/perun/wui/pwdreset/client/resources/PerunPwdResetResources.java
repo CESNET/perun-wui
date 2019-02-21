@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.pwdreset.client.resources;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
+import com.google.gwt.resources.client.ImageResource;
 
 /**
  * Resources for Perun Pwd Reset WUI app.
@@ -30,5 +31,8 @@ public interface PerunPwdResetResources extends ClientBundle {
 
 	@Source("css/PerunPwdReset.gss")
 	PerunPwdResetCss gss();
+
+	@Source("vsup_multilang.jpg")
+	ImageResource getVsupLogo();
 
 }
