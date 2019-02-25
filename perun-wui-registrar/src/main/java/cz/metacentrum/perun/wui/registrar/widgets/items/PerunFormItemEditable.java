@@ -53,9 +53,15 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		this.status = new HelpBlock();
 		Column statusWrap = new Column(PerunForm.STATUS_SIZE);
 
-
-		label.setText(getLabelOrShortName());
-		label.setShowRequiredIndicator(getItemData().getFormItem().isRequired());
+		// We assure that * is at the same line
+		if (getItemData().getFormItem().isRequired()) {
+			label.setHTML(SafeHtmlUtils.htmlEscape(getLabelOrShortName())+"&#8203;<span style=\"color:#b94a48\">*</span>");
+		} else {
+			label.setText(getLabelOrShortName());
+		}
+		// original implementation
+		//label.setHTML(SafeHtmlUtils.htmlEscape(getLabelOrShortName()));
+		//label.setShowRequiredIndicator(getItemData().getFormItem().isRequired());
 
 		label.addStyleName(PerunForm.LABEL_SIZE.getCssName());
 		widgetWithTexts.addStyleName(PerunForm.WIDGET_WITH_TEXT_SIZE.getCssName());
