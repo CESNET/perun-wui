@@ -56,10 +56,10 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 			"Without verification it is not possible to approve your application.")
 	public String verifyMail(String mail);
 
-	@DefaultMessage("Please wait until your application will be approved. You will be informed by email once your application is either approved or rejected.")
+	@DefaultMessage("Please wait until your application has been approved. You will be notified by email.")
 	public String waitForAcceptation();
 
-	@DefaultMessage("Please wait until your application for membership extension will be approved. You will be informed by email once your application is either approved or rejected.")
+	@DefaultMessage("Please wait until your application for membership extension has been approved. You will be notified by email.")
 	public String waitForExtAcceptation();
 
 	@DefaultMessage("After acceptation you will become member of \"{0}\" automatically.")
