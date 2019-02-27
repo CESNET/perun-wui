@@ -347,6 +347,10 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 						alert.setHTML((isAccountActivation) ? translation.dontHaveLoginActive(namespace) : translation.dontHaveLogin(namespace));
 					}
 
+				} else {
+					// doesn't have login (any login)
+					alert.setVisible(true);
+					alert.setHTML((isAccountActivation) ? translation.dontHaveLoginActive(namespace) : translation.dontHaveLogin(namespace));
 				}
 
 			}
