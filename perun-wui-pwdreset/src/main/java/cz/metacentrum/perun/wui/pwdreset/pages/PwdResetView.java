@@ -33,6 +33,7 @@ import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
+import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Form;
 import org.gwtbootstrap3.client.ui.FormGroup;
 import org.gwtbootstrap3.client.ui.FormLabel;
@@ -84,8 +85,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	@UiField HelpBlock itemStatus;
 	@UiField HelpBlock help;
 	@UiField AlertErrorReporter alert;
-	@UiField
-	Div namespaceLogoWrapper;
+	@UiField Column namespaceLogoWrapper;
 
 	@Inject
 	public PwdResetView(PwdResetUiBinder binder) {
@@ -94,7 +94,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 		text.setText((isAccountActivation) ? translation.activateAppName() : translation.pwdresetAppName());
 		submit.setText((isAccountActivation) ? translation.submitActivateButton() : translation.submitPwdResetButton());
-		passLabel.setText(translation.pwdresetLabel());
+		passLabel.setHTML(SafeHtmlUtils.htmlEscape(translation.pwdresetLabel())+"&#8203;<span style=\"color:#b94a48\">*</span>");
 
 		help.setHTML(translation.dontUseAccents());
 
@@ -490,6 +490,27 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 		loader.onFinished();
 		alert.setVisible(false);
 		form.setVisible(true);
+
+		if (Window.Location.getParameter("login-namespace") != null && !Window.Location.getParameter("login-namespace").isEmpty()) {
+			namespace = SafeHtmlUtils.fromString(Window.Location.getParameter("login-namespace")).asString();
+		} else {
+			namespace = "";
+		}
+
+		if (Objects.equals(namespace, "einfra")) {
+
+			help.setHTML("<p>" + translation.metaHelp());
+
+		} else if (Objects.equals(namespace, "vsup")) {
+			help.setHTML("<p>"+translation.vsupHelp());
+
+			Image logo = new Image(PerunPwdResetResources.INSTANCE.getVsupLogo());
+			logo.setWidth("auto");
+			logo.setHeight("150px");
+			namespaceLogoWrapper.add(logo);
+			namespaceLogoWrapper.setVisible(true);
+
+		}
 
 	}
 
