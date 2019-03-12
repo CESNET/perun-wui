@@ -13,6 +13,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import com.gwtplatform.mvp.client.proxy.ProxyPlace;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import cz.metacentrum.perun.wui.client.PerunPresenter;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
@@ -150,7 +151,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 			return;
 		}
 
-		UsersManager.requestPreferredEmailChange(user.getId(), email, new JsonEvents() {
+		UsersManager.requestPreferredEmailChange(user.getId(), email, PerunConfiguration.getCurrentLocaleName(), new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject result) {
 				List<String> pendingEmails = JsUtils.listFromJsArrayString((JsArrayString) result.cast());

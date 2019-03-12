@@ -178,15 +178,17 @@ public class UsersManager {
 	 *
 	 * @param userId Users ID
 	 * @param email  New email address to set
+	 * @param lang Language to get confirmation mail in
 	 * @param events Events done on callback
 	 *
 	 * @return Request unique request
 	 */
-	public static Request requestPreferredEmailChange(int userId, String email, JsonEvents events) {
+	public static Request requestPreferredEmailChange(int userId, String email, String lang, JsonEvents events) {
 
 		JsonClient client = new JsonClient(events);
 		if (userId > 0) client.put("user", userId);
 		client.put("email", email);
+		client.put("lang", lang);
 		return client.call(USERS_MANAGER + "requestPreferredEmailChange");
 
 	}
