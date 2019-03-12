@@ -141,7 +141,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 					if (validate()) {
 
-						UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), new JsonEvents() {
+						UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), PerunConfiguration.getCurrentLocaleName(), new JsonEvents() {
 
 							final JsonEvents events = this;
 

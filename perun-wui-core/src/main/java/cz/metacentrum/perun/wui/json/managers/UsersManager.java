@@ -261,16 +261,18 @@ public class UsersManager {
 	 * @param i Token param i
 	 * @param m Token param m
 	 * @param newPass New password set for the user
+	 * @param lang Language to get notification in
 	 * @param events Events done on callback
 	 *
 	 * @return Request unique request
 	 */
-	public static Request resetNonAuthzPassword(String i, String m, String newPass, JsonEvents events){
+	public static Request resetNonAuthzPassword(String i, String m, String newPass, String lang, JsonEvents events){
 
 		JsonClient client = new JsonClient(events);
 		if (i != null && !i.isEmpty()) client.put("i", i);
 		if (m != null && !m.isEmpty()) client.put("m", m);
 		if (newPass!= null && !newPass.isEmpty()) client.put("password", newPass);
+		if (lang!= null && !lang.isEmpty()) client.put("lang", newPass);
 		return client.call(USERS_MANAGER + "changeNonAuthzPassword");
 
 	}
