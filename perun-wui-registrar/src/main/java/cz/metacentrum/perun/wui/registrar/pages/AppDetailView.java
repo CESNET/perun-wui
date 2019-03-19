@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.shared.HandlerRegistration;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -117,6 +118,7 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 	@UiField
 	PerunButton resendNotification;
+	HandlerRegistration resendNotificationHandler = null;
 
 	@UiField
 	Paragraph mailVerificationText;
@@ -225,7 +227,11 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 						String val = SafeHtmlUtils.fromString((item.getValue()!=null) ? item.getValue() : "").asString();
 						mailVerificationText.setHTML(translation.mailVerificationText(val));
 						resendNotification.setText(translation.reSendMailVerificationButton());
-						resendNotification.addClickHandler(new ClickHandler() {
+						// clear previous handler registration on same button
+						if (resendNotificationHandler != null) {
+							resendNotificationHandler.removeHandler();
+						}
+						resendNotificationHandler = resendNotification.addClickHandler(new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
 
