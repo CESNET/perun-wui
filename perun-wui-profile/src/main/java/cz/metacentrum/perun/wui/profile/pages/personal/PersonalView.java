@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.resources.beans.Locale;
 import cz.metacentrum.perun.wui.client.resources.beans.PersonalAttribute;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -261,6 +262,11 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		Column column = new Column(ColumnSize.SM_6, ColumnSize.XS_6);
 
 		String descriptionString = personalAttribute.getLocalizedDescription(Utils.getLocale());
+		if (descriptionString == null) {
+			// fallback to EN version
+			descriptionString = personalAttribute.getLocalizedDescription(Locale.EN);
+		}
+
 		Widget descriptionWidget = getWidgetForText(descriptionString);
 		descriptionWidget.addStyleName(resources.gss().personalDescriptionLabel());
 
@@ -408,26 +414,33 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		String urn = personalAttribute.getUrn();
 		String name;
 
-		// check if there is name from configuration for current locale
+		// check if translated name is available
+		String translatedName = attributeNamesTranslations.get(urn);
+		if (translatedName == null) {
+			if (defaultName != null) {
+				translatedName = defaultName;
+			} else {
+				// parse name from urn
+				String[] split = urn.split(":");
+				if (split.length == 1) {
+					translatedName = split[split.length - 1];
+				}
+			}
+		}
+
+		name = translatedName;
+
+		// check if there is name from configuration for current locale - override code defaults
 		String configName = personalAttribute.getLocalizedName(Utils.getLocale());
+
 		if (configName != null) {
 			name = configName;
 		} else {
-			// check if translated name is available
-			String translatedName = attributeNamesTranslations.get(urn);
-			if (translatedName == null) {
-				if (defaultName != null) {
-					translatedName = defaultName;
-				} else {
-					// parse name from urn
-					String[] split = urn.split(":");
-					if (split.length == 1) {
-						translatedName = split[split.length - 1];
-					}
-				}
+			// if value for current locale is not present, override by EN
+			configName = personalAttribute.getLocalizedName(Locale.EN);
+			if (configName != null) {
+				name = configName;
 			}
-
-			name = translatedName;
 		}
 
 		Text nameText = new Text(name);
