@@ -228,35 +228,37 @@
 <div id="footer">
 	<!-- ELIXIR FOOTER (copy from here) -->
 	<footer style="background-color: #f5f5f5; margin: 0; padding: 0 10px 1em;border-top: 5px solid #eee;">
+		<div class="container">
+			<div class="row">
+				<!-- CSS for the footer -->
+				<style scoped>
+					#footer-logo {float: left; margin: 10px 1em 0 0;width: 100px;}
+					#footer-text {color: #888; font-size: 0.7em;font-family: Verdana, sans-serif;margin: 33px 0;}
+					#footer-text p {margin: 0.5em 0;}
+					#footer-text p a {color: #4471A9; text-decoration: none;}
+					#footer-text p a:hover {text-decoration: underline;}
+				</style>
+				<!-- /CSS for the footer -->
 
-		<!-- CSS for the footer -->
-		<style scoped>
-			#footer-logo {float: left; margin: 10px 1em 0 0;width: 100px;}
-			#footer-text {color: #888; font-size: 0.7em;font-family: Verdana, sans-serif;margin: 33px 0;}
-			#footer-text p {margin: 0.5em 0;}
-			#footer-text p a {color: #4471A9; text-decoration: none;}
-			#footer-text p a:hover {text-decoration: underline;}
-		</style>
-		<!-- /CSS for the footer -->
-
-		<!-- HTML for the footer -->
-		<div id="footer-logo">
-			<a href="https://www.elixir-europe.org/" title="ELIXIR" class="no-underline">
-				<img src="data:image/png;base64,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" />
-			</a>
+				<!-- HTML for the footer -->
+				<div id="footer-logo">
+					<a href="https://www.elixir-europe.org/" title="ELIXIR" class="no-underline">
+						<img src="data:image/png;base64,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" />
+					</a>
+				</div>
+				<div id="footer-text">
+					<p>ELIXIR, Wellcome Trust Genome Campus, Hinxton, Cambridgeshire, CB10 1SD, UK
+						&nbsp; &nbsp; +44 (0)1223 492-670 &nbsp;
+						<a href="mailto:info@elixir-europe.org">info@elixir-europe.org</a>
+					</p>
+					<p>Copyright © ELIXIR 2015  | <a href="https://www.elixir-europe.org/legal/privacy">Privacy</a> |
+						<a href="https://www.elixir-europe.org/legal/cookies">Cookies</a> |
+						<a href="https://www.elixir-europe.org/legal/terms-of-use">Terms of use</a>
+					</p>
+				</div>
+				<!-- /HTML for the footer -->
+			</div>
 		</div>
-		<div id="footer-text">
-			<p>ELIXIR, Wellcome Trust Genome Campus, Hinxton, Cambridgeshire, CB10 1SD, UK
-				&nbsp; &nbsp; +44 (0)1223 492-670 &nbsp;
-				<a href="mailto:info@elixir-europe.org">info@elixir-europe.org</a>
-			</p>
-			<p>Copyright © ELIXIR 2015  | <a href="https://www.elixir-europe.org/legal/privacy">Privacy</a> |
-				<a href="https://www.elixir-europe.org/legal/cookies">Cookies</a> |
-				<a href="https://www.elixir-europe.org/legal/terms-of-use">Terms of use</a>
-			</p>
-		</div>
-		<!-- /HTML for the footer -->
-
 	</footer>
 	<!-- /ELIXIR FOOTER (end copying) -->
 </div>
