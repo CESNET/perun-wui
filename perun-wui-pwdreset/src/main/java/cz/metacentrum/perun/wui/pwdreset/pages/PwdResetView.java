@@ -420,7 +420,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 				return false;
 			}
 
-			if (login.equalsIgnoreCase(passwordTextBox.getValue()) || passwordTextBox.getValue().contains(login)) {
+			if (!login.isEmpty() &&
+					(login.equalsIgnoreCase(passwordTextBox.getValue()) || passwordTextBox.getValue().contains(login))) {
 				itemStatus.setText(translation.metaStrength());
 				passItem.setValidationState(ValidationState.ERROR);
 				return false;
