@@ -274,7 +274,7 @@ public class UsersManager {
 		if (i != null && !i.isEmpty()) client.put("i", i);
 		if (m != null && !m.isEmpty()) client.put("m", m);
 		if (newPass!= null && !newPass.isEmpty()) client.put("password", newPass);
-		if (lang!= null && !lang.isEmpty()) client.put("lang", newPass);
+		if (lang!= null && !lang.isEmpty()) client.put("lang", lang);
 		return client.call(USERS_MANAGER + "changeNonAuthzPassword");
 
 	}
