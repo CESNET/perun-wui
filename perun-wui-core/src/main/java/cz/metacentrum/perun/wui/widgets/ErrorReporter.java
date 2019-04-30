@@ -84,7 +84,7 @@ public class ErrorReporter {
 
 		widget = ourUiBinder.createAndBindUi(this);
 
-		subject.setText("Reported error: " + ex.getRequestURL() + " (" +ex.getErrorId() + ")");
+		subject.setText("Reported error: " + ((ex.getRequestURL() != null) ? ex.getRequestURL() : ex.getName()) + " (" +ex.getErrorId() + ")");
 		message.setHeight("100px");
 
 		// only if perun-user unknown
@@ -173,7 +173,7 @@ public class ErrorReporter {
 				}
 
 				if (subject.getText().isEmpty()) {
-					subject.setText("Reported error: " + ex.getRequestURL() + " (" + ex.getErrorId() + ")");
+					subject.setText("Reported error: " + ((ex.getRequestURL() != null) ? ex.getRequestURL() : ex.getName()) + " (" + ex.getErrorId() + ")");
 				}
 
 				final String text = getMessage(ex);
@@ -220,9 +220,13 @@ public class ErrorReporter {
 	private String getMessage(PerunException ex) {
 
 		// clear password fields if present
-		final JSONObject postObject = new JSONObject(JsonUtils.parseJson(ex.getPostData()));
-
-		clearPasswords(postObject);
+		JSONObject postObject = null;
+		if (ex != null) {
+			if (ex.getPostData() != null && !ex.getPostData().isEmpty()) {
+				postObject = new JSONObject(JsonUtils.parseJson(ex.getPostData()));
+				clearPasswords(postObject);
+			}
+		}
 
 		String text = "";
 		if (!message.getText().trim().isEmpty()) {
@@ -230,10 +234,14 @@ public class ErrorReporter {
 			text += "-------------------------------------\n";
 		}
 		text += "Technical details: \n\n";
-		text += ex.getErrorId() + " - " + ex.getName() + "\n";
-		text += ex.getMessage() + "\n\n";
+		if (ex != null) {
+			text += ex.getErrorId() + " - " + ex.getName() + "\n";
+			text += ex.getMessage() + "\n\n";
+		}
 		text += "Perun instance: " + PerunConfiguration.perunInstanceName()+ "\n";
-		text += "Request: " + ex.getRequestURL() + "\n";
+		if (ex != null) {
+			text += "Request: " + ex.getRequestURL() + "\n";
+		}
 		if (postObject != null) text += "Post data: " + postObject.toString() + "\n";
 		text += "Application state: " + Window.Location.createUrlBuilder().buildString() + "\n\n";
 		text += "Authz: " + PerunSession.getInstance().getRolesString() + "\n\n";

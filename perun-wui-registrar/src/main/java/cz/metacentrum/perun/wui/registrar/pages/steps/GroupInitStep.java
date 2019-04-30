@@ -79,7 +79,7 @@ public class GroupInitStep extends FormStep {
 		form.setFormItems(registrar.getGroupFormInitial());
 
 		if (!form.containsSubmitButton()) {
-			PerunException ex = PerunException.createNew("0", "FormWrongFormedException", "Registration group form is wrong formed.");
+			PerunException ex = PerunException.createNew("0", "FormWrongFormedException", "Group registration form is wrongly formed.");
 			result.setException(ex);
 			events.onError(ex);
 			return;
