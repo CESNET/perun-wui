@@ -82,6 +82,8 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 			History.newItem(PerunRegistrarPlaceTokens.getMyApps());
 		}
 		if (Window.Location.getParameterMap().containsKey("i") && Window.Location.getParameterMap().containsKey("m")) {
+			// skip captcha on mail verification
+			captchaOK = true;
 			History.newItem(PerunRegistrarPlaceTokens.getVerify(), false);
 		}
 
