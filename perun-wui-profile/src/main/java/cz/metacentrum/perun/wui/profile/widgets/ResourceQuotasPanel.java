@@ -28,6 +28,7 @@ import static cz.metacentrum.perun.wui.profile.client.PerunProfileUtils.A_D_R_DA
 import static cz.metacentrum.perun.wui.profile.client.PerunProfileUtils.A_D_R_DEFAULT_DATA_LIMIT_NAME;
 import static cz.metacentrum.perun.wui.profile.client.PerunProfileUtils.A_D_R_DEFAULT_FILES_LIMIT_NAME;
 import static cz.metacentrum.perun.wui.profile.client.PerunProfileUtils.A_D_R_FILES_LIMIT_NAME;
+import static cz.metacentrum.perun.wui.profile.client.PerunProfileUtils.A_D_R_USER_SETTINGS_DESCRIPTION_NAME;
 import static cz.metacentrum.perun.wui.profile.client.PerunProfileUtils.A_D_R_USER_SETTINGS_NAME_NAME;
 
 /**
@@ -113,6 +114,13 @@ public class ResourceQuotasPanel extends Panel {
 	private void createBodyItems(PanelBody body) {
 		ListGroup listGroup = new ListGroup();
 		listGroup.addStyleName(PerunProfileResources.INSTANCE.gss().panelList());
+
+		if (indexedAttrs.containsKey(A_D_R_USER_SETTINGS_DESCRIPTION_NAME)) {
+			ListGroupItem description = new ListGroupItem();
+			Text value = new Text(indexedAttrs.get(A_D_R_USER_SETTINGS_DESCRIPTION_NAME).getValue());
+			description.add(value);
+			listGroup.add(description);
+		}
 
 		if (indexedAttrs.containsKey(A_D_R_DEFAULT_DATA_LIMIT_NAME)) {
 			createLimitItem(listGroup, indexedAttrs.get(A_D_R_DEFAULT_DATA_LIMIT_NAME),
