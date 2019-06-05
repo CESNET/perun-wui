@@ -337,6 +337,9 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Not set")
 	String notSet();
 
+	@DefaultMessage("SAMBA password")
+	String menuSambaPassword();
+
 	@DefaultMessage("Alternative passwords")
 	String menuAltPasswords();
 
@@ -384,5 +387,20 @@ public interface PerunProfileTranslation extends PerunTranslation {
 
 	@DefaultMessage("You already have password with this description")
 	String errorDuplicateDescription();
+
+	@DefaultMessage("Enter new password")
+	String passwordField();
+
+	@DefaultMessage("You <b>already have</b> password for SAMBA. You can change it by setting new password.")
+	String sambaPasswordSet();
+
+	@DefaultMessage("You <b>don`t have</b> password for SAMBA yet. You can create new one using form below.")
+	String sambaPasswordNotSet();
+
+	@DefaultMessage("Set password")
+	String setSambaPassword();
+
+	@DefaultMessage("Password for SAMBA service has been changed.")
+	String sambaPasswordSetNotif();
 
 }

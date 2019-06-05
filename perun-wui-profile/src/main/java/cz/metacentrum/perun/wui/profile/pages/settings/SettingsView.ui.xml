@@ -38,6 +38,8 @@
 							  targetHistoryToken="{placeTokens.getSettingsDataquotas}"/>
 			<b:AnchorListItem ui:field="alternativePasswords" icon="UNLOCK" text="{trans.menuAltPasswords}"
 							  targetHistoryToken="{placeTokens.getSettingsAltPasswords}"/>
+			<b:AnchorListItem ui:field="sambaPassword" icon="UNLOCK" text="{trans.menuSambaPassword}"
+			                  targetHistoryToken="{placeTokens.getSettingsSamba}"/>
 		</b:Nav>
 
 		<p:PerunLoader visible="false" ui:field="loader" />
