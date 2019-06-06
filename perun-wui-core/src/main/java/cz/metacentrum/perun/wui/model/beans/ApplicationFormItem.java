@@ -50,6 +50,7 @@ public class ApplicationFormItem extends JavaScriptObject {
 	 * @param required TRUE = item is required / FALSE = item is optional
 	 * @param type ApplicationFormItemType of form item
 	 * @param federationAttribute Name of IdP federation attribute
+	 * @param perunSourceAttribute URN of linked attribute definition
 	 * @param perunDestinationAttribute URN of linked attribute definition
 	 * @param regex Regular expression to set
 	 * @param applicationTypes List<Application.ApplicationType> List of application types this form item is used on
@@ -58,7 +59,7 @@ public class ApplicationFormItem extends JavaScriptObject {
 	 * @return
 	 */
 	static public ApplicationFormItem createNew(int id, String shortname, boolean required, ApplicationFormItemType type,
-												String federationAttribute, String perunDestinationAttribute, String regex,
+												String federationAttribute, String perunSourceAttribute, String perunDestinationAttribute, String regex,
 												List<Application.ApplicationType> applicationTypes, Integer ordnum, boolean forDelete)	{
 		ApplicationFormItem afi = new JSONObject().getJavaScriptObject().cast();
 		afi.setId(id);
@@ -66,7 +67,8 @@ public class ApplicationFormItem extends JavaScriptObject {
 		afi.setRequired(required);
 		afi.setType(type);
 		afi.setFederationAttribute(federationAttribute);
-		afi.setPerunAttribute(perunDestinationAttribute);
+		afi.setPerunSourceAttribute(perunSourceAttribute);
+		afi.setPerunDestinationAttribute(perunDestinationAttribute);
 		afi.setRegex(regex);
 		afi.setApplicationTypes(applicationTypes);
 		afi.setOrdnum(ordnum);
@@ -156,30 +158,54 @@ public class ApplicationFormItem extends JavaScriptObject {
 	}-*/;
 
 	/**
-	 * Get URN of Attribute definition this form item is linked to.
+	 * Get URN of Attribute definition this form item is pre-filled from.
 	 *
-	 * Vale from form item is stored to attribute on application approval.
 	 * Value from attribute is pushed to form item on item retrieval.
 	 *
 	 * @see AttributeDefinition#getURN()
 	 *
 	 * @return URN of linked attribute definition
 	 */
-	public final String getPerunAttribute() {
-		return JsUtils.getNativePropertyString(this, "perunDestinationAttribute");
+	public final String getPerunSourceAttribute() {
+		return JsUtils.getNativePropertyString(this, "perunSourceAttribute");
 	}
 
 	/**
-	 * Set URN of Attribute definition this form item is linked to.
+	 * Set URN of Attribute definition this form item is pre-filled from.
 	 *
-	 * Vale from form item is stored to attribute on application approval.
 	 * Value from attribute is pushed to form item on item retrieval.
 	 *
 	 * @see AttributeDefinition#getURN()
 	 *
 	 * @param attribute URN of linked attribute definition
 	 */
-	public final native void setPerunAttribute(String attribute) /*-{
+	public final native void setPerunSourceAttribute(String attribute) /*-{
+		this.perunSourceAttribute = attribute;
+	}-*/;
+
+	/**
+	 * Get URN of Attribute definition this form item is stored into.
+	 *
+	 * Vale from form item is stored to attribute on application approval.
+	 *
+	 * @see AttributeDefinition#getURN()
+	 *
+	 * @return URN of linked attribute definition
+	 */
+	public final String getPerunDestinationAttribute() {
+		return JsUtils.getNativePropertyString(this, "perunDestinationAttribute");
+	}
+
+	/**
+	 * Set URN of Attribute definition this form item is stored into.
+	 *
+	 * Vale from form item is stored to attribute on application approval.
+	 *
+	 * @see AttributeDefinition#getURN()
+	 *
+	 * @param attribute URN of linked attribute definition
+	 */
+	public final native void setPerunDestinationAttribute(String attribute) /*-{
 		this.perunDestinationAttribute = attribute;
 	}-*/;
 

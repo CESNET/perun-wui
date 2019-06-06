@@ -30,7 +30,7 @@ public class Password extends PerunFormItemEditable {
 	public Password(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang, onlyPreview);
 		// FIXME - specific per-namespace validation
-		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunAttribute())) {
+		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunDestinationAttribute())) {
 				this.validator = new EinfraPasswordValidator();
 		} else {
 			this.validator = new PasswordValidator();

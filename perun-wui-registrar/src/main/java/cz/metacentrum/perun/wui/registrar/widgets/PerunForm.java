@@ -358,7 +358,7 @@ public class PerunForm extends FieldSet {
 						// mail changed - re-check existing users
 						checkSimilarUsersAgain = true;
 					}
-				} else if (Objects.equals(item.getItemData().getFormItem().getPerunAttribute(), "urn:perun:user:attribute-def:core:displayName")) {
+				} else if (Objects.equals(item.getItemData().getFormItem().getPerunDestinationAttribute(), "urn:perun:user:attribute-def:core:displayName")) {
 					if (!Objects.equals(prefilledValue, item.getValue())) {
 						// name changed - re-check existing users
 						checkSimilarUsersAgain = true;

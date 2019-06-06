@@ -55,7 +55,7 @@ public class UsernameValidator extends PerunFormItemValidatorImpl<Username> {
 			return;
 		}
 
-		String loginNamespace = username.getItemData().getFormItem().getPerunAttribute().substring(PERUN_ATTRIBUTE_LOGIN_NAMESPACE_POSITION);
+		String loginNamespace = username.getItemData().getFormItem().getPerunDestinationAttribute().substring(PERUN_ATTRIBUTE_LOGIN_NAMESPACE_POSITION);
 
 		UsersManager.isLoginAvailable(loginNamespace, username.getValue(), new JsonEvents() {
 
