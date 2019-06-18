@@ -22,12 +22,13 @@ public class UserExtSource extends GeneralObject {
 	 * @param persistent persistent flag of this UserExtSource
 	 * @return
 	 */
-	public static final UserExtSource createNew(ExtSource source, String login, int userId, int loa, boolean persistent){
+	public static final UserExtSource createNew(ExtSource source, String login, int userId, int loa, String lastAccess, boolean persistent){
 		UserExtSource ues = new JSONObject().getJavaScriptObject().cast();
 		ues.setExtSource(source);
 		ues.setLogin(login);
 		ues.setUserId(userId);
 		ues.setLoa(loa);
+		ues.setLastAccess(lastAccess);
 		ues.setPersistent(persistent);
 		return ues;
 	}
@@ -118,7 +119,7 @@ public class UserExtSource extends GeneralObject {
 	}
 
 	/**
-	 * Get Persistent flag of this UserExtSource (User's identity).
+	 * Set Persistent flag of this UserExtSource (User's identity).
 	 *
 	 * false = UserExtSource can be removed. It is truly external.
 	 * true = UserExtSource can NOT be removed. It is somehow important and needed in the system.
@@ -127,6 +128,28 @@ public class UserExtSource extends GeneralObject {
 	 */
 	public final native void setPersistent(boolean persistent) /*-{
 		this.persistent = persistent;
+	}-*/;
+
+	/**
+	 * Get timestamp of last users usage of UserExtSource in "YYYY-MM-DD HH:mm:ss.SSSSSS" format.
+	 *
+	 * It is either timestamp of UserExtSource creation or last users access to Perun using this UES.
+	 *
+	 * @return last access timestamp
+	 */
+	public final String getLastAccess() {
+		return JsUtils.getNativePropertyString(this, "lastAccess");
+	}
+
+	/**
+	 * Set timestamp of last users usage of UserExtSource in "YYYY-MM-DD HH:mm:ss.SSSSSS" format.
+	 *
+	 * It is either timestamp of UserExtSource creation or last users access to Perun using this UES.
+	 *
+	 * @param lastAccess last access timestamp
+	 */
+	public final native void setLastAccess(String lastAccess) /*-{
+		this.lastAccess = lastAccess;
 	}-*/;
 
 	/**

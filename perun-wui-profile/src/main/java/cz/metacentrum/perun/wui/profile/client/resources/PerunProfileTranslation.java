@@ -73,6 +73,9 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	String phone();
 
 
+	@DefaultMessage("Last usage")
+	String lastAccess();
+
 	@DefaultMessage("These are the accounts you use to access your services.")
 	public String myIdentsText();
 

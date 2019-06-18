@@ -27,6 +27,7 @@ import org.gwtbootstrap3.client.ui.html.Small;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -59,6 +60,9 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 	private static final String EMAIL_ATTRIBUTE = "urn:perun:ues:attribute-def:def:mail";
 	private static final String ORIGIN_ENTITY_ID_ATTRIBUTE = "urn:perun:ues:attribute-def:def:authenticating-authority";
 	private static final String EPPN_ATTRIBUTE = "urn:perun:ues:attribute-def:def:eppn";
+	// organization names provided by IDPs
+	private static final String SOURCE_IDP_ORG_NAME = "urn:perun:ues:attribute-def:def:IdPOrganizationName";
+	private static final String SOURCE_IDP_NAME = "urn:perun:ues:attribute-def:def:sourceIdPName";
 
 	@Inject
 	public IdentitiesView(IdentitiesViewUiBinder binder) {
@@ -76,35 +80,14 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 				if (rues.getAttribute(EMAIL_ATTRIBUTE) == null || rues.getAttribute(EMAIL_ATTRIBUTE).isEmpty()) {
 					return "N/A";
 				} else {
-					return rues.getAttribute(EMAIL_ATTRIBUTE).getValue();
+					return rues.getAttribute(EMAIL_ATTRIBUTE).getValue().replaceAll(";", "\n");
 				}
 			}
 		};
 		TextColumn<RichUserExtSource> nameCol = new TextColumn<RichUserExtSource>() {
 			@Override
 			public String getValue(RichUserExtSource userExtSource) {
-				if (ExtSourceType.IDP.getType().equals(userExtSource.getUes().getExtSource().getType())) {
-					if (userExtSource.getUes().getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth") ||
-							userExtSource.getUes().getExtSource().getName().equals("https://login.elixir-czech.org/idp/")) {
-						// hack our social IdP so we can tell from where identity is
-						return Utils.translateIdp("@"+userExtSource.getUes().getLogin().split("@")[1]);
-					}
-
-					// show source entityId for proxy of EduTeams
-					if (userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE) != null &&
-							userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE).getValue() != null) {
-						return Utils.translateIdp(userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE).getValue());
-					}
-
-					return Utils.translateIdp(userExtSource.getUes().getExtSource().getName());
-
-				} else if (ExtSourceType.X509.getType().equals(userExtSource.getUes().getExtSource().getType())) {
-					return getCertParam(userExtSource.getUes().getExtSource().getName(), "O") +
-							", " +
-							getCertParam(userExtSource.getUes().getExtSource().getName(), "CN");
-				} else {
-					return userExtSource.getUes().getExtSource().getName();
-				}
+				return resolveUesName(userExtSource);
 			}
 		};
 		TextColumn<RichUserExtSource> loginCol = new TextColumn<RichUserExtSource>() {
@@ -132,6 +115,17 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 			}
 		};
 
+		TextColumn<RichUserExtSource> lastAccessCol = new TextColumn<RichUserExtSource>() {
+			@Override
+			public String getValue(RichUserExtSource userExtSource) {
+				if (userExtSource.getUes().getLastAccess() != null && !userExtSource.getUes().getLastAccess().isEmpty()) {
+					return userExtSource.getUes().getLastAccess().split("\\.")[0];
+				} else {
+					return "N/A";
+				}
+			}
+		};
+
 		Column<RichUserExtSource, String> removeColumn = new Column<RichUserExtSource, String>(
 				new ButtonCell(ButtonType.DANGER, ButtonSize.EXTRA_SMALL)) {
 			@Override
@@ -149,6 +143,7 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		federatedIdentitiesTable.addColumn(emailCol, translation.uesEmail());
 		federatedIdentitiesTable.addColumn(nameCol, translation.federatedIdp());
 		federatedIdentitiesTable.addColumn(loginCol, translation.federatedLogin());
+		federatedIdentitiesTable.addColumn(lastAccessCol, translation.lastAccess());
 		federatedIdentitiesTable.addColumn(removeColumn);
 		federatedIdentitiesTable.setColumnWidth(federatedIdentitiesTable.getColumnCount()-1, "5%");
 		((PerunLoader) federatedIdentitiesTable.getEmptyTableWidget()).setEmptyMessage(translation.noIdentities());
@@ -159,6 +154,7 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		x509IdentitiesTable.addColumn(emailCol, translation.uesEmail());
 		x509IdentitiesTable.addColumn(nameCol, translation.x509Issuer());
 		x509IdentitiesTable.addColumn(loginCol, translation.x509Identity());
+		x509IdentitiesTable.addColumn(lastAccessCol, translation.lastAccess());
 		x509IdentitiesTable.addColumn(removeColumn);
 		x509IdentitiesTable.setColumnWidth(x509IdentitiesTable.getColumnCount()-1, "5%");
 		((PerunLoader) x509IdentitiesTable.getEmptyTableWidget()).setEmptyMessage(translation.noIdentities());
@@ -169,6 +165,7 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		otherIdentitiesTable.addColumn(emailCol, translation.uesEmail());
 		otherIdentitiesTable.addColumn(nameCol, translation.uesName());
 		otherIdentitiesTable.addColumn(loginCol, translation.login());
+		otherIdentitiesTable.addColumn(lastAccessCol, translation.lastAccess());
 		otherIdentitiesTable.addColumn(removeColumn);
 		otherIdentitiesTable.setColumnWidth(otherIdentitiesTable.getColumnCount()-1, "5%");
 		((PerunLoader) otherIdentitiesTable.getEmptyTableWidget()).setEmptyMessage(translation.noIdentities());
@@ -183,12 +180,30 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 	public void addUserExtSource(RichUserExtSource es) {
 		if (ExtSourceType.IDP.getType().equals(es.getUes().getExtSource().getType())) {
 			federatedIdentities.add(es);
+			federatedIdentities.sort(new Comparator<RichUserExtSource>() {
+				@Override
+				public int compare(RichUserExtSource o1, RichUserExtSource o2) {
+					return resolveUesName(o1).compareTo(resolveUesName(o2));
+				}
+			});
 			federatedIdentitiesTable.setRowData(federatedIdentities);
 		} else if (ExtSourceType.X509.getType().equals(es.getUes().getExtSource().getType())) {
 			x509Identities.add(es);
+			x509Identities.sort(new Comparator<RichUserExtSource>() {
+				@Override
+				public int compare(RichUserExtSource o1, RichUserExtSource o2) {
+					return resolveUesName(o1).compareTo(resolveUesName(o2));
+				}
+			});
 			x509IdentitiesTable.setRowData(x509Identities);
 		} else {
 			otherIdentities.add(es);
+			otherIdentities.sort(new Comparator<RichUserExtSource>() {
+				@Override
+				public int compare(RichUserExtSource o1, RichUserExtSource o2) {
+					return resolveUesName(o1).compareTo(resolveUesName(o2));
+				}
+			});
 			otherIdentitiesTable.setRowData(otherIdentities);
 		}
 
@@ -273,4 +288,46 @@ public class IdentitiesView extends ViewWithUiHandlers<IdentitiesUiHandlers> imp
 		}
 		return "";
 	}
+
+	private String resolveUesName(RichUserExtSource userExtSource) {
+
+		// IDP provided own name
+		if (userExtSource.getAttribute(SOURCE_IDP_NAME) != null &&
+				userExtSource.getAttribute(SOURCE_IDP_NAME).getValue() != null) {
+			return userExtSource.getAttribute(SOURCE_IDP_NAME).getValue();
+		}
+
+		// IDP provided organization name
+		if (userExtSource.getAttribute(SOURCE_IDP_ORG_NAME) != null &&
+				userExtSource.getAttribute(SOURCE_IDP_ORG_NAME).getValue() != null) {
+			return userExtSource.getAttribute(SOURCE_IDP_ORG_NAME).getValue();
+		}
+
+		// static translation
+
+		if (ExtSourceType.IDP.getType().equals(userExtSource.getUes().getExtSource().getType())) {
+			if (userExtSource.getUes().getExtSource().getName().equals("https://extidp.cesnet.cz/idp/shibboleth") ||
+					userExtSource.getUes().getExtSource().getName().equals("https://login.elixir-czech.org/idp/")) {
+				// hack our social IdP so we can tell from where identity is
+				return Utils.translateIdp("@"+userExtSource.getUes().getLogin().split("@")[1]);
+			}
+
+			// show source entityId for proxy of EduTeams
+			if (userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE) != null &&
+					userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE).getValue() != null) {
+				return Utils.translateIdp(userExtSource.getAttribute(ORIGIN_ENTITY_ID_ATTRIBUTE).getValue());
+			}
+
+			return Utils.translateIdp(userExtSource.getUes().getExtSource().getName());
+
+		} else if (ExtSourceType.X509.getType().equals(userExtSource.getUes().getExtSource().getType())) {
+			return getCertParam(userExtSource.getUes().getExtSource().getName(), "O") +
+					", " +
+					getCertParam(userExtSource.getUes().getExtSource().getName(), "CN");
+		} else {
+			return userExtSource.getUes().getExtSource().getName();
+		}
+
+	}
+
 }
