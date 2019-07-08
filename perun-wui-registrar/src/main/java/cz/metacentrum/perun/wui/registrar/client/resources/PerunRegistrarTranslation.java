@@ -310,6 +310,10 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Based on information provided by <i>{0}</i> you are <b>not active academia member</b>. Please sing out and use your home institution (University you are active member) when signing in.")
 	public String notAcademicLoA(String idp);
 
+	@DefaultMessage("In order to access CESNET services you must log-in using verified academic identity (at least once a year). Please use such identity to access this form.")
+	public String notEligibleCESNET();
+
+
 	/* ------------ LOADER MESSAGES ---------------- */
 
 	@DefaultMessage("Loading ...")

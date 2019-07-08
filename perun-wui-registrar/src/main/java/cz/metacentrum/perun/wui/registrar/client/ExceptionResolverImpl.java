@@ -199,6 +199,8 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 		if (Objects.equals("NOT_ACADEMIC", exception.getReason())) {
 			setInfo(trans.cantSubmitLoA(), trans.notAcademicLoA(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
+		} else if (Objects.equals("NOT_ELIGIBLE", exception.getReason())) {
+			setInfo(trans.cantSubmitLoA(), trans.notEligibleCESNET());
 		} else {
 			setInfo(trans.cantSubmitLoA(), exception.getMessage());
 		}
