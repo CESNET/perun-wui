@@ -1,7 +1,9 @@
 package cz.metacentrum.perun.wui.registrar.widgets;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Checkbox;
@@ -69,6 +71,13 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 			case VALIDATED_EMAIL:
 				return new ValidatedEmail(data, lang, onlyPreview);
 			case TEXTAREA:
+				// FIXME - hack for BBMRI collections to pre-fill value from URL
+				if ((data.getValue() == null || data.getValue().isEmpty() || data.getValue().equals("null")) &&
+						(data.getPrefilledValue() == null || data.getPrefilledValue().isEmpty() || data.getPrefilledValue().equals("null")) &&
+						data.getFormItem().getShortname().equals("Comma or new-line separated list of collection IDs you are representing:")) {
+					final String bbmriCollections = Window.Location.getParameter("col");
+					data.setPrefilledValue((bbmriCollections != null) ? JsUtils.unzipString(JsUtils.decodeBase64(bbmriCollections.replaceAll(" ", "+"))) : null);
+				}
 				return new TextArea(data, lang, onlyPreview);
 			case USERNAME:
 				Username username = new Username(data, lang, onlyPreview);
