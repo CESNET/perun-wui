@@ -291,6 +291,26 @@ public class JsUtils {
 	}-*/;
 
 	/**
+	 * Unzip String
+	 *
+	 * @param zippedString String to unzip
+	 * @return Unziped string
+	 */
+	public static final native String unzipString(String zippedString)/*-{
+		return $wnd.pako.ungzip(zippedString,{ to: 'string' , level: '9', memLevel: '1'});
+	}-*/;
+
+	/**
+	 * GZip String
+	 *
+	 * @param string String to unzip
+	 * @return Unziped string
+	 */
+	public static final native String zipString(String string)/*-{
+		return btoa($wnd.pako.gzip(string,{ to: 'string' , level: '9', memLevel: '1'}));
+	}-*/;
+
+	/**
 	 * Return current year as number
 	 * @return current year
 	 */
