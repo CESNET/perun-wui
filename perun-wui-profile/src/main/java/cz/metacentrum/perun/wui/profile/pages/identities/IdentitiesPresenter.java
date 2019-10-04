@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.profile.pages.identities;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.http.client.URL;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -18,7 +19,9 @@ import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AttributesManager;
+import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
+import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.profile.model.beans.RichUserExtSource;
@@ -157,6 +160,23 @@ public class IdentitiesPresenter extends Presenter<IdentitiesPresenter.MyView, I
 
 	@Override
 	public void addUserExtSource() {
-		Window.Location.assign(Utils.getIdentityConsolidatorLink(true));
+
+		RegistrarManager.getConsolidatorToken(new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				String token = ((BasicOverlayObject) result).getString();
+				Window.Location.assign(Utils.getIdentityConsolidatorLink(true)+"&token=" + token);
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				Window.Location.assign(Utils.getIdentityConsolidatorLink(true));
+			}
+
+			@Override
+			public void onLoadingStart() {
+			}
+		});
+
 	}
 }
