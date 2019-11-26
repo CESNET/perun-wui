@@ -707,6 +707,26 @@ public final class PerunConfiguration {
 	}
 
 	/**
+	 * Returns list of string identifiers (format "vo_short_name:group_name" or "vo_short_name") for which
+	 * result page of registration/extension is skipped. Redirect value is expected in URL user used to visit
+	 * registration form. Redirect is immediate (normally it would display continue button).
+	 *
+	 * If there is any exception in registration process, then summary page is still displayed !
+	 * If there is no redirect value in URL, then summary page is still displayed !
+	 *
+	 * @return names of attributes that should be shown
+	 */
+	public static List<String> getRegistrarSkipSummaryFor() {
+		List<String> attributes = new ArrayList<>();
+		String data = getConfigPropertyString("registrar.skipSummaryFor");
+		if (data != null) {
+			String[] values = data.split(",");
+			attributes.addAll(Arrays.asList(values));
+		}
+		return attributes;
+	}
+
+	/**
 	 * Parse single PersonalAttribute from raw String format.
 	 * Expected format is: {urn} [ {englishDescription} | {czech description} ]
 	 * Descriptions are optional
