@@ -33,19 +33,6 @@ public class Selectionbox extends PerunFormItemEditable {
 	}
 
 	@Override
-	protected void onAttach() {
-		super.onAttach();
-		if (!isOnlyPreview()) {
-			// Selectpicker widget has to have proper form class too, make sure it's not null
-			if (getSelect() != null &&
-					getSelect().getElement().getNextSiblingElement() != null &&
-					getSelect().getElement().getNextSiblingElement().getFirstChildElement() != null) {
-				getSelect().getElement().getNextSiblingElement().getFirstChildElement().addClassName("form-control");
-			}
-		}
-	}
-
-	@Override
 	protected Widget initWidget() {
 
 		widget = new Select();
@@ -142,10 +129,11 @@ public class Selectionbox extends PerunFormItemEditable {
 			getPreview().add(new Span(value));
 			return;
 		}
+		// Value is already in select
 		for (int i = 0; i < getSelect().getItemCount(); i++) {
 			if (getSelect().getValue(i).equals(value)) {
 				getSelect().setSelectedIndex(i);
-				break;
+				return;
 			}
 		}
 		getSelect().refresh();

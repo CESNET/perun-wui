@@ -65,6 +65,7 @@ public class Combobox extends PerunFormItemEditable {
 		}
 
 		final ExtendedTextBox box = new ExtendedTextBox();
+		box.setPlaceholder(translation.enterCustomValue());
 
 		getWidgetPanel().add(select);
 		getWidgetPanel().add(box);
@@ -254,15 +255,15 @@ public class Combobox extends PerunFormItemEditable {
 			getTextBox().setVisible(true);
 			getTextBox().setFocus(true);
 			getTextBox().addStyleName("comboboxFormItemLast");
-			getSelect().addStyleName("comboboxFormItemFirst");
 			// FIXME - hack bug in BootstrapSelect
-			getSelect().getElement().getNextSiblingElement().addClassName("comboboxFormItemFirst");
+			getSelect().getElement().getParentElement().getFirstChildElement().addClassName("comboboxFormItemFirst");
+			//getSelect().getElement().getNextSiblingElement().addClassName("comboboxFormItemFirst");
 		} else {
 			getTextBox().setVisible(false);
 			getTextBox().removeStyleName("comboboxFormItemLast");
-			getSelect().removeStyleName("comboboxFormItemFirst");
 			// FIXME - hack bug in BootstrapSelect
-			getSelect().getElement().getNextSiblingElement().removeClassName("comboboxFormItemFirst");
+			getSelect().getElement().getParentElement().getFirstChildElement().removeClassName("comboboxFormItemFirst");
+			//getSelect().getElement().getNextSiblingElement().removeClassName("comboboxFormItemFirst");
 		}
 	}
 

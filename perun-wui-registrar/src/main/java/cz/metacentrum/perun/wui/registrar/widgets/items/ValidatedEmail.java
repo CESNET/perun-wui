@@ -1,5 +1,7 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -107,6 +109,12 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		if (isOnlyPreview()) {
 			return;
 		}
+		getTextBox().addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent event) {
+				validateLocal();
+			}
+		});
 		getTextBox().addValueChangeHandler(new ValueChangeHandler() {
 			private boolean first = true;
 			@Override
