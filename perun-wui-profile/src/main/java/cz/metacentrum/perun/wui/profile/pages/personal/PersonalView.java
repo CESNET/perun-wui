@@ -334,6 +334,9 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	}
 
 	private Widget getWidgetForMap(Map<String, JSONValue> map, String description) {
+
+		if (map.isEmpty()) return new Text("-");
+
 		Div div = new Div();
 
 		//table for description
@@ -403,6 +406,9 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 			} else {
 				text.setText(text.getText() + "\n" + s);
 			}
+		}
+		if (list.isEmpty()) {
+			text.setText("-");
 		}
 		span.add(text);
 		return span;
