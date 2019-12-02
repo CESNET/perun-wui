@@ -1,5 +1,7 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
 import com.google.gwt.event.dom.client.ChangeHandler;
 import com.google.gwt.event.logical.shared.ValueChangeEvent;
@@ -19,7 +21,6 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -35,7 +36,6 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	private final ValidatedEmailValidator validator;
 
 	private InputGroup widget;
-	private List<String> validMails;
 
 	public ValidatedEmail(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang, onlyPreview);
@@ -109,6 +109,12 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		if (isOnlyPreview()) {
 			return;
 		}
+		getTextBox().addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent event) {
+				validateLocal();
+			}
+		});
 		getTextBox().addValueChangeHandler(new ValueChangeHandler() {
 			private boolean first = true;
 			@Override
@@ -147,12 +153,11 @@ public class ValidatedEmail extends PerunFormItemEditable {
 			return;
 		}
 
-		validMails = Arrays.asList(value.split(";"));
-
+		List<String> prefilledMails = Arrays.asList(value.split(";"));
 		// remove duplicates
-		validMails = new ArrayList<>(new LinkedHashSet<>(validMails));
+		prefilledMails = new ArrayList<>(new LinkedHashSet<>(prefilledMails));
 
-		getTextBox().setValue(validMails.get(0));
+		getTextBox().setValue(prefilledMails.get(0));
 
 		if (isOnlyPreview()) {
 			// should contain only one value;
@@ -163,7 +168,7 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		emailSelect.addStyleName("emailFormItem");
 		emailSelect.setWidth("38px");
 
-		for (String val : validMails) {
+		for (String val : prefilledMails) {
 			emailSelect.addItem(val, val);
 		}
 		emailSelect.addItem(getTranslation().customValueEmail(), CUSTOM_ID);
@@ -236,13 +241,6 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		}
 		return null;
 
-	}
-
-	public List<String> getValidMails() {
-		if (validMails == null) {
-			return new ArrayList<>();
-		}
-		return validMails;
 	}
 
 	public Paragraph getPreview() {

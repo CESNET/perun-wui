@@ -145,6 +145,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Email with verification link will be sent to provided email address.")
 	public String mustValidateEmail();
 
+	@DefaultMessage("Enter custom value...")
+	public String enterCustomValue();
+
 	@DefaultMessage("Similar user(s) are already registered in system. If it`s you, prove your identity by logging-in using one of the registered identities.")
 	public String similarUsersFound();
 
