@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.HTML;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.Events;
@@ -45,6 +46,7 @@ import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -61,6 +63,9 @@ public class SummaryStep implements Step {
 	private final String TARGET_EXISTING = "targetexisting";
 	private final String TARGET_NEW = "targetnew";
 	private final String TARGET_EXTENDED = "targetextended";
+
+	private boolean exceptionDisplayed = false;
+	private String redirectTo = null;
 
 	public SummaryStep(FormView formView) {
 		this.formView = formView;
@@ -715,21 +720,51 @@ public class SummaryStep implements Step {
 	}
 
 	private void displaySummary(Heading title, ListGroup messages, PerunButton continueButton) {
-		if (title != null || title.getWidgetCount() != 0 || !title.getText().isEmpty()) {
-			formView.getForm().add(title);
+
+		boolean skipSummary = false;
+
+		Vo resultVo = null;
+		Group resultGroup = null;
+		if (formView != null && formView.getForm() != null && formView.getForm().getApp() != null) {
+			resultVo = formView.getForm().getApp().getVo();
+			resultGroup = formView.getForm().getApp().getGroup();
 		}
-		if (messages != null || messages.getWidgetCount() != 0) {
-			formView.getForm().add(messages);
+
+		String resultKey = (resultVo != null) ? resultVo.getShortName() : "";
+		if (resultGroup != null) {
+			resultKey += ":" + resultGroup.getName();
 		}
-		if (continueButton != null) {
-			formView.getForm().add(continueButton);
+
+		List<String> skippedSummary = PerunConfiguration.getRegistrarSkipSummaryFor();
+		skipSummary = skippedSummary.contains(resultKey);
+
+		if (skipSummary && !exceptionDisplayed && continueButton != null && redirectTo != null) {
+
+			// redirect using continue button
+			Window.Location.assign(redirectTo);
+
+		} else {
+
+			if (title != null || title.getWidgetCount() != 0 || !title.getText().isEmpty()) {
+				formView.getForm().add(title);
+			}
+			if (messages != null || messages.getWidgetCount() != 0) {
+				formView.getForm().add(messages);
+			}
+			if (continueButton != null) {
+				formView.getForm().add(continueButton);
+			}
+
 		}
+
 	}
 
 
 	private PerunButton getContinueButton(final String urlParameter) {
 
 		if (Window.Location.getParameter(urlParameter) != null) {
+
+			redirectTo = Window.Location.getParameter(urlParameter);
 
 			PerunButton continueButton = PerunButton.getButton(PerunButtonType.CONTINUE);
 			// make button more visible to the users
@@ -758,7 +793,7 @@ public class SummaryStep implements Step {
 
 					formView.getForm().add(column);
 
-					// WAIT 4 SEC BEFORE REDIRECT
+					// WAIT 7 SEC BEFORE REDIRECT back to service so that LDAP in Perun is updated
 					Timer timer = new Timer() {
 						@Override
 						public void run() {
@@ -776,6 +811,7 @@ public class SummaryStep implements Step {
 
 	private void displayException(PerunException ex, GeneralObject bean) {
 		formView.displayException(ex, bean);
+		exceptionDisplayed = true;
 	}
 
 	@Override
