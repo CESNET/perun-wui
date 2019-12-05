@@ -44,7 +44,10 @@ public class ValidatedEmailValidator extends PerunFormItemValidatorImpl<Validate
 		// check which mails can be really trusted
 		ArrayList<String> validMails = new ArrayList<>();
 		List<String> prefilledMails = new ArrayList<>();
-		prefilledMails.addAll(Arrays.asList(mail.getItemData().getPrefilledValue().split(";")));
+
+		if (mail.getItemData().getPrefilledValue() != null) {
+			prefilledMails.addAll(Arrays.asList(mail.getItemData().getPrefilledValue().split(";")));
+		}
 
 		// we do this, since we can't tell, if mail was pre-filled from federation or perun
 		// by removing all fed values we can be sure, that value from perun will remain as trusted
