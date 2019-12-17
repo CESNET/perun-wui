@@ -61,9 +61,9 @@
 									<b:AnchorListItem visibleOn="XS" ui:field="settingsXS" icon="COG" iconFixedWidth="true" targetHistoryToken="{placeTokens.getSettings}" >
 										<ui:text from='{trans.menuSettings}'/>
 									</b:AnchorListItem>
-									<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">
+									<!--<b:AnchorListItem icon="SIGN_OUT" iconSize="LARGE" ui:field="logout" targetHistoryToken="{placeTokens.getLogout}">
 										<ui:text from='{trans.logout}'/>
-									</b:AnchorListItem>
+									</b:AnchorListItem>-->
 								</b:NavbarNav>
 							</g:FocusPanel>
 						</b:NavbarCollapse>
