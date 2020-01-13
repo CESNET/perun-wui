@@ -76,14 +76,14 @@ public class PerunProfileView extends ViewImpl implements PerunProfilePresenter.
 //	@UiField AnchorListItem loginsXS;
 	@UiField AnchorListItem settingsXS;
 
-	@UiField AnchorListItem logout;
+//	@UiField AnchorListItem logout;
 
 	@UiField NavPills menuPills;
 
-	@UiHandler(value="logout")
+/*	@UiHandler(value="logout")
 	public void logoutClick(ClickEvent event) {
 		History.newItem("logout");
-	}
+	}*/
 
 	@Override
 	public void setActiveMenuItem(String anchor) {
