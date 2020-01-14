@@ -21,7 +21,7 @@ See https://perun.cesnet.cz/ for more details about the base project.
 
 ### License ###
 
-&copy; 2010-2018 [CESNET](https://www.cesnet.cz/?lang=en) and [CERIT-SC](https://www.cerit-sc.cz/en/index.html), all rights reserved.
+&copy; 2010-2020 [CESNET](https://www.cesnet.cz/?lang=en) and [CERIT-SC](https://www.cerit-sc.cz/en/index.html), all rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
