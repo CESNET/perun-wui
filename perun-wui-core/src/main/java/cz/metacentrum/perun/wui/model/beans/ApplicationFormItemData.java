@@ -133,6 +133,22 @@ public class ApplicationFormItemData extends JavaScriptObject {
 	}-*/;
 
 	/**
+	 * Is generated
+	 * @return TRUE if pre-filled value was generated
+	 */
+	public final native boolean isGenerated() /*-{
+		if(typeof this.generated == "undefined") return false;
+		return this.generated;
+	}-*/;
+
+	/**
+	 * Set generated
+	 */
+	public final native void setGenerated(boolean generated) /*-{
+		this.generated = generated;
+	}-*/;
+
+	/**
 	 * Returns Perun specific type of object
 	 *
 	 * @return type of object
