@@ -468,6 +468,12 @@ public class PerunForm extends FieldSet {
 			// cast form item back
 			ApplicationFormItem formItem = formItemJSON.getJavaScriptObject().cast();
 
+			// clear pre-filled value if login was generated, since we want server to register new login
+			if (ApplicationFormItem.ApplicationFormItemType.USERNAME.equals(formItem.getType()) &&
+					item.getItemData().isGenerated()) {
+				prefilled = "";
+			}
+
 			// prepare package with data
 			ApplicationFormItemData itemData = ApplicationFormItemData.construct(formItem, formItem.getShortname(), value, prefilled, item.getItemData().getAssuranceLevel() != null ? item.getItemData().getAssuranceLevel() : "");
 

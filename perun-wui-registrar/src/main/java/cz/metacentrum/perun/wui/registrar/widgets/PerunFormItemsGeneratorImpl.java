@@ -81,7 +81,7 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 				return new TextArea(data, lang, onlyPreview);
 			case USERNAME:
 				Username username = new Username(data, lang, onlyPreview);
-				if (data.getPrefilledValue() != null && !data.getPrefilledValue().isEmpty()) {
+				if (data.getPrefilledValue() != null && !data.getPrefilledValue().isEmpty() && !data.isGenerated()) {
 					username.setEnable(false);
 				}
 				return username;
