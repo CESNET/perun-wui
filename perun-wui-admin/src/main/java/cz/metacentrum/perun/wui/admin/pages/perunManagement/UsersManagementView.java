@@ -135,7 +135,6 @@ public class UsersManagementView extends ViewImpl implements UsersManagementPres
 
 	@Override
 	public void focus() {
-		GWT.log("called");
 		textBox.setFocus(true);
 	}
 
