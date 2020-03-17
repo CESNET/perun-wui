@@ -36,7 +36,6 @@ public class PerunAdminPresenter extends PerunPresenter<PerunAdminPresenter.MyVi
 
 	@Override
 	protected void onReset() {
-		GWT.log("called");
 		String token = placeManager.getCurrentPlaceRequest().getNameToken();
 		// FIXME - get default token by role from place manager)
 		if (token == null || token.isEmpty()) token = PlaceTokens.getPerunVos();
