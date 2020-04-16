@@ -128,7 +128,7 @@ public class Wayf extends Composite {
 							authnContextClassRef += "%20urn:cesnet:proxyidp:filter:"+group.getFilter();
 						}
 
-						final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?authnContextClassRef=" + authnContextClassRef +"&target="+consolidatorUrl);
+						final String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?authnContextClassRef=" + authnContextClassRef +"&target="+consolidatorUrl + "&forceAuthn=true");
 						Window.Location.assign(redirectUrl);
 					}
 				});
