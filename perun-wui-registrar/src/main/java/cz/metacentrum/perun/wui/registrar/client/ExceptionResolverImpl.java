@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.registrar.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.http.client.URL;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
@@ -9,11 +10,13 @@ import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -26,6 +29,8 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 	private String text;
 	private String subtext;
 	private boolean isSoft;
+	private boolean showReSendButton = false;
+	private String mailToVerify = "";
 	private Application application;
 	private PerunRegistrarTranslation trans = GWT.create(PerunRegistrarTranslation.class);
 
@@ -70,6 +75,15 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 	}
 
 	@Override
+	public boolean isShowMailVerificationReSendButton() {
+		return showReSendButton;
+	}
+
+	public String getMailToVerify() {
+		return mailToVerify;
+	}
+
+	@Override
 	public Application getApplication() {
 		return application;
 	}
@@ -84,15 +98,28 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			setInfo(trans.alreadyRegistered(getBeanName()), null);
 
-		} else if ("DuplicateRegistrationAttemptException".equalsIgnoreCase(exception.getName())) {
+		} else if ("DuplicateRegistrationAttemptException".equalsIgnoreCase(exception.getName()) ||
+				"DuplicateExtensionAttemptException".equalsIgnoreCase(exception.getName())) {
+
+			application = exception.getApplication();
+			ArrayList<ApplicationFormItemData> applicationData = exception.getApplicationData();
+
+			String text = "<p><br/><b>"+trans.submittedOn()+":</b>&nbsp;" + application.getCreatedAt().split("\\.")[0] +
+					"<br/><b>"+trans.state()+":</b>&nbsp;" + application.getTranslatedState();
+
+			if (application.getState().equals(Application.ApplicationState.NEW)) {
+				for (final ApplicationFormItemData item : applicationData) {
+					if (item.getFormItem() != null &&
+							item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL) &&
+							item.getAssuranceLevelAsInt() < 1) {
+						showReSendButton = true;
+						mailToVerify = SafeHtmlUtils.fromString((item.getValue() != null) ? item.getValue() : "").asString();
+					}
+				}
+			}
 
 			setInfo(trans.alreadySubmitted(getBeanName()),
-					trans.visitSubmitted(Window.Location.getHref().split("#")[0], trans.submittedTitle()));
-
-		} else if ("DuplicateExtensionAttemptException".equalsIgnoreCase(exception.getName())) {
-
-			setInfo(trans.alreadySubmittedExtension(getBeanName()),
-					trans.visitSubmitted(Window.Location.getHref().split("#")[0], trans.submittedTitle()));
+					text + trans.visitSubmitted(Window.Location.getHref().split("#")[0], trans.submittedTitle()));
 
 		} else if ("MissingRequiredDataException".equalsIgnoreCase(exception.getName())) {
 

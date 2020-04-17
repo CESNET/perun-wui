@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.registrar.pages.steps;
 
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.Application;
 
 /**
  * Data about step. How it ends, exception, ...
@@ -17,6 +18,7 @@ public class Result {
     private boolean autoApproval;
     private GeneralObject bean;
     private PerunException exception;
+    private Application application;
 
     public Result(FormStep.Type type, PerunException exception, GeneralObject bean, boolean autoApproval) {
         this.type = type;
@@ -62,4 +64,11 @@ public class Result {
         this.exception = exception;
     }
 
+	public Application getApplication() {
+		return application;
+	}
+
+	public void setApplication(Application application) {
+		this.application = application;
+	}
 }

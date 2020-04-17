@@ -41,7 +41,7 @@ public class ApplicationFormItemData extends JavaScriptObject {
 	 * @return id
 	 */
 	public final int getId(){
-    	return JsUtils.getNativePropertyInt(this, "id");
+		return JsUtils.getNativePropertyInt(this, "id");
 	}
 
 
@@ -50,7 +50,7 @@ public class ApplicationFormItemData extends JavaScriptObject {
 	 * @param id
 	 */
 	public final native void setId(int id) /*-{
-    	this.id = id;
+		this.id = id;
 	}-*/;
 
 	/**
