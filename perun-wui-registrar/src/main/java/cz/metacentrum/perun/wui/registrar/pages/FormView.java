@@ -186,7 +186,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					// CHECK SIMILAR USERS
 					// Make sure we load form only after user decide to skip identity joining
 
-					if (!registrar.getSimilarUsers().isEmpty()) {
+					if (!registrar.getSimilarUsers().isEmpty() && !isApplicationPending(registrar)) {
 						showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
@@ -215,6 +215,19 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			public void onLoadingStart() {
 				loader.onLoading(translation.preparingForm());
 			}
+
+			boolean isApplicationPending(RegistrarObject registrar) {
+				if (isPending(registrar.getVoFormInitialException())) return true;
+				if (isPending(registrar.getGroupFormInitialException())) return true;
+				if (isPending(registrar.getVoFormExtensionException())) return true;
+				if (isPending(registrar.getGroupFormExtensionException())) return true;
+				return false;
+			}
+
+			boolean isPending(PerunException ex) {
+				return (ex != null && "DuplicateRegistrationAttemptException".equals(ex.getName()));
+			}
+
 		});
 
 	}
