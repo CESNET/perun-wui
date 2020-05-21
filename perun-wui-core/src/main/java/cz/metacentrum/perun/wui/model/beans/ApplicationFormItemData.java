@@ -125,6 +125,21 @@ public class ApplicationFormItemData extends JavaScriptObject {
 		return this.assuranceLevel;
 	}-*/;
 
+	public final int getAssuranceLevelAsInt() {
+
+		String value = getAssuranceLevel();
+		if (value == null) return 0;
+		if ("null".equals(value)) return 0;
+		if (value.isEmpty()) return 0;
+
+		try {
+			return Integer.parseInt(value);
+		} catch (NumberFormatException ex) {
+			return 0;
+		}
+
+	}
+
 	/**
 	 * Set assuranceLevel
 	 */

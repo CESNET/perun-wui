@@ -221,7 +221,7 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 				for (final ApplicationFormItemData item : list) {
 					if (item.getFormItem() != null &&
 							item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL) &&
-							!item.getAssuranceLevel().equals("1")) {
+							item.getAssuranceLevelAsInt() < 1) {
 						found = true;
 
 						String val = SafeHtmlUtils.fromString((item.getValue()!=null) ? item.getValue() : "").asString();
