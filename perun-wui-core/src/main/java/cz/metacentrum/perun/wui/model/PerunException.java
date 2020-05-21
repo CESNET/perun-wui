@@ -186,6 +186,18 @@ public class PerunException extends JavaScriptObject {
 		return o.getErrorId().equals(this.getErrorId());
 	}
 
+	public final Application getApplication() {
+		return JsUtils.getNativePropertyObject(this, "application").cast();
+	}
+
+	public final native void setApplication(Application application) /*-{
+		this.application = application;
+	}-*/;
+
+	public final ArrayList<ApplicationFormItemData> getApplicationData() {
+		return JsUtils.jsoAsList(JsUtils.getNativePropertyArray(this, "applicationData"));
+	}
+
 	public final Attribute getAttribute() {
 		return JsUtils.getNativePropertyObject(this, "attribute").cast();
 	}

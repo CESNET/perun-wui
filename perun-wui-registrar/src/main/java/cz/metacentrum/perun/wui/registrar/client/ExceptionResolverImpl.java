@@ -8,6 +8,7 @@ import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Vo;
@@ -25,6 +26,7 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 	private String text;
 	private String subtext;
 	private boolean isSoft;
+	private Application application;
 	private PerunRegistrarTranslation trans = GWT.create(PerunRegistrarTranslation.class);
 
 	public void resolve(PerunException exception, GeneralObject bean) {
@@ -65,6 +67,11 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 	@Override
 	public GeneralObject getBean() {
 		return bean;
+	}
+
+	@Override
+	public Application getApplication() {
+		return application;
 	}
 
 	private void resolve() {

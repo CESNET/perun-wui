@@ -250,7 +250,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You have already submitted extension application to {0}")
 	public String alreadySubmittedExtension(String voName);
 
-	@DefaultMessage("<br/>You can check state of your application in <a href=\"{0}#submitted\">{1}</a>.")
+	@DefaultMessage("<p>You can check details of your application in <a href=\"{0}#submitted\">{1}</a>.")
 	public String visitSubmitted(String url, String title);
 
 	@DefaultMessage("You are already registered")
@@ -316,6 +316,17 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("In order to access CESNET services you must log-in using verified academic identity (at least once a year). Please use such identity to access this form.")
 	public String notEligibleCESNET();
 
+	@DefaultMessage("<p>Your application still awaits for mail address verification. If you continue now, it is most probable, that service will redirect you back to the registration form.<p>Please check your mailbox for verification mail. Once your application is verified and approved, you will be able to access the service.")
+	public String redirectWaitForVerification();
+
+	@DefaultMessage("<p>Your application still awaits administrators approval. If you continue now, it is most probable, that service will redirect you back to the registration form.<p>Once your application is approved by administrator, you will be notified and able to access the service.")
+	public String redirectWaitForApproval();
+
+	@DefaultMessage("I understand")
+	public String understand();
+
+	@DefaultMessage("Continue anyway")
+	public String continueAnyway();
 
 	/* ------------ LOADER MESSAGES ---------------- */
 

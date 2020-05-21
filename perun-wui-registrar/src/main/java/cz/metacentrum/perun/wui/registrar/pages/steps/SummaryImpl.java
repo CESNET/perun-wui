@@ -142,7 +142,8 @@ public class SummaryImpl implements Summary {
 		if (registrar.getVoFormExtensionException() == null) {
 			return false;
 		}
-		if (registrar.getVoFormExtensionException().getName().equals("DuplicateRegistrationAttemptException")) {
+		if (registrar.getVoFormExtensionException().getName().equals("DuplicateRegistrationAttemptException") ||
+				registrar.getVoFormExtensionException().getName().equals("DuplicateExtensionAttemptException")) {
 			return true;
 		} else {
 			return false;
@@ -154,7 +155,8 @@ public class SummaryImpl implements Summary {
 		if (registrar.getGroupFormExtensionException() == null) {
 			return false;
 		}
-		if (registrar.getGroupFormExtensionException().getName().equals("DuplicateRegistrationAttemptException")) {
+		if (registrar.getGroupFormExtensionException().getName().equals("DuplicateRegistrationAttemptException") ||
+				registrar.getGroupFormExtensionException().getName().equals("DuplicateExtensionAttemptException")) {
 			return true;
 		} else {
 			return false;

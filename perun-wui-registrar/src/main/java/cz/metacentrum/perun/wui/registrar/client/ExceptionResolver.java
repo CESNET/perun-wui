@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.registrar.client;
 
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.Application;
 
 /**
  * Provides info about exception which can be shown to user.
@@ -59,4 +60,7 @@ public interface ExceptionResolver {
 	 * @return related bean to exception if any. Null otherwise.
      */
 	GeneralObject getBean();
+
+	Application getApplication();
+
 }
