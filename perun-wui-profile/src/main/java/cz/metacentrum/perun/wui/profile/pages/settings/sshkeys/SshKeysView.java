@@ -45,6 +45,7 @@ public class SshKeysView extends ViewWithUiHandlers<SshKeysUiHandlers> implement
 	@UiField Div newAdminKeyButtonDiv;
 	@UiField Button newKeyButton;
 	@UiField Div newKeyButtonDiv;
+	@UiField Div adminKeysDiv;
 
 	private Attribute sshKeysAttribute;
 	private Attribute adminSshKeysAttribute;
@@ -98,6 +99,7 @@ public class SshKeysView extends ViewWithUiHandlers<SshKeysUiHandlers> implement
 		adminSshKeysAttribute = attribute;
 		((PerunLoader) adminSshKeysTable.getEmptyTableWidget()).onEmpty();
 		adminSshKeysTable.setRowData(parseValues(attribute));
+		adminKeysDiv.setVisible(true);
 	}
 
 	@Override
@@ -107,7 +109,11 @@ public class SshKeysView extends ViewWithUiHandlers<SshKeysUiHandlers> implement
 
 	@Override
 	public void setAdminSshKeysError(PerunException error) {
-		((PerunLoader) sshKeysTable.getEmptyTableWidget()).onError(error, event -> getUiHandlers().loadAdminSshKeys());
+		if ("AttributeNotExistsException".equals(error.getName())) {
+			adminKeysDiv.setVisible(false);
+		} else {
+			((PerunLoader) adminSshKeysTable.getEmptyTableWidget()).onError(error, event -> getUiHandlers().loadAdminSshKeys());
+		}
 	}
 
 	@Override

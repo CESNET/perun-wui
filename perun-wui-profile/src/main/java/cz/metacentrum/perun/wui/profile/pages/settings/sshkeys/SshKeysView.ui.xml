@@ -39,11 +39,13 @@
 			<b:Button type="SUCCESS" icon="PLUS" text="{trans.newPublicKey}" marginTop="5" ui:field="newKeyButton"/>
 		</b.html:Div>
 
-		<b:Heading size="H3" text="{trans.adminSshKeysHeading}"/>
-		<b.html:Text text="{trans.adminSshKeysNote}"/>
-		<b.gwt:CellTable ui:field="adminSshKeysTable" condensed="true" bordered="true" striped="true" addStyleNames="{res.gss.sshKeysTable}" />
-		<b.html:Div ui:field="newAdminKeyButtonDiv">
-			<b:Button type="SUCCESS" icon="PLUS" text="{trans.newPublicAdminKey}" marginTop="5" ui:field="newAdminKeyButton"/>
+		<b.html:Div ui:field="adminKeysDiv" visible="false">
+			<b:Heading size="H3" text="{trans.adminSshKeysHeading}"/>
+			<b.html:Text text="{trans.adminSshKeysNote}"/>
+			<b.gwt:CellTable ui:field="adminSshKeysTable" condensed="true" bordered="true" striped="true" addStyleNames="{res.gss.sshKeysTable}" />
+			<b.html:Div ui:field="newAdminKeyButtonDiv">
+				<b:Button type="SUCCESS" icon="PLUS" text="{trans.newPublicAdminKey}" marginTop="5" ui:field="newAdminKeyButton"/>
+			</b.html:Div>
 		</b.html:Div>
 
 	</b.html:Div>
