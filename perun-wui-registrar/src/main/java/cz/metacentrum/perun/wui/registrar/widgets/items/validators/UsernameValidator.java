@@ -31,7 +31,7 @@ public class UsernameValidator extends PerunFormItemValidatorImpl<Username> {
 			return false;
 		}
 
-		if (username.getValue() != null && username.getValue().length() > username.MAX_LENGTH) {
+		if (username.getValue() != null && username.getValue().length() > Username.MAX_LENGTH) {
 			setResult(Result.TOO_LONG);
 			username.setStatus(getTransl().tooLong(), ValidationState.ERROR);
 			return false;
@@ -75,9 +75,14 @@ public class UsernameValidator extends PerunFormItemValidatorImpl<Username> {
 			}
 
 			@Override
-			public void onError (PerunException error){
-				setResult(Result.CANT_CHECK_LOGIN);
-				username.setStatus(getTransl().checkingLoginFailed(), ValidationState.ERROR);
+			public void onError(PerunException error){
+				if ("InvalidLoginException".equalsIgnoreCase(error.getName())) {
+					setResult(Result.INVALID_FORMAT);
+					username.setStatus(getTransl().loginNotAllowed(), ValidationState.ERROR);
+				} else {
+					setResult(Result.CANT_CHECK_LOGIN);
+					username.setStatus(getTransl().checkingLoginFailed(), ValidationState.ERROR);
+				}
 				events.onFinished(false);
 			}
 

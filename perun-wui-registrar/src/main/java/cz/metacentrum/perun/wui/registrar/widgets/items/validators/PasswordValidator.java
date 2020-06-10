@@ -23,7 +23,7 @@ public class PasswordValidator extends PerunFormItemValidatorImpl<Password> {
 			return false;
 		}
 
-		if (password.getValue().length() > password.MAX_LENGTH) {
+		if (password.getValue().length() > Password.MAX_LENGTH) {
 			setResult(Result.TOO_LONG);
 			password.setStatus(getTransl().tooLong(), ValidationState.ERROR);
 			return false;
