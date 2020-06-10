@@ -53,14 +53,8 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("Please <b>avoid using accented characters</b>. It might not be supported by all backend components and services.")
 	public String dontUseAccents();
 
-	@DefaultMessage("Password must be at least 8 characters long and contain only printable (not accented) characters. It must contain min. 3 uppercase or/and lowercase letters and min. 1 number or symbol.")
-	public String metaHelp();
-
 	@DefaultMessage("Password must be at least {0} characters long.")
 	public String passwordLength(int length);
-
-	@DefaultMessage("Password can contain only printable (not accented) characters. It must contain min. 3 uppercase or/and lowercase letters and min. 1 number or symbol.")
-	public String metaStrength();
 
 	@DefaultMessage("<ul><li>the minimum password length is 8 characters</li><li>must contain characters of at least three sets of characters</li><li>character sets are: [a-z], [A-Z], [0-9], [!#%&()[]*+,./:;<=>?@^_&#96;&#123;&#125;&#124;~-]</li><li>letters must not contain diacritics, the space is allowed</li><li>may not include your name, surname, personal number or username</li></ul>")
 	public String vsupHelp();
@@ -93,5 +87,20 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 
 	@DefaultMessage("Can`t activate account. You don`t have login in namespace <i>{0}</i>.")
 	public String dontHaveLoginActive(String namespace);
+
+	// ---------- EINFRA LOGIN/PASSWORD ----------- //
+
+	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 10 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
+	public String einfraPasswordHelp();
+
+	@DefaultMessage("Password must be <b>at least 10 characters</b> long!")
+	public String einfraPasswordLength();
+
+	@DefaultMessage("Password <b>can`t contain accented characters (diacritics)</b> or non-printing and control characters!")
+	public String einfraPasswordFormat();
+
+	@DefaultMessage("Password must consist of <b>at least 3 of 4</b> character groups<ul><li>lower-case letters</li><li>upper-case letters</li><li>digits</li><li>special characters</li></ul>")
+	public String einfraPasswordStrength();
+
 
 }
