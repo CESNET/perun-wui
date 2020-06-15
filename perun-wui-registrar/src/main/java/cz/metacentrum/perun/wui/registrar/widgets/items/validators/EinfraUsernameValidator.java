@@ -16,7 +16,7 @@ public class EinfraUsernameValidator extends UsernameValidator {
 
 		if (username.isRequired() && isNullOrEmpty(username.getValue())) {
 			setResult(Result.EMPTY);
-			username.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			username.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 

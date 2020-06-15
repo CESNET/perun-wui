@@ -19,7 +19,7 @@ public class ValidatedEmailValidator extends PerunFormItemValidatorImpl<Validate
 
 		if (mail.isRequired() && isNullOrEmpty(mail.getValue())) {
 			setResult(Result.EMPTY);
-			mail.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			mail.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 

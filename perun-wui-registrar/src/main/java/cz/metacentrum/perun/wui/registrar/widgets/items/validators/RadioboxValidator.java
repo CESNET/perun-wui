@@ -15,7 +15,7 @@ public class RadioboxValidator extends PerunFormItemValidatorImpl<Radiobox> {
 
 		if (radiobox.isRequired() && isNullOrEmpty(radiobox.getValue())) {
 			setResult(Result.EMPTY);
-			radiobox.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			radiobox.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 

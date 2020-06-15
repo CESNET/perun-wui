@@ -13,7 +13,7 @@ public class CheckboxValidator extends PerunFormItemValidatorImpl<Checkbox> {
 
 		if (checkbox.isRequired() && isNullOrEmpty(checkbox.getValue())) {
 			setResult(Result.EMPTY);
-			checkbox.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			checkbox.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 

@@ -88,19 +88,4 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("Can`t activate account. You don`t have login in namespace <i>{0}</i>.")
 	public String dontHaveLoginActive(String namespace);
 
-	// ---------- EINFRA LOGIN/PASSWORD ----------- //
-
-	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 10 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
-	public String einfraPasswordHelp();
-
-	@DefaultMessage("Password must be <b>at least 10 characters</b> long!")
-	public String einfraPasswordLength();
-
-	@DefaultMessage("Password <b>can`t contain accented characters (diacritics)</b> or non-printing and control characters!")
-	public String einfraPasswordFormat();
-
-	@DefaultMessage("Password must consist of <b>at least 3 of 4</b> character groups<ul><li>lower-case letters</li><li>upper-case letters</li><li>digits</li><li>special characters</li></ul>")
-	public String einfraPasswordStrength();
-
-
 }

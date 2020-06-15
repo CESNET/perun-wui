@@ -13,7 +13,7 @@ public class PasswordValidator extends PerunFormItemValidatorImpl<Password> {
 
 		if (password.isRequired() && isNullOrEmpty(password.getValue())) {
 			setResult(Result.EMPTY_PASSWORD);
-			password.setStatus(getTransl().passEmpty(), ValidationState.ERROR);
+			password.setRawStatus(getTransl().passEmpty(), ValidationState.ERROR);
 			return false;
 		}
 

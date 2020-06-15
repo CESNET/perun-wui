@@ -13,7 +13,7 @@ public class TextAreaValidator extends PerunFormItemValidatorImpl<TextArea> {
 
 		if (textArea.isRequired() && isNullOrEmpty(textArea.getValue())) {
 			setResult(Result.EMPTY);
-			textArea.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			textArea.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 

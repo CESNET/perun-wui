@@ -21,7 +21,7 @@ public class UsernameValidator extends PerunFormItemValidatorImpl<Username> {
 
 		if (username.isRequired() && isNullOrEmpty(username.getValue())) {
 			setResult(Result.EMPTY);
-			username.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			username.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 
@@ -66,7 +66,7 @@ public class UsernameValidator extends PerunFormItemValidatorImpl<Username> {
 
 				if (!available) {
 					setResult(Result.LOGIN_NOT_AVAILABLE);
-					username.setStatus(getTransl().loginNotAvailable(), ValidationState.ERROR);
+					username.setRawStatus(getTransl().loginNotAvailable(), ValidationState.ERROR);
 					events.onFinished(false);
 					return;
 				}
