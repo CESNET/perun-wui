@@ -13,7 +13,7 @@ public class PasswordValidator extends PerunFormItemValidatorImpl<Password> {
 
 		if (password.isRequired() && isNullOrEmpty(password.getValue())) {
 			setResult(Result.EMPTY_PASSWORD);
-			password.setStatus(getTransl().passEmpty(), ValidationState.ERROR);
+			password.setRawStatus(getTransl().passEmpty(), ValidationState.ERROR);
 			return false;
 		}
 
@@ -23,7 +23,7 @@ public class PasswordValidator extends PerunFormItemValidatorImpl<Password> {
 			return false;
 		}
 
-		if (password.getValue().length() > password.MAX_LENGTH) {
+		if (password.getValue().length() > Password.MAX_LENGTH) {
 			setResult(Result.TOO_LONG);
 			password.setStatus(getTransl().tooLong(), ValidationState.ERROR);
 			return false;

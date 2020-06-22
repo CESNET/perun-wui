@@ -106,8 +106,21 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 			// enforce gray color on help text instead of taking validation color.
 			help.addStyleName(PerunRegistrarResources.INSTANCE.gss().help());
 
-			if (this instanceof Password) {
+			// add generic help for passwords, except for einfra
+			if (this instanceof Password &&
+					this.getItemData().getFormItem() != null &&
+					!"urn:perun:user:attribute-def:def:login-namespace:einfra".equals(this.getItemData().getFormItem().getPerunDestinationAttribute())) {
 				help.setHTML(help.getHTML() + "<p>" + translation.dontUseAccents());
+			}
+
+			// replace EINFRA help texts to support HTML formatting
+			if (this.getItemData().getFormItem() != null &&
+					"urn:perun:user:attribute-def:def:login-namespace:einfra".equals(this.getItemData().getFormItem().getPerunDestinationAttribute())) {
+				if (this instanceof Password) {
+					help.setHTML(translation.einfraPasswordHelp());
+				} else if (this instanceof Username) {
+					help.setHTML(translation.einfraLoginHelp());
+				}
 			}
 
 			widgetWithTexts.add(help);

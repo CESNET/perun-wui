@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.items.validators.EinfraUsernameValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.UsernameValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
@@ -14,8 +15,10 @@ import org.gwtbootstrap3.client.ui.InputGroupAddon;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
+import java.util.Objects;
+
 /**
- * Represents text field for user.
+ * Represents text field for username/login.
  *
  * @author Ondrej Velisek <ondrejvelisek@gmail.com>
  */
@@ -28,7 +31,11 @@ public class Username extends PerunFormItemEditable {
 
 	public Username(ApplicationFormItemData item, String lang, boolean onlyPreview) {
 		super(item, lang, onlyPreview);
-		this.validator = new UsernameValidator();
+		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunDestinationAttribute())) {
+			this.validator = new EinfraUsernameValidator();
+		} else {
+			this.validator = new UsernameValidator();
+		}
 	}
 
 	protected Widget initWidget() {

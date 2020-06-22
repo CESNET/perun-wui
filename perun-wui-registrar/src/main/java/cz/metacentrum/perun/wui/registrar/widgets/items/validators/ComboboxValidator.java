@@ -13,7 +13,7 @@ public class ComboboxValidator extends PerunFormItemValidatorImpl<Combobox> {
 
 		if (combobox.isRequired() && isNullOrEmpty(combobox.getValue())) {
 			setResult(Result.EMPTY);
-			combobox.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			combobox.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 

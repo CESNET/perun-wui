@@ -12,7 +12,7 @@ public abstract class PerunFormItemValidatorImpl<T extends PerunFormItem> implem
 
 	private Result result = Result.NOT_CHECKED;
 
-	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
+	private final PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	@Override
 	public void validate(T item, Events<Boolean> events) {

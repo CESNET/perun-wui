@@ -14,7 +14,7 @@ public class TextFieldValidator extends PerunFormItemValidatorImpl<TextField> {
 
 		if (textField.isRequired() && isNullOrEmpty(textField.getValue())) {
 			setResult(Result.EMPTY);
-			textField.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			textField.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 

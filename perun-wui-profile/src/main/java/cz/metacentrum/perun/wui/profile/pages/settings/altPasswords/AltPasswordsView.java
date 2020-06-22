@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
@@ -21,6 +22,7 @@ import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.TextBox;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.ValidationState;
 import org.gwtbootstrap3.client.ui.gwt.ButtonCell;
 import org.gwtbootstrap3.client.ui.gwt.DataGrid;
 import org.gwtbootstrap3.client.ui.html.Div;
@@ -67,7 +69,11 @@ public class AltPasswordsView extends ViewWithUiHandlers<AltPasswordsUiHandlers>
 
 	@UiHandler({"addAltPasswordButton"})
 	public void onListAll(ClickEvent event) {
-		getUiHandlers().newAltPassoword(passwordBox.getText(), generatePassword(16));
+		String pass = generatePassword(16);
+		while (!checkPasswordGroups(pass)) {
+			pass = generatePassword(16);
+		}
+		getUiHandlers().newAltPassoword(passwordBox.getText(), pass);
 	}
 
 	@UiHandler("backButton")
@@ -180,6 +186,7 @@ public class AltPasswordsView extends ViewWithUiHandlers<AltPasswordsUiHandlers>
 	}
 
 	private String generatePassword(int length) {
+		// TODO - do we want to add spec. chars "!@#$%&*()-_=+;:,<.>/?" ?
 		String chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 		StringBuilder password = new StringBuilder();
 		Random r = new Random();
@@ -192,4 +199,30 @@ public class AltPasswordsView extends ViewWithUiHandlers<AltPasswordsUiHandlers>
 	private static native void jSCopy() /*-{
 		$doc.execCommand('copy')
 	}-*/;
+
+	/**
+	 * Return TRUE if password contains all three types of chars.
+	 *
+	 * @param password password to check
+	 * @return TRUE if strong / FALSE otherwise
+	 */
+	private boolean checkPasswordGroups(String password) {
+
+		// Check that password contains at least 3 of 4 character groups
+
+		RegExp regExpDigit = RegExp.compile("^.*[0-9].*$");
+		RegExp regExpLower = RegExp.compile("^.*[a-z].*$");
+		RegExp regExpUpper = RegExp.compile("^.*[A-Z].*$");
+		RegExp regExpSpec = RegExp.compile("^.*[\\x20-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7E].*$");
+
+		int matchCounter = 0;
+		if (regExpDigit.exec(password) != null) matchCounter++;
+		if (regExpLower.exec(password) != null) matchCounter++;
+		if (regExpUpper.exec(password) != null) matchCounter++;
+		if (regExpSpec.exec(password) != null) matchCounter++;
+
+		return matchCounter >= 3;
+
+	}
+
 }

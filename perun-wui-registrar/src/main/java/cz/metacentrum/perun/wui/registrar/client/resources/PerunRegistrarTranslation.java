@@ -112,7 +112,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Incorrect input format!")
 	public String incorrectFormat();
 
-	@DefaultMessage("Field can`t be empty!")
+	@DefaultMessage("Item <b>can`t be empty!</b>")
 	public String cantBeEmpty();
 
 	@DefaultMessage("You must select at least one option!")
@@ -124,7 +124,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Check & submit the form")
 	public String checkAndSubmit();
 
-	@DefaultMessage("Password can`t be empty!")
+	@DefaultMessage("Password <b>can`t be empty!</b>")
 	public String passEmpty();
 
 	@DefaultMessage("Passwords doesn`t match!")
@@ -133,11 +133,14 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Checking...")
 	public String checkingLogin();
 
-	@DefaultMessage("Login not available!")
+	@DefaultMessage("Login <b>is not available!</b>")
 	public String loginNotAvailable();
 
 	@DefaultMessage("Unable to check login availability!")
 	public String checkingLoginFailed();
+
+	@DefaultMessage("Login contains invalid character(s) or is not allowed!")
+	public String loginNotAllowed();
 
 	@DefaultMessage("--- Custom ---")
 	public String customValueEmail();
@@ -366,11 +369,5 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Go to password reset")
 	public String metaResetButton();
-
-	@DefaultMessage("Password must be at least 8 characters long.")
-	public String metaLength();
-
-	@DefaultMessage("Password can contain only printable (not accented) characters. It must contain min. 3 uppercase or/and lowercase letters and min. 1 number or symbol.")
-	public String metaStrength();
 
 }

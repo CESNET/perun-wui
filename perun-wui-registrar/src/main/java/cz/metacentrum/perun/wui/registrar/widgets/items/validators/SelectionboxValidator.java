@@ -13,7 +13,7 @@ public class SelectionboxValidator extends PerunFormItemValidatorImpl<Selectionb
 
 		if (selectionbox.isRequired() && isNullOrEmpty(selectionbox.getValue())) {
 			setResult(Result.EMPTY_SELECT);
-			selectionbox.setStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			selectionbox.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
 			return false;
 		}
 
