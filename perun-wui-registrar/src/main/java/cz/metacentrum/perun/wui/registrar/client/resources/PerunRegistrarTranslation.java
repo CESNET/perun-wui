@@ -133,7 +133,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Checking...")
 	public String checkingLogin();
 
-	@DefaultMessage("Login <b>is not available!</b>")
+	@DefaultMessage("Login <b>is not available!</b> Please choose another.")
 	public String loginNotAvailable();
 
 	@DefaultMessage("Unable to check login availability!")
