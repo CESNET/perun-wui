@@ -66,6 +66,7 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -450,9 +451,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			ButtonGroup othersGroup = new ButtonGroup();
 			DropDownMenu menu3 = getOthersJoinButton(othersGroup);
 
-			boolean certFound = false;
-			boolean idpFound = false;
-			boolean othersFound = false;
+			HashMap<AnchorListItem,ClickHandler> certItems = new HashMap<>();
+			HashMap<AnchorListItem,ClickHandler> idpItems = new HashMap<>();
+			HashMap<AnchorListItem,ClickHandler> othersItems = new HashMap<>();
 
 			ArrayList<ExtSource> sources = identity.getExternalIdentities();
 			Collections.sort(sources, new Comparator<ExtSource>() {
@@ -471,8 +472,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				if (source.getType().equals(ExtSource.ExtSourceType.X509.getType())) {
 
 					AnchorListItem link = new AnchorListItem(Utils.convertCertCN(source.getName()));
-					menu.add(link);
-					link.addClickHandler(new ClickHandler() {
+					certItems.put(link, new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 							RegistrarManager.getConsolidatorToken(new JsonEvents() {
@@ -495,9 +495,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 						}
 					});
 
-					certFound = true;
-					ft.setWidget(row, 1, certGroup);
-					ft.getFlexCellFormatter().setVerticalAlignment(row, 1, HasVerticalAlignment.ALIGN_MIDDLE);
 
 
 				} else if (source.getType().equals(ExtSource.ExtSourceType.IDP.getType())) {
@@ -510,11 +507,11 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 					// IF Perun is behind proxy, offer only allowed proxies !!!
 					// IF not proxy, show all
-					if ((!proxies.isEmpty() && proxies.contains(entityId)) || proxies.isEmpty()) {
+					if (proxies.isEmpty() || proxies.contains(entityId)) {
 
 						if (entityId.equals("https://auth.west-life.eu/proxy/saml2/idp/metadata.php") ||
 								entityId.equals("https://login.cesnet.cz/idp/")) {
-							/* FIXME - SKIP invalid joining entries -> PROXY identities themselves */
+							// FIXME - SKIP invalid joining entries -> PROXY identities themselves
 							// do not not ban Elixir, since its used on CESNET and ELIXIR (wrong ExtSource on all identities)
 							continue;
 						}
@@ -533,8 +530,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 						final String finalEntityId = entityId;
 
 						AnchorListItem link = new AnchorListItem(Utils.translateIdp(originalIdP));
-						menu2.add(link);
-						link.addClickHandler(new ClickHandler() {
+						idpItems.put(link, new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
 
@@ -560,9 +556,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 								});
 							}
 						});
-						idpFound = true;
-						ft.setWidget(row, 2, idpGroup);
-						ft.getFlexCellFormatter().setVerticalAlignment(row, 2, HasVerticalAlignment.ALIGN_MIDDLE);
 
 					}
 
@@ -579,8 +572,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 						final String prefix = toBePrefix;
 
 						AnchorListItem link = new AnchorListItem(Utils.translateKerberos(source.getName()));
-						menu3.add(link);
-						link.addClickHandler(new ClickHandler() {
+						othersItems.put(link, new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
 
@@ -605,26 +597,72 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 							}
 						});
 
-						othersFound = true;
-						ft.setWidget(row, 3, othersGroup);
-						ft.getFlexCellFormatter().setVerticalAlignment(row, 3, HasVerticalAlignment.ALIGN_MIDDLE);
+					}
 
+				}
+
+				if (!certItems.isEmpty()) {
+					ft.getFlexCellFormatter().setVerticalAlignment(row, 1, HasVerticalAlignment.ALIGN_MIDDLE);
+					if (certItems.size() > 1) {
+						ft.setWidget(row, 1, certGroup);
+						for (AnchorListItem link : certItems.keySet()) {
+							link.addClickHandler(certItems.get(link));
+							menu.add(link);
+						}
+					} else {
+						AnchorListItem key = certItems.keySet().iterator().next();
+						Button button = getCertButton();
+						button.addClickHandler(certItems.get(key));
+						ft.setWidget(row, 2, button);
+					}
+
+				}
+
+				if (!idpItems.isEmpty()) {
+					ft.getFlexCellFormatter().setVerticalAlignment(row, 2, HasVerticalAlignment.ALIGN_MIDDLE);
+					if (idpItems.size() > 1) {
+						ft.setWidget(row, 2, idpGroup);
+						for (AnchorListItem link : idpItems.keySet()) {
+							link.addClickHandler(idpItems.get(link));
+							menu2.add(link);
+						}
+					} else {
+						AnchorListItem key = idpItems.keySet().iterator().next();
+						Button button = getIdpButton();
+						button.addClickHandler(idpItems.get(key));
+						ft.setWidget(row, 2, button);
+					}
+				}
+
+				if (!othersItems.isEmpty()) {
+					ft.getFlexCellFormatter().setVerticalAlignment(row, 3, HasVerticalAlignment.ALIGN_MIDDLE);
+					if (othersItems.size() > 1) {
+						ft.setWidget(row, 3, othersGroup);
+						for (AnchorListItem link : othersItems.keySet()) {
+							link.addClickHandler(othersItems.get(link));
+							menu3.add(link);
+						}
+					} else {
+						AnchorListItem key = othersItems.keySet().iterator().next();
+						Button button = getOthersButton();
+						button.addClickHandler(othersItems.get(key));
+						ft.setWidget(row, 3, button);
 					}
 
 				}
 
 			}
 
-			if (sources.isEmpty() || (!idpFound && !certFound && !othersFound)) {
+			if (sources.isEmpty() || (idpItems.isEmpty() && certItems.isEmpty() && othersItems.isEmpty())) {
 
 				// no identity for joining
 				ft.setHTML(row, 1, translation.noIdentityForJoining(SafeHtmlUtils.fromString(PerunConfiguration.getBrandSupportMail()).asString()));
 				ft.getFlexCellFormatter().setColSpan(row, 1, 3);
 
 			} else {
-				if (!certFound) ft.setText(row, 1, "");
-				if (!idpFound) ft.setText(row, 2, "");
-				if (!othersFound) ft.setText(row, 3, "");
+				if (certItems.isEmpty()) ft.setText(row, 1, "");
+				if (idpItems.isEmpty()) ft.setText(row, 2, "");
+				if (othersItems.isEmpty()) ft.setText(row, 3, "");
 			}
 
 			row++;
@@ -673,15 +711,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	private static DropDownMenu getCertificatesJoinButton(ButtonGroup certGroup) {
 
-		Button certButt = new Button(translation.byCertificate(), IconType.CERTIFICATE, new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent event) {
-
-			}
-		});
-		certButt.setPaddingLeft(10);
-		certButt.setIconFixedWidth(true);
-		certButt.setType(ButtonType.SUCCESS);
+		Button certButt = getCertButton();
 		certButt.setDataToggle(Toggle.DROPDOWN);
 		certGroup.add(certButt);
 		DropDownMenu certMenu = new DropDownMenu();
@@ -691,7 +721,34 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	}
 
-	private static DropDownMenu getIdpJoinButton(ButtonGroup certGroup) {
+	private static Button getCertButton() {
+
+		Button certButt = new Button(translation.byCertificate(), IconType.CERTIFICATE, new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+
+			}
+		});
+		certButt.setPaddingLeft(10);
+		certButt.setIconFixedWidth(true);
+		certButt.setType(ButtonType.SUCCESS);
+		return certButt;
+
+	}
+
+	private static DropDownMenu getIdpJoinButton(ButtonGroup idpGroup) {
+
+		Button idpButt = getIdpButton();
+		idpButt.setDataToggle(Toggle.DROPDOWN);
+		idpGroup.add(idpButt);
+		DropDownMenu idpMenu = new DropDownMenu();
+		idpGroup.add(idpMenu);
+
+		return idpMenu;
+
+	}
+
+	private static Button getIdpButton() {
 
 		Button idpButt = new Button(translation.byIdp(), IconType.USER, new ClickHandler() {
 			@Override
@@ -702,16 +759,23 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		idpButt.setPaddingLeft(10);
 		idpButt.setIconFixedWidth(true);
 		idpButt.setType(ButtonType.SUCCESS);
-		idpButt.setDataToggle(Toggle.DROPDOWN);
-		certGroup.add(idpButt);
+		return idpButt;
+
+	}
+
+	private static DropDownMenu getOthersJoinButton(ButtonGroup othersButton) {
+
+		Button othButt = getOthersButton();
+		othButt.setDataToggle(Toggle.DROPDOWN);
+		othersButton.add(othButt);
 		DropDownMenu idpMenu = new DropDownMenu();
-		certGroup.add(idpMenu);
+		othersButton.add(idpMenu);
 
 		return idpMenu;
 
 	}
 
-	private static DropDownMenu getOthersJoinButton(ButtonGroup othersButton) {
+	private static Button getOthersButton() {
 
 		Button othButt = new Button(translation.byLoginPassword(), IconType.KEY, new ClickHandler() {
 			@Override
@@ -722,12 +786,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		othButt.setPaddingLeft(10);
 		othButt.setIconFixedWidth(true);
 		othButt.setType(ButtonType.SUCCESS);
-		othButt.setDataToggle(Toggle.DROPDOWN);
-		othersButton.add(othButt);
-		DropDownMenu idpMenu = new DropDownMenu();
-		othersButton.add(idpMenu);
-
-		return idpMenu;
+		return othButt;
 
 	}
 
