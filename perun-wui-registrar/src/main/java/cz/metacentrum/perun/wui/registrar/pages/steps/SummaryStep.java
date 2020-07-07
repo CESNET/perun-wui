@@ -740,11 +740,12 @@ public class SummaryStep implements Step {
 
 		if (skipSummary && !exceptionDisplayed && continueButton != null && redirectTo != null) {
 
-			// redirect using continue button
-			Window.Location.assign(redirectTo);
+			// make sure LDAP backend is updated and go to the end-service
+			redirectAfterTimeout(redirectTo);
 
 		} else {
 
+			// show summary
 			if (title != null || title.getWidgetCount() != 0 || !title.getText().isEmpty()) {
 				formView.getForm().add(title);
 			}
@@ -774,39 +775,49 @@ public class SummaryStep implements Step {
 			continueButton.addClickHandler(new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
-
-					formView.getForm().clear();
-
-					Heading head = new Heading(HeadingSize.H4, translation.redirectingBackToService());
-					Icon spin = new Icon(IconType.SPINNER);
-					spin.setSpin(true);
-					spin.setSize(IconSize.LARGE);
-					spin.setPull(Pull.LEFT);
-					spin.setMarginTop(10);
-
-					Column column = new Column(ColumnSize.MD_8, ColumnSize.LG_6, ColumnSize.SM_10, ColumnSize.XS_12);
-					column.setOffset(ColumnOffset.MD_2,ColumnOffset.LG_3,ColumnOffset.SM_1,ColumnOffset.XS_0);
-
-					column.add(spin);
-					column.add(head);
-					column.setMarginTop(30);
-
-					formView.getForm().add(column);
-
-					// WAIT 7 SEC BEFORE REDIRECT back to service so that LDAP in Perun is updated
-					Timer timer = new Timer() {
-						@Override
-						public void run() {
-							Window.Location.assign(Window.Location.getParameter(urlParameter));
-						}
-					};
-					timer.schedule(7000);
+					redirectAfterTimeout(redirectTo);
 				}
 			});
 			return continueButton;
 
 		}
 		return null;
+	}
+
+	/**
+	 * Clears form and perform redirect after specified time. Also prints info about redirection.
+	 *
+	 * @param redirectTo URL to redirect to
+	 */
+	private void redirectAfterTimeout(String redirectTo) {
+
+		formView.getForm().clear();
+
+		Heading head = new Heading(HeadingSize.H4, translation.redirectingBackToService());
+		Icon spin = new Icon(IconType.SPINNER);
+		spin.setSpin(true);
+		spin.setSize(IconSize.LARGE);
+		spin.setPull(Pull.LEFT);
+		spin.setMarginTop(10);
+
+		Column column = new Column(ColumnSize.MD_8, ColumnSize.LG_6, ColumnSize.SM_10, ColumnSize.XS_12);
+		column.setOffset(ColumnOffset.MD_2,ColumnOffset.LG_3,ColumnOffset.SM_1,ColumnOffset.XS_0);
+
+		column.add(spin);
+		column.add(head);
+		column.setMarginTop(30);
+
+		formView.getForm().add(column);
+
+		// WAIT 7 SEC BEFORE REDIRECT back to service so that LDAP in Perun is updated
+		Timer timer = new Timer() {
+			@Override
+			public void run() {
+				Window.Location.assign(redirectTo);
+			}
+		};
+		timer.schedule(7000);
+
 	}
 
 	private void displayException(PerunException ex, GeneralObject bean) {
