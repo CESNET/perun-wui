@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.registrar.widgets.items;
 
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import org.gwtbootstrap3.client.ui.constants.Emphasis;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
@@ -14,8 +15,8 @@ public class Undefined extends PerunFormItemStatic {
 
 	private Paragraph widget;
 
-	public Undefined(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public Undefined(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 	}
 
 	@Override

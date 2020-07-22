@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.registrar.widgets.items;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
@@ -18,8 +19,8 @@ public class FromFederation extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public FromFederation(ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(item, lang, onlyPreview);
+	public FromFederation(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(form, item, lang, onlyPreview);
 	}
 
 	@Override

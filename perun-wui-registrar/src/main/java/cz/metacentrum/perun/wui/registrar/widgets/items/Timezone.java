@@ -6,6 +6,7 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.Select;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.TimezoneValidator;
@@ -26,8 +27,8 @@ public class Timezone extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public Timezone(ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(item, lang, onlyPreview);
+	public Timezone(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(form, item, lang, onlyPreview);
 		this.validator = new TimezoneValidator();
 	}
 

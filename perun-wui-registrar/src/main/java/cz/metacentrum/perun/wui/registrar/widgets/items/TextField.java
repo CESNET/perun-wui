@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.TextFieldValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
@@ -23,8 +24,8 @@ public class TextField extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public TextField(ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(item, lang, onlyPreview);
+	public TextField(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(form, item, lang, onlyPreview);
 		this.validator = new TextFieldValidator();
 	}
 

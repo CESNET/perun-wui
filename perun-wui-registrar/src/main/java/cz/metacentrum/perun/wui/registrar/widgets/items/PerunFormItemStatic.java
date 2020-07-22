@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.registrar.widgets.items;
 
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 
 /**
@@ -11,8 +12,8 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItem
  */
 public abstract class PerunFormItemStatic extends PerunFormItem {
 
-	public PerunFormItemStatic(ApplicationFormItemData item, String lang) {
-		super(item, lang);
+	public PerunFormItemStatic(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 		add(initFormItem());
 	}
 

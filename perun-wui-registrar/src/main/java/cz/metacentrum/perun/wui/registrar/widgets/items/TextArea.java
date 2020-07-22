@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.TextAreaValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextArea;
@@ -22,8 +23,8 @@ public class TextArea extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public TextArea(ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(item, lang, onlyPreview);
+	public TextArea(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(form, item, lang, onlyPreview);
 		this.validator = new TextAreaValidator();
 	}
 

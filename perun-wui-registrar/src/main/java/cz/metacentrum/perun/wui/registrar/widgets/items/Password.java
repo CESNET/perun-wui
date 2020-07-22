@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.EinfraPasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
@@ -27,8 +28,8 @@ public class Password extends PerunFormItemEditable {
 
 	private InputGroup widget;
 
-	public Password(ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(item, lang, onlyPreview);
+	public Password(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(form, item, lang, onlyPreview);
 		// FIXME - specific per-namespace validation
 		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunDestinationAttribute())) {
 				this.validator = new EinfraPasswordValidator();

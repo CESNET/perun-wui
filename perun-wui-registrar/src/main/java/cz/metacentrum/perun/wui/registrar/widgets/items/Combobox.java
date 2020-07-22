@@ -10,6 +10,7 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.Select;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.ComboboxValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
@@ -37,8 +38,8 @@ public class Combobox extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public Combobox(ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(item, lang, onlyPreview);
+	public Combobox(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(form, item, lang, onlyPreview);
 		this.validator = new ComboboxValidator();
 	}
 

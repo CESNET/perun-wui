@@ -65,11 +65,11 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 
 		switch (data.getFormItem().getType()) {
 			case HEADING:
-				return new Header(data, lang);
+				return new Header(form ,data, lang);
 			case TEXTFIELD:
-				return new TextField(data, lang, onlyPreview);
+				return new TextField(form, data, lang, onlyPreview);
 			case VALIDATED_EMAIL:
-				return new ValidatedEmail(data, lang, onlyPreview);
+				return new ValidatedEmail(form, data, lang, onlyPreview);
 			case TEXTAREA:
 				// FIXME - hack for BBMRI collections to pre-fill value from URL
 				if ((data.getValue() == null || data.getValue().isEmpty() || data.getValue().equals("null")) &&
@@ -78,29 +78,29 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 					final String bbmriCollections = Window.Location.getParameter("col");
 					data.setPrefilledValue((bbmriCollections != null) ? JsUtils.unzipString(JsUtils.decodeBase64(bbmriCollections.replaceAll(" ", "+"))) : null);
 				}
-				return new TextArea(data, lang, onlyPreview);
+				return new TextArea(form, data, lang, onlyPreview);
 			case USERNAME:
-				Username username = new Username(data, lang, onlyPreview);
+				Username username = new Username(form, data, lang, onlyPreview);
 				if (data.getPrefilledValue() != null && !data.getPrefilledValue().isEmpty() && !data.isGenerated()) {
 					username.setEnable(false);
 				}
 				return username;
 			case PASSWORD:
-				return new Password(data, lang, onlyPreview);
+				return new Password(form, data, lang, onlyPreview);
 			case TIMEZONE:
-				return new Timezone(data, lang, onlyPreview);
+				return new Timezone(form, data, lang, onlyPreview);
 			case SELECTIONBOX:
-				return new Selectionbox(data, lang, onlyPreview);
+				return new Selectionbox(form, data, lang, onlyPreview);
 			case COMBOBOX:
-				return new Combobox(data, lang, onlyPreview);
+				return new Combobox(form, data, lang, onlyPreview);
 			case CHECKBOX:
-				return new Checkbox(data, lang, onlyPreview);
+				return new Checkbox(form, data, lang, onlyPreview);
 			case RADIO:
-				return new Radiobox(data, lang, onlyPreview);
+				return new Radiobox(form, data, lang, onlyPreview);
 			case FROM_FEDERATION_SHOW:
-				return new FromFederation(data, lang, onlyPreview);
+				return new FromFederation(form, data, lang, onlyPreview);
 			case FROM_FEDERATION_HIDDEN:
-				FromFederation hidden = new FromFederation(data, lang, onlyPreview);
+				FromFederation hidden = new FromFederation(form, data, lang, onlyPreview);
 				if (!form.isSeeHiddenItems()) {
 					hidden.setVisible(false);
 				} else {
@@ -108,13 +108,13 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 				}
 				return hidden;
 			case HTML_COMMENT:
-				return new HtmlComment(data, lang);
+				return new HtmlComment(form, data, lang);
 			case SUBMIT_BUTTON:
-				return new SubmitButton(data, lang, form, false);
+				return new SubmitButton(form, data, lang, false);
 			case AUTO_SUBMIT_BUTTON:
-				return new SubmitButton(data, lang, form, true);
+				return new SubmitButton(form, data, lang, true);
 			default:
-				return new Undefined(data, lang);
+				return new Undefined(form, data, lang);
 		}
 	}
 
