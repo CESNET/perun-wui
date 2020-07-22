@@ -29,8 +29,8 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<!-- Project wide GWT version -->
-		<gwtVersion>2.8.2</gwtVersion>
-		<gwtPluginVersion>2.8.2</gwtPluginVersion>
+		<gwtVersion>2.9.0</gwtVersion>
+		<gwtPluginVersion>2.9.0</gwtPluginVersion>
 		<gwtp.version>1.6</gwtp.version>
 		<gin.version>2.1.2</gin.version>
 	</properties>
