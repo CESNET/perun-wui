@@ -1,6 +1,6 @@
 Perun WUI
 =========
-[![Build Status](https://travis-ci.org/CESNET/perun-wui.svg?branch=master)](https://travis-ci.org/CESNET/perun-wui)
+![](https://github.com/CESNET/perun-wui/workflows/Maven%20build/badge.svg?branch=master)
 
 ### Web interface for Perun using GWT and Bootstrap3 ###
 
