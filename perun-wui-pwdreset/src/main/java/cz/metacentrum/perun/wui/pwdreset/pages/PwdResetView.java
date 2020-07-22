@@ -470,14 +470,22 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 				return false;
 			}
 
-			/* - TODO check for collision with login or users name
-			if (!login.isEmpty() &&
-					(login.equalsIgnoreCase(passwordTextBox.getValue()) || passwordTextBox.getValue().contains(login))) {
-				itemStatus.setText(translation.metaStrength());
-				passItem.setValidationState(ValidationState.ERROR);
-				return false;
+			// TODO - Check also name/surname
+
+			if (!login.isEmpty() && login.length()>2) {
+
+				if (passwordTextBox.getValue().toLowerCase().contains(login.toLowerCase()) ||
+						passwordTextBox.getValue().toLowerCase().contains(reverse(login.toLowerCase())) ||
+						normalizeString(passwordTextBox.getValue()).contains(normalizeString(login)) ||
+						normalizeString(passwordTextBox.getValue()).contains(normalizeString(reverse(login)))) {
+
+					itemStatus.setHTML(translation.einfraPasswordStrengthForNameLogin());
+					passItem.setValidationState(ValidationState.ERROR);
+					return false;
+
+				}
+
 			}
-			*/
 
 		} else if (Objects.equals(namespace, "vsup")) {
 
@@ -502,11 +510,14 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 				return false;
 			}
 
+			// TODO - check also against name, surname, personal number
 			// can't contain login
 			if (!login.isEmpty()) {
 				// only if known to the app
-				if (login.equalsIgnoreCase(passwordTextBox.getValue()) || passwordTextBox.getValue().contains(login)) {
-					itemStatus.setText(translation.passwordStrength2());
+				if (passwordTextBox.getValue().toLowerCase().contains(login.toLowerCase()) ||
+						normalizeString(passwordTextBox.getValue()).contains(normalizeString(login))) {
+
+					itemStatus.setHTML(translation.passwordStrength2());
 					passItem.setValidationState(ValidationState.ERROR);
 					return false;
 				}
@@ -564,6 +575,26 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 		}
 
+	}
+
+	private String normalizeString(String string) {
+		String result = normalizeStringToNFD(string);
+		result = result.replaceAll("\\s","");
+		return result;
+	}
+
+	private final native String normalizeStringToNFD(String input) /*-{
+		if (typeof input.normalize !== "undefined") {
+			// convert to normal decomposed form and replace all combining-diacritics marks
+			return input.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+		}
+		// just lowercase
+		return input.toLowerCase();
+	}-*/;
+
+	public static String reverse(String string) {
+		if (string == null || string.isEmpty() || string.length() == 1) return string;
+		return string.charAt(string.length()-1)+reverse(string.substring(1, string.length()-1))+string.charAt(0);
 	}
 
 }

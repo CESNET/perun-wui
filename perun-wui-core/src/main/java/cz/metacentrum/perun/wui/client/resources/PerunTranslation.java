@@ -285,4 +285,7 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Password must consist of <b>at least 3 of 4</b> character groups<ul><li>lower-case letters</li><li>upper-case letters</li><li>digits</li><li>special characters</li></ul>")
 	public String einfraPasswordStrength();
 
+	@DefaultMessage("Password <b>can`t contain login, name or surname</b>, not even backwards!")
+	public String einfraPasswordStrengthForNameLogin();
+
 }

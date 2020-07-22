@@ -158,7 +158,7 @@ public class EinfraPasswordValidator extends PasswordValidator {
 						normalizeString(password.getValue()).contains(normalizeString(s)) ||
 						normalizeString(password.getValue()).contains(normalizeString(reverse(s)))) {
 					setResult(Result.INVALID_FORMAT);
-					password.setRawStatus("Password can't contain login, name or surname, not even backwards.", ValidationState.ERROR);
+					password.setRawStatus(getTransl().einfraPasswordStrengthForNameLogin(), ValidationState.ERROR);
 					return false;
 				}
 
@@ -172,7 +172,7 @@ public class EinfraPasswordValidator extends PasswordValidator {
 				normalizeString(password.getValue()).contains(normalizeString(string)) ||
 				normalizeString(password.getValue()).contains(normalizeString(reverse(string)))) {
 			setResult(Result.INVALID_FORMAT);
-			password.setRawStatus("Password can't contain login, name or surname, not even backwards.", ValidationState.ERROR);
+			password.setRawStatus(getTransl().einfraPasswordStrengthForNameLogin(), ValidationState.ERROR);
 			return false;
 		}
 
