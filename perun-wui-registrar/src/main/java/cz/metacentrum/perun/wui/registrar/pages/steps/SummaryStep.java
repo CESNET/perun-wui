@@ -26,7 +26,6 @@ import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
-import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Heading;
@@ -74,8 +73,10 @@ public class SummaryStep implements Step {
 	private final String TARGET_EXTENDED = "targetextended";
 
 	private boolean exceptionDisplayed = false;
-	private boolean modalDisplayed = false;
 	private String redirectTo = null;
+	private ListGroupItem verifyMail;
+	private ListGroup messages;
+	private Heading title;
 
 	public SummaryStep(FormView formView) {
 		this.formView = formView;
@@ -85,8 +86,8 @@ public class SummaryStep implements Step {
 	@Override
 	public void call(final PerunPrincipal pp, Summary summary, Events<Result> events) {
 
-		Heading title = new Heading(HeadingSize.H2);
-		ListGroup messages = new ListGroup();
+		title = new Heading(HeadingSize.H2);
+		messages = new ListGroup();
 
 		if (summary.containsGroupInitResult()) {
 			if (summary.containsVoInitResult()) {
@@ -244,10 +245,11 @@ public class SummaryStep implements Step {
 
 			messages.add(msg);
 		} else if (res.isOk() && summary.mustRevalidateEmail() != null) {
+
 			title.add(new Icon(IconType.WARNING));
 			title.add(new Text(" " + translation.emailVerificationNeededTitle()));
-
 			verifyMailMessage(summary, messages, summary.getApplication().getId());
+
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
@@ -288,7 +290,7 @@ public class SummaryStep implements Step {
 	 */
 	private void caseVoExt(Summary summary, Heading title, ListGroup messages) {
 		Result res = summary.getVoExtResult();
-		if (res.isOk()) {
+		if (res.isOk() && summary.mustRevalidateEmail() == null) {
 			title.add(successIcon());
 			ListGroupItem msg = new ListGroupItem();
 
@@ -301,6 +303,12 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
+
+		} else if (res.isOk() && summary.mustRevalidateEmail() != null) {
+
+			title.add(new Icon(IconType.WARNING));
+			title.add(new Text(" " + translation.emailVerificationNeededTitle()));
 			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
@@ -746,12 +754,12 @@ public class SummaryStep implements Step {
 
 	private void verifyMailMessage(Summary summary, ListGroup messages, int appId) {
 		if (summary.mustRevalidateEmail() != null) {
-			ListGroupItem verifyMail = new ListGroupItem();
+			verifyMail = new ListGroupItem();
 			verifyMail.add(new Paragraph(" " + translation.verifyMail(summary.mustRevalidateEmail())));
 			verifyMail.setType(ListGroupItemType.WARNING);
 			AlertErrorReporter errorReporter = new AlertErrorReporter();
 			errorReporter.setVisible(false);
-			errorReporter.setType(AlertType.WARNING);
+			errorReporter.setType(AlertType.DANGER);
 			errorReporter.setMarginTop(20);
 
 			PerunButton resendButton = new PerunButton();
@@ -876,17 +884,6 @@ public class SummaryStep implements Step {
 					}
 				});
 
-				Button button2 = new Button(translation.continueAnyway());
-				button2.setType(ButtonType.DEFAULT);
-				button2.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						// perform final redirect
-						modal.hide();
-						clickHandler.onClick(event);
-					}
-				});
-
 				ModalFooter footer = new ModalFooter();
 				footer.add(button);
 
@@ -914,20 +911,52 @@ public class SummaryStep implements Step {
 
 								if (Application.ApplicationState.NEW.equals(currentAppState.getState())) {
 									content.setHTML(translation.redirectWaitForVerification());
-									// modal will allow redirect
 									modal.show();
-								} else if (Application.ApplicationState.VERIFIED.equals(currentAppState.getState()) &&
-									previousResult.getException() != null) {
+								} else if (Application.ApplicationState.VERIFIED.equals(currentAppState.getState())) {
+
 									// verified in the mean time
-									PerunException fakeException = PerunException.createNew("0", "DuplicateRegistrationAttemptException", "");
-									fakeException.setApplication(currentAppState);
-									displayException(fakeException, (currentAppState.getGroup() != null) ? currentAppState.getGroup() : currentAppState.getVo());
 									formView.hideMailVerificationAlert();
+									if (verifyMail != null) {
+										verifyMail.setVisible(false);
+									}
+
+									// update title and message to current state
+
+									if (title != null && previousResult.getException() == null) {
+										title.clear();
+										title.add(successIcon());
+										if (currentAppState.getType().equals(Application.ApplicationType.INITIAL)) {
+											title.add(new Text(" "+translation.initTitle()));
+										} else if (currentAppState.getType().equals(Application.ApplicationType.EXTENSION)) {
+											title.add(new Text(" "+translation.extendTitle()));
+										}
+
+									}
+
+									if (messages != null && messages.getWidgetCount() > 0) {
+										messages.clear();
+										if (currentAppState.getType().equals(Application.ApplicationType.INITIAL)) {
+											ListGroupItem msg = new ListGroupItem();
+											msg.setText(translation.waitForAcceptation());
+											messages.add(msg);
+										} else if (currentAppState.getType().equals(Application.ApplicationType.EXTENSION)) {
+											ListGroupItem msg = new ListGroupItem();
+											msg.setText(translation.waitForExtAcceptation());
+											messages.add(msg);
+										}
+									}
+
+									// show modal
+
 									content.setHTML(translation.redirectWaitForApproval());
-									// modal will allow redirect
 									modal.show();
+
 								} else if (Application.ApplicationState.APPROVED.equals(currentAppState.getState())) {
 									// no modal needed - click to go
+									formView.hideMailVerificationAlert();
+									if (verifyMail != null) {
+										verifyMail.setVisible(false);
+									}
 									formView.hideNotice();
 									clickHandler.onClick(event);
 								}
@@ -936,6 +965,7 @@ public class SummaryStep implements Step {
 
 							@Override
 							public void onError(PerunException error) {
+								continueButton.setProcessing(false);
 								// FIXME - this BLEEEH hack
 								// should display some info to the user, but I am not sure where exactly
 								// in this context

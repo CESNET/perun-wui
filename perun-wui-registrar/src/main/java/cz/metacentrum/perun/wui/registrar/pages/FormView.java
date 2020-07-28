@@ -467,6 +467,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	public void hideMailVerificationAlert() {
 		mailVerificationAlert.setVisible(false);
+		mailVerificationNotice.setVisible(false);
 	}
 
 	public void hideNotice() {
