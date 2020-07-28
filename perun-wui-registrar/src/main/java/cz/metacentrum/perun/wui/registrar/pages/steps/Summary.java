@@ -1,5 +1,7 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
+import cz.metacentrum.perun.wui.model.beans.Application;
+
 /**
  * Envelope around collection of Results.
  * Provides methods to interpret data from results.
@@ -42,5 +44,7 @@ public interface Summary {
 	boolean isEmpty();
 
 	String mustRevalidateEmail();
+
+	Application getApplication();
 
 }

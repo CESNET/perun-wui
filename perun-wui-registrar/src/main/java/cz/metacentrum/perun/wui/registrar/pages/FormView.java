@@ -9,6 +9,7 @@ import com.google.gwt.http.client.URL;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -18,6 +19,7 @@ import com.gwtplatform.mvp.client.ViewImpl;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
@@ -47,7 +49,9 @@ import cz.metacentrum.perun.wui.registrar.pages.steps.VoExtStep;
 import cz.metacentrum.perun.wui.registrar.pages.steps.VoInitStep;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
+import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ButtonGroup;
@@ -62,6 +66,8 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
+import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -98,6 +104,18 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 	@UiField
 	AlertErrorReporter notice;
 
+	@UiField
+	Alert mailVerificationAlert;
+
+	@UiField
+	Paragraph mailVerificationText;
+
+	@UiField
+	PerunButton resendNotification;
+
+	@UiField
+	AlertErrorReporter mailVerificationNotice;
+
 	private PerunException displayedException;
 
 	@Inject
@@ -115,6 +133,33 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		return translation;
 	}
 
+	@UiHandler(value = "resendNotification")
+	public void reSendMailVerificationNotification(ClickEvent event) {
+
+		RegistrarManager.sendMessage(exceptionResolver.getApplication().getId(), "MAIL_VALIDATION", null, new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				resendNotification.setProcessing(false);
+				Notify.notify(translation.mailVerificationRequestSent(exceptionResolver.getMailToVerify()), NotifyType.SUCCESS);
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				mailVerificationNotice.setType(AlertType.DANGER);
+				mailVerificationNotice.setVisible(true);
+				mailVerificationNotice.setHTML(ErrorTranslator.getTranslatedMessage(error));
+				mailVerificationNotice.setReportInfo(error);
+				resendNotification.setProcessing(false);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				mailVerificationNotice.setVisible(false);
+				resendNotification.setProcessing(true);
+			}
+		});
+
+	}
 
 	public void draw() {
 
@@ -410,9 +455,19 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			notice.setReportInfo(null);
 			notice.setType(AlertType.WARNING);
 		}
+
+		if (exceptionResolver.isShowMailVerificationReSendButton()) {
+			mailVerificationAlert.setVisible(true);
+			mailVerificationText.setHTML(translation.mailVerificationText(exceptionResolver.getMailToVerify()));
+			resendNotification.setText(translation.reSendMailVerificationButton());
+		}
+
 		return exceptionResolver.isSoft();
 	}
 
+	public void hideMailVerificationAlert() {
+		mailVerificationAlert.setVisible(false);
+	}
 
 	public void hideNotice() {
 		notice.setVisible(false);

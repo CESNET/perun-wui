@@ -47,6 +47,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You have been successfully registered")
 	public String initTitleAutoApproval();
 
+	@DefaultMessage("Email verification needed")
+	public String emailVerificationNeededTitle();
+
 	@DefaultMessage("You have successfully extend your membership")
 	public String extendTitleAutoApproval();
 

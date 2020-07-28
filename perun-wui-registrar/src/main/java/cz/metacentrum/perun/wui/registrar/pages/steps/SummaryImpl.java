@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
+import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
 
 import java.util.LinkedList;
@@ -16,6 +17,16 @@ public class SummaryImpl implements Summary {
 	public SummaryImpl(RegistrarObject registrar) {
 		this.results = new LinkedList<>();
 		this.registrar = registrar;
+	}
+
+	@Override
+	public Application getApplication() {
+		for (Result result : results) {
+			if (result.getApplication() != null) {
+				return result.getApplication();
+			}
+		}
+		return null;
 	}
 
 	@Override
