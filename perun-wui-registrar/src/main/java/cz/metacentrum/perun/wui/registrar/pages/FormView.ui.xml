@@ -21,6 +21,15 @@
 
 					<p.core:AlertErrorReporter visible="false" type="WARNING" ui:field="notice" marginTop="20"/>
 
+					<b:Alert type="WARNING" visible="false" ui:field="mailVerificationAlert">
+						<b.html:Paragraph ui:field="mailVerificationText" marginBottom="10"/>
+						<p.core:PerunToolbar>
+							<p.core:PerunButton ui:field="resendNotification" type="WARNING" iconFixedWidth="true" icon="ENVELOPE"/>
+						</p.core:PerunToolbar>
+					</b:Alert>
+
+					<p.core:AlertErrorReporter visible="false" type="DANGER" ui:field="mailVerificationNotice" marginTop="20" />
+
 					<b:Form type="HORIZONTAL">
 						<p:PerunForm ui:field="form">
 

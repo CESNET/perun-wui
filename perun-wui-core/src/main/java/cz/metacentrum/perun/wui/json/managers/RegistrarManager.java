@@ -236,7 +236,7 @@ public class RegistrarManager {
 		if (data != null) {
 			client.put("data", data);
 		}
-		return client.call(REGISTRAR_MANAGER + "createApplication");
+		return client.call(REGISTRAR_MANAGER + "submitApplication");
 
 	}
 

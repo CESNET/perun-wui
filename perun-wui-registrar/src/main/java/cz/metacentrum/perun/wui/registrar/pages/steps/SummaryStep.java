@@ -9,17 +9,21 @@ import com.google.gwt.user.client.ui.HTML;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AttributesManager;
+import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
+import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
 import org.gwtbootstrap3.client.ui.Button;
@@ -31,6 +35,7 @@ import org.gwtbootstrap3.client.ui.ListGroupItem;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.ModalFooter;
+import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
@@ -42,7 +47,10 @@ import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ListGroupItemType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Pull;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Text;
+import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,6 +74,9 @@ public class SummaryStep implements Step {
 
 	private boolean exceptionDisplayed = false;
 	private String redirectTo = null;
+	private ListGroupItem verifyMail;
+	private ListGroup messages;
+	private Heading title;
 
 	public SummaryStep(FormView formView) {
 		this.formView = formView;
@@ -75,8 +86,8 @@ public class SummaryStep implements Step {
 	@Override
 	public void call(final PerunPrincipal pp, Summary summary, Events<Result> events) {
 
-		Heading title = new Heading(HeadingSize.H2);
-		ListGroup messages = new ListGroup();
+		title = new Heading(HeadingSize.H2);
+		messages = new ListGroup();
 
 		if (summary.containsGroupInitResult()) {
 			if (summary.containsVoInitResult()) {
@@ -220,7 +231,7 @@ public class SummaryStep implements Step {
 	 */
 	private void caseVoInit(Summary summary, Heading title, ListGroup messages) {
 		Result res = summary.getVoInitResult();
-		if (res.isOk()) {
+		if (res.isOk() && summary.mustRevalidateEmail() == null) {
 			title.add(successIcon());
 			ListGroupItem msg = new ListGroupItem();
 
@@ -233,7 +244,12 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
-			verifyMailMessage(summary, messages);
+		} else if (res.isOk() && summary.mustRevalidateEmail() != null) {
+
+			title.add(new Icon(IconType.WARNING));
+			title.add(new Text(" " + translation.emailVerificationNeededTitle()));
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
+
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
@@ -242,7 +258,7 @@ public class SummaryStep implements Step {
 			title.add(new Text(" "+translation.initTitle()));
 			msg.setText(translation.waitForAcceptation());
 			messages.add(msg);
-			verifyMailMessage(summary, messages);
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else {
 			displayException(res.getException(), res.getBean());
@@ -250,10 +266,15 @@ public class SummaryStep implements Step {
 
 		// Show continue button
 		PerunButton continueBtn = null;
-		if (summary.alreadyMemberOfVo() || summary.alreadyAppliedToVo()) {
+		if (summary.alreadyMemberOfVo()) {
+			// user visited registration form, but is already registered
 			continueBtn = getContinueButton(TARGET_EXISTING);
+		} else if (summary.alreadyAppliedToVo()) {
+			// user visited registration form again (back from service?), his registration is not yet verified/approved
+			continueBtn = getContinueButton(TARGET_NEW, res);
 		} else if (res.isOk() || res.getException().getName().equals("RegistrarException")) {
-			continueBtn = getContinueButton(TARGET_NEW);
+			// user submitted registration, it might have failed
+			continueBtn = getContinueButton(TARGET_NEW, res);
 		}
 
 		displaySummary(title, messages, continueBtn);
@@ -269,7 +290,7 @@ public class SummaryStep implements Step {
 	 */
 	private void caseVoExt(Summary summary, Heading title, ListGroup messages) {
 		Result res = summary.getVoExtResult();
-		if (res.isOk()) {
+		if (res.isOk() && summary.mustRevalidateEmail() == null) {
 			title.add(successIcon());
 			ListGroupItem msg = new ListGroupItem();
 
@@ -282,7 +303,13 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
-			verifyMailMessage(summary, messages);
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
+
+		} else if (res.isOk() && summary.mustRevalidateEmail() != null) {
+
+			title.add(new Icon(IconType.WARNING));
+			title.add(new Text(" " + translation.emailVerificationNeededTitle()));
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
 
@@ -292,11 +319,11 @@ public class SummaryStep implements Step {
 			title.add(new Text(" "+translation.extendTitle()));
 			msg.setText(translation.waitForExtAcceptation());
 			messages.add(msg);
-			verifyMailMessage(summary, messages);
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else {
 			// FIXME - solve this BLEEEH hack in better way.
-			if (res.getException().getName().equals("DuplicateRegistrationAttemptException")) {
+			if (res.getException() != null && "DuplicateRegistrationAttemptException".equals(res.getException().getName())) {
 				res.getException().setName("DuplicateExtensionAttemptException");
 			}
 			displayException(res.getException(), res.getBean());
@@ -305,13 +332,16 @@ public class SummaryStep implements Step {
 		// Show continue button
 		PerunButton continueBtn = null;
 		if (res.isOk() || res.getException().getName().equals("RegistrarException")) {
-			continueBtn = getContinueButton(TARGET_EXTENDED);
-		} else if (summary.alreadyAppliedForVoExtension() || summary.alreadyMemberOfVo()) {
+			continueBtn = getContinueButton(TARGET_EXTENDED, res);
+		} else if (summary.alreadyAppliedForVoExtension()) {
+			continueBtn = getContinueButton(TARGET_EXTENDED, res);
+		} else if (summary.alreadyMemberOfVo()) {
 			continueBtn = getContinueButton(TARGET_EXISTING);
 		}
 
 		// FIXME: HACK for ELIXIR - if is member and link should go out of registrar, leave immediatelly
-		if (summary.alreadyMemberOfVo()) {
+		if (summary.alreadyMemberOfVo() && !summary.alreadyAppliedForVoExtension()) {
+			// only when there is no pending extension application !!
 			String url = Window.Location.getParameter(TARGET_EXISTING);
 			if (url != null && !url.isEmpty()) {
 				Window.Location.assign(url);
@@ -350,7 +380,7 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
-			verifyMailMessage(summary, messages);
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
 
@@ -362,7 +392,7 @@ public class SummaryStep implements Step {
 			msg.setText(translation.waitForAcceptation());
 
 			messages.add(msg);
-			verifyMailMessage(summary, messages);
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else {
 			displayException(res.getException(), res.getBean());
@@ -370,10 +400,12 @@ public class SummaryStep implements Step {
 
 		// Show continue button
 		PerunButton continueBtn = null;
-		if (summary.alreadyMemberOfGroup() || summary.alreadyAppliedToGroup()) {
+		if (summary.alreadyMemberOfGroup()) {
 			continueBtn = getContinueButton(TARGET_EXISTING);
+		} else if (summary.alreadyAppliedToGroup()) {
+			continueBtn = getContinueButton(TARGET_NEW, res);
 		} else if (res.isOk() || res.getException().getName().equals("RegistrarException")) {
-			continueBtn = getContinueButton(TARGET_NEW);
+			continueBtn = getContinueButton(TARGET_NEW, res);
 		}
 
 		displaySummary(title, messages, continueBtn);
@@ -406,7 +438,7 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
-			verifyMailMessage(summary, messages);
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
 
@@ -418,11 +450,11 @@ public class SummaryStep implements Step {
 			msg.setText(translation.waitForExtAcceptation());
 
 			messages.add(msg);
-			verifyMailMessage(summary, messages);
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else {
 			// FIXME - solve this BLEEEH hack in better way.
-			if (res.getException().getName().equals("DuplicateRegistrationAttemptException")) {
+			if (res.getException() != null && "DuplicateRegistrationAttemptException".equals(res.getException().getName())) {
 				res.getException().setName("DuplicateExtensionAttemptException");
 			}
 			displayException(res.getException(), res.getBean());
@@ -430,10 +462,12 @@ public class SummaryStep implements Step {
 
 		// Show continue button
 		PerunButton continueBtn = null;
-		if (summary.alreadyMemberOfGroup() || summary.alreadyAppliedForGroupExtension()) {
+		if (summary.alreadyMemberOfGroup()) {
 			continueBtn = getContinueButton(TARGET_EXISTING);
+		} else if (summary.alreadyAppliedForGroupExtension()) {
+			continueBtn = getContinueButton(TARGET_EXTENDED, res);
 		} else if (res.isOk() || res.getException().getName().equals("RegistrarException")) {
-			continueBtn = getContinueButton(TARGET_EXTENDED);
+			continueBtn = getContinueButton(TARGET_EXTENDED, res);
 		}
 
 		displaySummary(title, messages, continueBtn);
@@ -475,7 +509,7 @@ public class SummaryStep implements Step {
 			displayException(resultVo.getException(), resultVo.getBean());
 		}
 
-		verifyMailMessage(summary, messages);
+		verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		// Show summary about application to group
 		if (resultGroup.isOk()) {
@@ -515,10 +549,15 @@ public class SummaryStep implements Step {
 
 		// Show continue button
 		PerunButton continueBtn = null;
-		if (summary.alreadyMemberOfGroup() || summary.alreadyAppliedToGroup()) {
+		if (summary.alreadyMemberOfGroup()) {
 			continueBtn = getContinueButton(TARGET_EXISTING);
+		} else if (summary.alreadyAppliedToGroup()) {
+			// FIXME - we must pass both results
+			// NOTE - how is it handled, when both VO and group are awaiting approval ??
+			continueBtn = getContinueButton(TARGET_NEW, resultGroup);
 		} else if ((resultGroup.isOk() || resultGroup.getException().getName().equals("RegistrarException"))
 				&& (resultVo.isOk() || resultVo.getException().getName().equals("RegistrarException"))) {
+			// FIXME - we must pass both results
 			continueBtn = getContinueButton(TARGET_NEW);
 		}
 
@@ -560,7 +599,7 @@ public class SummaryStep implements Step {
 
 		} else {
 			// FIXME - solve this BLEEEH hack in better way.
-			if (resultVo.getException().getName().equals("DuplicateRegistrationAttemptException")) {
+			if (resultVo.getException() != null && "DuplicateRegistrationAttemptException".equals(resultVo.getException().getName())) {
 				resultVo.getException().setName("DuplicateExtensionAttemptException");
 			}
 			displayException(resultVo.getException(), resultVo.getBean());
@@ -603,10 +642,12 @@ public class SummaryStep implements Step {
 
 		// Show continue button
 		PerunButton continueBtn = null;
-		if (summary.alreadyMemberOfGroup() || summary.alreadyAppliedToGroup()) {
+		if (summary.alreadyMemberOfGroup()) {
 			continueBtn = getContinueButton(TARGET_EXISTING);
+		} else if (summary.alreadyAppliedToGroup()) {
+			continueBtn = getContinueButton(TARGET_NEW, resultGroup);
 		} else if (resultGroup.isOk() || resultGroup.getException().getName().equals("RegistrarException")) {
-			continueBtn = getContinueButton(TARGET_NEW);
+			continueBtn = getContinueButton(TARGET_NEW, resultGroup);
 		}
 
 		displaySummary(title, messages, continueBtn);
@@ -647,7 +688,7 @@ public class SummaryStep implements Step {
 
 		} else {
 			// FIXME - solve this BLEEEH hack in better way.
-			if (resultVo.getException().getName().equals("DuplicateRegistrationAttemptException")) {
+			if (resultVo.getException() != null && "DuplicateRegistrationAttemptException".equals(resultVo.getException().getName())) {
 				resultVo.getException().setName("DuplicateExtensionAttemptException");
 			}
 			displayException(resultVo.getException(), resultVo.getBean());
@@ -686,7 +727,7 @@ public class SummaryStep implements Step {
 
 		} else {
 			// FIXME - solve this BLEEEH hack in better way.
-			if (resultVo.getException().getName().equals("DuplicateRegistrationAttemptException")) {
+			if ("DuplicateRegistrationAttemptException".equals(resultVo.getException().getName())) {
 				resultVo.getException().setName("DuplicateExtensionAttemptException");
 			}
 			displayException(resultGroup.getException(), resultGroup.getBean());
@@ -694,10 +735,12 @@ public class SummaryStep implements Step {
 
 		// Show continue button
 		PerunButton continueBtn = null;
-		if (summary.alreadyMemberOfGroup() || summary.alreadyAppliedForGroupExtension()) {
+		if (summary.alreadyMemberOfGroup()) {
 			continueBtn = getContinueButton(TARGET_EXISTING);
+		} else if (summary.alreadyAppliedForGroupExtension()) {
+			continueBtn = getContinueButton(TARGET_EXTENDED, resultGroup);
 		} else if (resultGroup.isOk() || resultGroup.getException().getName().equals("RegistrarException")) {
-			continueBtn = getContinueButton(TARGET_EXTENDED);
+			continueBtn = getContinueButton(TARGET_EXTENDED, resultGroup);
 		}
 
 		displaySummary(title, messages, continueBtn);
@@ -709,12 +752,43 @@ public class SummaryStep implements Step {
 		return success;
 	}
 
-	private void verifyMailMessage(Summary summary, ListGroup messages) {
+	private void verifyMailMessage(Summary summary, ListGroup messages, int appId) {
 		if (summary.mustRevalidateEmail() != null) {
-			ListGroupItem verifyMail = new ListGroupItem();
-			verifyMail.add(new Icon(IconType.WARNING));
-			verifyMail.add(new Text(" " + translation.verifyMail(summary.mustRevalidateEmail())));
+			verifyMail = new ListGroupItem();
+			verifyMail.add(new Paragraph(" " + translation.verifyMail(summary.mustRevalidateEmail())));
 			verifyMail.setType(ListGroupItemType.WARNING);
+			AlertErrorReporter errorReporter = new AlertErrorReporter();
+			errorReporter.setVisible(false);
+			errorReporter.setType(AlertType.DANGER);
+			errorReporter.setMarginTop(20);
+
+			PerunButton resendButton = new PerunButton();
+			resendButton.setType(ButtonType.WARNING);
+			resendButton.setText(translation.reSendMailVerificationButton());
+			resendButton.addClickHandler(event ->
+				RegistrarManager.sendMessage(appId, "MAIL_VALIDATION", null, new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					resendButton.setProcessing(false);
+					Notify.notify(translation.mailVerificationRequestSent(summary.mustRevalidateEmail()), NotifyType.SUCCESS);
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					errorReporter.setVisible(true);
+					errorReporter.setHTML(ErrorTranslator.getTranslatedMessage(error));
+					errorReporter.setReportInfo(error);
+					resendButton.setProcessing(false);
+				}
+
+				@Override
+				public void onLoadingStart() {
+					errorReporter.setVisible(false);
+					resendButton.setProcessing(true);
+				}
+			}));
+			verifyMail.add(resendButton);
+			verifyMail.add(errorReporter);
 			messages.add(verifyMail);
 		}
 	}
@@ -760,8 +834,11 @@ public class SummaryStep implements Step {
 
 	}
 
-
 	private PerunButton getContinueButton(final String urlParameter) {
+		return getContinueButton(urlParameter, null);
+	}
+
+	private PerunButton getContinueButton(final String urlParameter, final Result previousResult) {
 
 		if (Window.Location.getParameter(urlParameter) != null) {
 
@@ -772,14 +849,141 @@ public class SummaryStep implements Step {
 			continueButton.setSize(ButtonSize.LARGE);
 			continueButton.setType(ButtonType.SUCCESS);
 
-			continueButton.addClickHandler(new ClickHandler() {
+			final ClickHandler clickHandler = new ClickHandler() {
 				@Override
 				public void onClick(ClickEvent event) {
 					redirectAfterTimeout(redirectTo);
 				}
-			});
-			return continueButton;
+			};
 
+			if (redirectTo != null && !redirectTo.isEmpty()) {
+
+				int applicationId;
+				if (previousResult.getApplication() != null) {
+					// in case user has just submitted the application
+					applicationId = previousResult.getApplication().getId();
+				} else {
+					// in case the user has tried again to submit the application
+					applicationId = previousResult.getException().getApplication().getId();
+				}
+
+				final Modal modal = new Modal();
+				modal.setFade(true);
+				modal.setDataKeyboard(false);
+				modal.setDataBackdrop(ModalBackdrop.STATIC);
+				modal.setClosable(false);
+				modal.setWidth("750px");
+
+
+				Button button = new Button(translation.understand());
+				button.setType(ButtonType.PRIMARY);
+				button.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						modal.hide();
+					}
+				});
+
+				ModalFooter footer = new ModalFooter();
+				footer.add(button);
+
+				ModalBody body = new ModalBody();
+				modal.add(body);
+				modal.add(footer);
+
+				continueButton.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+
+						// check if
+						RegistrarManager.getApplicationById(applicationId, new JsonEvents() {
+							@Override
+							public void onFinished(JavaScriptObject result) {
+								Application application = result.cast();
+								String text = (Application.ApplicationState.NEW.equals(application.getState())) ? translation.redirectWaitForVerification() : translation.redirectWaitForApproval();
+								modal.setTitle(application.getTranslatedState());
+								final Paragraph content =new Paragraph(text);
+								body.clear();
+								body.add(content);
+
+								continueButton.setProcessing(false);
+								Application currentAppState = result.cast();
+
+								if (Application.ApplicationState.NEW.equals(currentAppState.getState())) {
+									content.setHTML(translation.redirectWaitForVerification());
+									modal.show();
+								} else if (Application.ApplicationState.VERIFIED.equals(currentAppState.getState())) {
+
+									// verified in the mean time
+									formView.hideMailVerificationAlert();
+									if (verifyMail != null) {
+										verifyMail.setVisible(false);
+									}
+
+									// update title and message to current state
+
+									if (title != null && previousResult.getException() == null) {
+										title.clear();
+										title.add(successIcon());
+										if (currentAppState.getType().equals(Application.ApplicationType.INITIAL)) {
+											title.add(new Text(" "+translation.initTitle()));
+										} else if (currentAppState.getType().equals(Application.ApplicationType.EXTENSION)) {
+											title.add(new Text(" "+translation.extendTitle()));
+										}
+
+									}
+
+									if (messages != null && messages.getWidgetCount() > 0) {
+										messages.clear();
+										if (currentAppState.getType().equals(Application.ApplicationType.INITIAL)) {
+											ListGroupItem msg = new ListGroupItem();
+											msg.setText(translation.waitForAcceptation());
+											messages.add(msg);
+										} else if (currentAppState.getType().equals(Application.ApplicationType.EXTENSION)) {
+											ListGroupItem msg = new ListGroupItem();
+											msg.setText(translation.waitForExtAcceptation());
+											messages.add(msg);
+										}
+									}
+
+									// show modal
+
+									content.setHTML(translation.redirectWaitForApproval());
+									modal.show();
+
+								} else if (Application.ApplicationState.APPROVED.equals(currentAppState.getState())) {
+									// no modal needed - click to go
+									formView.hideMailVerificationAlert();
+									if (verifyMail != null) {
+										verifyMail.setVisible(false);
+									}
+									formView.hideNotice();
+									clickHandler.onClick(event);
+								}
+
+							}
+
+							@Override
+							public void onError(PerunException error) {
+								continueButton.setProcessing(false);
+								// FIXME - this BLEEEH hack
+								// should display some info to the user, but I am not sure where exactly
+								// in this context
+							}
+
+							@Override
+							public void onLoadingStart() {
+								continueButton.setProcessing(true);
+							}
+						});
+
+					}
+				});
+
+			} else {
+				continueButton.addClickHandler(clickHandler);
+			}
+			return continueButton;
 		}
 		return null;
 	}
@@ -792,6 +996,7 @@ public class SummaryStep implements Step {
 	private void redirectAfterTimeout(String redirectTo) {
 
 		formView.getForm().clear();
+		formView.hideMailVerificationAlert();
 
 		Heading head = new Heading(HeadingSize.H4, translation.redirectingBackToService());
 		Icon spin = new Icon(IconType.SPINNER);
@@ -817,7 +1022,6 @@ public class SummaryStep implements Step {
 			}
 		};
 		timer.schedule(7000);
-
 	}
 
 	private void displayException(PerunException ex, GeneralObject bean) {
