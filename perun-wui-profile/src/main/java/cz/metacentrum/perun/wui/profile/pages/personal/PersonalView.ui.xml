@@ -50,6 +50,15 @@
 			</b:ModalBody>
 		</b:Modal>
 
+		<b:Modal title="Verify preferred e-mail" ui:field="verifyEmailModal" closable="true" fade="true" dataBackdrop="STATIC" dataKeyboard="true" b:id="verifyEmailModal">
+			<b:ModalBody>
+				<p:PerunLoader ui:field="verifyEmailLoader" />
+			</b:ModalBody>
+			<b:ModalFooter>
+				<b:Button ui:field="doneButton" enabled="false" type="PRIMARY" dataDismiss="MODAL" dataTarget="verifyEmailModal">OK</b:Button>
+			</b:ModalFooter>
+		</b:Modal>
+
 	</b.html:Div>
 
 </ui:UiBinder>

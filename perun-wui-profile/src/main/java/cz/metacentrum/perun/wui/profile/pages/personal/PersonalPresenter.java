@@ -2,6 +2,7 @@ package cz.metacentrum.perun.wui.profile.pages.personal;
 
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.core.client.JsArrayString;
+import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.HasUiHandlers;
@@ -19,6 +20,7 @@ import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
+import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
 import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
@@ -48,6 +50,11 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 
 		void requestingEmailUpdateStart();
 		void requestingEmailUpdateError(PerunException ex, String email);
+
+		void verifyEmailChangeStart();
+		void verifyEmailChangeError(PerunException ex);
+		void verifyEmailChangeDone(String email);
+
 	}
 
 	@NameToken(PerunProfilePlaceTokens.PERSONAL)
@@ -63,8 +70,30 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 
 	@Override
 	protected void onReveal() {
+
 		loadUser();
+
+		// if mail validation
+		if (Window.Location.getParameterMap().containsKey("i") && Window.Location.getParameterMap().containsKey("m") && Window.Location.getParameterMap().containsKey("u")) {
+
+			String verifyI = Window.Location.getParameter("i");
+			String verifyM = Window.Location.getParameter("m");
+			String verifyU = Window.Location.getParameter("u");
+
+			if (verifyI != null && !verifyI.isEmpty() &&
+					verifyM != null && !verifyM.isEmpty() &&
+					verifyU != null && !verifyU.isEmpty() && JsUtils.checkParseInt(verifyU)) {
+				// verify mail !
+				verifyEmail(verifyI, verifyM, Integer.parseInt(verifyU));
+				checkEmailRequestPending();
+				return;
+			}
+
+		}
+
+		// check pending requests if not verifying
 		checkEmailRequestPending();
+
 	}
 
 	@Override
@@ -170,4 +199,43 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 		});
 
 	}
+
+	@Override
+	public void verifyEmail() {
+
+		String verifyI = Window.Location.getParameter("i");
+		String verifyM = Window.Location.getParameter("m");
+		String verifyU = Window.Location.getParameter("u");
+
+		if (verifyI != null && !verifyI.isEmpty() &&
+				verifyM != null && !verifyM.isEmpty() &&
+				verifyU != null && !verifyU.isEmpty() && JsUtils.checkParseInt(verifyU)) {
+			// verify mail !
+			verifyEmail(verifyI, verifyM, Integer.parseInt(verifyU));
+		}
+
+	}
+
+	private void verifyEmail(final String i, final String m, final int u) {
+
+		UsersManager.validatePreferredEmailChange(u, i, m, new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				BasicOverlayObject bo = result.cast();
+				getView().verifyEmailChangeDone(bo.getString());
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				getView().verifyEmailChangeError(error);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				getView().verifyEmailChangeStart();
+			}
+		});
+
+	}
+
 }

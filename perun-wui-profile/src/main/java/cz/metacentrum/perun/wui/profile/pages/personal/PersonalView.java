@@ -2,7 +2,10 @@ package cz.metacentrum.perun.wui.profile.pages.personal;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.TextColumn;
@@ -98,6 +101,12 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	Modal updateEmailModal;
 	@UiField
 	FormLabel updateEmailLabel;
+	@UiField
+	Modal verifyEmailModal;
+	@UiField
+	PerunLoader verifyEmailLoader;
+	@UiField
+	Button doneButton;
 
 	@Inject
 	public PersonalView(PersonalViewUiBinder binder) {
@@ -220,6 +229,34 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 			updateEmailFormGroup.setValidationState(ValidationState.NONE);
 			updateEmailHelpBlock.setVisible(false);
 		}
+	}
+
+	@Override
+	public void verifyEmailChangeStart() {
+		doneButton.setEnabled(false);
+		verifyEmailLoader.getWidget().getElement().getStyle().setMarginTop(0, Style.Unit.PX);
+		verifyEmailLoader.setEmptyMessage("");
+		verifyEmailModal.setTitle(translation.verifyEmailChangeTitle());
+		verifyEmailLoader.onLoading(translation.verifyingEmailChange());
+		verifyEmailModal.show();
+	}
+
+	@Override
+	public void verifyEmailChangeError(PerunException ex) {
+		doneButton.setEnabled(true);
+		verifyEmailLoader.onError(ex, new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent clickEvent) {
+				getUiHandlers().verifyEmail();
+			}
+		});
+	}
+
+	@Override
+	public void verifyEmailChangeDone(String email) {
+		doneButton.setEnabled(true);
+		verifyEmailLoader.setEmptyMessage(translation.verifyingEmailChangeDone(SafeHtmlUtils.fromString(email).asString()));
+		verifyEmailLoader.onFinishedEmpty();
 	}
 
 	/**
