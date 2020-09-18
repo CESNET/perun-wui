@@ -856,7 +856,7 @@ public class SummaryStep implements Step {
 				}
 			};
 
-			if (redirectTo != null && !redirectTo.isEmpty()) {
+			if (redirectTo != null && !redirectTo.isEmpty() && previousResult != null) {
 
 				int applicationId;
 				if (previousResult.getApplication() != null) {
