@@ -406,4 +406,13 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Password for SAMBA service has been changed.")
 	String sambaPasswordSetNotif();
 
+	@DefaultMessage("Verify preferred e-mail")
+	String verifyEmailChangeTitle();
+
+	@DefaultMessage("Verifying e-mail")
+	String verifyingEmailChange();
+
+	@DefaultMessage("E-mail address {0} was verified and set as your preferred e-mail.")
+	String verifyingEmailChangeDone(String email);
+
 }

@@ -14,4 +14,6 @@ public interface PersonalUiHandlers extends UiHandlers {
 
     void updateEmail(String email);
 
+    void verifyEmail();
+
 }
