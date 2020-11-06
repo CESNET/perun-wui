@@ -727,6 +727,21 @@ public final class PerunConfiguration {
 	}
 
 	/**
+	 * Returns email, that is shown when pwd reset link expires or is invalid. If there is no
+	 * mail specified for the given namespace, returns a generic one.
+	 *
+	 * @param namespace namespace
+	 * @return support mail
+	 */
+	public static String getPwdResetSupportMail(String namespace) {
+		String mail = getConfigPropertyString("pwdreset.support.mail." + namespace);
+		if (mail == null || mail.isEmpty()) {
+			mail = getConfigPropertyString("pwdreset.support.mail");
+		}
+		return mail;
+	}
+
+	/**
 	 * Parse single PersonalAttribute from raw String format.
 	 * Expected format is: {urn} [ {englishDescription} | {czech description} ]
 	 * Descriptions are optional
