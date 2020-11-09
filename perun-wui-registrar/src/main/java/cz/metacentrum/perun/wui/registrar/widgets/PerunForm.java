@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
+import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
@@ -226,7 +227,7 @@ public class PerunForm extends FieldSet {
 
 				if (result) {
 
-					if (checkSimilarUsersAgain) {
+					if (checkSimilarUsersAgain && !PerunConfiguration.findSimilarUsersDisabled()) {
 
 						// validation ok - check similar users
 						RegistrarManager.checkForSimilarUsers(getFormItemData(), new JsonEvents() {

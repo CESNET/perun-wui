@@ -707,6 +707,15 @@ public final class PerunConfiguration {
 	}
 
 	/**
+	 * Checks whether the functionality of finding similar users is disabled.
+	 *
+	 * @return true when the property registrar.findSimilarUsers.disabled is set to true. False otherwise.
+	 */
+	public static boolean findSimilarUsersDisabled() {
+		return getConfigPropertyBoolean("registrar.findSimilarUsers.disabled");
+	}
+
+	/**
 	 * Returns list of string identifiers (format "vo_short_name:group_name" or "vo_short_name") for which
 	 * result page of registration/extension is skipped. Redirect value is expected in URL user used to visit
 	 * registration form. Redirect is immediate (normally it would display continue button).

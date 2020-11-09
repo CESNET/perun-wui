@@ -232,7 +232,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					// CHECK SIMILAR USERS
 					// Make sure we load form only after user decide to skip identity joining
 
-					if (!registrar.getSimilarUsers().isEmpty() && !isApplicationPending(registrar)) {
+					if (!registrar.getSimilarUsers().isEmpty() &&
+						!isApplicationPending(registrar) &&
+						!PerunConfiguration.findSimilarUsersDisabled()) {
 						showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
