@@ -134,60 +134,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 			drawNonAuthz();
 
-			submit.addClickHandler(new ClickHandler() {
-				@Override
-				public void onClick(ClickEvent event) {
-
-					if (validate()) {
-
-						UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), PerunConfiguration.getCurrentLocaleName(), new JsonEvents() {
-
-							final JsonEvents events = this;
-
-							@Override
-							public void onFinished(JavaScriptObject result) {
-								submit.setProcessing(false);
-								form.setVisible(false);
-								alert.setType(AlertType.SUCCESS);
-								alert.setText((isAccountActivation) ? translation.activateSuccess() : translation.resetSuccess());
-								alert.setVisible(true);
-								if (Window.Location.getParameterMap().containsKey("target_url")) {
-									alert.getToolbar().setVisible(true);
-									continueButton.setType(ButtonType.SUCCESS);
-									continueButton.setVisible(true);
-								}
-
-							}
-
-							@Override
-							public void onError(PerunException error) {
-								submit.setProcessing(false);
-								form.setVisible(false);
-								alert.setVisible(true);
-								alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
-								alert.setReportInfo(error);
-								alert.setRetryHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										drawNonAuthz();
-										//UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), events);
-									}
-								});
-								if (Window.Location.getParameterMap().containsKey("target_url")) {
-									continueButton.setVisible(true);
-								}
-							}
-
-							@Override
-							public void onLoadingStart() {
-								submit.setProcessing(true);
-							}
-						});
-
-					}
-
-				}
-			});
+			setUpNonAuthz(i, m);
 
 		} else {
 
@@ -250,6 +197,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 								alert.setVisible(true);
 								alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
 								alert.setReportInfo(error);
+								error.setNamespace(namespace);
 								alert.setRetryHandler(new ClickHandler() {
 									@Override
 									public void onClick(ClickEvent event) {
@@ -274,6 +222,101 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			});
 		}
 
+	}
+
+	private void setUpNonAuthz(String i, String m) {
+		UsersManager.checkPasswordResetRequestIsValid(i, m, new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				form.setVisible(true);
+
+				setUpNonAuthzSubmitButton(i, m);
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				submit.setProcessing(false);
+				form.setVisible(false);
+				alert.setVisible(true);
+				if ("PasswordResetLinkExpiredException".equals(error.getName())) {
+					alert.setType(AlertType.WARNING);
+				} else {
+					alert.setType(AlertType.DANGER);
+				}
+				error.setNamespace(namespace);
+				alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
+				if (Window.Location.getParameterMap().containsKey("target_url")) {
+					continueButton.setVisible(true);
+				}
+			}
+
+			@Override
+			public void onLoadingStart() {
+				form.setVisible(false);
+			}
+		});
+	}
+
+	private void setUpNonAuthzSubmitButton(String i, String m) {
+		submit.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+
+				if (validate()) {
+
+					UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), PerunConfiguration.getCurrentLocaleName(), new JsonEvents() {
+
+						final JsonEvents events = this;
+
+						@Override
+						public void onFinished(JavaScriptObject result) {
+							submit.setProcessing(false);
+							form.setVisible(false);
+							alert.setType(AlertType.SUCCESS);
+							alert.setText((isAccountActivation) ? translation.activateSuccess() : translation.resetSuccess());
+							alert.setVisible(true);
+							if (Window.Location.getParameterMap().containsKey("target_url")) {
+								alert.getToolbar().setVisible(true);
+								continueButton.setType(ButtonType.SUCCESS);
+								continueButton.setVisible(true);
+							}
+
+						}
+
+						@Override
+						public void onError(PerunException error) {
+							submit.setProcessing(false);
+							form.setVisible(false);
+							if ("PasswordResetLinkExpiredException".equals(error.getName())) {
+								alert.setType(AlertType.WARNING);
+							} else {
+								alert.setType(AlertType.DANGER);
+								alert.setRetryHandler(new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										drawNonAuthz();
+										//UsersManager.resetNonAuthzPassword(i, m, passwordTextBox.getValue(), events);
+									}
+								});
+							}
+							alert.setVisible(true);
+							alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
+							alert.setReportInfo(error);
+							if (Window.Location.getParameterMap().containsKey("target_url")) {
+								continueButton.setVisible(true);
+							}
+						}
+
+						@Override
+						public void onLoadingStart() {
+							submit.setProcessing(true);
+						}
+					});
+
+				}
+
+			}
+		});
 	}
 
 	public void draw() {

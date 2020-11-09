@@ -716,6 +716,14 @@ public class ErrorTranslator {
 
 			return translation.requestTimeout();
 
+		} else if ("PasswordResetLinkExpiredException".equalsIgnoreCase(errorName)) {
+
+			return translation.pwdResetLinkExpired(PerunConfiguration.getPwdResetSupportMail(error.getNamespace()));
+
+		} else if ("PasswordResetLinkNotValidException".equalsIgnoreCase(errorName)) {
+
+			return translation.pwdResetLinkNotValid(PerunConfiguration.getPwdResetSupportMail(error.getNamespace()));
+
 		}
 
 

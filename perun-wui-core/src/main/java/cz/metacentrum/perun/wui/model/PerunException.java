@@ -248,6 +248,10 @@ public class PerunException extends JavaScriptObject {
 		return JsUtils.getNativePropertyString(this, "namespace");
 	}
 
+	public final native void setNamespace(String namespace) /*-{
+        this.namespace = namespace;
+    }-*/;
+
 	/* FIXME - add Destination bean
 	public final Destination getDestination() {
 		return JsUtils.getNativePropertyObject(this, "destination").cast();
