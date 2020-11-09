@@ -28,10 +28,10 @@ public interface PerunErrorTranslation extends PerunTranslation {
 	@DefaultMessage("Your request is still processing on server. Please refresh your view (table) to see, if it ended up successfully before trying again.")
 	public String requestTimeout();
 
-	@DefaultMessage("The password reset link has expired. Please, contact support at {0}")
+	@DefaultMessage("The password reset link has expired.<p><p>Please, contact support at <a href=\"mailto:{0}\">{0}</a>")
 	public String pwdResetLinkExpired(String supportEmail);
 
-	@DefaultMessage("The password reset link has already been used, or it is invalid. Please, contact support at {0}")
+	@DefaultMessage("The password reset link has already been used, or it is invalid.<p><p>Please, contact support at <a href=\"mailto:{0}\">{0}</a>")
 	public String pwdResetLinkNotValid(String supportEmail);
 
 	// GENERIC HTTP ERRORS
