@@ -72,6 +72,7 @@ public abstract class FormStep implements Step {
 					result.setRegisteredMail(unknownMail);
 				}
 				result.setApplication(jso.cast());
+				result.setException(null);
 				events.onFinished(result);
 			}
 
