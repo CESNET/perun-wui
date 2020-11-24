@@ -1,8 +1,12 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items.validators;
 
 import com.google.gwt.regexp.shared.RegExp;
+import cz.metacentrum.perun.wui.registrar.widgets.items.Password;
+import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Username;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
+
+import java.util.List;
 
 /**
  * Specific validation for EINFRA namespace
@@ -41,6 +45,19 @@ public class EinfraUsernameValidator extends UsernameValidator {
 			setResult(Result.INVALID_FORMAT);
 			username.setRawStatus(getTransl().einfraLoginLength(), ValidationState.ERROR);
 			return false;
+		}
+
+		// re-validate einfra password if login changes, but only if password was already entered
+		List<PerunFormItem> allItems = username.getForm().getPerunFormItems();
+		for (PerunFormItem item : allItems) {
+			if (item instanceof Password) {
+				if (((Password)item).getValidator() instanceof EinfraPasswordValidator) {
+					if (!ValidationState.NONE.equals(item.getValidationState())) {
+						item.validateLocal();
+						break;
+					}
+				}
+			}
 		}
 
 		username.setStatus(ValidationState.SUCCESS);

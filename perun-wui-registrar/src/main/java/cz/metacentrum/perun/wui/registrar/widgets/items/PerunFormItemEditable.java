@@ -32,8 +32,8 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	private final boolean onlyPreview;
 	public PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
-	public PerunFormItemEditable(ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(item, lang);
+	public PerunFormItemEditable(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
+		super(form, item, lang);
 		this.onlyPreview = onlyPreview;
 		add(initFormItem());
 		if (!isOnlyPreview()) {

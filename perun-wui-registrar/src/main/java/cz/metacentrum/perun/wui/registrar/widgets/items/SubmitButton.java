@@ -20,13 +20,11 @@ import org.gwtbootstrap3.client.ui.constants.Placement;
 public class SubmitButton extends PerunFormItemStatic {
 
 	private boolean autoSubmit;
-	private PerunForm form;
 	private Row widget;
 	private PerunButton button;
 
-	public SubmitButton(ApplicationFormItemData item, String lang, PerunForm form, boolean autoSubmit) {
-		super(item, lang);
-		this.form = form;
+	public SubmitButton(PerunForm form, ApplicationFormItemData item, String lang, boolean autoSubmit) {
+		super(form, item, lang);
 		this.autoSubmit = autoSubmit;
 	}
 
@@ -48,8 +46,8 @@ public class SubmitButton extends PerunFormItemStatic {
 		button.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if (form != null) {
-					form.submit(button);
+				if (getForm() != null) {
+					getForm().submit(button);
 				}
 			}
 		});

@@ -5,6 +5,7 @@ import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
+import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import org.gwtbootstrap3.client.ui.FormGroup;
 
@@ -17,13 +18,19 @@ public abstract class PerunFormItem extends FormGroup {
 
 	private ApplicationFormItemData itemData;
 	private String lang;
+	private PerunForm form;
 
 	PerunRegistrarTranslation translation;
 
-	public PerunFormItem(ApplicationFormItemData itemData, String lang) {
+	public PerunFormItem(PerunForm form, ApplicationFormItemData itemData, String lang) {
+		this.form = form;
 		this.itemData = itemData;
 		this.lang = lang;
 		this.translation = GWT.create(PerunRegistrarTranslation.class);
+	}
+
+	public PerunForm getForm() {
+		return form;
 	}
 
 	/**
