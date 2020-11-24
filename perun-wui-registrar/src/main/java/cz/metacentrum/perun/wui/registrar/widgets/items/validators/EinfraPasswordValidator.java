@@ -12,6 +12,8 @@ import java.util.Objects;
 /**
  * Specific password validator for EINFRA namespace
  *
+ * TODO: We must revalidate this form item when person`s name changes after entering password value !!
+ *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
 public class EinfraPasswordValidator extends PasswordValidator {

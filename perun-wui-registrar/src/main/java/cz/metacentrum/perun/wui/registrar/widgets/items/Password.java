@@ -154,4 +154,8 @@ public class Password extends PerunFormItemEditable {
 		return null;
 	}
 
+	public PasswordValidator getValidator() {
+		return this.validator;
+	}
+
 }
