@@ -257,7 +257,7 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 		// TODO - authorization shouldn't be in gui.
 		// admins can see hidden fields - users not
 		PerunSession sess = PerunSession.getInstance();
-		return (sess.isVoAdmin(app.getVo().getId()) || sess.isVoObserver(app.getVo().getId()) || (app.getGroup() != null && sess.isGroupAdmin(app.getGroup().getId())));
+		return (sess.isPerunAdmin() || sess.isVoAdmin(app.getVo().getId()) || sess.isVoObserver(app.getVo().getId()) || (app.getGroup() != null && sess.isGroupAdmin(app.getGroup().getId())));
 
 	}
 
@@ -341,6 +341,11 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 				}
 
 				form.setFormItems(list);
+
+				if (form.hasNoVisibleItems() || form.hasNoUpdatableItems()) {
+					editButton.setVisible(false);
+				}
+
 			}
 
 			@Override

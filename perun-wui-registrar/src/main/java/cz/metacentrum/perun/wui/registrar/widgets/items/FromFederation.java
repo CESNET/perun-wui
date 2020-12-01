@@ -19,8 +19,8 @@ public class FromFederation extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public FromFederation(PerunForm form, ApplicationFormItemData item, String lang, PerunForm.FormState formState) {
-		super(form, item, lang, formState);
+	public FromFederation(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 	}
 
 	@Override

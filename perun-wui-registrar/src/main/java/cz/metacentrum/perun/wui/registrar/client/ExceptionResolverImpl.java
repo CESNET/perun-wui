@@ -119,7 +119,7 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			}
 
 			setInfo(trans.alreadySubmitted(getBeanName()),
-					text + trans.visitSubmitted(Window.Location.getHref().split("#")[0], trans.submittedTitle()));
+					text + trans.visitSubmitted(Window.Location.getHref().split("#")[0], application.getId(), trans.submittedTitle()));
 
 		} else if ("MissingRequiredDataException".equalsIgnoreCase(exception.getName())) {
 

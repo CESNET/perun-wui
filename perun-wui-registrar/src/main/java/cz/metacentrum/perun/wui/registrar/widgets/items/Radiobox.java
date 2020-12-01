@@ -29,8 +29,8 @@ public class Radiobox extends PerunFormItemEditable {
 
 	private FlowPanel widget;
 
-	public Radiobox(PerunForm form, ApplicationFormItemData item, String lang, PerunForm.FormState formState) {
-		super(form, item, lang, formState);
+	public Radiobox(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 		this.validator = new RadioboxValidator();
 	}
 

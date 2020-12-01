@@ -136,7 +136,8 @@ public class PerunForm extends FieldSet {
 
 		}
 
-		if (this.items.isEmpty()) {
+		if (this.items.isEmpty() ||
+				(FormState.PREVIEW.equals(formState) && hasNoVisibleItems())) {
 			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
 		}
 
@@ -603,6 +604,30 @@ public class PerunForm extends FieldSet {
 
 		return data;
 
+	}
+
+	/**
+	 * Return TRUE if form is empty, or has no "visible" items
+	 * @return
+	 */
+	public boolean hasNoVisibleItems() {
+		for (PerunFormItem item : items) {
+			if (item.isVisible())
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Return TRUE if form is empty, or has no "updatable" items
+	 * @return
+	 */
+	public boolean hasNoUpdatableItems() {
+		for (PerunFormItem item : items) {
+			if (item.isUpdatable())
+				return false;
+		}
+		return true;
 	}
 
 }

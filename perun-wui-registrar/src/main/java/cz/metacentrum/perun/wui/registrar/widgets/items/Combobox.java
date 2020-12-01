@@ -36,8 +36,8 @@ public class Combobox extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public Combobox(PerunForm form, ApplicationFormItemData item, String lang, PerunForm.FormState formState) {
-		super(form, item, lang, formState);
+	public Combobox(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 		this.validator = new ComboboxValidator();
 	}
 
