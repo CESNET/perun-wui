@@ -239,8 +239,22 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Membership extension in {0}")
 	public String extensionDetail(String registerTo);
 
-	@DefaultMessage("Form content")
-	public String formDataTitle();
+	// -------------- APP DETAIL PAGE - EDIT ------------------------ //
+
+	@DefaultMessage("Edit")
+	public String edit();
+
+	@DefaultMessage("Save")
+	public String save();
+
+	@DefaultMessage("Cancel")
+	public String cancel();
+
+	@DefaultMessage("There are no changes to be saved!")
+	public String noChange();
+
+	@DefaultMessage("All changes to the form will be discarded. Do you wish to continue?")
+	public String cancelAsk();
 
 	// --------------- EXCEPTIONS -------------------------------- //
 

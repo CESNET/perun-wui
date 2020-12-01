@@ -29,8 +29,8 @@ public class Checkbox extends PerunFormItemEditable {
 
 	private FlowPanel widget;
 
-	public Checkbox(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public Checkbox(PerunForm form, ApplicationFormItemData item, String lang, PerunForm.FormState formState) {
+		super(form, item, lang, formState);
 		this.validator = new CheckboxValidator();
 	}
 

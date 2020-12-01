@@ -23,8 +23,8 @@ public class TextArea extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public TextArea(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public TextArea(PerunForm form, ApplicationFormItemData item, String lang, PerunForm.FormState formState) {
+		super(form, item, lang, formState);
 		this.validator = new TextAreaValidator();
 	}
 

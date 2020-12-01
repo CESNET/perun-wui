@@ -29,12 +29,12 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	private FormLabel label;
 	private HelpBlock status;
 	private HelpBlock help;
-	private final boolean onlyPreview;
+	private final PerunForm.FormState formState;
 	public PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
-	public PerunFormItemEditable(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
+	public PerunFormItemEditable(PerunForm form, ApplicationFormItemData item, String lang, PerunForm.FormState formState) {
 		super(form, item, lang);
-		this.onlyPreview = onlyPreview;
+		this.formState = formState;
 		add(initFormItem());
 		if (!isOnlyPreview()) {
 			setValidationTriggers();
@@ -78,7 +78,6 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		item.add(label);
 		item.add(widgetWithTexts);
 
-
 		if (isOnlyPreview()) {
 
 			statusWrap.setVisible(false);
@@ -92,7 +91,14 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		} else {
 
 			widget.add(initWidget());
-			setValue(getItemData().getPrefilledValue());
+
+			if (formState.equals(PerunForm.FormState.EDIT)) {
+				// value already stored in item
+				setValue(getItemData().getValue());
+			} else {
+				// value pre-filled by perun (default on sending new form)
+				setValue(getItemData().getPrefilledValue());
+			}
 
 			String helpText = getItemData().getFormItem().getItemTexts(getLang()).getHelp();
 			if (helpText == null) {
@@ -183,7 +189,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	}
 
 	public boolean isOnlyPreview() {
-		return onlyPreview;
+		return PerunForm.FormState.PREVIEW.equals(formState);
 	}
 
 

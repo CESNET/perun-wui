@@ -24,8 +24,8 @@ public class TextField extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public TextField(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public TextField(PerunForm form, ApplicationFormItemData item, String lang, PerunForm.FormState formState) {
+		super(form, item, lang, formState);
 		this.validator = new TextFieldValidator();
 	}
 

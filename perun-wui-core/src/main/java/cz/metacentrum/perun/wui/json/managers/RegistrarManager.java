@@ -345,4 +345,23 @@ public class RegistrarManager {
 
 	}
 
+	/**
+	 * Update form items data of existing submitted application.
+	 * This might trigger verification and approval of application!
+	 *
+	 * @param applicationId ID of application
+	 * @param formItems Form items to be updated
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request updateFormItemsData(int applicationId, List<ApplicationFormItemData> formItems, JsonEvents events) {
+
+		JsonClient client = new JsonClient(true, events);
+		if (applicationId > 0) client.put("appId", applicationId);
+		if (formItems != null) client.put("data", formItems);
+		return client.call(REGISTRAR_MANAGER + "updateFormItemsData");
+
+	}
+
 }

@@ -61,15 +61,15 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 	private PerunFormItem generatePerunFormItem(ApplicationFormItemData data) {
 
 		String lang = PerunConfiguration.getCurrentLocaleName();
-		boolean onlyPreview = form.isOnlyPreview();
+		PerunForm.FormState formState = form.getFormState();
 
 		switch (data.getFormItem().getType()) {
 			case HEADING:
-				return new Header(form ,data, lang);
+				return new Header(form, data, lang);
 			case TEXTFIELD:
-				return new TextField(form, data, lang, onlyPreview);
+				return new TextField(form, data, lang, formState);
 			case VALIDATED_EMAIL:
-				return new ValidatedEmail(form, data, lang, onlyPreview);
+				return new ValidatedEmail(form, data, lang, formState);
 			case TEXTAREA:
 				// FIXME - hack for BBMRI collections to pre-fill value from URL
 				if ((data.getValue() == null || data.getValue().isEmpty() || data.getValue().equals("null")) &&
@@ -78,29 +78,29 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 					final String bbmriCollections = Window.Location.getParameter("col");
 					data.setPrefilledValue((bbmriCollections != null) ? JsUtils.unzipString(JsUtils.decodeBase64(bbmriCollections.replaceAll(" ", "+"))) : null);
 				}
-				return new TextArea(form, data, lang, onlyPreview);
+				return new TextArea(form, data, lang, formState);
 			case USERNAME:
-				Username username = new Username(form, data, lang, onlyPreview);
+				Username username = new Username(form, data, lang, formState);
 				if (data.getPrefilledValue() != null && !data.getPrefilledValue().isEmpty() && !data.isGenerated()) {
 					username.setEnable(false);
 				}
 				return username;
 			case PASSWORD:
-				return new Password(form, data, lang, onlyPreview);
+				return new Password(form, data, lang, formState);
 			case TIMEZONE:
-				return new Timezone(form, data, lang, onlyPreview);
+				return new Timezone(form, data, lang, formState);
 			case SELECTIONBOX:
-				return new Selectionbox(form, data, lang, onlyPreview);
+				return new Selectionbox(form, data, lang, formState);
 			case COMBOBOX:
-				return new Combobox(form, data, lang, onlyPreview);
+				return new Combobox(form, data, lang, formState);
 			case CHECKBOX:
-				return new Checkbox(form, data, lang, onlyPreview);
+				return new Checkbox(form, data, lang, formState);
 			case RADIO:
-				return new Radiobox(form, data, lang, onlyPreview);
+				return new Radiobox(form, data, lang, formState);
 			case FROM_FEDERATION_SHOW:
-				return new FromFederation(form, data, lang, onlyPreview);
+				return new FromFederation(form, data, lang, formState);
 			case FROM_FEDERATION_HIDDEN:
-				FromFederation hidden = new FromFederation(form, data, lang, onlyPreview);
+				FromFederation hidden = new FromFederation(form, data, lang, formState);
 				if (!form.isSeeHiddenItems()) {
 					hidden.setVisible(false);
 				} else {

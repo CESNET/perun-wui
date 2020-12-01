@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -9,7 +8,6 @@ import com.google.gwt.user.client.ui.Panel;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.Select;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.ComboboxValidator;
@@ -38,8 +36,8 @@ public class Combobox extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public Combobox(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public Combobox(PerunForm form, ApplicationFormItemData item, String lang, PerunForm.FormState formState) {
+		super(form, item, lang, formState);
 		this.validator = new ComboboxValidator();
 	}
 

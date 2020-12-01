@@ -309,7 +309,7 @@ public class ApplicationFormItem extends JavaScriptObject {
 	}-*/;
 
 	private final native void setApplicationTypes(JavaScriptObject object)/*-{
-        this.applicationTypes = applicationTypes;
+        this.applicationTypes = object;
 	}-*/;
 
 	// TODO - item texts
@@ -330,6 +330,11 @@ public class ApplicationFormItem extends JavaScriptObject {
 	 */
 	public final native void setItemTexts(String locale, ApplicationFormItemTexts itemTexts) /*-{
 		this.i18n[locale] = itemTexts;
+	}-*/;
+
+	public final native String[] getItemTextLocales() /*-{
+		console.log(Object.keys(this.i18n));
+		return Object.keys(this.i18n);
 	}-*/;
 
 	/**

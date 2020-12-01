@@ -42,7 +42,11 @@
 
 				<b:Form type="HORIZONTAL" ui:field="formWrapper">
 
-					<b:Heading size="H3" text="Form data" ui:field="formTitle"/>
+					<p:PerunToolbar>
+						<p:PerunButton ui:field="editButton" text="Edit" icon="EDIT" />
+						<p:PerunButton ui:field="saveButton" text="Save" icon="SAVE" visible="false" />
+						<p:PerunButton ui:field="cancelButton" text="Cancel" visible="false" />
+					</p:PerunToolbar>
 					<b.html:Hr/>
 
 					<p.registrar:PerunForm ui:field="form">

@@ -19,8 +19,8 @@ public class FromFederation extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public FromFederation(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public FromFederation(PerunForm form, ApplicationFormItemData item, String lang, PerunForm.FormState formState) {
+		super(form, item, lang, formState);
 	}
 
 	@Override
@@ -125,6 +125,17 @@ public class FromFederation extends PerunFormItemEditable {
 			return (Paragraph) widget;
 		}
 		return null;
+	}
+
+	@Override
+	public boolean isOnlyPreview() {
+		return super.isOnlyPreview() || PerunForm.FormState.EDIT.equals(getForm().getFormState());
+	}
+
+	@Override
+	public boolean isUpdatable() {
+		// non editable items can't' be updated once submitted
+		return false;
 	}
 
 }
