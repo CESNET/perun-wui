@@ -30,8 +30,8 @@ public class Username extends PerunFormItemEditable {
 
 	private InputGroup widget;
 
-	public Username(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public Username(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunDestinationAttribute())) {
 			this.validator = new EinfraUsernameValidator();
 		} else {
@@ -76,7 +76,7 @@ public class Username extends PerunFormItemEditable {
 
 	@Override
 	public void validate(Events<Boolean> events) {
-		if (getTextBox().isEnabled()) {
+		if (!isOnlyPreview() && getTextBox().isEnabled()) {
 			validator.validate(this, events);
 		} else {
 			events.onLoadingStart();
@@ -86,7 +86,7 @@ public class Username extends PerunFormItemEditable {
 
 	@Override
 	public boolean validateLocal() {
-		if (getTextBox().isEnabled()) {
+		if (!isOnlyPreview() && getTextBox().isEnabled()) {
 			return validator.validateLocal(this);
 		}
 		return true;
@@ -186,4 +186,16 @@ public class Username extends PerunFormItemEditable {
 	public void setEnable(boolean enable) {
 		getTextBox().setEnabled(enable);
 	}
+
+	@Override
+	public boolean isOnlyPreview() {
+		return super.isOnlyPreview() || PerunForm.FormState.EDIT.equals(getForm().getFormState());
+	}
+
+	@Override
+	public boolean isUpdatable() {
+		// username can't' be updated once submitted
+		return false;
+	}
+
 }

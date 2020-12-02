@@ -48,4 +48,10 @@ public abstract class PerunFormItemStatic extends PerunFormItem {
 		// do nothing.
 	}
 
+	@Override
+	public boolean isUpdatable() {
+		// static items can't be updated
+		return false;
+	}
+
 }

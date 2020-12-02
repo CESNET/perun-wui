@@ -4,7 +4,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
@@ -18,6 +17,7 @@ import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Identity;
+import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources;
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Header;
 import cz.metacentrum.perun.wui.registrar.widgets.items.HtmlComment;
@@ -42,6 +42,12 @@ import java.util.Objects;
  */
 public class PerunForm extends FieldSet {
 
+	public enum FormState {
+		PREFILLED,
+		PREVIEW,
+		EDIT
+	}
+
 	// LABEL_SIZE + WIDGET_WITH_TEXT_SIZE should be 12
 	// LABEL_OFFSET should be same as LABEL_SIZE
 	public static final ColumnSize LABEL_SIZE = ColumnSize.MD_2;
@@ -53,7 +59,7 @@ public class PerunForm extends FieldSet {
 
 	// contains info about onlyPreview and seeHiddenItems
 	private PerunFormItemsGenerator generator;
-	private boolean onlyPreview;
+	private FormState formState;
 	private boolean seeHiddenItems;
 	private Application app;
 	private JsonEvents onSubmitEvent;
@@ -73,30 +79,28 @@ public class PerunForm extends FieldSet {
 	/**
 	 * Create form instance with possibility to set 'only preview' state.
 	 *
-	 * @param onlyPreview TRUE = form will display only preview / FALSE = form will allow editing
+	 * @param formState default is PREFILLED, @see FormState
 	 */
-	public PerunForm(boolean onlyPreview) {
+	public PerunForm(FormState formState) {
 		this();
-		this.onlyPreview = onlyPreview;
+		this.formState = formState;
 	}
 
 	/**
 	 * Create form instance with possibility to set 'only preview' state.
 	 *
-	 * @param onlyPreview TRUE = form will display only preview / FALSE = form will allow editing
+	 * @param formState default is PREFILLED, @see FormState
 	 * @param seeHiddenItems TRUE = form will display also hidden items
 	 */
-	public PerunForm(boolean onlyPreview, boolean seeHiddenItems) {
-		this(onlyPreview);
+	public PerunForm(FormState formState, boolean seeHiddenItems) {
+		this(formState);
 		this.seeHiddenItems = seeHiddenItems;
 	}
 
 	public void addFormItems(List<ApplicationFormItemData> items) {
 
 		if (items != null) {
-
 			addPerunFormItems(generator.generatePerunFormItems(items));
-
 		}
 
 	}
@@ -122,13 +126,18 @@ public class PerunForm extends FieldSet {
 		if (items != null)  {
 
 			for (PerunFormItem item : items) {
+				if (FormState.EDIT.equals(formState) && !item.isUpdatable()) {
+					// distinguish non-editable items
+					item.addStyleName(PerunRegistrarResources.INSTANCE.gss().help());
+				}
 				add(item);
 			}
 			this.items.addAll(items);
 
 		}
 
-		if (this.items.isEmpty()) {
+		if (this.items.isEmpty() ||
+				(FormState.PREVIEW.equals(formState) && hasNoVisibleItems())) {
 			add(new Heading(HeadingSize.H2, "", perunTranslation.formHasNoFormItems()));
 		}
 
@@ -159,12 +168,25 @@ public class PerunForm extends FieldSet {
 	}
 
 	/**
+	 * Get all sourcing form items (not suitable for submit!!)
+	 *
+	 * @return list of source form items with no changes
+	 */
+	public List<ApplicationFormItemData> getSourceFormItems() {
+		List<ApplicationFormItemData> data = new ArrayList<>();
+		for (PerunFormItem item : getPerunFormItems()) {
+			data.add(item.getItemData());
+		}
+		return data;
+	}
+
+	/**
 	 * perform auto submit if form contains auto submit button. Do nothing otherwise.
 	 */
 	public void performAutoSubmit() {
 
 		SubmitButton autoSubmit = getAutoSubmitButton(items);
-		if (autoSubmit != null && !isOnlyPreview()) {
+		if (autoSubmit != null && FormState.PREFILLED.equals(getFormState())) {
 			submit(autoSubmit.getButton());
 		}
 	}
@@ -230,7 +252,7 @@ public class PerunForm extends FieldSet {
 					if (checkSimilarUsersAgain && !PerunConfiguration.findSimilarUsersDisabled()) {
 
 						// validation ok - check similar users
-						RegistrarManager.checkForSimilarUsers(getFormItemData(), new JsonEvents() {
+						RegistrarManager.checkForSimilarUsers(getFormItemDataToSubmit(), new JsonEvents() {
 							@Override
 							public void onFinished(JavaScriptObject result) {
 
@@ -285,6 +307,48 @@ public class PerunForm extends FieldSet {
 
 	}
 
+	public void submitEditedForm(final Application application, final Events<Boolean> events) {
+		validateAll(items, new Events<Boolean>() {
+			@Override
+			public void onFinished(Boolean result) {
+				if (result) {
+					// if everything is valid - submit updated items
+					List<ApplicationFormItemData> data = getFormItemDataToUpdate();
+					if (data.isEmpty()) {
+						events.onError(null);
+					} else {
+						RegistrarManager.updateFormItemsData(application.getId(), data, new JsonEvents() {
+							@Override
+							public void onFinished(JavaScriptObject result) {
+								events.onFinished(true);
+							}
+							@Override
+							public void onError(PerunException error) {
+								events.onError(error);
+							}
+							@Override
+							public void onLoadingStart() {
+							}
+						});
+					}
+				} else {
+					events.onError(null);
+				}
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				events.onError(error);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				events.onLoadingStart();
+			}
+
+		});
+	}
+
 	/**
 	 * Finally send application form to Perun API
 	 *
@@ -292,7 +356,7 @@ public class PerunForm extends FieldSet {
 	 */
 	private void createApplication(final PerunButton button) {
 
-		RegistrarManager.createApplication(app, getFormItemData(), new JsonEvents() {
+		RegistrarManager.createApplication(app, getFormItemDataToSubmit(), new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 
@@ -349,23 +413,26 @@ public class PerunForm extends FieldSet {
 
 		for (final PerunFormItem item : items) {
 
-			// for anonymous users
-			if (PerunSession.getInstance().getUser() == null) {
+			if (FormState.PREFILLED.equals(formState)) {
 
-				String prefilledValue = item.getItemData().getPrefilledValue();
+				// for anonymous users
+				if (PerunSession.getInstance().getUser() == null) {
 
-				if (Objects.equals(item.getItemData().getFormItem().getType(), ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL)) {
-					if (prefilledValue == null || !prefilledValue.contains(item.getValue())) {
-						// mail changed - re-check existing users
-						checkSimilarUsersAgain = true;
+					String prefilledValue = item.getItemData().getPrefilledValue();
+
+					if (Objects.equals(item.getItemData().getFormItem().getType(), ApplicationFormItem.ApplicationFormItemType.VALIDATED_EMAIL)) {
+						if (prefilledValue == null || !prefilledValue.contains(item.getValue())) {
+							// mail changed - re-check existing users
+							checkSimilarUsersAgain = true;
+						}
+					} else if (Objects.equals(item.getItemData().getFormItem().getPerunDestinationAttribute(), "urn:perun:user:attribute-def:core:displayName")) {
+						if (!Objects.equals(prefilledValue, item.getValue())) {
+							// name changed - re-check existing users
+							checkSimilarUsersAgain = true;
+						}
 					}
-				} else if (Objects.equals(item.getItemData().getFormItem().getPerunDestinationAttribute(), "urn:perun:user:attribute-def:core:displayName")) {
-					if (!Objects.equals(prefilledValue, item.getValue())) {
-						// name changed - re-check existing users
-						checkSimilarUsersAgain = true;
-					}
+
 				}
-
 			}
 
 			item.validate(new Events<Boolean>() {
@@ -412,21 +479,21 @@ public class PerunForm extends FieldSet {
 
 
 	/**
-	 * Is form meant only for preview
+	 * Return state of the form, default is PREFILLED, can be PREVIEW and EDIT
 	 *
-	 * @return TRUE = preview / FALSE = editing
+	 * @return FormState
 	 */
-	public boolean isOnlyPreview() {
-		return this.onlyPreview;
+	public FormState getFormState() {
+		return this.formState;
 	}
 
 	/**
-	 * Set form as meant only for preview
+	 * Set form state, default is PREFILLED, can be PREVIEW and EDIT
 	 *
-	 * @param onlyPreview TRUE = for preview / FALSE = for editing
+	 * @param  formState default is PREFILLED, @see FormState
 	 */
-	public void setOnlyPreview(boolean onlyPreview) {
-		this.onlyPreview = onlyPreview;
+	public void setFormState(FormState formState) {
+		this.formState = formState;
 	}
 
 	public boolean isSeeHiddenItems() {
@@ -453,7 +520,7 @@ public class PerunForm extends FieldSet {
 		this.onSubmitEvent = onSubmitEvent;
 	}
 
-	private List<ApplicationFormItemData> getFormItemData() {
+	private List<ApplicationFormItemData> getFormItemDataToSubmit() {
 
 		// convert data
 		List<ApplicationFormItemData> data = new ArrayList<ApplicationFormItemData>();
@@ -461,13 +528,19 @@ public class PerunForm extends FieldSet {
 
 			String value = item.getValue();
 			String prefilled = item.getItemData().getPrefilledValue();
-			JSONObject formItemJSON = new JSONObject(item.getItemData().getFormItem());
 
 			// remove text (locale), saves data transfer & removes problem with parsing locale
-			formItemJSON.put("i18n", new JSONObject());
-
-			// cast form item back
-			ApplicationFormItem formItem = formItemJSON.getJavaScriptObject().cast();
+			ApplicationFormItem formItem = ApplicationFormItem.createNew(item.getItemData().getFormItem().getId(),
+					item.getItemData().getFormItem().getShortname(),
+					item.getItemData().getFormItem().isRequired(),
+					item.getItemData().getFormItem().getType(),
+					item.getItemData().getFormItem().getFederationAttribute(),
+					item.getItemData().getFormItem().getPerunSourceAttribute(),
+					item.getItemData().getFormItem().getPerunDestinationAttribute(),
+					item.getItemData().getFormItem().getRegex(),
+					item.getItemData().getFormItem().getApplicationTypes(),
+					item.getItemData().getFormItem().getOrdnum(),
+					item.getItemData().getFormItem().isForDelete());
 
 			// clear pre-filled value if login was generated, since we want server to register new login
 			if (ApplicationFormItem.ApplicationFormItemType.USERNAME.equals(formItem.getType()) &&
@@ -484,6 +557,77 @@ public class PerunForm extends FieldSet {
 
 		return data;
 
+	}
+
+	private List<ApplicationFormItemData> getFormItemDataToUpdate() {
+
+		// convert data
+		List<ApplicationFormItemData> data = new ArrayList<ApplicationFormItemData>();
+		for (PerunFormItem item : items) {
+
+			// skip non-updatable form items
+			if (!item.isUpdatable()) continue;
+
+			if (Objects.equals(item.getItemData().getValue(), item.getValue())) {
+				// value within item and form item is same -> unchanged -> do not update
+				continue;
+			}
+
+			String value = item.getValue();
+			String prefilled = item.getItemData().getPrefilledValue();
+
+			// clear pre-filled value if login was generated, since we want server to register new login
+			if (ApplicationFormItem.ApplicationFormItemType.USERNAME.equals(item.getItemData().getFormItem().getType()) &&
+					item.getItemData().isGenerated()) {
+				prefilled = "";
+			}
+
+			// remove text (locale), saves data transfer & removes problem with parsing locale
+			ApplicationFormItem formItem = ApplicationFormItem.createNew(item.getItemData().getFormItem().getId(),
+					item.getItemData().getFormItem().getShortname(),
+					item.getItemData().getFormItem().isRequired(),
+					item.getItemData().getFormItem().getType(),
+					item.getItemData().getFormItem().getFederationAttribute(),
+					item.getItemData().getFormItem().getPerunSourceAttribute(),
+					item.getItemData().getFormItem().getPerunDestinationAttribute(),
+					item.getItemData().getFormItem().getRegex(),
+					item.getItemData().getFormItem().getApplicationTypes(),
+					item.getItemData().getFormItem().getOrdnum(),
+					item.getItemData().getFormItem().isForDelete());
+
+			// prepare package with data
+			ApplicationFormItemData itemData = ApplicationFormItemData.construct(formItem, item.getItemData().getFormItem().getShortname(), value, prefilled, item.getItemData().getAssuranceLevel() != null ? item.getItemData().getAssuranceLevel() : "");
+			itemData.setId(item.getItemData().getId());
+			data.add(itemData);
+
+		}
+
+		return data;
+
+	}
+
+	/**
+	 * Return TRUE if form is empty, or has no "visible" items
+	 * @return
+	 */
+	public boolean hasNoVisibleItems() {
+		for (PerunFormItem item : items) {
+			if (item.isVisible())
+				return false;
+		}
+		return true;
+	}
+
+	/**
+	 * Return TRUE if form is empty, or has no "updatable" items
+	 * @return
+	 */
+	public boolean hasNoUpdatableItems() {
+		for (PerunFormItem item : items) {
+			if (item.isUpdatable())
+				return false;
+		}
+		return true;
 	}
 
 }

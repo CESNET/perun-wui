@@ -27,8 +27,8 @@ public class Timezone extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public Timezone(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public Timezone(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 		this.validator = new TimezoneValidator();
 	}
 

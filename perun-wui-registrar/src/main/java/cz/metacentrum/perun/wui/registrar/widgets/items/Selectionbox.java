@@ -28,8 +28,8 @@ public class Selectionbox extends PerunFormItemEditable {
 
 	private Widget widget;
 
-	public Selectionbox(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public Selectionbox(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 		this.validator = new SelectionboxValidator();
 	}
 

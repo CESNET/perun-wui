@@ -28,8 +28,8 @@ public class Password extends PerunFormItemEditable {
 
 	private InputGroup widget;
 
-	public Password(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public Password(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 		// FIXME - specific per-namespace validation
 		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunDestinationAttribute())) {
 				this.validator = new EinfraPasswordValidator();
@@ -156,6 +156,17 @@ public class Password extends PerunFormItemEditable {
 
 	public PasswordValidator getValidator() {
 		return this.validator;
+	}
+
+	@Override
+	public boolean isOnlyPreview() {
+		return super.isOnlyPreview() || PerunForm.FormState.EDIT.equals(getForm().getFormState());
+	}
+
+	@Override
+	public boolean isUpdatable() {
+		// password can't' be updated once submitted
+		return false;
 	}
 
 }

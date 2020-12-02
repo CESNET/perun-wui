@@ -138,4 +138,14 @@ public abstract class PerunFormItem extends FormGroup {
 		return "";
 	}
 
+	/**
+	 * Return TRUE if form item can be "updated" once form is submitted.
+	 * We can update only items with non-null "ApplicationFormItem" property.
+	 *
+	 * @return default TRUE
+	 */
+	public boolean isUpdatable() {
+		return getItemData().getFormItem() != null;
+	}
+
 }

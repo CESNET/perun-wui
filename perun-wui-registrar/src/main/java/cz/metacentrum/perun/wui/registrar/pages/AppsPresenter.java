@@ -30,7 +30,13 @@ public class AppsPresenter extends Presenter<AppsPresenter.MyView, AppsPresenter
 		super(eventBus, view, proxy, PerunPresenter.SLOT_MAIN_CONTENT);
 	}
 
-/*	@Override
+	@Override
+	protected void onReset() {
+		super.onReset();
+		((AppsView)getView()).draw();
+	}
+
+	/*	@Override
 	protected void onReset() {
 		super.onReset();
 		// resize when any of presenters is attached/detached

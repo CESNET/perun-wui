@@ -9,6 +9,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -16,6 +17,7 @@ import com.gwtplatform.mvp.client.proxy.PlaceManager;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
+import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -33,10 +35,8 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Text;
 import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
-import org.gwtbootstrap3.extras.notify.client.ui.NotifySettings;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
@@ -96,9 +96,6 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 	Form formWrapper;
 
 	@UiField
-	Heading formTitle;
-
-	@UiField
 	DescriptionTitle subTitle;
 
 	@UiField
@@ -112,6 +109,10 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 	@UiField
 	Alert state;
+
+	@UiField PerunButton editButton;
+	@UiField PerunButton saveButton;
+	@UiField PerunButton cancelButton;
 
 	@UiField
 	PerunLoader loader;
@@ -135,19 +136,86 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 	@Inject
 	public AppDetailView(AppDetailViewUiBinder binder) {
 		initWidget(binder.createAndBindUi(this));
-		form.setOnlyPreview(true);
+		editButton.setText(translation.edit());
+		saveButton.setText(translation.save());
+		cancelButton.setText(translation.cancel());
+		form.setFormState(PerunForm.FormState.PREVIEW);
 	}
 
 	@UiHandler(value = "backButton")
 	public void back(ClickEvent event) {
-		placeManager.navigateBack();
+		if (PerunForm.FormState.EDIT.equals(form.getFormState())) {
+			//
+			boolean ok = Window.confirm(translation.cancelAsk());
+			if (ok) {
+				updateState(false);
+				placeManager.navigateBack();
+			}
+		} else {
+			placeManager.navigateBack();
+		}
 	}
+
+	@UiHandler(value = "editButton")
+	public void edit(ClickEvent event) {
+		updateState(true);
+	}
+
+	@UiHandler(value = "cancelButton")
+	public void cancel(ClickEvent event) {
+		updateState(false);
+	}
+
+	@UiHandler(value = "saveButton")
+	public void save(ClickEvent event) {
+		form.submitEditedForm(app, new Events<Boolean>() {
+			@Override
+			public void onFinished(Boolean result) {
+				alertErrorReporter.setVisible(false);
+				saveButton.setProcessing(false);
+				cancelButton.setEnabled(true);
+				updateState(false);
+				// reload whole application state/form from API
+				placeManager.revealCurrentPlace();
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				cancelButton.setEnabled(true);
+				saveButton.setProcessing(false);
+				if (error != null) {
+					alertErrorReporter.setVisible(true);
+					alertErrorReporter.setHTML(ErrorTranslator.getTranslatedMessage(error));
+					alertErrorReporter.setReportInfo(error);
+				} else {
+					Window.alert(translation.noChange());
+				}
+			}
+
+			@Override
+			public void onLoadingStart() {
+				cancelButton.setEnabled(false);
+				saveButton.setProcessing(true);
+				alertErrorReporter.setVisible(false);
+			}
+		});
+	}
+
+	private void updateState(boolean edit) {
+		form.setFormState(edit ? PerunForm.FormState.EDIT : PerunForm.FormState.PREVIEW);
+		form.setFormItems(form.getSourceFormItems());
+		editButton.setVisible(!edit);
+		saveButton.setVisible(edit);
+		cancelButton.setVisible(edit);
+	}
+
 
 	public void draw() {
 
 		form.setSeeHiddenItems(canSeeHiddenFields());
 
-		formTitle.setText(translation.formDataTitle());
+		// hide notice until loaded
+		mailVerificationAlert.setVisible(false);
 
 		if (Application.ApplicationType.INITIAL.equals(app.getType())) {
 			text.setText(translation.initialDetail(app.getVo().getName()));
@@ -179,13 +247,17 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 		stateTitle.setText(app.getTranslatedState());
 		stateText.setText(app.getModifiedAt().split("\\.")[0]);
 
+		// only new and verified application are editable
+		editButton.setVisible(Application.ApplicationState.NEW.equals(app.getState()) ||
+				Application.ApplicationState.VERIFIED.equals(app.getState()));
+
 	}
 
 	private boolean canSeeHiddenFields() {
-		// TODO - authorization shouldnt be in gui.
+		// TODO - authorization shouldn't be in gui.
 		// admins can see hidden fields - users not
 		PerunSession sess = PerunSession.getInstance();
-		return (sess.isVoAdmin(app.getVo().getId()) || sess.isVoObserver(app.getVo().getId()) || (app.getGroup() != null && sess.isGroupAdmin(app.getGroup().getId())));
+		return (sess.isPerunAdmin() || sess.isVoAdmin(app.getVo().getId()) || sess.isVoObserver(app.getVo().getId()) || (app.getGroup() != null && sess.isGroupAdmin(app.getGroup().getId())));
 
 	}
 
@@ -269,6 +341,11 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 				}
 
 				form.setFormItems(list);
+
+				if (form.hasNoVisibleItems() || form.hasNoUpdatableItems()) {
+					editButton.setVisible(false);
+				}
+
 			}
 
 			@Override

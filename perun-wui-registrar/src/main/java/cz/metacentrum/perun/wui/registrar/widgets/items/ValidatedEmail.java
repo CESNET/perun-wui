@@ -38,9 +38,13 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 	private InputGroup widget;
 
-	public ValidatedEmail(PerunForm form, ApplicationFormItemData item, String lang, boolean onlyPreview) {
-		super(form, item, lang, onlyPreview);
+	public ValidatedEmail(PerunForm form, ApplicationFormItemData item, String lang) {
+		super(form, item, lang);
 		this.validator = new ValidatedEmailValidator();
+		if (PerunForm.FormState.EDIT.equals(getForm().getFormState())) {
+			// make sure we consider current value as verified based on LoA when editing form
+			item.setPrefilledValue(item.getValue());
+		}
 	}
 
 	protected Widget initWidget() {

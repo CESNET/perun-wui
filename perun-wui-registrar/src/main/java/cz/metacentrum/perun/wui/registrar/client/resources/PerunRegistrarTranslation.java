@@ -62,6 +62,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Please wait until your application has been approved. You will be notified by email.")
 	public String waitForAcceptation();
 
+	@DefaultMessage("<p><p>You can <b>see or edit your application <a href=\"{0}#appdetail;id={1}\">here</b></a>.")
+	public String seeOrEditApplicationHere(String url, int id);
+
 	@DefaultMessage("Please wait until your application for membership extension has been approved. You will be notified by email.")
 	public String waitForExtAcceptation();
 
@@ -239,8 +242,22 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Membership extension in {0}")
 	public String extensionDetail(String registerTo);
 
-	@DefaultMessage("Form content")
-	public String formDataTitle();
+	// -------------- APP DETAIL PAGE - EDIT ------------------------ //
+
+	@DefaultMessage("Edit")
+	public String edit();
+
+	@DefaultMessage("Save")
+	public String save();
+
+	@DefaultMessage("Cancel")
+	public String cancel();
+
+	@DefaultMessage("There are no changes to be saved!")
+	public String noChange();
+
+	@DefaultMessage("All changes to the form will be discarded. Do you wish to continue?")
+	public String cancelAsk();
 
 	// --------------- EXCEPTIONS -------------------------------- //
 
@@ -256,8 +273,8 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You have already submitted extension application to {0}")
 	public String alreadySubmittedExtension(String voName);
 
-	@DefaultMessage("<p>You can check details of your application in <a href=\"{0}#submitted\">{1}</a>.")
-	public String visitSubmitted(String url, String title);
+	@DefaultMessage("<p>You can <b>see or edit your application <a href=\"{0}#appdetail;id={1}\">here</b></a>. You can see all your applications in section <a href=\"{0}#submitted\">{2}</a>.")
+	public String visitSubmitted(String url, int appId, String title);
 
 	@DefaultMessage("You are already registered")
 	public String cantExtendMembership();
