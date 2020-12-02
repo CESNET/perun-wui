@@ -16,6 +16,7 @@
 			<b:Icon ui:field="icon" type="ARCHIVE" fixedWidth="true" />
 			<b.html:Text text="My registrations" ui:field="text"/>
 			<b.html:Small text=""/>
+			<p:PerunButton tooltipText="Refresh" icon="REFRESH" ui:field="refresh" marginLeft="20" />
 		</b:Heading>
 
 		<g:ResizeLayoutPanel addStyleNames="{res.gss.grid}">

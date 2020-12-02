@@ -173,6 +173,10 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			return;
 		}
 
+		// hide previous state
+		hideMailVerificationAlert();
+		hideNotice();
+		form.clear();
 
 		final PerunLoader loader = new PerunLoader();
 		form.add(loader);

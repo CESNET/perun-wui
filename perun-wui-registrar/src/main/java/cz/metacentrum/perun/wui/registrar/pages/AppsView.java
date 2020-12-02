@@ -6,6 +6,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
+import com.google.gwt.uibinder.client.UiHandler;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewImpl;
@@ -16,6 +17,7 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.model.ApplicationColumnProvider;
+import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
 import org.gwtbootstrap3.client.ui.html.Text;
 
@@ -35,6 +37,9 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 	@UiField
 	Text text;
 
+	@UiField
+	PerunButton refresh;
+
 	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	@Inject
@@ -42,11 +47,15 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 
 		initWidget(binder.createAndBindUi(this));
 		text.setText(translation.submittedTitle());
+		refresh.setTooltipText(translation.refresh());
 		grid.setHeight("100%");
-		draw();
 
 	}
 
+	@UiHandler(value = "refresh")
+	public void refresh(ClickEvent event) {
+		draw();
+	}
 
 	public void draw() {
 
