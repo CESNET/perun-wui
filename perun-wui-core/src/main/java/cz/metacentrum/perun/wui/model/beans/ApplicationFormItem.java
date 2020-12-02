@@ -333,7 +333,6 @@ public class ApplicationFormItem extends JavaScriptObject {
 	}-*/;
 
 	public final native String[] getItemTextLocales() /*-{
-		console.log(Object.keys(this.i18n));
 		return Object.keys(this.i18n);
 	}-*/;
 
