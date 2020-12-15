@@ -339,6 +339,12 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("In order to access CESNET services you must log-in using verified academic identity (at least once a year). Please use such identity to access this form.")
 	public String notEligibleCESNET();
 
+	@DefaultMessage("<p>To renew your membership, <b>verification of academic status</b> is required for your e-Infrastructure account. <p><ul><li>I have a verified account</li><ul><li>The verification may have expired. In this case, please sign in to your account with a verified academic identity, which will extend the validity of the verification.</li></ul></ul><ul><li>I don`t have a verified account</li><ul><li>Please <a href=\"{0}\">add verified identity</a> to your account from some academic institution (involved in eduId).</li><li><a href=\"{1}\">Ask for manual verification</a> of your academic background (if your institution is not involved in the eduId federation).</li></ul>")
+	public String notEligibleEINFRAextension(String consolidatorUrl, String einfraVerifyUrl);
+
+	@DefaultMessage("<p>You are signed in with an account from Metacentrum. You <b>cannot register or renew your membership</b> using this identity.<p>Please <b>sign-out / close all browser windows</b> and sign-in again using an external identity provider - an account from your academic organization or a social identity provider if your institution doesn`t have one.")
+	public String notEligibleMETAIDP();
+
 	@DefaultMessage("<p>Your application still awaits for mail address verification. If you continue now, it is most probable, that service will redirect you back to the registration form.<p>Please check your mailbox for verification mail. Once your application is verified and approved, you will be able to access the service.")
 	public String redirectWaitForVerification();
 
