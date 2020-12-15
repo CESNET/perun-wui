@@ -158,30 +158,6 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 								alert.setText((isAccountActivation) ? translation.activateSuccess() : translation.resetSuccess());
 								alert.setVisible(true);
 
-								/**
-								 * FIXME - Temporary change forcing all extending Metacentrum users to change their password due to need to re-sign all keys in kerberos database
-								 */
-								// For authorized reset in EINFRA (meta) namespace set sign to not bother users again in registrar
-								if (Objects.equals("einfra", namespace) && PerunSession.getInstance().getUserId() > 0) {
-									AttributesManager.getUserAttribute(PerunSession.getInstance().getUserId(), "urn:perun:user:attribute-def:def:changedPassMeta", new JsonEvents() {
-										@Override
-										public void onFinished(JavaScriptObject result) {
-											Attribute attribute = result.cast();
-											if (attribute.isEmpty()) {
-												attribute.setValue(JsUtils.getCurrentDateString());
-												AttributesManager.setUserAttribute(PerunSession.getInstance().getUserId(), attribute, null);
-											}
-										}
-										@Override
-										public void onError(PerunException error) {
-										}
-
-										@Override
-										public void onLoadingStart() {
-										}
-									});
-								}
-
 								if (Window.Location.getParameterMap().containsKey("target_url")) {
 									alert.getToolbar().setVisible(true);
 									continueButton.setType(ButtonType.SUCCESS);
