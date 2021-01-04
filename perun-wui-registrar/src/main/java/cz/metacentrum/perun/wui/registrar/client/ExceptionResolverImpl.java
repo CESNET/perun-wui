@@ -13,6 +13,7 @@ import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Group;
+import cz.metacentrum.perun.wui.model.beans.User;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 
@@ -235,6 +236,11 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			setInfo(trans.cantSubmitLoA(), trans.notAcademicLoA(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 		} else if (Objects.equals("NOT_ELIGIBLE", exception.getReason())) {
 			setInfo(trans.cantSubmitLoA(), trans.notEligibleCESNET());
+		} else if (Objects.equals("NOT_ELIGIBLE_EINFRA_EXTENSION", exception.getReason())) {
+			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/";
+			setInfo(trans.cantSubmitLoA(), trans.notEligibleEINFRAextension(Utils.getIdentityConsolidatorLink(true), url+PerunSession.getInstance().getRpcServer()+"/registrar/?vo=einfra&group=verified_users:catch_all"));
+		} else if (Objects.equals("NOT_ELIGIBLE_METAIDP", exception.getReason())) {
+			setInfo(trans.cantSubmitLoA(), trans.notEligibleMETAIDP());
 		} else {
 			setInfo(trans.cantSubmitLoA(), exception.getMessage());
 		}
