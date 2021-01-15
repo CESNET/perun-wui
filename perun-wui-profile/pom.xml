@@ -118,10 +118,13 @@
 				<!-- Plugin configuration. There are many available options, see
 				  gwt-maven-plugin documentation at codehaus.org -->
 				<configuration>
+					<sourceLevel>1.11</sourceLevel>
+					<extraJvmArgs>-Xmx1024m</extraJvmArgs>
 					<module>cz.metacentrum.perun.wui.profile.perun-wui-profile</module>
 					<runTarget>PerunProfile.html</runTarget>
 					<hostedWebapp>${webappDirectory}</hostedWebapp>
 					<outputDirectory>${webappDirectory}</outputDirectory>
+					<server>cz.metacentrum.perun.wui.JettyLauncher</server>
 				</configuration>
 
 			</plugin>

@@ -99,6 +99,9 @@
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>${gwtPluginVersion}</version>
+                <configuration>
+                    <extraJvmArgs>-Xmx1024m</extraJvmArgs>
+                </configuration>
             </plugin>
 
         </plugins>
@@ -140,6 +143,32 @@
         <dependency>
             <groupId>com.gwtplatform</groupId>
             <artifactId>gwtp-mvp-client</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Redefined Jetty dependency so that our JettyLauncher can be compiled and used by GWT super-dev mode -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-webapp</artifactId>
+            <version>9.4.34.v20201102</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-servlets</artifactId>
+            <version>9.4.34.v20201102</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-annotations</artifactId>
+            <version>9.4.34.v20201102</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>apache-jsp</artifactId>
+            <version>9.4.34.v20201102</version>
             <scope>provided</scope>
         </dependency>
 
