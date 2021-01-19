@@ -188,9 +188,9 @@ public class Attribute extends AttributeDefinition {
 				return getValue().isEmpty();
 			case "java.lang.Boolean":
 				return getValue().isEmpty();
-			case "java.lang.LargeString":
+			case "java.lang.String":
 				return getValue().isEmpty();
-			case "java.util.LargeArrayList":
+			case "java.util.ArrayList":
 				return getValue().isEmpty();
 			default:
 				return getValueAsJsArray().length() == 0;

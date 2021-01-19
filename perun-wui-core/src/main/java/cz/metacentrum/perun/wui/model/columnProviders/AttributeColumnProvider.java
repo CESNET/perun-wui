@@ -191,9 +191,9 @@ public class AttributeColumnProvider extends ColumnProvider<Attribute> {
 								return generateNumberBox(attr.getValue());
 							} else if (attr.getType().equals("java.lang.Boolean")) {
 								return generateCheckBox(attr.getValue());
-							} else if (attr.getType().equals("java.lang.LargeString")) {
+							} else if (attr.getType().equals("java.lang.String")) {
 								return generateString(attr.getValue());
-							} else if (attr.getType().equals("java.util.LargeArrayList")) {
+							} else if (attr.getType().equals("java.util.ArrayList")) {
 								return generateList(attr.getValueAsJsArray());
 							} else {
 								return generateList(attr.getValueAsJsArray());
