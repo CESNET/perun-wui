@@ -567,6 +567,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					// skip more identities from same IdP
 					if (offeredIdPs.contains(entityId)) continue;
 
+					// skip identities from discontinued Hostel
+					if ("https://idp.hostel.eduid.cz/idp/shibboleth".equals(entityId)) continue;
+
 					// IF Perun is behind proxy, offer only allowed proxies !!!
 					// IF not proxy, show all
 					if (proxies.isEmpty() || proxies.contains(entityId)) {
