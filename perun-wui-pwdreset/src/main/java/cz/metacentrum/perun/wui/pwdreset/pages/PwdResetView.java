@@ -348,6 +348,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 									help.setHTML("<p>" + translation.einfraPasswordHelp());
 								} else if (Objects.equals(namespace, "vsup")) {
 									help.setHTML("<p>"+translation.vsupHelp());
+								} else if (Objects.equals(namespace, "mu")) {
+									help.setHTML("<p>"+translation.muPasswordHelp());
 								}
 
 								return;
@@ -506,6 +508,34 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			if(!matchFound2){
 				itemStatus.setText(translation.passwordStrength3());
 				passItem.setValidationState(ValidationState.ERROR);
+				return false;
+			}
+
+		} else if (Objects.equals(namespace, "mu")) {
+
+			// Check that password contains at least 3 of 4 character groups
+
+			RegExp regExpDigit = RegExp.compile("^.*[0-9].*$");
+			RegExp regExpLower = RegExp.compile("^.*[a-z].*$");
+			RegExp regExpUpper = RegExp.compile("^.*[A-Z].*$");
+			RegExp regExpSpec = RegExp.compile("^.*[\\x20-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7E].*$"); // FIXME - are those correct printable specific chars?
+
+			int matchCounter = 0;
+			if (regExpDigit.exec(passwordTextBox.getValue()) != null) matchCounter++;
+			if (regExpLower.exec(passwordTextBox.getValue()) != null) matchCounter++;
+			if (regExpUpper.exec(passwordTextBox.getValue()) != null) matchCounter++;
+			if (regExpSpec.exec(passwordTextBox.getValue()) != null) matchCounter++;
+
+			if(matchCounter < 3){
+				passItem.setValidationState(ValidationState.ERROR);
+				itemStatus.setHTML(translation.muPasswordStrength());
+				return false;
+			}
+
+			// check length
+			if (passwordTextBox.getValue().length() < 12) {
+				passItem.setValidationState(ValidationState.ERROR);
+				itemStatus.setHTML(translation.muPasswordLength());
 				return false;
 			}
 
