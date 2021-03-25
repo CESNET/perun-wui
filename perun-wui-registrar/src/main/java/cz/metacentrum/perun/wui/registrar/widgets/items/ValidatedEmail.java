@@ -38,6 +38,12 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 	private InputGroup widget;
 
+	@Override
+	public void setEnabled(boolean enabled) {
+		getTextBox().setEnabled(enabled);
+		getSelect().setEnabled(enabled);
+	}
+
 	public ValidatedEmail(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
 		this.validator = new ValidatedEmailValidator();

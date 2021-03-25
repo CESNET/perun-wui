@@ -36,6 +36,13 @@ public class Combobox extends PerunFormItemEditable {
 
 	private Widget widget;
 
+	private Select select;
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		this.select.setEnabled(enabled);
+	}
+
 	public Combobox(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
 		this.validator = new ComboboxValidator();
@@ -46,7 +53,7 @@ public class Combobox extends PerunFormItemEditable {
 
 		widget = new FlowPanel();
 
-		final Select select = new Select();
+		select = new Select();
 		select.setWidth("100%");
 		select.setShowTick(true);
 

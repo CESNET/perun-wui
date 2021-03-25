@@ -176,6 +176,9 @@ public class PerunForm extends FieldSet {
 		List<ApplicationFormItemData> data = new ArrayList<>();
 		for (PerunFormItem item : getPerunFormItems()) {
 			data.add(item.getItemData());
+			if (!item.isUpdatable()) {
+				item.getItemData().getFormItem().setDisabled(ApplicationFormItem.Disabled.ALWAYS);
+			}
 		}
 		return data;
 	}

@@ -28,10 +28,16 @@ public class Checkbox extends PerunFormItemEditable {
 	private final CheckboxValidator validator;
 
 	private FlowPanel widget;
+	private CheckBox checkBox;
 
 	public Checkbox(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
 		this.validator = new CheckboxValidator();
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		this.checkBox.setEnabled(enabled);
 	}
 
 	@Override
@@ -47,7 +53,7 @@ public class Checkbox extends PerunFormItemEditable {
 
 		for (Map.Entry<String, String> entry : opts.entrySet()) {
 
-			CheckBox checkBox = new CheckBox(entry.getValue());
+			checkBox = new CheckBox(entry.getValue());
 			checkBox.setName(entry.getKey());
 			widget.add(checkBox);
 

@@ -25,8 +25,6 @@ public class ApplicationFormItem extends JavaScriptObject {
 		HTML_COMMENT,
 		SUBMIT_BUTTON,
 		AUTO_SUBMIT_BUTTON,
-		FROM_FEDERATION_SHOW,
-		FROM_FEDERATION_HIDDEN,
 		PASSWORD,
 		VALIDATED_EMAIL,
 		TEXTFIELD,
@@ -38,6 +36,20 @@ public class ApplicationFormItem extends JavaScriptObject {
 		USERNAME,
 		HEADING,
 		TIMEZONE
+	}
+
+	public enum Hidden {
+		NEVER,
+		ALWAYS,
+		IF_PREFILLED,
+		IF_EMPTY
+	}
+
+	public enum Disabled {
+		NEVER,
+		ALWAYS,
+		IF_PREFILLED,
+		IF_EMPTY
 	}
 
 	protected ApplicationFormItem() {}
@@ -376,6 +388,53 @@ public class ApplicationFormItem extends JavaScriptObject {
 	 */
 	public final native void setEdited(boolean edited) /*-{
 		this.edited = edited;
+	}-*/;
+
+	public final boolean isUpdatable() {
+		return JsUtils.getNativePropertyBoolean(this, "updatable");
+	}
+
+	public final native void setUpdatable(boolean updatable) /*-{
+		this.updatable = updatable;
+	}-*/;
+
+	public final native Integer getHiddenDependencyItemId() /*-{
+		return this.hiddenDependencyItemId;
+	}-*/;
+
+	public final native Integer getDisabledDependencyItemId() /*-{
+		return this.disabledDependencyItemId;
+	}-*/;
+
+	public final native void setHiddenDependencyItemId(Integer itemId) /*-{
+		this.hiddenDependencyItemId = itemId;
+	}-*/;
+
+	public final native void setDisabledDependencyItemId(Integer itemId) /*-{
+		this.disabledDependencyItemId = itemId;
+	}-*/;
+
+	public final Disabled getDisabled() {
+		return Disabled.valueOf(JsUtils.getNativePropertyString(this, "disabled"));
+	}
+	public final Hidden getHidden() {
+		return Hidden.valueOf(JsUtils.getNativePropertyString(this, "hidden"));
+	}
+
+	public final void setDisabled(Disabled disabled) {
+		setDisabled(String.valueOf(disabled));
+	}
+
+	private native void setDisabled(String disabled) /*-{
+		this.disabled = disabled;
+	}-*/;
+
+	public final void setHidden(Hidden hidden) {
+		setHidden(String.valueOf(hidden));
+	}
+
+	private native void setHidden(String hidden) /*-{
+		this.hidden = hidden;
 	}-*/;
 
 	/**

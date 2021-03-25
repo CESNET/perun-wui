@@ -203,4 +203,5 @@ public class ApplicationFormItemData extends JavaScriptObject {
 		return o.getShortname().equals(this.getShortname());
 	}
 
+
 }
