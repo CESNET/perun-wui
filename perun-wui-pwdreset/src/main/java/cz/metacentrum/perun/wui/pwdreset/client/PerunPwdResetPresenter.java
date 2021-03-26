@@ -65,7 +65,8 @@ public class PerunPwdResetPresenter extends PerunPresenter<PerunPwdResetPresente
 		} else if (PerunSession.getInstance().getUser() == null &&
 				PerunSession.getInstance().getRpcServer().equals("non") &&
 				!Window.Location.getParameterMap().keySet().contains("m") &&
-				!Window.Location.getParameterMap().keySet().contains("i")) {
+				!Window.Location.getParameterMap().keySet().contains("i") &&
+				!Window.Location.getParameterMap().keySet().contains("token")) {
 			placeManager.revealPlace(new PlaceRequest.Builder().nameToken(PlaceTokens.NOT_USER).build());
 			return;
 		}
