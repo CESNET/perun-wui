@@ -299,6 +299,23 @@ public class UsersManager {
 	}
 
 	/**
+	 * Checks if the password reset request link is valid. The request is valid, if it
+	 * was created, never used and hasn't expired yet.
+	 *
+	 * @param token Token param
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request checkPasswordResetRequestIsValid(String token, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (token != null && !token.isEmpty()) client.put("token", token);
+		return client.call(USERS_MANAGER + "checkPasswordResetRequestIsValid");
+
+	}
+
+	/**
 	 * Reset users password in selected namespace by non-authz call using secret token
 	 *
 	 * @param i Token param i
@@ -314,6 +331,26 @@ public class UsersManager {
 		JsonClient client = new JsonClient(events);
 		if (i != null && !i.isEmpty()) client.put("i", i);
 		if (m != null && !m.isEmpty()) client.put("m", m);
+		if (newPass!= null && !newPass.isEmpty()) client.put("password", newPass);
+		if (lang!= null && !lang.isEmpty()) client.put("lang", lang);
+		return client.call(USERS_MANAGER + "changeNonAuthzPassword");
+
+	}
+
+	/**
+	 * Reset users password in selected namespace by non-authz call using secret token
+	 *
+	 * @param token Token param
+	 * @param newPass New password set for the user
+	 * @param lang Language to get notification in
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request resetNonAuthzPassword(String token, String newPass, String lang, JsonEvents events){
+
+		JsonClient client = new JsonClient(events);
+		if (token != null && !token.isEmpty()) client.put("token", token);
 		if (newPass!= null && !newPass.isEmpty()) client.put("password", newPass);
 		if (lang!= null && !lang.isEmpty()) client.put("lang", lang);
 		return client.call(USERS_MANAGER + "changeNonAuthzPassword");
