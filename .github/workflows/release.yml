@@ -45,15 +45,6 @@ jobs:
           asset_path: perun-wui-admin/target/perun-wui-admin.war
           asset_name: perun-wui-admin.war
           asset_content_type: application/x-webarchive
-      - name: "Upload asset perun-wui-cabinet.war"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: perun-wui-cabinet/target/perun-wui-cabinet.war
-          asset_name: perun-wui-cabinet.war
-          asset_content_type: application/x-webarchive
       - name: "Upload asset perun-wui-registrar.war"
         uses: actions/upload-release-asset@v1
         env:
@@ -89,14 +80,5 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: perun-wui-profile/target/perun-wui-profile.war
           asset_name: perun-wui-profile.war
-          asset_content_type: application/x-webarchive
-      - name: "Upload asset perun-wui-setAffiliation.war"
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: perun-wui-setAffiliation/target/perun-wui-setAffiliation.war
-          asset_name: perun-wui-setAffiliation.war
           asset_content_type: application/x-webarchive
 
