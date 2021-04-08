@@ -29,6 +29,16 @@ public class Username extends PerunFormItemEditable {
 	private final UsernameValidator validator;
 
 	private InputGroup widget;
+	private ExtendedTextBox box;
+	private boolean enabled = true;
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+		if (this.box != null) {
+			this.box.setEnabled(enabled);
+		}
+	}
 
 	public Username(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
@@ -43,7 +53,8 @@ public class Username extends PerunFormItemEditable {
 
 		InputGroupAddon addon = new InputGroupAddon();
 		addon.setIcon(IconType.USER);
-		ExtendedTextBox box = new ExtendedTextBox();
+		box = new ExtendedTextBox();
+		box.setEnabled(enabled);
 		box.setMaxLength(MAX_LENGTH);
 
 		if (getItemData().getFormItem().getRegex() != null) {
@@ -167,12 +178,7 @@ public class Username extends PerunFormItemEditable {
 	}
 
 	public ExtendedTextBox getTextBox() {
-		for (Widget box : getWidget()) {
-			if (box instanceof ExtendedTextBox) {
-				return (ExtendedTextBox) box;
-			}
-		}
-		return null;
+		return box;
 	}
 	public Paragraph getPreview() {
 		for (Widget box : getWidget()) {
@@ -181,10 +187,6 @@ public class Username extends PerunFormItemEditable {
 			}
 		}
 		return null;
-	}
-
-	public void setEnable(boolean enable) {
-		getTextBox().setEnabled(enable);
 	}
 
 	@Override

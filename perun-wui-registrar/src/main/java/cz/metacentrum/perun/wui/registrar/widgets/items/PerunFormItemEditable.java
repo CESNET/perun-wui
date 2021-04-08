@@ -190,6 +190,10 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		return PerunForm.FormState.PREVIEW.equals(getForm().getFormState());
 	}
 
+	public void setEnabled(boolean enabled) {
+		// do nothing by default
+	}
+
 
 	/**
 	 * Status of item means validationState and text.

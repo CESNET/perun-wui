@@ -3,11 +3,16 @@ package cz.metacentrum.perun.wui.registrar.widgets.items;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import org.gwtbootstrap3.client.ui.FormGroup;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Represents general form item. Encapsulate and view of ApplicationFormItemData returned from RPC.
@@ -21,6 +26,15 @@ public abstract class PerunFormItem extends FormGroup {
 	private PerunForm form;
 
 	PerunRegistrarTranslation translation;
+
+	Set<ApplicationFormItem.ApplicationFormItemType> notUpdatableTypes = new HashSet<>(Arrays.asList(
+		ApplicationFormItem.ApplicationFormItemType.USERNAME,
+		ApplicationFormItem.ApplicationFormItemType.PASSWORD,
+		ApplicationFormItem.ApplicationFormItemType.HEADING,
+		ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT,
+		ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON,
+		ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON
+	));
 
 	public PerunFormItem(PerunForm form, ApplicationFormItemData itemData, String lang) {
 		this.form = form;
@@ -145,7 +159,13 @@ public abstract class PerunFormItem extends FormGroup {
 	 * @return default TRUE
 	 */
 	public boolean isUpdatable() {
-		return getItemData().getFormItem() != null;
+		if (getItemData().getFormItem() == null) {
+			return false;
+		}
+		if (notUpdatableTypes.contains(getItemData().getFormItem().getType())) {
+			return false;
+		}
+		return getItemData().getFormItem().isUpdatable();
 	}
 
 }
