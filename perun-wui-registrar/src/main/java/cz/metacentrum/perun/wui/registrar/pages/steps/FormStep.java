@@ -55,11 +55,11 @@ public abstract class FormStep implements Step {
 		return null;
 	}
 
-	protected String getFedInfo(PerunPrincipal pp) {
+	protected String getFedInfo(PerunPrincipal pp, String redirectURL) {
 		return "{" + " displayName=\"" + pp.getAdditionInformation("displayName")+"\"" + " commonName=\"" + pp.getAdditionInformation("cn")+"\""
 				+ " givenName=\"" + pp.getAdditionInformation("givenName")+"\"" + " sureName=\"" + pp.getAdditionInformation("sn")+"\""
 				+ " loa=\"" + pp.getAdditionInformation("loa")+"\"" + " mail=\"" + pp.getAdditionInformation("mail")+"\""
-				+ " organization=\"" + pp.getAdditionInformation("o")+"\"" + " }";
+				+ " organization=\"" + pp.getAdditionInformation("o")+"\"" + " redirectURL=\"" + redirectURL + "\"" +" }";
 	}
 
 	protected JsonEvents getOnSubmitEvent(final Events<Result> events) {

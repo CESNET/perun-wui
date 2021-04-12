@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
 import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AuthzManager;
@@ -86,7 +87,7 @@ public class GroupInitStep extends FormStep {
 		}
 
 		form.setApp(Application.createNew(registrar.getVo(), registrar.getGroup(), Application.ApplicationType.INITIAL,
-				getFedInfo(localPP), localPP.getActor(), localPP.getExtSource(), localPP.getExtSourceType(), localPP.getExtSourceLoa(), localPP.getUser()));
+				getFedInfo(localPP, Window.Location.getParameter("targetnew")), localPP.getActor(), localPP.getExtSource(), localPP.getExtSourceType(), localPP.getExtSourceLoa(), localPP.getUser()));
 
 		form.setOnSubmitEvent(getOnSubmitEvent(events));
 

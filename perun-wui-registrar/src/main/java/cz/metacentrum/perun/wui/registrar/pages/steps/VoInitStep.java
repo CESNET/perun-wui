@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.pages.steps;
 
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
@@ -40,7 +41,7 @@ public class VoInitStep extends FormStep {
 		}
 
 		form.setApp(Application.createNew(registrar.getVo(), null, Application.ApplicationType.INITIAL,
-				getFedInfo(pp), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa(), pp.getUser()));
+				getFedInfo(pp, Window.Location.getParameter("targetnew")), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa(), pp.getUser()));
 
 		form.setOnSubmitEvent(getOnSubmitEvent(events));
 
