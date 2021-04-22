@@ -33,7 +33,9 @@ public class TextField extends PerunFormItemEditable {
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		getBox().setEnabled(enabled);
+		if (getBox() != null) {
+			getBox().setEnabled(enabled);
+		}
 	}
 
 	@Override
