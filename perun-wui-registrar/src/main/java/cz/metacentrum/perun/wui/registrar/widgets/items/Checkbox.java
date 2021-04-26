@@ -37,7 +37,12 @@ public class Checkbox extends PerunFormItemEditable {
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		this.checkBox.setEnabled(enabled);
+		for (Widget widget : getWidget()) {
+			if (widget instanceof CheckBox) {
+				CheckBox checkBox = (CheckBox) widget;
+				checkBox.setEnabled(enabled);
+			}
+		}
 	}
 
 	@Override

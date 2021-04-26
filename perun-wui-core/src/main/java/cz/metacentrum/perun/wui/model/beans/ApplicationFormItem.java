@@ -35,7 +35,8 @@ public class ApplicationFormItem extends JavaScriptObject {
 		COMBOBOX,
 		USERNAME,
 		HEADING,
-		TIMEZONE
+		TIMEZONE,
+		EMBEDDED_GROUP_APPLICATION
 	}
 
 	public enum Hidden {

@@ -33,7 +33,8 @@ public abstract class PerunFormItem extends FormGroup {
 		ApplicationFormItem.ApplicationFormItemType.HEADING,
 		ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT,
 		ApplicationFormItem.ApplicationFormItemType.SUBMIT_BUTTON,
-		ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON
+		ApplicationFormItem.ApplicationFormItemType.AUTO_SUBMIT_BUTTON,
+		ApplicationFormItem.ApplicationFormItemType.EMBEDDED_GROUP_APPLICATION
 	));
 
 	public PerunFormItem(PerunForm form, ApplicationFormItemData itemData, String lang) {

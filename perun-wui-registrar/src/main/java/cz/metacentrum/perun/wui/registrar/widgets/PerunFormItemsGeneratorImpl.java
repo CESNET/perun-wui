@@ -10,6 +10,7 @@ import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemTexts;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Checkbox;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Combobox;
+import cz.metacentrum.perun.wui.registrar.widgets.items.GroupCheckBox;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Header;
 import cz.metacentrum.perun.wui.registrar.widgets.items.HtmlComment;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Password;
@@ -232,6 +233,8 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 				return new SubmitButton(form, data, lang, false);
 			case AUTO_SUBMIT_BUTTON:
 				return new SubmitButton(form, data, lang, true);
+			case EMBEDDED_GROUP_APPLICATION:
+				return new GroupCheckBox(form, data, lang);
 			default:
 				return new Undefined(form, data, lang);
 		}
