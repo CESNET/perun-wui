@@ -30,11 +30,9 @@ public class Username extends PerunFormItemEditable {
 
 	private InputGroup widget;
 	private ExtendedTextBox box;
-	private boolean enabled = true;
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
 		if (this.box != null) {
 			this.box.setEnabled(enabled);
 		}
@@ -54,7 +52,6 @@ public class Username extends PerunFormItemEditable {
 		InputGroupAddon addon = new InputGroupAddon();
 		addon.setIcon(IconType.USER);
 		box = new ExtendedTextBox();
-		box.setEnabled(enabled);
 		box.setMaxLength(MAX_LENGTH);
 
 		if (getItemData().getFormItem().getRegex() != null) {
