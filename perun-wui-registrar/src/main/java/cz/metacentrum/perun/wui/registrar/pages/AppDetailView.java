@@ -54,6 +54,7 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 		formWrapper.setVisible(true);
 		state.setVisible(true);
 		loader.setVisible(false);
+		embeddedInfo.setVisible(false);
 
 		draw();
 		loadForm();
@@ -128,6 +129,12 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 	@UiField
 	AlertErrorReporter alertErrorReporter;
+
+	@UiField
+	Alert embeddedInfo;
+
+	@UiField
+	DescriptionData embeddedInfoText;
 
 	private Application app;
 
@@ -224,7 +231,7 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 		}
 
 		if (app.getGroup() != null) {
-			if (Application.ApplicationType.INITIAL.equals(app.getType())) {
+			if (Application.ApplicationType.INITIAL.equals(app.getType()) || Application.ApplicationType.EMBEDDED.equals(app.getType())) {
 				text.setText(translation.initialDetail(app.getGroup().getShortName() + " / " + app.getVo().getName()));
 			} else {
 				text.setText(translation.extensionDetail(app.getGroup().getShortName() + " / " + app.getVo().getName()));
@@ -246,6 +253,11 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 		stateTitle.setText(app.getTranslatedState());
 		stateText.setText(app.getModifiedAt().split("\\.")[0]);
+
+		if (Application.ApplicationType.EMBEDDED.equals(app.getType())) {
+			embeddedInfo.setVisible(true);
+			embeddedInfoText.setText(translation.embeddedInfo(app.getVo().getName()));
+		}
 
 		// only new and verified application are editable
 		editButton.setVisible(Application.ApplicationState.NEW.equals(app.getState()) ||

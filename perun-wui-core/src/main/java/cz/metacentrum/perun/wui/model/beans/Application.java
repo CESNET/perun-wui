@@ -18,7 +18,8 @@ public class Application extends JavaScriptObject {
 	 */
 	public enum ApplicationType {
 		INITIAL,
-		EXTENSION
+		EXTENSION,
+		EMBEDDED
 	}
 
 	/**
@@ -370,6 +371,8 @@ public class Application extends JavaScriptObject {
 			return translation.applicationInitial();
 		} else if (ApplicationType.EXTENSION.equals(getType())) {
 			return translation.applicationExtension();
+		} else if (ApplicationType.EMBEDDED.equals(getType())) {
+			return translation.applicationEmbedded();
 		}
 
 		return getType().toString();

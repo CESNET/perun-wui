@@ -62,6 +62,9 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Extension")
 	public String applicationExtension();
 
+	@DefaultMessage("Embedded")
+	public String applicationEmbedded();
+
 
 
 	/* ------------ LOADER MESSAGES ---------------- */
