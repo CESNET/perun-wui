@@ -242,6 +242,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Membership extension in {0}")
 	public String extensionDetail(String registerTo);
 
+	@DefaultMessage("This registration was automatically submitted after approved registration to {0}.")
+	public String embeddedInfo(String vo);
+
 	// -------------- APP DETAIL PAGE - EDIT ------------------------ //
 
 	@DefaultMessage("Edit")

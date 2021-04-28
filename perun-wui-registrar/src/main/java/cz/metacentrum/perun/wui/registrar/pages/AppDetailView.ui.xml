@@ -31,6 +31,10 @@
 					</b:Description>
 				</b:Alert>
 
+				<b:Alert type="INFO" ui:field="embeddedInfo">
+					<b:DescriptionData ui:field="embeddedInfoText" />
+				</b:Alert>
+
 				<b:Alert type="WARNING" visible="false" ui:field="mailVerificationAlert">
 					<b.html:Paragraph ui:field="mailVerificationText" marginBottom="10"/>
 					<p:PerunToolbar>
