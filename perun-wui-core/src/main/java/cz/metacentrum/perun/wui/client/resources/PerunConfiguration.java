@@ -529,6 +529,11 @@ public final class PerunConfiguration {
 		return Utils.stringToList(value, ",");
 	}
 
+	public static List<String> getRegistrarHiddenProxies() {
+		String value = getConfigPropertyString("registrar.hideProxy");
+		return Utils.stringToList(value, ",");
+	}
+
 	// ---------------------------   WAYF   ---------------------------- //
 
 	/**

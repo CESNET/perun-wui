@@ -526,6 +526,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			});
 
 			List<String> proxies = PerunConfiguration.getRegistrarEnforcedProxies();
+			List<String> hiddenProxies = PerunConfiguration.getRegistrarHiddenProxies();
 			// just to make list unique (no more duplicate entries from same IdP).
 			Set<String> offeredIdPs = new HashSet<>();
 
@@ -562,39 +563,19 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				} else if (source.getType().equals(ExtSource.ExtSourceType.IDP.getType())) {
 
 					String entityId = source.getName();
-					String originalIdP = source.getName();
 
-					// skip more identities from same IdP
-					if (offeredIdPs.contains(entityId)) continue;
-
-					// skip identities from discontinued Hostel
-					if ("https://idp.hostel.eduid.cz/idp/shibboleth".equals(entityId)) continue;
+					// skip more identities from same IdP or hidden IdPs
+					if (offeredIdPs.contains(entityId) || hiddenProxies.contains(entityId)) continue;
 
 					// IF Perun is behind proxy, offer only allowed proxies !!!
 					// IF not proxy, show all
 					if (proxies.isEmpty() || proxies.contains(entityId)) {
 
-						if (entityId.equals("https://auth.west-life.eu/proxy/saml2/idp/metadata.php") ||
-								entityId.equals("https://login.cesnet.cz/idp/")) {
-							// FIXME - SKIP invalid joining entries -> PROXY identities themselves
-							// do not not ban Elixir, since its used on CESNET and ELIXIR (wrong ExtSource on all identities)
-							continue;
-						}
-
 						offeredIdPs.add(entityId);
-
-					/*
-					WE NO LONGER WANT TO SPECIFY source IdPs for ELIXIR, just reference the proxy itself
-					if (source.getName().startsWith("https://login.elixir-czech.org/idp/")) {
-						// FIXME - hacked for Elixir proxy IdP to work with original user IdP name
-						entityId = source.getName().split("@")[0];
-						originalIdP = "@" + source.getName().split("@")[1];
-					}
-					*/
 
 						final String finalEntityId = entityId;
 
-						AnchorListItem link = new AnchorListItem(Utils.translateIdp(originalIdP));
+						AnchorListItem link = new AnchorListItem(Utils.translateIdp(entityId));
 						idpItems.put(link, new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
