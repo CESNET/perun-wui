@@ -1,6 +1,7 @@
 package cz.metacentrum.perun.wui.json.managers;
 
 import com.google.gwt.http.client.Request;
+import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
@@ -191,6 +192,7 @@ public class UsersManager {
 		client.put("email", email);
 		client.put("lang", lang);
 		client.put("linkPath","/"+PerunSession.getInstance().getRpcServer()+"/profile/");
+		client.put("customUrl", Window.Location.getProtocol() + "//" + Window.Location.getHostName());
 		return client.call(USERS_MANAGER + "requestPreferredEmailChange");
 
 	}
