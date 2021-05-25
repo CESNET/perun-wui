@@ -191,8 +191,8 @@ public class UsersManager {
 		if (userId > 0) client.put("user", userId);
 		client.put("email", email);
 		client.put("lang", lang);
-		client.put("linkPath","/"+PerunSession.getInstance().getRpcServer()+"/profile/");
-		client.put("customUrl", Window.Location.getProtocol() + "//" + Window.Location.getHostName());
+		client.put("customUrl", Window.Location.getProtocol() + "//" + Window.Location.getHostName()
+			+ "/" + PerunSession.getInstance().getRpcServer() + "/profile/");
 		return client.call(USERS_MANAGER + "requestPreferredEmailChange");
 
 	}
