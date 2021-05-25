@@ -206,7 +206,7 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 						(data.getPrefilledValue() == null || data.getPrefilledValue().isEmpty() || data.getPrefilledValue().equals("null")) &&
 						data.getFormItem().getShortname().equals("Comma or new-line separated list of IDs of collections you are representing:")) {
 					final String bbmriCollections = Window.Location.getParameter("col");
-					data.setPrefilledValue((bbmriCollections != null) ? JsUtils.unzipString(JsUtils.decodeBase64(bbmriCollections.replaceAll(" ", "+"))) : null);
+					data.setPrefilledValue((bbmriCollections != null) ? JsUtils.unzipString(JsUtils.decodeBase64UrlSafe(bbmriCollections)) : null);
 				}
 				return new TextArea(form, data, lang);
 			case USERNAME:
