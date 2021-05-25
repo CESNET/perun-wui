@@ -296,9 +296,9 @@ public class JsUtils {
 	 * @param encodedString String to decode
 	 * @return Decoded string
 	 */
-	public static final native String decodeBase64UrlSafe(String encodedString)/*-{
+	public static String decodeBase64UrlSafe(String encodedString) {
 		return decodeBase64(base64UrlSafeToNonSafe(encodedString));
-	}-*/;
+	}
 
 	/**
 	 * Encode any ASCII string to base64urlSafe
@@ -306,28 +306,28 @@ public class JsUtils {
 	 * @param decodedString String to encode
 	 * @return Encoded string
 	 */
-	public static final native String encodeBase64UrlSafe(String decodedString)/*-{
+	public static String encodeBase64UrlSafe(String decodedString) {
 		return base64ToUrlSafe(encodeBase64(decodedString));
+	};
+
+	/**
+	 * Transform base64 encoded string to url safe base64
+	 *
+	 * @param input String to transform
+	 * @return Transformed string
+	 */
+	public static final native String base64ToUrlSafe(String input)/*-{
+		return input.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 	}-*/;
 
 	/**
 	 * Transform base64 url safe encoded string to regular base64
 	 *
-	 * @param str String to transform
+	 * @param input String to transform
 	 * @return Transformed string
 	 */
-	public static final native String base64UrlSafeToNonSafe(String str)/*-{
-		return str.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
-	}-*/;
-
-	/**
-	 * Transform base64 encoded string to url safe base64
-	 *
-	 * @param str String to transform
-	 * @return Transformed string
-	 */
-	public static final native String base64ToUrlSafe(String str)/*-{
-		return (str + '==='.slice((str.length + 3) % 4)).replace(/-/g, '+').replace(/_/g, '/');
+	public static final native String base64UrlSafeToNonSafe(String input)/*-{
+		return (input + '==='.slice((input.length + 3) % 4)).replace(/-/g, '+').replace(/_/g, '/');
 	}-*/;
 
 	/**
