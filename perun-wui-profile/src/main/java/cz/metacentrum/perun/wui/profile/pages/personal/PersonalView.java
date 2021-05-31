@@ -2,13 +2,12 @@ package cz.metacentrum.perun.wui.profile.pages.personal;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.dom.client.Style;
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.cellview.client.TextColumn;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
@@ -107,6 +106,8 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	PerunLoader verifyEmailLoader;
 	@UiField
 	Button doneButton;
+	@UiField
+	Alert mailChangeError;
 
 	@Inject
 	public PersonalView(PersonalViewUiBinder binder) {
@@ -127,6 +128,8 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 		updateEmailBtn.setText(translation.sendValidationEmail());
 		updateEmailModal.setTitle(translation.updateEmailModalTitle());
 		updateEmailLabel.setText(translation.newPreferredEmail());
+
+		doneButton.addClickHandler(clickEvent -> Window.Location.replace(Window.Location.getPath()));
 	}
 
 	private void loadAttributeNamesTranslations() {
@@ -244,12 +247,9 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	@Override
 	public void verifyEmailChangeError(PerunException ex) {
 		doneButton.setEnabled(true);
-		verifyEmailLoader.onError(ex, new ClickHandler() {
-			@Override
-			public void onClick(ClickEvent clickEvent) {
-				getUiHandlers().verifyEmail();
-			}
-		});
+		mailChangeError.setVisible(true);
+		mailChangeError.setText(translation.mailChangeError());
+		verifyEmailLoader.setVisible(false);
 	}
 
 	@Override

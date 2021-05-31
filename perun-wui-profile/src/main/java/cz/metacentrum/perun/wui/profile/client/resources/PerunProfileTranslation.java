@@ -415,4 +415,6 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("E-mail address {0} was verified and set as your preferred e-mail.")
 	String verifyingEmailChangeDone(String email);
 
+	@DefaultMessage("Preferred email change requested doesn't exist or isn't valid anymore.")
+	String mailChangeError();
 }
