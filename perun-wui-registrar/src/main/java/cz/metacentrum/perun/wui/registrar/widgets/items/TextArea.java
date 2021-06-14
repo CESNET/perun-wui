@@ -18,7 +18,7 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
  */
 public class TextArea extends PerunFormItemEditable {
 
-	public final static int MAX_LENGTH = 3999;
+	public final static int MAX_LENGTH = 10000;
 	private final TextAreaValidator validator;
 
 	private Widget widget;
