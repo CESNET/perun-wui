@@ -268,7 +268,7 @@ public class UsersManager {
 
 		JsonClient client = new JsonClient(events);
 		if (userId > 0) client.put("user", userId);
-		if (loginNamespace != null && !loginNamespace.isEmpty()) client.put("loginNamespace", loginNamespace);
+		if (loginNamespace != null && !loginNamespace.isEmpty()) client.put("namespace", loginNamespace);
 		if (oldPass != null && !oldPass.isEmpty()) client.put("oldPassword", oldPass);
 		if (newPass!= null && !newPass.isEmpty()) client.put("newPassword", newPass);
 		client.put("checkOldPassword", 1);
@@ -293,7 +293,7 @@ public class UsersManager {
 		client.put("checkOldPassword", 0);
 
 		if (userId > 0) client.put("user", userId);
-		if (loginNamespace != null && !loginNamespace.isEmpty()) client.put("loginNamespace", loginNamespace);
+		if (loginNamespace != null && !loginNamespace.isEmpty()) client.put("namespace", loginNamespace);
 		if (newPass!= null && !newPass.isEmpty()) client.put("newPassword", newPass);
 		return client.call(USERS_MANAGER + "changePassword");
 
