@@ -7,12 +7,12 @@
     <parent>
         <artifactId>wui</artifactId>
         <groupId>cz.metacentrum.perun</groupId>
-        <version>3.26.0</version>
+        <version>3.26.1</version>
     </parent>
 
     <groupId>cz.metacentrum.perun.wui</groupId>
     <artifactId>perun-wui-core</artifactId>
-    <version>3.26.0</version>
+    <version>3.26.1</version>
     <packaging>jar</packaging>
 
     <name>perun-wui-core</name>
