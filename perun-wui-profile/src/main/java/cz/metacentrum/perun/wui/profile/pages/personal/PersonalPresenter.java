@@ -74,22 +74,7 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 		loadUser();
 
 		// if mail validation
-		if (Window.Location.getParameterMap().containsKey("i") && Window.Location.getParameterMap().containsKey("m") && Window.Location.getParameterMap().containsKey("u")) {
-
-			String verifyI = Window.Location.getParameter("i");
-			String verifyM = Window.Location.getParameter("m");
-			String verifyU = Window.Location.getParameter("u");
-
-			if (verifyI != null && !verifyI.isEmpty() &&
-					verifyM != null && !verifyM.isEmpty() &&
-					verifyU != null && !verifyU.isEmpty() && JsUtils.checkParseInt(verifyU)) {
-				// verify mail !
-				verifyEmail(verifyI, verifyM, Integer.parseInt(verifyU));
-				checkEmailRequestPending();
-				return;
-			}
-
-		} else if (Window.Location.getParameterMap().containsKey("token") && Window.Location.getParameterMap().containsKey("u")) {
+		if (Window.Location.getParameterMap().containsKey("token") && Window.Location.getParameterMap().containsKey("u")) {
 
 			String verifyToken = Window.Location.getParameter("token");
 			String verifyU = Window.Location.getParameter("u");
@@ -217,42 +202,13 @@ public class PersonalPresenter extends Presenter<PersonalPresenter.MyView, Perso
 	public void verifyEmail() {
 
 		String verifyToken = Window.Location.getParameter("token");
-		String verifyI = Window.Location.getParameter("i");
-		String verifyM = Window.Location.getParameter("m");
 		String verifyU = Window.Location.getParameter("u");
 
-		if (verifyI != null && !verifyI.isEmpty() &&
-				verifyM != null && !verifyM.isEmpty() &&
-				verifyU != null && !verifyU.isEmpty() && JsUtils.checkParseInt(verifyU)) {
-			// verify mail !
-			verifyEmail(verifyI, verifyM, Integer.parseInt(verifyU));
-		} else if (verifyToken != null && !verifyToken.isEmpty() &&
+		if (verifyToken != null && !verifyToken.isEmpty() &&
 			verifyU != null && !verifyU.isEmpty() && JsUtils.checkParseInt(verifyU)) {
 			// verify mail !
 			verifyEmail(verifyToken, Integer.parseInt(verifyU));
 		}
-
-	}
-
-	private void verifyEmail(final String i, final String m, final int u) {
-
-		UsersManager.validatePreferredEmailChange(u, i, m, new JsonEvents() {
-			@Override
-			public void onFinished(JavaScriptObject result) {
-				BasicOverlayObject bo = result.cast();
-				getView().verifyEmailChangeDone(bo.getString());
-			}
-
-			@Override
-			public void onError(PerunException error) {
-				getView().verifyEmailChangeError(error);
-			}
-
-			@Override
-			public void onLoadingStart() {
-				getView().verifyEmailChangeStart();
-			}
-		});
 
 	}
 
