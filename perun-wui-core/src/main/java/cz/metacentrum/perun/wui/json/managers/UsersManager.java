@@ -219,26 +219,6 @@ public class UsersManager {
 	 * Validates change of preferred email in Perun
 	 *
 	 * @param userId Users ID
-	 * @param i Param "i" retrieved from URL
-	 * @param m Param "m" retrieved from URL
-	 * @param events Events done on callback
-	 *
-	 * @return Request unique request
-	 */
-	public static Request validatePreferredEmailChange(int userId, String i, String m, JsonEvents events){
-
-		JsonClient client = new JsonClient(events);
-		if (userId > 0) client.put("u", userId);
-		if (i != null && !i.isEmpty()) client.put("i", i);
-		if (m != null && !m.isEmpty()) client.put("m", m);
-		return client.call(USERS_MANAGER + "validatePreferredEmailChange");
-
-	}
-
-	/**
-	 * Validates change of preferred email in Perun
-	 *
-	 * @param userId Users ID
 	 * @param token Param "token" retrieved from URL
 	 * @param events Events done on callback
 	 *
