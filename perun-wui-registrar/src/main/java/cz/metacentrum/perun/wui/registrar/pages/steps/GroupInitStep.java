@@ -32,12 +32,8 @@ public class GroupInitStep extends FormStep {
 		events.onLoadingStart();
 		this.localPP = pp;
 
-		// if there is a VoInitForm then there should be previous step where user submitted VO init application
-		// it it`s in an auto-approval mode, then User might have been created and we want to reflect this in
-		// group application, hence we will forcefully reload its form and session info.
-		if (!registrar.getVoFormInitial().isEmpty() &&
-				registrar.getVoFormInitialException() == null &&
-				registrar.hasVoFormAutoApproval()) {
+		// reload user data for group application
+		if (!registrar.getVoFormInitial().isEmpty() &&	registrar.getVoFormInitialException() == null) {
 
 			reloadGroupAppData(new JsonEvents() {
 				@Override
