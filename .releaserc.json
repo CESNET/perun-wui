@@ -1,0 +1,29 @@
+{
+  "branches": [
+    "production",
+    "+([0-9])?(.{+([0-9]),x}).x",
+    { "name": "alpha", "prerelease": true },
+    { "name": "beta", "prerelease": true }
+  ],
+  "plugins": [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    ["@semantic-release/exec", {
+      "prepareCmd": "./update-versions.sh ${nextRelease.version} && mvn -B clean install"
+    }],
+    ["@semantic-release/git", {
+      "assets": [["**/pom.xml"]],
+      "message": "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
+    }],
+    ["@semantic-release/github", {
+      "assets": [
+        {"path": "perun-wui-admin/target/perun-wui-admin.war"},
+        {"path": "perun-wui-registrar/target/perun-wui-registrar.war"},
+        {"path": "perun-wui-consolidator/target/perun-wui-consolidator.war"},
+        {"path": "perun-wui-pwdreset/target/perun-wui-pwdreset.war"},
+        {"path": "perun-wui-profile/target/perun-wui-profile.war"}
+      ]
+    }]
+  ]
+}
+

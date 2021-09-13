@@ -4,6 +4,10 @@
 *.war
 *.ear
 
+# Semantic releasing related
+*.versionsBackup
+node_modules
+
 # Ignore Maven target #
 
 **/target
@@ -51,6 +55,7 @@ nb-configuration.xml
 # LINUX ignore #
 
 .*
+!.releaserc.json
 !.editorconfig
 !.gitignore
 !.gitattributes
