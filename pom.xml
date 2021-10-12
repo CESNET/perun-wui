@@ -77,6 +77,8 @@
 						</execution>
 					</executions>
 					<configuration>
+						<!-- Allow to override used JVM for this project if system Java > 16 -->
+						<jvm>${JAVA_HOME_16}</jvm>
 						<sourceLevel>1.8</sourceLevel>
 						<extraJvmArgs>--illegal-access=permit</extraJvmArgs>
 					</configuration>
