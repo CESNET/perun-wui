@@ -78,7 +78,7 @@
 					</executions>
 					<configuration>
 						<sourceLevel>1.8</sourceLevel>
-						<extraJvmArgs>--illegal-access=permit</extraJvmArgs>
+						<extraJvmArgs>--add-opens java.base/java.lang=ALL-UNNAMED</extraJvmArgs>
 					</configuration>
 				</plugin>
 

@@ -53,7 +53,7 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 	@DefaultMessage("Your token for joining identities is no longer valid. Please retry from the start.")
 	public String invalidTokenException();
 
-	@DefaultMessage("Neither original or current identity is registered. Please use registered identity at least in a one step.")
+	@DefaultMessage("Neither original nor current identity is registered. Please use registered identity at least in a one step.")
 	public String identityUnknownException();
 
 	@DefaultMessage("You tried to join identity ({0}) with itself. Please go back and select different identity to join with.")
