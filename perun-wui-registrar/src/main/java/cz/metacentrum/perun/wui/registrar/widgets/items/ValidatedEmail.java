@@ -40,8 +40,12 @@ public class ValidatedEmail extends PerunFormItemEditable {
 
 	@Override
 	public void setEnabled(boolean enabled) {
-		getTextBox().setEnabled(enabled);
-		getSelect().setEnabled(enabled);
+		if (getTextBox() != null) {
+			getTextBox().setEnabled(enabled);
+		}
+		if (getSelect() != null) {
+			getSelect().setEnabled(enabled);
+		}
 	}
 
 	public ValidatedEmail(PerunForm form, ApplicationFormItemData item, String lang) {
