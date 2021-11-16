@@ -12,7 +12,6 @@
 	<!-- PERUN MODULES -->
 	<modules>
 		<module>perun-wui-core</module>
-		<module>perun-wui-admin</module>
 		<module>perun-wui-registrar</module>
 		<module>perun-wui-consolidator</module>
 		<module>perun-wui-pwdreset</module>
