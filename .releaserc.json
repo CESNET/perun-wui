@@ -17,7 +17,6 @@
     }],
     ["@semantic-release/github", {
       "assets": [
-        {"path": "perun-wui-admin/target/perun-wui-admin.war"},
         {"path": "perun-wui-registrar/target/perun-wui-registrar.war"},
         {"path": "perun-wui-consolidator/target/perun-wui-consolidator.war"},
         {"path": "perun-wui-pwdreset/target/perun-wui-pwdreset.war"},
