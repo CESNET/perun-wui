@@ -48,10 +48,12 @@ public class Password extends PerunFormItemEditable {
 		ExtendedPasswordTextBox box = new ExtendedPasswordTextBox();
 		box.setMaxLength(MAX_LENGTH);
 		box.addStyleName("passwordFormItemFirst");
+		box.setPlaceholder(getTranslation().enterPassword());
 
 		ExtendedPasswordTextBox box2 = new ExtendedPasswordTextBox();
 		box2.setMaxLength(MAX_LENGTH);
 		box2.addStyleName("passwordFormItemLast");
+		box2.setPlaceholder(getTranslation().confirmPassword());
 
 		if (getItemData().getFormItem().getRegex() != null) {
 			box.setRegex(getItemData().getFormItem().getRegex());
