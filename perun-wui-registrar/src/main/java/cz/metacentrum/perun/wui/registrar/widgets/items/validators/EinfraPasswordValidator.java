@@ -68,6 +68,11 @@ public class EinfraPasswordValidator extends PasswordValidator {
 
 		// check typos
 		if (!password.getPassword().getValue().equals(password.getPasswordSecond().getValue())) {
+			if (isNullOrEmpty(password.getPasswordSecond().getValue())) {
+				setResult(Result.SECOND_PASSWORD_EMPTY);
+				password.setStatus(getTransl().secondPassEmpty(), ValidationState.WARNING);
+				return false;
+			}
 			setResult(Result.PASSWORD_MISSMATCH);
 			password.setStatus(getTransl().passMismatch(), ValidationState.ERROR);
 			return false;
