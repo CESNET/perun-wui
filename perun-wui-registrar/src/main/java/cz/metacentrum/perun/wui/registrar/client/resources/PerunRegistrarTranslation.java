@@ -217,8 +217,23 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Multiple consecutive commas are not allowed, use a single comma or newline as a separator between SSH keys.")
 	String tooMuchCommas();
 
+	@DefaultMessage("Multiple consecutive commas are not allowed, use a single comma as a separator between SSH keys.")
+	String tooMuchCommasTextField();
+
 	@DefaultMessage("Multiple consecutive newlines are not allowed, use one newline or comma as a separator between SSH keys.")
 	String tooMuchNewlines();
+
+	@DefaultMessage("Missing separator between the SSH keys (comma or newline).")
+	String sshKeyMissingDelimiter();
+
+	@DefaultMessage("Missing comma as a separator between the SSH keys.")
+	String sshKeyMissingCommaDelimiterTextField();
+
+	@DefaultMessage("No spaces are allowed around the SSH key separator (comma or newline).")
+	String sshKeyNoSpaceAroundKeySeparator();
+
+	@DefaultMessage("No spaces are allowed around the SSH key separator (comma).")
+	String sshKeyNoSpaceAroundCommasTextField();
 
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 

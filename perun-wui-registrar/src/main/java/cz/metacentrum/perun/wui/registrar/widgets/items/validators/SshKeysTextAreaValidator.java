@@ -59,6 +59,21 @@ public class SshKeysTextAreaValidator extends TextAreaValidator {
 				return false;
 			}
 
+			if (sshKeys.contains(", ") || sshKeys.contains(" ,") || sshKeys.contains("\n ") || sshKeys.contains(" \n")) {
+				setResult(Result.INVALID_FORMAT);
+				textArea.setStatus(getTransl().sshKeyNoSpaceAroundKeySeparator(), ValidationState.ERROR);
+				return false;
+			}
+
+			if (sshKeys.indexOf("ssh-") != sshKeys.lastIndexOf("ssh-")) {
+				// there are at least two keys
+				if (!sshKeys.contains(",ssh-") && !sshKeys.contains("\nssh-")) {
+					setResult(Result.INVALID_FORMAT);
+					textArea.setStatus(getTransl().sshKeyMissingDelimiter(), ValidationState.ERROR);
+					return false;
+				}
+			}
+
 			// normalize value just in case
 			sshKeys = sshKeys.replaceAll("(\n)+", ",");
 			sshKeys = sshKeys.replaceAll("(,)+", ",");
