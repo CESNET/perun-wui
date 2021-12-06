@@ -136,6 +136,15 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Passwords doesn`t match!")
 	public String passMismatch();
 
+	@DefaultMessage("Confirm password!")
+	public String secondPassEmpty();
+
+	@DefaultMessage("Enter password")
+	public String enterPassword();
+
+	@DefaultMessage("Confirm password")
+	public String confirmPassword();
+
 	@DefaultMessage("Checking...")
 	public String checkingLogin();
 
