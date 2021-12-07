@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 public class SshKeysTextFieldValidator extends TextFieldValidator {
 
-	RegExp regExp = RegExp.compile("^(ssh-rsa|ssh-dsa|ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521|ssh-ed25519|sk-ed25519|sk-ecdsa) (([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?)$");
+	RegExp regExp = RegExp.compile("^(ssh-rsa|ssh-dsa|ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521|ssh-ed25519|sk-ed25519|sk-ecdsa) (([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?)( [^,\n]+)?$");
 
 	@Override
 	public boolean validateLocal(TextField textField) {
