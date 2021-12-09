@@ -14,7 +14,11 @@ import java.util.stream.Collectors;
  */
 public class SshKeysTextFieldValidator extends TextFieldValidator {
 
-	RegExp regExp = RegExp.compile("^(ssh-rsa|ssh-dsa|ecdsa-sha2-nistp256|ecdsa-sha2-nistp384|ecdsa-sha2-nistp521|ssh-ed25519|sk-ed25519|sk-ecdsa) (([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?)( [^,\n]+)?$");
+	RegExp regExp = RegExp.compile("^(" +
+			"(ssh-(rsa|dss|ed25519)(-cert-v01@openssh.com)?)|" +
+			"(sk-(ssh-ed25519|ecdsa-sha2-nistp256)(-cert-v01)?@openssh.com)|" +
+			"(ecdsa-sha2-nistp(256|384|521)(-cert-v01@openssh.com)?))" +
+			" (([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{3}=|[A-Za-z0-9+/]{2}==)?)( [^,\n]+)?$");
 
 	@Override
 	public boolean validateLocal(TextField textField) {
@@ -53,6 +57,8 @@ public class SshKeysTextFieldValidator extends TextFieldValidator {
 				return false;
 			}
 
+			// FIXME - this doesn't make sense anymore, as we have multiple different SSH keys prefixes, which needs to be checked.
+			/*
 			if (sshKeys.indexOf("ssh-") != sshKeys.lastIndexOf("ssh-")) {
 				// there are at least two keys
 				if (!sshKeys.contains(",ssh-")) {
@@ -61,6 +67,7 @@ public class SshKeysTextFieldValidator extends TextFieldValidator {
 					return false;
 				}
 			}
+			*/
 
 			// normalize value just in case
 			sshKeys = sshKeys.replaceAll("(,)+", ",");
