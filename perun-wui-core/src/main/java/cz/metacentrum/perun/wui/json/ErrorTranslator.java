@@ -49,7 +49,7 @@ public class ErrorTranslator {
 			GeneralObject holder = error.getAttributeHolder();
 			GeneralObject secondHolder = error.getAttributeHolderSecondary();
 
-			String text = "Wrong value of attribute (value or format).<p>";
+			String text = a == null || (a != null && a.getFriendlyName().startsWith("ssh")) ? SafeHtmlUtils.fromString(error.getMessage()).toString() : "Wrong value of attribute (value or format).<p>";
 
 			if (holder != null) {
 				if (!holder.getName().equalsIgnoreCase("undefined")) {
@@ -65,8 +65,6 @@ public class ErrorTranslator {
 				String attrName = SafeHtmlUtils.fromString(a.getName()).asString();
 				String attrValue = SafeHtmlUtils.fromString(a.getValue()).asString();
 				text += "<strong>Attribute:&nbsp;</strong>" + attrName + "<br /><strong>Value:&nbsp;</strong>" + attrValue;
-			} else {
-				text += "<i>Attribute is null</i>";
 			}
 
 			return text;
