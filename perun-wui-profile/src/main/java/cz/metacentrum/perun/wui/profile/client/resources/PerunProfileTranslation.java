@@ -226,10 +226,10 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Add admin SSH key")
 	String addAdminPublicKey();
 
-	@DefaultMessage("Begins with ''ssh-rsa'', ''ssh-ed25519'', ''ecdsa-sha2-nistp256'', ''ecdsa-sha2-nistp384'' or ''ecdsa-sha2-nistp521''.")
+	@DefaultMessage("Begins with ''ssh-rsa'', ''ssh-dss'', ''sk-ssh-ed25519'', ''ssh-ed25519'', ''sk-ecdsa'', ''ecdsa-sha2-nistp256'', ''ecdsa-sha2-nistp384'' or ''ecdsa-sha2-nistp521''.")
 	String newSshKeyInfoText();
 
-	@DefaultMessage("Invalid value given. Your key should begin with ''ssh-rsa'', ''ssh-ed25519'', ''ecdsa-sha2-nistp256'', ''ecdsa-sha2-nistp384'' or ''ecdsa-sha2-nistp521''.")
+	@DefaultMessage("Invalid value given. Your key should have one of the following types: ''ssh-ed25519'', ''ssh-ed25519-cert-v01@openssh.com'', ''sk-ssh-ed25519@openssh.com'', ''sk-ssh-ed25519-cert-v01@openssh.com'', ''ssh-rsa'', ''ssh-dss'', ''ecdsa-sha2-nistp256'', ''ecdsa-sha2-nistp384'', ''ecdsa-sha2-nistp521'', ''sk-ecdsa-sha2-nistp256@openssh.com'', ''ssh-rsa-cert-v01@openssh.com'', ''ssh-dss-cert-v01@openssh.com'', ''ecdsa-sha2-nistp256-cert-v01@openssh.com'', ''ecdsa-sha2-nistp384-cert-v01@openssh.com'', ''ecdsa-sha2-nistp521-cert-v01@openssh.com'' or ''sk-ecdsa-sha2-nistp256-cert-v01@openssh.com")
 	String sshInvalidPrefixText();
 
 	@DefaultMessage("Cancel")
