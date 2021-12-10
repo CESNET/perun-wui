@@ -24,12 +24,23 @@ public class PerunProfileUtils {
 	public static final String A_D_R_USER_SETTINGS_NAME_NAME = "userSettingsName";
 	public static final String A_D_R_USER_SETTINGS_DESCRIPTION_NAME = "userSettingsDescription";
 
-	public static final List<String> SSH_KEY_PREFIXES = Arrays.asList(
-			"ssh-rsa",
-			"ssh-ed25519",
-			"ecdsa-sha2-nistp256",
-			"ecdsa-sha2-nistp384",
-			"ecdsa-sha2-nistp521"
+	public static final List<String> SSH_KEY_TYPES = Arrays.asList(
+		"ssh-ed25519",
+		"ssh-ed25519-cert-v01@openssh.com",
+		"sk-ssh-ed25519@openssh.com",
+		"sk-ssh-ed25519-cert-v01@openssh.com",
+		"ssh-rsa",
+		"ssh-dss",
+		"ecdsa-sha2-nistp256",
+		"ecdsa-sha2-nistp384",
+		"ecdsa-sha2-nistp521",
+		"sk-ecdsa-sha2-nistp256@openssh.com",
+		"ssh-rsa-cert-v01@openssh.com",
+		"ssh-dss-cert-v01@openssh.com",
+		"ecdsa-sha2-nistp256-cert-v01@openssh.com",
+		"ecdsa-sha2-nistp384-cert-v01@openssh.com",
+		"ecdsa-sha2-nistp521-cert-v01@openssh.com",
+		"sk-ecdsa-sha2-nistp256-cert-v01@openssh.com"
 	);
 	public static final List<String> SHELL_OPTIONS = Arrays.asList(
 			"/bin/bash",
@@ -73,12 +84,12 @@ public class PerunProfileUtils {
 	 * @return true if given value is correct ssh key, false otherwise
 	 */
 	public static boolean isValidSshKey(String value) {
-		for (String prefix : PerunProfileUtils.SSH_KEY_PREFIXES) {
-			if (value.startsWith(prefix)) {
+		String SshType = value.split(" ")[0];
+		for (String type : PerunProfileUtils.SSH_KEY_TYPES) {
+			if (SshType.equals(type)) {
 				return true;
 			}
 		}
-
 		return false;
 	}
 
