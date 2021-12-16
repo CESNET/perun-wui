@@ -264,7 +264,7 @@ public interface PerunTranslation extends Messages {
 
 	/* ---------- EINFRA LOGIN/PASSWORD ----------- */
 
-	@DefaultMessage("Login must<ul><li>start with lower-cased letter<li>be 2-15 characters long<li>consist only of<ul><li>lower-cased non-accented letters<li>digits<li>hyphens and underscores</ul></ul>")
+	@DefaultMessage("Login must<ul><li>start with a lower-case letter<li>be 2-15 characters long<li>consist only of<ul><li>lower-case non-accented letters<li>digits<li>hyphens and underscores</ul></ul>")
 	public String einfraLoginHelp();
 
 	@DefaultMessage("Login must <b>be 2-15 characters long!</b>")
