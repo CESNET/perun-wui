@@ -357,6 +357,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("<p>You are signed in with an account from Metacentrum. You <b>cannot register or renew your membership</b> using this identity.<p>Please <b>sign-out / close all browser windows</b> and sign-in again using an external identity provider - an account from your academic organization or a social identity provider if your institution doesn`t have one.")
 	public String notEligibleMETAIDP();
 
+	@DefaultMessage("<p>You are signed in with an e-INFRA CZ account. You <b>cannot register or renew your membership</b> using this identity.<p>Please <b>sign-out / close all browser windows</b> and sign-in again using an external identity provider - an account from your academic organization or a social identity provider if your institution doesn`t have one.")
+	public String notEligibleEINFRAIDP();
+
 	@DefaultMessage("<p>Your application still awaits for mail address verification. If you continue now, it is most probable, that service will redirect you back to the registration form.<p>Please check your mailbox for verification mail. Once your application is verified and approved, you will be able to access the service.")
 	public String redirectWaitForVerification();
 
