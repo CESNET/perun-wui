@@ -208,6 +208,33 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Type to search...")
 	String typeToSearch();
 
+	@DefaultMessage("Key \"<i>{0}</i>\" does not have the correct format.")
+	String sshKeyFormat(String key);
+
+	@DefaultMessage("Do not mix commas and new-lines as SSH keys separators.")
+	String mixingNewlinesWithCommas();
+
+	@DefaultMessage("Multiple consecutive commas are not allowed, use a single comma or newline as a separator between SSH keys.")
+	String tooMuchCommas();
+
+	@DefaultMessage("Multiple consecutive commas are not allowed, use a single comma as a separator between SSH keys.")
+	String tooMuchCommasTextField();
+
+	@DefaultMessage("Multiple consecutive newlines are not allowed, use one newline or comma as a separator between SSH keys.")
+	String tooMuchNewlines();
+
+	@DefaultMessage("Missing separator between the SSH keys (comma or newline).")
+	String sshKeyMissingDelimiter();
+
+	@DefaultMessage("Missing comma as a separator between the SSH keys.")
+	String sshKeyMissingCommaDelimiterTextField();
+
+	@DefaultMessage("No spaces are allowed around the SSH key separator (comma or newline).")
+	String sshKeyNoSpaceAroundKeySeparator();
+
+	@DefaultMessage("No spaces are allowed around the SSH key separator (comma).")
+	String sshKeyNoSpaceAroundCommasTextField();
+
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
 	@DefaultMessage("Submitted registrations")

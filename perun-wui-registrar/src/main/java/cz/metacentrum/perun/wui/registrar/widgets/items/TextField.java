@@ -7,6 +7,7 @@ import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
+import cz.metacentrum.perun.wui.registrar.widgets.items.validators.SshKeysTextFieldValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.TextFieldValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
@@ -28,7 +29,11 @@ public class TextField extends PerunFormItemEditable {
 
 	public TextField(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
-		this.validator = new TextFieldValidator();
+		if ("urn:perun:user:attribute-def:def:sshPublicKey".equals(item.getFormItem().getPerunDestinationAttribute())) {
+			this.validator = new SshKeysTextFieldValidator();
+		} else {
+			this.validator = new TextFieldValidator();
+		}
 	}
 
 	@Override
