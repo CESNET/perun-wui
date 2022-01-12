@@ -10,6 +10,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.model.common.WayfGroup;
 import org.gwtbootstrap3.client.ui.*;
@@ -54,6 +55,10 @@ public class Wayf extends Composite {
 		mainContent.add(row);
 
 		for (final WayfGroup group : wayfGroups) {
+
+			// skip groups hidden on specific prefix
+			String currentPrefix = PerunSession.getInstance().getRpcServer();
+			if (group.hideOnPrefixes().contains(currentPrefix)) continue;
 
 			int size = wayfGroups.size();
 
