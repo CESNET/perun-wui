@@ -567,6 +567,16 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					// skip more identities from same IdP or hidden IdPs
 					if (offeredIdPs.contains(entityId) || hiddenProxies.contains(entityId)) continue;
 
+					// FIXME - CESNET hack to not offer Meta/Einfra IDP when app runs behind the other proxy
+					if ("signup.e-infra.cz".equals(Window.Location.getHostName())) {
+						// Exclude old Meta IdP on new E-INFRA CZ domain
+						if ("https://login.ics.muni.cz/idp/shibboleth".equals(entityId)) continue;
+					} else {
+						// Exclude new E-INFRA IDPs on old (other) domains
+						if ("https://idp.e-infra.cz/idp/".equals(entityId) ||
+						"https://idp-cert.e-infra.cz/idp/".equals(entityId)) continue;
+					}
+
 					// IF Perun is behind proxy, offer only allowed proxies !!!
 					// IF not proxy, show all
 					if (proxies.isEmpty() || proxies.contains(entityId)) {
