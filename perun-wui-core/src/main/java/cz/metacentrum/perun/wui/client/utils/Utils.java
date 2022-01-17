@@ -125,6 +125,12 @@ public class Utils {
 		organizationsTranslation.put("SITOLA.FI.MUNI.CZ", "Sitola");
 		organizationsTranslation.put("ICS.MUNI.CZ", "Masaryk University");
 
+		// e-INFRA CZ
+		organizationsTranslation.put("https://idp.e-infra.cz/idp/", "e-INFRA CZ heslo");
+		organizationsTranslation.put("https://idp-cert.e-infra.cz/idp/", "e-INFRA CZ certifikát");
+		//organizationsTranslation.put("https://login.cesnet.cz/idp/", "CESNET eInfrastructure AAI");
+		//organizationsTranslation.put("https://login.e-infra.cz/idp/", "e-INFRA CZ AAI");
+
 	}
 
 	/*

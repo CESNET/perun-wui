@@ -4,6 +4,8 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 
+import java.util.List;
+
 /**
  * Represents one group of wayf from local config file
  *
@@ -88,6 +90,10 @@ public class WayfGroup extends JavaScriptObject {
 
 	public final String getIdpEntityID() {
 		return JsUtils.getNativePropertyString(this, "idpentityid");
+	}
+
+	public final List<String> hideOnPrefixes() {
+		return JsUtils.listFromJsArrayString(JsUtils.getNativePropertyArrayString(this, "hideOn"));
 	}
 
 }

@@ -208,6 +208,33 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Type to search...")
 	String typeToSearch();
 
+	@DefaultMessage("Key \"<i>{0}</i>\" does not have the correct format.")
+	String sshKeyFormat(String key);
+
+	@DefaultMessage("Do not mix commas and new-lines as SSH keys separators.")
+	String mixingNewlinesWithCommas();
+
+	@DefaultMessage("Multiple consecutive commas are not allowed, use a single comma or newline as a separator between SSH keys.")
+	String tooMuchCommas();
+
+	@DefaultMessage("Multiple consecutive commas are not allowed, use a single comma as a separator between SSH keys.")
+	String tooMuchCommasTextField();
+
+	@DefaultMessage("Multiple consecutive newlines are not allowed, use one newline or comma as a separator between SSH keys.")
+	String tooMuchNewlines();
+
+	@DefaultMessage("Missing separator between the SSH keys (comma or newline).")
+	String sshKeyMissingDelimiter();
+
+	@DefaultMessage("Missing comma as a separator between the SSH keys.")
+	String sshKeyMissingCommaDelimiterTextField();
+
+	@DefaultMessage("No spaces are allowed around the SSH key separator (comma or newline).")
+	String sshKeyNoSpaceAroundKeySeparator();
+
+	@DefaultMessage("No spaces are allowed around the SSH key separator (comma).")
+	String sshKeyNoSpaceAroundCommasTextField();
+
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
 	@DefaultMessage("Submitted registrations")
@@ -356,6 +383,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("<p>You are signed in with an account from Metacentrum. You <b>cannot register or renew your membership</b> using this identity.<p>Please <b>sign-out / close all browser windows</b> and sign-in again using an external identity provider - an account from your academic organization or a social identity provider if your institution doesn`t have one.")
 	public String notEligibleMETAIDP();
+
+	@DefaultMessage("<p>You are signed in with an e-INFRA CZ account. You <b>cannot register or renew your membership</b> using this identity.<p>Please <b>sign-out / close all browser windows</b> and sign-in again using an external identity provider - an account from your academic organization or a social identity provider if your institution doesn`t have one.")
+	public String notEligibleEINFRAIDP();
 
 	@DefaultMessage("<p>Your application still awaits for mail address verification. If you continue now, it is most probable, that service will redirect you back to the registration form.<p>Please check your mailbox for verification mail. Once your application is verified and approved, you will be able to access the service.")
 	public String redirectWaitForVerification();
