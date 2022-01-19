@@ -70,7 +70,7 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 
 	// -------------- ACTIVATE ACCOUNT TRANSLATION ------------------------ //
 
-	@DefaultMessage("Activate account")
+	@DefaultMessage("Account activation")
 	public String activateAppName();
 
 	@DefaultMessage("Activate account for {0}")
@@ -79,13 +79,28 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("Activate account")
 	public String submitActivateButton();
 
-	@DefaultMessage("Account is active.")
-	public String activateSuccess();
+	@DefaultMessage("Your {0} account has been activated.")
+	public String activateSuccess(String namespace);
 
 	@DefaultMessage("Account activation in a namespace <i>{0}</i> is not supported.")
 	public String namespaceNotSupportedActive(String namespace);
 
 	@DefaultMessage("Can`t activate account. You don`t have login in namespace <i>{0}</i>.")
 	public String dontHaveLoginActive(String namespace);
+
+	@DefaultMessage("<h4>Your password in e-INFRA CZ has already been activated</h4><br/><p>Setting your password may be delayed in some services (about 10 minutes).<p><b>In IT4I services, the delay can be up to 1 hour.</b> It is also <b>necessary to wait for the final confirmation of the account migration by IT4I</b>. Until then, the original password is valid within IT4I.<p>If the previous conditions have been met and your password is still not working, please contact support at <a href=\"mailto:{0}\">{0}</a>.")
+	public String alreadyActivated(String mailto);
+
+	@DefaultMessage("<h4>Password for e-INFRA CZ account has been activated</h4><br/><p>New password will be reflected in e-INFRA CZ and CESNET services within 10 minutes.<p><b>It may take up to 1 hour to take effect within the IT4I services.</b> At the same time, <b>the change will not take effect until you receive a final confirmation from IT4I that the account migration has been completed</b> and linked to your e-INFRA CZ account. In the meantime, the original password is valid within IT4I services.<p>You can now close the browser window.")
+	public String activationSuccessEinfra();
+
+	@DefaultMessage("Password activation for an account {0} at e-INFRA CZ")
+	public String activateForEinfra(String login);
+
+	@DefaultMessage("Activate password")
+	public String submitActivateButtonEinfra();
+
+	@DefaultMessage("<p>To complete the import of your account from IT4I to the e-INFRA CZ common e-infrastructure, you need to set a password.")
+	public String explanation();
 
 }
