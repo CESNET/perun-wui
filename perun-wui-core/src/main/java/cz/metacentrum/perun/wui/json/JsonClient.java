@@ -19,6 +19,7 @@ import com.google.gwt.json.client.JSONString;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.regexp.shared.MatchResult;
 import com.google.gwt.regexp.shared.RegExp;
+import com.google.gwt.storage.client.Storage;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunErrorTranslation;
@@ -76,6 +77,8 @@ public class JsonClient {
 	private static int counter = 0;
 	private static Modal modal;
 	private static boolean shown = false;
+	public static Storage localStorage = Storage.getLocalStorageIfSupported();
+	public boolean showErrorMessage = true;
 
 	/**
 	 * New JsonClient using GET method
@@ -268,6 +271,11 @@ public class JsonClient {
 					// HTTP status code is OK
 					if (resp.getStatusCode() == 200) {
 
+						// remove csrf check from localStorage if the request is successful
+						if (localStorage.getItem("csrf") != null) {
+							localStorage.removeItem("csrf");
+						}
+
 						// check JSO, if not PerunException
 						if (jso != null) {
 
@@ -302,6 +310,19 @@ public class JsonClient {
 
 							error.setName("Not Authorized");
 							error.setMessage(errorTranslation.httpError401or403());
+
+							// force reload page if it is the first getPerunPrincipal call, otherwise keep it to alert box
+							if (Cookies.getCookie("XSRF-TOKEN") != null &&
+								localStorage.getItem("csrf") == null &&
+								url.contains("authzResolver") &&
+								url.contains("getPerunPrincipal")
+							) {
+								localStorage.setItem("csrf", "reload");
+								showErrorMessage = false;
+								Window.Location.reload();
+							} else {
+								showErrorMessage = true;
+							}
 
 						} else if (resp.getStatusCode() == 500) {
 
@@ -412,8 +433,9 @@ public class JsonClient {
 						}
 
 						if (checkIfPending) runningRequests.remove(requestUrl);
-						handleErrors(error);
-
+						if (showErrorMessage) {
+							handleErrors(error);
+						}
 					}
 
 				}
