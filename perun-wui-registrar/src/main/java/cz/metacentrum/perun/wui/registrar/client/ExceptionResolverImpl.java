@@ -60,7 +60,7 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 		}
 		String html = "<h4>"+getText()+"</h4>";
 		if (getSubtext() != null) {
-			html += "<p>"+getSubtext()+"</p>";
+			html += "<br /><p>"+getSubtext()+"</p>";
 		}
 		return html;
 	}
@@ -167,6 +167,10 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 		}  else if ("RegistrarException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.registrarException(getBeanName()), null);
+
+		} else if ("0".equals(exception.getErrorId())) {
+
+			setInfo(trans.unableToSubmit(), trans.error0(), false);
 
 		} else {
 

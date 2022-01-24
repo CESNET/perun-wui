@@ -399,6 +399,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Continue anyway")
 	public String continueAnyway();
 
+	@DefaultMessage("The request was aborted by the browser. The most common cause is a short-term loss of internet connection (e.g. when changing networks, connecting to a VPN) or firewall issues.<p>Try submitting the form again. If that doesn`t work, refresh the page and reload the entire form.")
+	public String error0();
+
 	/* ------------ LOADER MESSAGES ---------------- */
 
 	@DefaultMessage("Loading ...")
