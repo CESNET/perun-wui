@@ -29,6 +29,8 @@
 
 					<p:PerunLoader ui:field="loader" visible="true" />
 
+					<b.html:Paragraph ui:field="infoAlert" visible="false" marginTop="20" addStyleNames="col-lg-10 col-sm-10 col-xs-10" />
+
 					<b:Form ui:field="form" visible="false" addStyleNames="col-lg-7 col-md-8 col-sm-8 col-xs-12">
 						<b:FieldSet marginTop="50">
 

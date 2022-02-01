@@ -42,6 +42,7 @@ import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 import java.util.ArrayList;
@@ -85,6 +86,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	@UiField HelpBlock help;
 	@UiField AlertErrorReporter alert;
 	@UiField Column namespaceLogoWrapper;
+	@UiField Paragraph infoAlert;
 
 	@Inject
 	public PwdResetView(PwdResetUiBinder binder) {
@@ -153,7 +155,13 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 								submit.setProcessing(false);
 								form.setVisible(false);
 								alert.setType(AlertType.SUCCESS);
-								alert.setText((isAccountActivation) ? translation.activateSuccess() : translation.resetSuccess());
+								infoAlert.setVisible(false);
+
+								if (isAccountActivation && "einfra".equals(namespace) && "it4i".equals(PerunSession.getInstance().getRpcServer())) {
+									alert.setHTML(translation.activationSuccessEinfra());
+								} else {
+									alert.setText((isAccountActivation) ? translation.activateSuccess(namespace) : translation.resetSuccess());
+								}
 								alert.setVisible(true);
 
 								if (Window.Location.getParameterMap().containsKey("target_url")) {
@@ -166,6 +174,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 							@Override
 							public void onError(PerunException error) {
+								infoAlert.setVisible(false);
 								submit.setProcessing(false);
 								form.setVisible(false);
 								alert.setVisible(true);
@@ -247,7 +256,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 							submit.setProcessing(false);
 							form.setVisible(false);
 							alert.setType(AlertType.SUCCESS);
-							alert.setText((isAccountActivation) ? translation.activateSuccess() : translation.resetSuccess());
+							alert.setText((isAccountActivation) ? translation.activateSuccess(namespace) : translation.resetSuccess());
 							alert.setVisible(true);
 							if (Window.Location.getParameterMap().containsKey("target_url")) {
 								alert.getToolbar().setVisible(true);
@@ -333,22 +342,41 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 									found = true;
 								}
 							}
+
 							if (found) {
-								// HAVE LOGIN AND SUPPORTED
-								text.setText((isAccountActivation) ?
-										translation.activateFor(a.getValue() + "@" + namespace.toUpperCase()) :
-										translation.passwordResetFor(a.getValue() + "@" + namespace.toUpperCase()));
-								form.setVisible(true);
-								login = a.getValue();
 
-								if (Objects.equals(namespace, "einfra")) {
-									help.setHTML("<p>" + translation.einfraPasswordHelp());
-								} else if (Objects.equals(namespace, "vsup")) {
-									help.setHTML("<p>"+translation.vsupHelp());
-								} else if (Objects.equals(namespace, "mu")) {
-									help.setHTML("<p>"+translation.muPasswordHelp());
+								if (isAccountActivation && "einfra".equals(namespace) && "it4i".equals(PerunSession.getInstance().getRpcServer())) {
+
+									text.setText(translation.activateForEinfra(a.getValue()));
+
+									AttributesManager.getUserAttribute(PerunSession.getInstance().getUserId(), "urn:perun:user:attribute-def:def:lastPwdChangeTimestamp:einfra", new JsonEvents() {
+										@Override
+										public void onFinished(JavaScriptObject result) {
+											Attribute lastTimestamp = result.cast();
+											if (lastTimestamp.getValue() != null) {
+												alert.setVisible(true);
+												alert.setType(AlertType.WARNING);
+												alert.setHTML(translation.alreadyActivated("support@e-infra.cz"));
+											} else {
+												showHaveLoginAsIsSupported(a);
+											}
+										}
+
+										@Override
+										public void onError(PerunException error) {
+											// IGNORE ERROR
+											showHaveLoginAsIsSupported(a);
+										}
+
+										@Override
+										public void onLoadingStart() {
+
+										}
+									});
+
+								} else {
+									showHaveLoginAsIsSupported(a);
 								}
-
 								return;
 							}
 						}
@@ -392,6 +420,32 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 		});
 
 
+
+	}
+
+	private void showHaveLoginAsIsSupported(Attribute a) {
+
+		if (isAccountActivation && "einfra".equals(namespace) && "it4i".equals(PerunSession.getInstance().getRpcServer())) {
+			text.setText(translation.activateForEinfra(a.getValue()));
+			submit.setText(translation.submitActivateButtonEinfra());
+			infoAlert.setHTML(translation.explanation());
+			infoAlert.setVisible(true);
+		} else {
+			// HAVE LOGIN AND SUPPORTED
+			text.setText((isAccountActivation) ?
+					translation.activateFor(a.getValue() + "@" + namespace.toUpperCase()) :
+					translation.passwordResetFor(a.getValue() + "@" + namespace.toUpperCase()));
+		}
+		form.setVisible(true);
+		login = a.getValue();
+
+		if (Objects.equals(namespace, "einfra")) {
+			help.setHTML("<p>" + translation.einfraPasswordHelp());
+		} else if (Objects.equals(namespace, "vsup")) {
+			help.setHTML("<p>"+translation.vsupHelp());
+		} else if (Objects.equals(namespace, "mu")) {
+			help.setHTML("<p>"+translation.muPasswordHelp());
+		}
 
 	}
 
