@@ -199,7 +199,8 @@ public class JoinPage {
 
 				if (extSourceType.equals(ExtSource.ExtSourceType.IDP.getType())) {
 
-					translatedExtSourceName = translatedActor.split("@")[1];// Utils.translateIdp(translatedExtSourceName);
+					//translatedExtSourceName = translatedActor.split("@")[1];
+					translatedExtSourceName = Utils.translateIdp(translatedExtSourceName) + " (" + translatedActor.split("@")[1] + ")";
 
 					// social identity
 					if (translatedActor.endsWith("extidp.cesnet.cz") || translatedActor.endsWith("elixir-europe.org") || Objects.equals(translatedExtSourceName, "https://login.elixir-czech.org/idp/")) {
