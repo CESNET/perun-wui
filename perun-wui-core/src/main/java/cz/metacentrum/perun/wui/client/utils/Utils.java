@@ -81,8 +81,7 @@ public class Utils {
 		organizationsTranslation.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
 		organizationsTranslation.put("https://login.elixir-czech.org/idp/", "ELIXIR AAI");
 		organizationsTranslation.put("https://mojeid.cz/saml/idp.xml", "MojeID");
-		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI SSO");
-		organizationsTranslation.put("https://aai.egi.eu/proxy/saml2/idp/metadata.php", "EGI AAI");
+
 
 		organizationsTranslation.put("https://login.ceitec.cz/idp/", "CEITEC");
 		organizationsTranslation.put("https://login.cesnet.cz/google-idp/", "Google (CESNET gateway)");
@@ -130,6 +129,12 @@ public class Utils {
 		organizationsTranslation.put("https://idp-cert.e-infra.cz/idp/", "e-INFRA CZ certifikát");
 		//organizationsTranslation.put("https://login.cesnet.cz/idp/", "CESNET eInfrastructure AAI");
 		//organizationsTranslation.put("https://login.e-infra.cz/idp/", "e-INFRA CZ AAI");
+
+		// EGI
+		organizationsTranslation.put("https://aai.egi.eu/proxy/saml2/idp/metadata.php", "EGI Check-In");
+		organizationsTranslation.put("https://sso.egi.eu/edugainidp/shibboleth", "EGI Foundation");
+		organizationsTranslation.put("https://sso.egi.eu/egissoidp/shibboleth", "EGI SSO");
+		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI SSO");
 
 	}
 

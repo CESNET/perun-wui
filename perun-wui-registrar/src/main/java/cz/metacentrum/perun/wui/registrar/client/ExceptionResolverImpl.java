@@ -122,6 +122,10 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			setInfo(trans.alreadySubmitted(getBeanName()),
 					text + trans.visitSubmitted(Window.Location.getHref().split("#")[0], application.getId(), trans.submittedTitle()));
 
+		} else if ("NoPrefilledUneditableRequiredDataException".equalsIgnoreCase(exception.getName())) {
+
+			resolveNoPrefilledUneditableRequiredDataException();
+
 		} else if ("MissingRequiredDataException".equalsIgnoreCase(exception.getName())) {
 
 			resolveMissingRequiredDataException();
@@ -190,12 +194,25 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 	}
 
 
+	private void resolveNoPrefilledUneditableRequiredDataException() {
+
+		String emptyItems = "<ul>";
+		if (!exception.getFormItems().isEmpty()) {
+			for (ApplicationFormItemData item : exception.getFormItems()) {
+				emptyItems += "<li>" + item.getFormItem().getShortname() + "</li>";
+			}
+		}
+		emptyItems += "</ul>";
+
+		setInfo(trans.noPrefilledUneditableRequiredData(), emptyItems, false);
+	}
+
 	private void resolveMissingRequiredDataException() {
 
 		String missingItems = "<ul>";
 		if (!exception.getFormItems().isEmpty()) {
 			for (ApplicationFormItemData item : exception.getFormItems()) {
-				missingItems += "<li>" + trans.missingAttribute(item.getFormItem().getFederationAttribute()) + "</li>";
+				missingItems += "<li>" + item.getFormItem().getFederationAttribute() + "</li>";
 			}
 		}
 		missingItems += "</ul>";
