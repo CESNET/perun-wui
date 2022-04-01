@@ -266,4 +266,8 @@ public class PerunException extends JavaScriptObject {
 		return JsUtils.getNativePropertyObject(this, "service").cast();
 	}
 
+	public final int getApplicationId() {
+		return JsUtils.getNativePropertyInt(this, "applicationId");
+	}
+
 }
