@@ -77,6 +77,10 @@ body {
     cursor: text;
 }
 
+.overflow {
+	overflow-x: auto;
+}
+
 .help {
 	color: #737373 !important;
 }

@@ -45,25 +45,19 @@ public class SshKeysTextAreaValidator extends TextAreaValidator {
 
 			String sshKeys = textArea.getValue();
 
+			if (sshKeys.contains("\n")) {
+				setResult(Result.INVALID_FORMAT);
+				textArea.setStatus(getTransl().newlinesNotAllowed(), ValidationState.ERROR);
+				return false;
+			}
+
 			if (sshKeys.contains(",,")) {
 				setResult(Result.INVALID_FORMAT);
 				textArea.setStatus(getTransl().tooMuchCommas(), ValidationState.ERROR);
 				return false;
 			}
 
-			if (sshKeys.contains("\n\n")) {
-				setResult(Result.INVALID_FORMAT);
-				textArea.setStatus(getTransl().tooMuchNewlines(), ValidationState.ERROR);
-				return false;
-			}
-
-			if (sshKeys.contains(",") && sshKeys.contains("\n")) {
-				setResult(Result.INVALID_FORMAT);
-				textArea.setStatus(getTransl().mixingNewlinesWithCommas(), ValidationState.ERROR);
-				return false;
-			}
-
-			if (sshKeys.contains(", ") || sshKeys.contains(" ,") || sshKeys.contains("\n ") || sshKeys.contains(" \n")) {
+			if (sshKeys.contains(", ") || sshKeys.contains(" ,")) {
 				setResult(Result.INVALID_FORMAT);
 				textArea.setStatus(getTransl().sshKeyNoSpaceAroundKeySeparator(), ValidationState.ERROR);
 				return false;
@@ -82,7 +76,6 @@ public class SshKeysTextAreaValidator extends TextAreaValidator {
 			*/
 
 			// normalize value just in case
-			sshKeys = sshKeys.replaceAll("(\n)+", ",");
 			sshKeys = sshKeys.replaceAll("(,)+", ",");
 			List<String> keys = Arrays.stream(sshKeys.split(",")).collect(Collectors.toList());
 
