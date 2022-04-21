@@ -5,19 +5,14 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.HTML;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
-import cz.metacentrum.perun.wui.client.utils.JsUtils;
-import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
-import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
-import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
@@ -41,7 +36,6 @@ import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
-import org.gwtbootstrap3.client.ui.constants.IconPosition;
 import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ListGroupItemType;
@@ -52,10 +46,7 @@ import org.gwtbootstrap3.client.ui.html.Text;
 import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a final step in registration process. Show info.
@@ -151,7 +142,7 @@ public class SummaryStep implements Step {
 			title.add(new Text(" "+translation.initTitle()));
 			msg.setText(translation.waitForAcceptation());
 			messages.add(msg);
-			verifyMailMessage(summary, messages, summary.getApplication().getId());
+			verifyMailMessage(summary, messages, res.getException().getApplicationId());
 
 		} else {
 			displayException(res.getException(), res.getBean());
@@ -212,7 +203,7 @@ public class SummaryStep implements Step {
 			title.add(new Text(" "+translation.extendTitle()));
 			msg.setText(translation.waitForExtAcceptation());
 			messages.add(msg);
-			verifyMailMessage(summary, messages, summary.getApplication().getId());
+			verifyMailMessage(summary, messages, res.getException().getApplicationId());
 
 		} else {
 			// FIXME - solve this BLEEEH hack in better way.
@@ -285,7 +276,7 @@ public class SummaryStep implements Step {
 			msg.setText(translation.waitForAcceptation());
 
 			messages.add(msg);
-			verifyMailMessage(summary, messages, summary.getApplication().getId());
+			verifyMailMessage(summary, messages, res.getException().getApplicationId());
 
 		} else {
 			displayException(res.getException(), res.getBean());
@@ -343,7 +334,7 @@ public class SummaryStep implements Step {
 			msg.setText(translation.waitForExtAcceptation());
 
 			messages.add(msg);
-			verifyMailMessage(summary, messages, summary.getApplication().getId());
+			verifyMailMessage(summary, messages, res.getException().getApplicationId());
 
 		} else {
 			// FIXME - solve this BLEEEH hack in better way.
@@ -391,18 +382,19 @@ public class SummaryStep implements Step {
 			if (!msg.getText().isEmpty()) {
 				messages.add(msg);
 			}
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
+
 		} else if (resultVo.getException() != null && "CantBeApprovedException".equals(resultVo.getException().getName())) {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
 			ListGroupItem msg = new ListGroupItem();
 			msg.setText(translation.waitForAcceptation());
 			messages.add(msg);
+			verifyMailMessage(summary, messages, resultVo.getException().getApplicationId());
 
 		} else {
 			displayException(resultVo.getException(), resultVo.getBean());
 		}
-
-		verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		// Show summary about application to group
 		if (resultGroup.isOk()) {
