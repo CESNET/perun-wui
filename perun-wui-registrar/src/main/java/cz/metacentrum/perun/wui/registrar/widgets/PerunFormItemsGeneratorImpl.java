@@ -25,10 +25,11 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.Timezone;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Undefined;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Username;
 import cz.metacentrum.perun.wui.registrar.widgets.items.ValidatedEmail;
+import cz.metacentrum.perun.wui.registrar.widgets.items.ListBox;
+import cz.metacentrum.perun.wui.registrar.widgets.items.MapBox;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -235,6 +236,10 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 				return new SubmitButton(form, data, lang, true);
 			case EMBEDDED_GROUP_APPLICATION:
 				return new GroupCheckBox(form, data, lang);
+			case LIST_INPUT_BOX:
+				return new ListBox(form, data, lang);
+			case MAP_INPUT_BOX:
+				return new MapBox(form, data, lang);
 			default:
 				return new Undefined(form, data, lang);
 		}

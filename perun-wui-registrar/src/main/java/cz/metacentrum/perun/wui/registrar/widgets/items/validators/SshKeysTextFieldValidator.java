@@ -47,13 +47,13 @@ public class SshKeysTextFieldValidator extends TextFieldValidator {
 
 			if (sshKeys.contains(",,")) {
 				setResult(Result.INVALID_FORMAT);
-				textField.setStatus(getTransl().tooMuchCommasTextField(), ValidationState.ERROR);
+				textField.setStatus(getTransl().tooMuchCommas(), ValidationState.ERROR);
 				return false;
 			}
 
 			if (sshKeys.contains(", ") || sshKeys.contains(" ,")) {
 				setResult(Result.INVALID_FORMAT);
-				textField.setStatus(getTransl().sshKeyNoSpaceAroundCommasTextField(), ValidationState.ERROR);
+				textField.setStatus(getTransl().sshKeyNoSpaceAroundKeySeparator(), ValidationState.ERROR);
 				return false;
 			}
 

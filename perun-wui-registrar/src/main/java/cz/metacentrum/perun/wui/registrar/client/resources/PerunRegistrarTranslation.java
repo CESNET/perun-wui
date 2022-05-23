@@ -118,6 +118,15 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Incorrect input format!")
 	public String incorrectFormat();
 
+	@DefaultMessage("The following items have incorrect format:")
+	public String incorrectFormatItemList();
+
+	@DefaultMessage("Items with the following keys have incorrect format:")
+	public String incorrectFormatItemMap();
+
+	@DefaultMessage("Each key must be unique!")
+	public String duplicateKeys();
+
 	@DefaultMessage("Item <b>can`t be empty!</b>")
 	public String cantBeEmpty();
 
@@ -211,17 +220,11 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Key \"<i>{0}</i>\" does not have the correct format.")
 	String sshKeyFormat(String key);
 
-	@DefaultMessage("Do not mix commas and new-lines as SSH keys separators.")
-	String mixingNewlinesWithCommas();
-
-	@DefaultMessage("Multiple consecutive commas are not allowed, use a single comma or newline as a separator between SSH keys.")
-	String tooMuchCommas();
+	@DefaultMessage("Newlines are not allowed, use a single comma as a separator between SSH keys.")
+	String newlinesNotAllowed();
 
 	@DefaultMessage("Multiple consecutive commas are not allowed, use a single comma as a separator between SSH keys.")
-	String tooMuchCommasTextField();
-
-	@DefaultMessage("Multiple consecutive newlines are not allowed, use one newline or comma as a separator between SSH keys.")
-	String tooMuchNewlines();
+	String tooMuchCommas();
 
 	@DefaultMessage("Missing separator between the SSH keys (comma or newline).")
 	String sshKeyMissingDelimiter();
@@ -229,11 +232,23 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Missing comma as a separator between the SSH keys.")
 	String sshKeyMissingCommaDelimiterTextField();
 
-	@DefaultMessage("No spaces are allowed around the SSH key separator (comma or newline).")
+	@DefaultMessage("No spaces are allowed around the SSH key separator (comma).")
 	String sshKeyNoSpaceAroundKeySeparator();
 
-	@DefaultMessage("No spaces are allowed around the SSH key separator (comma).")
-	String sshKeyNoSpaceAroundCommasTextField();
+	@DefaultMessage("No separators (commas) are allowed. Add new value for the new SSH key.")
+	String sshKeySeparatorNotAllowed();
+
+	@DefaultMessage("Add new value")
+	public String addNewValue();
+
+	@DefaultMessage("Remove value")
+	String removeValue();
+
+	@DefaultMessage("Enter new key")
+	public String enterKey();
+
+	@DefaultMessage("Enter value")
+	String enterValue();
 
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
