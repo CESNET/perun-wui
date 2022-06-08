@@ -38,6 +38,8 @@ public interface PerunRegistrarResources extends ClientBundle {
 
 		String help();
 
+		String overflow();
+
 	}
 
 	@Source("css/PerunRegistrar.gss")

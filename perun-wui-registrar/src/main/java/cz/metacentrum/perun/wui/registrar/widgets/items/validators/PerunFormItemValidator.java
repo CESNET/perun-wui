@@ -24,7 +24,8 @@ public interface PerunFormItemValidator<T extends PerunFormItem> {
 		EMPTY_PASSWORD,
 		PASSWORD_MISSMATCH,
 		MUST_VALIDATE_EMAIL,
-		SECOND_PASSWORD_EMPTY
+		SECOND_PASSWORD_EMPTY,
+		DUPLICATE_KEYS
 	}
 
 	/**

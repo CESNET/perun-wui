@@ -82,6 +82,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 
 			Widget w = initWidgetOnlyPreview();
 			w.addStyleName(PerunRegistrarResources.INSTANCE.gss().preview());
+			w.addStyleName(PerunRegistrarResources.INSTANCE.gss().overflow());
 			widget.add(w);
 
 			setValue(getItemData().getValue());

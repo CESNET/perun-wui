@@ -36,7 +36,9 @@ public class ApplicationFormItem extends JavaScriptObject {
 		USERNAME,
 		HEADING,
 		TIMEZONE,
-		EMBEDDED_GROUP_APPLICATION
+		EMBEDDED_GROUP_APPLICATION,
+		LIST_INPUT_BOX,
+		MAP_INPUT_BOX
 	}
 
 	public enum Hidden {
