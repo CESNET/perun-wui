@@ -103,6 +103,18 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Change")
 	String updateEmail();
 
+	@DefaultMessage("Change password")
+	String changePassword();
+
+	@DefaultMessage("Reset password")
+	String resetPassword();
+
+	@DefaultMessage("Change password for {0}")
+	String changePasswordModalTitle(String login);
+
+	@DefaultMessage("Old password can`t be empty!")
+	String oldPassCantBeEmpty();
+
 	@DefaultMessage("New e-mail")
 	String newPreferredEmail();
 

@@ -1,8 +1,16 @@
 package cz.metacentrum.perun.wui.profile.pages.personal;
 
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.dom.client.Style;
+import com.google.gwt.event.dom.client.BlurEvent;
+import com.google.gwt.event.dom.client.BlurHandler;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.KeyUpEvent;
+import com.google.gwt.event.dom.client.KeyUpHandler;
 import com.google.gwt.json.client.JSONValue;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
@@ -12,28 +20,45 @@ import com.google.gwt.user.client.ui.Widget;
 import com.google.inject.Inject;
 import com.gwtplatform.mvp.client.ViewWithUiHandlers;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
+import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.resources.beans.Locale;
 import cz.metacentrum.perun.wui.client.resources.beans.PersonalAttribute;
 import cz.metacentrum.perun.wui.client.utils.Utils;
+import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.RichUser;
+import cz.metacentrum.perun.wui.model.beans.User;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileTranslation;
+import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
+import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
 import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.Anchor;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Column;
+import org.gwtbootstrap3.client.ui.FieldSet;
 import org.gwtbootstrap3.client.ui.Form;
 import org.gwtbootstrap3.client.ui.FormGroup;
 import org.gwtbootstrap3.client.ui.FormLabel;
 import org.gwtbootstrap3.client.ui.HelpBlock;
 import org.gwtbootstrap3.client.ui.Input;
+import org.gwtbootstrap3.client.ui.InputGroup;
+import org.gwtbootstrap3.client.ui.InputGroupAddon;
 import org.gwtbootstrap3.client.ui.Modal;
+import org.gwtbootstrap3.client.ui.ModalBody;
+import org.gwtbootstrap3.client.ui.ModalFooter;
 import org.gwtbootstrap3.client.ui.Row;
+import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ButtonSize;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
+import org.gwtbootstrap3.client.ui.constants.IconPosition;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
 import org.gwtbootstrap3.client.ui.gwt.CellTable;
@@ -41,11 +66,14 @@ import org.gwtbootstrap3.client.ui.html.Div;
 import org.gwtbootstrap3.client.ui.html.Small;
 import org.gwtbootstrap3.client.ui.html.Span;
 import org.gwtbootstrap3.client.ui.html.Text;
+import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
+import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * View for displaying personal info about user
@@ -108,6 +136,19 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	Button doneButton;
 	@UiField
 	Alert mailChangeError;
+
+	ExtendedPasswordTextBox oldPass;
+	ExtendedPasswordTextBox newPass;
+	ExtendedPasswordTextBox newPass2;
+
+	FormGroup formGroup;
+	FormGroup formGroup2;
+	HelpBlock helpBlock;
+	HelpBlock helpBlock2;
+
+	String previousOldPassVal = null;
+	String previousNewPassVal = null;
+	String previousNewPass2Val = null;
 
 	@Inject
 	public PersonalView(PersonalViewUiBinder binder) {
@@ -285,14 +326,48 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 	}
 
 	private void addEmailChangeButton(Column column) {
-			Button updateButton = new Button();
-			updateButton.setSize(ButtonSize.EXTRA_SMALL);
-			updateButton.setMarginLeft(10);
-			updateButton.setText(translation.updateEmail());
-			updateButton.setDataTarget("#updateEmailModal");
-			updateButton.setDataToggle(Toggle.MODAL);
+		Button updateButton = new Button();
+		updateButton.setSize(ButtonSize.EXTRA_SMALL);
+		updateButton.setMarginLeft(10);
+		updateButton.setText(translation.updateEmail());
+		updateButton.setDataTarget("#updateEmailModal");
+		updateButton.setDataToggle(Toggle.MODAL);
 
-			column.add(updateButton);
+		column.add(updateButton);
+	}
+
+	private void addPasswordChangeButton(String namespace, String login, Column column) {
+		Button changePwdButton = new PerunButton();
+		changePwdButton.setSize(ButtonSize.EXTRA_SMALL);
+		changePwdButton.setMarginLeft(10);
+		changePwdButton.setText(translation.changePassword());
+		changePwdButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				createModal(namespace, login);
+			}
+		});
+		column.add(changePwdButton);
+	}
+
+	private void addPasswordResetButton(String namespace, Column column) {
+		Button resetPwdButton = new PerunButton();
+		resetPwdButton.setSize(ButtonSize.EXTRA_SMALL);
+		resetPwdButton.setMarginLeft(10);
+		resetPwdButton.setIcon(IconType.EXTERNAL_LINK);
+		resetPwdButton.setIconPosition(IconPosition.RIGHT);
+		resetPwdButton.setText(translation.resetPassword());
+		resetPwdButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				String baseUrl = Window.Location.getProtocol()+"//"+ Window.Location.getHost();
+				if (PerunSession.getInstance().getRpcServer() != null) {
+					baseUrl += "/" + PerunSession.getInstance().getRpcServer() + "/pwd-reset/?login-namespace="+namespace;
+				}
+				Window.Location.assign(baseUrl);
+			}
+		});
+		column.add(resetPwdButton);
 	}
 
 	private Column createDescriptionColumn(PersonalAttribute personalAttribute) {
@@ -542,6 +617,12 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 			addEmailChangeButton(innerValueColumn);
 		}
 
+		// FIXME - support other namespaces
+		if ("urn:perun:user:attribute-def:def:login-namespace:einfra".matches(personalAttribute.getUrn())) {
+			addPasswordChangeButton("einfra", value, innerValueColumn);
+			addPasswordResetButton("einfra", innerValueColumn);
+		}
+
 		Column innerDescriptionColumn = createDescriptionColumn(personalAttribute);
 
 		innerRow.add(innerValueColumn);
@@ -549,4 +630,325 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 		return innerRow;
 	}
+
+	void createModal(String namespace, String login) {
+
+		Modal pwdChangeModal = new Modal();
+		pwdChangeModal.setTitle(translation.changePasswordModalTitle(login));
+		pwdChangeModal.setDataBackdrop(ModalBackdrop.STATIC);
+
+		ModalBody body = new ModalBody();
+
+		Form form = new Form();
+		FieldSet fieldSet = new FieldSet();
+		formGroup = new FormGroup();
+		formGroup2 = new FormGroup();
+
+		FormLabel oldPassLabel = new FormLabel();
+		oldPassLabel.setText(translation.oldPassLabel());
+
+		FormLabel newPassLabel = new FormLabel();
+		newPassLabel.setText(translation.newPassLabel());
+
+		InputGroup ig = new InputGroup();
+		InputGroupAddon iga = new InputGroupAddon();
+		iga.setIcon(IconType.KEY);
+		ig.add(iga);
+		oldPass = new ExtendedPasswordTextBox();
+		oldPass.setPlaceholder(translation.enterOldPassPlaceholder());
+		ig.add(oldPass);
+
+		helpBlock = new HelpBlock();
+
+		formGroup.add(oldPassLabel);
+		formGroup.add(ig);
+		formGroup.add(helpBlock);
+
+		InputGroup ig2 = new InputGroup();
+		InputGroupAddon iga2 = new InputGroupAddon();
+		iga2.setIcon(IconType.KEY);
+		ig2.add(iga2);
+		newPass = new ExtendedPasswordTextBox();
+		newPass2 = new ExtendedPasswordTextBox();
+		newPass.setPlaceholder(translation.enterNewPassPlaceholder());
+		newPass2.setPlaceholder(translation.repeatNewPassPlaceholder());
+		ig2.add(newPass);
+		ig2.add(newPass2);
+
+		formGroup2.add(newPassLabel);
+		formGroup2.add(ig2);
+
+		helpBlock2 = new HelpBlock();
+		formGroup2.add(helpBlock2);
+
+		HelpBlock helpBlock3 = new HelpBlock();
+		helpBlock3.setHTML(translation.einfraPasswordHelp());
+
+		oldPass.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent event) {
+				if (!Objects.equals(previousOldPassVal, oldPass.getValue())) {
+					validateOldPass();
+					previousOldPassVal = oldPass.getValue();
+				}
+			}
+		});
+		oldPass.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				if (!Objects.equals(previousOldPassVal, oldPass.getValue())) {
+					validateOldPass();
+					previousOldPassVal = oldPass.getValue();
+				}
+			}
+		});
+		newPass.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent event) {
+				if (!Objects.equals(previousNewPassVal, newPass.getValue())) {
+					validateNewPass(login);
+					previousNewPassVal = newPass.getValue();
+				}
+			}
+		});
+		newPass.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				if (!Objects.equals(previousNewPassVal, newPass.getValue())) {
+					validateNewPass(login);
+					previousNewPassVal = newPass.getValue();
+				}
+			}
+		});
+		newPass2.addBlurHandler(new BlurHandler() {
+			@Override
+			public void onBlur(BlurEvent event) {
+				if (!Objects.equals(previousNewPass2Val, newPass2.getValue())) {
+					validateNewPass(login);
+					previousNewPass2Val = newPass2.getValue();
+				}
+			}
+		});
+		newPass2.addKeyUpHandler(new KeyUpHandler() {
+			@Override
+			public void onKeyUp(KeyUpEvent event) {
+				if (!Objects.equals(previousNewPass2Val, newPass2.getValue())) {
+					validateNewPass(login);
+					previousNewPass2Val = newPass2.getValue();
+				}
+			}
+		});
+
+		fieldSet.add(formGroup);
+		fieldSet.add(formGroup2);
+		fieldSet.add(helpBlock3);
+		form.add(fieldSet);
+		body.add(form);
+
+		final AlertErrorReporter alert = new AlertErrorReporter();
+		alert.setVisible(false);
+		alert.setType(AlertType.DANGER);
+		body.add(alert);
+
+		previousOldPassVal = oldPass.getValue();
+		previousNewPassVal = newPass.getValue();
+		previousNewPass2Val = newPass2.getValue();
+
+		ModalFooter footer = new ModalFooter();
+
+		final PerunButton changePasswordButton = new PerunButton(translation.changePasswordButton());
+		changePasswordButton.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				// split method call and condition to force validation of both fields
+				boolean oldOk = validateOldPass();
+				boolean newOk = validateNewPass(login);
+				if (oldOk && newOk) {
+
+					UsersManager.checkPasswordStrength(namespace, newPass.getValue(), new JsonEvents() {
+						@Override
+						public void onFinished(JavaScriptObject result) {
+
+							UsersManager.changePassword(PerunSession.getInstance().getUserId(), namespace, oldPass.getValue(), newPass.getValue(), new JsonEvents() {
+								@Override
+								public void onFinished(JavaScriptObject result) {
+									changePasswordButton.setProcessing(false);
+									pwdChangeModal.hide();
+									Notify.notify(translation.passwordHasBeenChanged(login), NotifyType.SUCCESS);
+								}
+
+								@Override
+								public void onError(PerunException error) {
+									changePasswordButton.setProcessing(false);
+
+									if (error.getName().equals("PasswordDoesntMatchException")) {
+										// old password doesn't match
+										formGroup.setValidationState(ValidationState.ERROR);
+										helpBlock.setText(translation.oldPasswordIncorrect());
+									} else {
+										// other errors
+										alert.setVisible(true);
+										alert.setReportInfo(error);
+										alert.setText(error.getMessage());
+									}
+
+								}
+
+								@Override
+								public void onLoadingStart() {
+								}
+							});
+
+						}
+
+						@Override
+						public void onError(PerunException error) {
+
+							changePasswordButton.setProcessing(false);
+
+							if (error.getName().equals("PasswordStrengthException")) {
+								// just strength error
+								formGroup2.setValidationState(ValidationState.ERROR);
+								helpBlock2.setText(error.getMessage());
+							} else {
+								// other errors
+								alert.setVisible(true);
+								alert.setReportInfo(error);
+								alert.setText(error.getMessage());
+							}
+
+						}
+
+						@Override
+						public void onLoadingStart() {
+							alert.setVisible(false);
+							changePasswordButton.setProcessing(true);
+						}
+					});
+
+
+				}
+			}
+		});
+		changePasswordButton.setType(ButtonType.PRIMARY);
+
+		footer.add(changePasswordButton);
+
+		pwdChangeModal.add(body);
+		pwdChangeModal.add(footer);
+		pwdChangeModal.show();
+
+		oldPass.setFocus(true);
+
+	}
+
+	public boolean validateOldPass() {
+
+		if (oldPass.getValue() == null || oldPass.getValue().isEmpty()) {
+			formGroup.setValidationState(ValidationState.ERROR);
+			helpBlock.setText(translation.oldPassCantBeEmpty());
+			return false;
+		}
+		formGroup.setValidationState(ValidationState.NONE);
+		helpBlock.setText("");
+		return true;
+
+	}
+
+	public boolean validateNewPass(String login) {
+
+		if (newPass.getValue() == null || newPass.getValue().isEmpty()) {
+			formGroup2.setValidationState(ValidationState.ERROR);
+			helpBlock2.setHTML(translation.passwordCantBeEmpty());
+			return false;
+		}
+
+		// limit only to ASCII printable chars
+		RegExp regExp2 = RegExp.compile("^[\\x20-\\x7E]{1,}$");
+		if(regExp2.exec(newPass.getValue()) == null){
+			formGroup2.setValidationState(ValidationState.ERROR);
+			helpBlock2.setHTML(translation.einfraPasswordFormat());
+			return false;
+		}
+
+		if (login != null && login.length() > 2) {
+
+
+			if (PerunSession.getInstance().getUserId() > 0) {
+				User user = PerunSession.getInstance().getUser();
+				String firstName = Utils.unAccent(user.getFirstName());
+				String lastName = Utils.unAccent(user.getLastName());
+
+				String backwardsFirstName = new StringBuilder(firstName).reverse().toString();
+				String backwardsLastName = new StringBuilder(lastName).reverse().toString();
+
+				if (newPass.getValue().toLowerCase().contains(firstName.toLowerCase()) ||
+						newPass.getValue().toLowerCase().contains(backwardsFirstName.toLowerCase())) {
+					formGroup2.setValidationState(ValidationState.ERROR);
+					helpBlock2.setHTML(translation.einfraPasswordStrengthForNameLogin());
+					return false;
+				}
+
+				if (newPass.getValue().toLowerCase().contains(lastName.toLowerCase()) ||
+						newPass.getValue().toLowerCase().contains(backwardsLastName.toLowerCase())) {
+					formGroup2.setValidationState(ValidationState.ERROR);
+					helpBlock2.setHTML(translation.einfraPasswordStrengthForNameLogin());
+					return false;
+				}
+
+			}
+
+			String backwardsLogin = new StringBuilder(login).reverse().toString();
+			if (newPass.getValue().toLowerCase().contains(login.toLowerCase()) ||
+					newPass.getValue().toLowerCase().contains(backwardsLogin.toLowerCase())) {
+				formGroup2.setValidationState(ValidationState.ERROR);
+				helpBlock2.setHTML(translation.einfraPasswordStrengthForNameLogin());
+				return false;
+			}
+
+		}
+
+		// Check that password contains at least 3 of 4 character groups
+
+		RegExp regExpDigit = RegExp.compile("^.*[0-9].*$");
+		RegExp regExpLower = RegExp.compile("^.*[a-z].*$");
+		RegExp regExpUpper = RegExp.compile("^.*[A-Z].*$");
+		RegExp regExpSpec = RegExp.compile("^.*[\\x20-\\x2F\\x3A-\\x40\\x5B-\\x60\\x7B-\\x7E].*$");
+
+		int matchCounter = 0;
+		if (regExpDigit.exec(newPass.getValue()) != null) matchCounter++;
+		if (regExpLower.exec(newPass.getValue()) != null) matchCounter++;
+		if (regExpUpper.exec(newPass.getValue()) != null) matchCounter++;
+		if (regExpSpec.exec(newPass.getValue()) != null) matchCounter++;
+
+		if(matchCounter < 3){
+			formGroup2.setValidationState(ValidationState.ERROR);
+			helpBlock2.getElement().setInnerHTML(translation.einfraPasswordStrength());
+			return false;
+		}
+
+		// check length
+		if (newPass.getValue().length() < 10) {
+			formGroup2.setValidationState(ValidationState.ERROR);
+			helpBlock2.getElement().setInnerHTML(translation.einfraPasswordLength());
+			return false;
+		}
+
+		if (!newPass.getValue().equals(newPass2.getValue())) {
+			if (newPass2.getValue() == null || newPass2.getValue().isEmpty()) {
+				formGroup2.setValidationState(ValidationState.WARNING);
+				helpBlock2.setHTML(translation.secondPasswordIsEmpty());
+				return false;
+			}
+			formGroup2.setValidationState(ValidationState.ERROR);
+			helpBlock2.setHTML(translation.passwordMismatch());
+			return false;
+		}
+
+		formGroup2.setValidationState(ValidationState.NONE);
+		helpBlock2.setHTML("");
+		return true;
+
+	}
+
 }
