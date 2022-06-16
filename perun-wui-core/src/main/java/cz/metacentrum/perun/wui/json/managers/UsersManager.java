@@ -39,6 +39,25 @@ public class UsersManager {
 	}
 
 	/**
+	 * Checks Password Strength against namespace constraints.
+	 * Throws exception when constraint check fails.
+	 *
+	 * @param namespace namespace to check password in
+	 * @param password password to be checked
+	 * @param events Events done on callback
+	 * @return Request unique request
+	 */
+	public static Request checkPasswordStrength(String namespace, String password, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		client.put("password", password);
+		client.put("namespace", namespace);
+		return client.call(USERS_MANAGER + "checkPasswordStrength");
+
+	}
+
+
+	/**
 	 * Search for RichUsers with attributes who matches the searchString by name, login or email.
 	 *
 	 * When list of attributes names is specified, only such attributes are returned. If null or empty,

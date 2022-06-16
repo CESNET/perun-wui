@@ -291,6 +291,38 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Password <b>can`t contain login, name or surname</b>, not even backwards!")
 	public String einfraPasswordStrengthForNameLogin();
 
+	@DefaultMessage("New password can`t be empty!")
+	public String passwordCantBeEmpty();
+
+	@DefaultMessage("Passwords dont`t match!")
+	public String passwordMismatch();
+
+	@DefaultMessage("Confirm your new password!")
+	public String secondPasswordIsEmpty();
+
+	@DefaultMessage("Old password:")
+	public String oldPassLabel();
+	@DefaultMessage("Enter your old password")
+	public String enterOldPassPlaceholder();
+
+	@DefaultMessage("New password:")
+	public String newPassLabel();
+
+	@DefaultMessage("Enter your new password")
+	public String enterNewPassPlaceholder();
+
+	@DefaultMessage("Confirm your new password")
+	public String repeatNewPassPlaceholder();
+
+	@DefaultMessage("Change password")
+	public String changePasswordButton();
+
+	@DefaultMessage("<b>Your password for login <i>{0}</i> has been changed!</b><br/>It might take a few minutes to reflect this change across our infrastructure.")
+	public String passwordHasBeenChanged(String login);
+
+	@DefaultMessage("Incorrect password!")
+	public String oldPasswordIncorrect();
+
 	@DefaultMessage("Password must <ul><li>be at least 12 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
 	public String muPasswordHelp();
 
