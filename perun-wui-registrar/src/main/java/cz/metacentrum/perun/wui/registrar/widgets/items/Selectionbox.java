@@ -34,6 +34,13 @@ public class Selectionbox extends PerunFormItemEditable {
 	}
 
 	@Override
+	public void setEnabled(boolean enabled) {
+		if (getSelect() != null) {
+			getSelect().setEnabled(enabled);
+		}
+	}
+
+	@Override
 	protected Widget initWidget() {
 
 		widget = new Select();
@@ -92,6 +99,7 @@ public class Selectionbox extends PerunFormItemEditable {
 		widget = new Paragraph();
 		Icon caret = new Icon(IconType.CARET_DOWN);
 		caret.setPull(Pull.RIGHT);
+		caret.setColor("#ccc");
 		getPreview().add(caret);
 		getPreview().addStyleName("form-control");
 		return widget;
@@ -127,6 +135,16 @@ public class Selectionbox extends PerunFormItemEditable {
 	@Override
 	protected void setValueImpl(String value) {
 		if (isOnlyPreview()) {
+			Map<String, String> opts = parseItemOptions();
+
+			for (Map.Entry<String, String> entry : opts.entrySet()) {
+				// value from param is the key in this map (but we want to display the value from map)
+				if (entry.getKey().equals(value)) {
+					getPreview().add(new Span(entry.getValue()));
+					return;
+				}
+			}
+			// if this option was deleted by admin from this form item, then it won't be parsed, and we have to display raw value
 			getPreview().add(new Span(value));
 			return;
 		}
@@ -137,7 +155,9 @@ public class Selectionbox extends PerunFormItemEditable {
 				return;
 			}
 		}
-		getSelect().refresh();
+		// set the value which doesn't match any option (this option was probably deleted after the form had been saved)
+		getSelect().addItem(value, value);
+		getSelect().setSelectedIndex(getSelect().getItemCount() - 1);
 	}
 
 	public Select getSelect() {
