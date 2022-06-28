@@ -127,7 +127,7 @@ public class Username extends PerunFormItemEditable {
 			return;
 		}
 
-		final Events<Boolean> nothingEvents = new Events<Boolean>() {
+		final Events<Boolean> nothingEvent = new Events<Boolean>() {
 			@Override
 			public void onFinished(Boolean result) {
 
@@ -147,9 +147,10 @@ public class Username extends PerunFormItemEditable {
 		getTextBox().addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {
-				validate(nothingEvents);
+				validate(nothingEvent);
 			}
 		});
+
 	}
 
 	@Override

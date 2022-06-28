@@ -21,6 +21,7 @@ import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.JsUtils;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
+import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
@@ -88,6 +89,9 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	@UiField Column namespaceLogoWrapper;
 	@UiField Paragraph infoAlert;
 
+	String previousNewPassVal = null;
+	String previousNewPass2Val = null;
+
 	@Inject
 	public PwdResetView(PwdResetUiBinder binder) {
 
@@ -99,28 +103,57 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 		help.setHTML(translation.dontUseAccents());
 
+		Events<Boolean> emptyEvent = new Events<Boolean>() {
+			@Override
+			public void onFinished(Boolean result) {
+
+			}
+
+			@Override
+			public void onError(PerunException error) {
+
+			}
+
+			@Override
+			public void onLoadingStart() {
+
+			}
+		};
+
 		passwordTextBox.addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {
-				validate();
+				if (!Objects.equals(previousNewPassVal, passwordTextBox.getValue())) {
+					validate(emptyEvent);
+					previousNewPassVal = passwordTextBox.getValue();
+				}
 			}
 		});
 		passwordTextBox2.addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {
-				validate();
+				if (!Objects.equals(previousNewPass2Val, passwordTextBox2.getValue())) {
+					validate(emptyEvent);
+					previousNewPass2Val = passwordTextBox2.getValue();
+				}
 			}
 		});
 		passwordTextBox.addKeyUpHandler(new KeyUpHandler() {
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
-				validate();
+				if (!Objects.equals(previousNewPassVal, passwordTextBox.getValue())) {
+					validate(emptyEvent);
+					previousNewPassVal = passwordTextBox.getValue();
+				}
 			}
 		});
 		passwordTextBox2.addKeyUpHandler(new KeyUpHandler() {
 			@Override
 			public void onKeyUp(KeyUpEvent event) {
-				validate();
+				if (!Objects.equals(previousNewPass2Val, passwordTextBox2.getValue())) {
+					validate(emptyEvent);
+					previousNewPass2Val = passwordTextBox2.getValue();
+				}
 			}
 		});
 
@@ -144,62 +177,79 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 				@Override
 				public void onClick(ClickEvent event) {
 
-					if (validate()) {
+					validate(new Events<Boolean>() {
+						@Override
+						public void onFinished(Boolean result) {
 
-						UsersManager.resetPassword(PerunSession.getInstance().getUserId(), namespace, passwordTextBox.getValue(), new JsonEvents() {
+							if (result) {
 
-							final JsonEvents events = this;
+								UsersManager.resetPassword(PerunSession.getInstance().getUserId(), namespace, passwordTextBox.getValue(), new JsonEvents() {
 
-							@Override
-							public void onFinished(JavaScriptObject result) {
-								submit.setProcessing(false);
-								form.setVisible(false);
-								alert.setType(AlertType.SUCCESS);
-								infoAlert.setVisible(false);
+									final JsonEvents events = this;
 
-								if (isAccountActivation && "einfra".equals(namespace) && "it4i".equals(PerunSession.getInstance().getRpcServer())) {
-									alert.setHTML(translation.activationSuccessEinfra());
-								} else {
-									alert.setText((isAccountActivation) ? translation.activateSuccess(namespace) : translation.resetSuccess());
-								}
-								alert.setVisible(true);
-
-								if (Window.Location.getParameterMap().containsKey("target_url")) {
-									alert.getToolbar().setVisible(true);
-									continueButton.setType(ButtonType.SUCCESS);
-									continueButton.setVisible(true);
-								}
-
-							}
-
-							@Override
-							public void onError(PerunException error) {
-								infoAlert.setVisible(false);
-								submit.setProcessing(false);
-								form.setVisible(false);
-								alert.setVisible(true);
-								alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
-								alert.setReportInfo(error);
-								error.setNamespace(namespace);
-								alert.setRetryHandler(new ClickHandler() {
 									@Override
-									public void onClick(ClickEvent event) {
-										draw();
-										//UsersManager.resetPassword(PerunSession.getInstance().getUserId(), namespace, passwordTextBox.getValue(), events);
+									public void onFinished(JavaScriptObject result) {
+										submit.setProcessing(false);
+										form.setVisible(false);
+										alert.setType(AlertType.SUCCESS);
+										infoAlert.setVisible(false);
+
+										if (isAccountActivation && "einfra".equals(namespace) && "it4i".equals(PerunSession.getInstance().getRpcServer())) {
+											alert.setHTML(translation.activationSuccessEinfra());
+										} else {
+											alert.setText((isAccountActivation) ? translation.activateSuccess(namespace) : translation.resetSuccess());
+										}
+										alert.setVisible(true);
+
+										if (Window.Location.getParameterMap().containsKey("target_url")) {
+											alert.getToolbar().setVisible(true);
+											continueButton.setType(ButtonType.SUCCESS);
+											continueButton.setVisible(true);
+										}
+
+									}
+
+									@Override
+									public void onError(PerunException error) {
+										infoAlert.setVisible(false);
+										submit.setProcessing(false);
+										form.setVisible(false);
+										alert.setVisible(true);
+										alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
+										alert.setReportInfo(error);
+										error.setNamespace(namespace);
+										alert.setRetryHandler(new ClickHandler() {
+											@Override
+											public void onClick(ClickEvent event) {
+												draw();
+												//UsersManager.resetPassword(PerunSession.getInstance().getUserId(), namespace, passwordTextBox.getValue(), events);
+											}
+										});
+										if (Window.Location.getParameterMap().containsKey("target_url")) {
+											continueButton.setVisible(true);
+										}
+									}
+
+									@Override
+									public void onLoadingStart() {
+										submit.setProcessing(true);
 									}
 								});
-								if (Window.Location.getParameterMap().containsKey("target_url")) {
-									continueButton.setVisible(true);
-								}
+
 							}
 
-							@Override
-							public void onLoadingStart() {
-								submit.setProcessing(true);
-							}
-						});
+						}
 
-					}
+						@Override
+						public void onError(PerunException error) {
+
+						}
+
+						@Override
+						public void onLoadingStart() {
+
+						}
+					});
 
 				}
 			});
@@ -245,57 +295,73 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			@Override
 			public void onClick(ClickEvent event) {
 
-				if (validate()) {
+				validate(new Events<Boolean>() {
+					@Override
+					public void onFinished(Boolean result) {
 
-					UsersManager.resetNonAuthzPassword(token, passwordTextBox.getValue(), PerunConfiguration.getCurrentLocaleName(), new JsonEvents() {
+						if (result) {
 
-						final JsonEvents events = this;
+							UsersManager.resetNonAuthzPassword(token, passwordTextBox.getValue(), PerunConfiguration.getCurrentLocaleName(), new JsonEvents() {
 
-						@Override
-						public void onFinished(JavaScriptObject result) {
-							submit.setProcessing(false);
-							form.setVisible(false);
-							alert.setType(AlertType.SUCCESS);
-							alert.setText((isAccountActivation) ? translation.activateSuccess(namespace) : translation.resetSuccess());
-							alert.setVisible(true);
-							if (Window.Location.getParameterMap().containsKey("target_url")) {
-								alert.getToolbar().setVisible(true);
-								continueButton.setType(ButtonType.SUCCESS);
-								continueButton.setVisible(true);
-							}
+								final JsonEvents events = this;
 
-						}
-
-						@Override
-						public void onError(PerunException error) {
-							submit.setProcessing(false);
-							form.setVisible(false);
-							if ("PasswordResetLinkExpiredException".equals(error.getName())) {
-								alert.setType(AlertType.WARNING);
-							} else {
-								alert.setType(AlertType.DANGER);
-								alert.setRetryHandler(new ClickHandler() {
-									@Override
-									public void onClick(ClickEvent event) {
-										drawNonAuthz();
+								@Override
+								public void onFinished(JavaScriptObject result) {
+									submit.setProcessing(false);
+									form.setVisible(false);
+									alert.setType(AlertType.SUCCESS);
+									alert.setText((isAccountActivation) ? translation.activateSuccess(namespace) : translation.resetSuccess());
+									alert.setVisible(true);
+									if (Window.Location.getParameterMap().containsKey("target_url")) {
+										alert.getToolbar().setVisible(true);
+										continueButton.setType(ButtonType.SUCCESS);
+										continueButton.setVisible(true);
 									}
-								});
-							}
-							alert.setVisible(true);
-							alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
-							alert.setReportInfo(error);
-							if (Window.Location.getParameterMap().containsKey("target_url")) {
-								continueButton.setVisible(true);
-							}
+
+								}
+
+								@Override
+								public void onError(PerunException error) {
+									submit.setProcessing(false);
+									form.setVisible(false);
+									if ("PasswordResetLinkExpiredException".equals(error.getName())) {
+										alert.setType(AlertType.WARNING);
+									} else {
+										alert.setType(AlertType.DANGER);
+										alert.setRetryHandler(new ClickHandler() {
+											@Override
+											public void onClick(ClickEvent event) {
+												drawNonAuthz();
+											}
+										});
+									}
+									alert.setVisible(true);
+									alert.setHTML(ErrorTranslator.getTranslatedMessage(error));
+									alert.setReportInfo(error);
+									if (Window.Location.getParameterMap().containsKey("target_url")) {
+										continueButton.setVisible(true);
+									}
+								}
+
+								@Override
+								public void onLoadingStart() {
+									submit.setProcessing(true);
+								}
+							});
 						}
 
-						@Override
-						public void onLoadingStart() {
-							submit.setProcessing(true);
-						}
-					});
+					}
 
-				}
+					@Override
+					public void onError(PerunException error) {
+
+					}
+
+					@Override
+					public void onLoadingStart() {
+
+					}
+				});
 
 			}
 		});
@@ -454,12 +520,13 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	 *
 	 * @return TRUE = valid / FALSE otherwise
 	 */
-	private boolean validate() {
+	private void validate(final Events<Boolean> events) {
 
 		if (passwordTextBox.getValue() == null || passwordTextBox.getValue().isEmpty()) {
 			passItem.setValidationState(ValidationState.ERROR);
 			itemStatus.setText(translation.passwordCantBeEmpty());
-			return false;
+			events.onFinished(false);
+			return;
 		}
 
 		// TODO - per-namespace regex validation
@@ -470,7 +537,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			if(regExp2.exec(passwordTextBox.getValue()) == null){
 				itemStatus.setHTML(translation.einfraPasswordFormat());
 				passItem.setValidationState(ValidationState.ERROR);
-				return false;
+				events.onFinished(false);
+				return;
 			}
 
 			// Check that password contains at least 3 of 4 character groups
@@ -489,14 +557,16 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			if(matchCounter < 3){
 				passItem.setValidationState(ValidationState.ERROR);
 				itemStatus.setHTML(translation.einfraPasswordStrength());
-				return false;
+				events.onFinished(false);
+				return;
 			}
 
 			// check length
 			if (passwordTextBox.getValue().length() < 10) {
 				passItem.setValidationState(ValidationState.ERROR);
 				itemStatus.setHTML(translation.einfraPasswordLength());
-				return false;
+				events.onFinished(false);
+				return;
 			}
 
 			// TODO - Check also name/surname
@@ -510,8 +580,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 					itemStatus.setHTML(translation.einfraPasswordStrengthForNameLogin());
 					passItem.setValidationState(ValidationState.ERROR);
-					return false;
-
+					events.onFinished(false);
+					return;
 				}
 
 			}
@@ -522,7 +592,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			if (passwordTextBox.getValue().length() < 8) {
 				itemStatus.setText(translation.passwordLength(8));
 				passItem.setValidationState(ValidationState.ERROR);
-				return false;
+				events.onFinished(false);
+				return;
 			}
 
 			int limit = 3;
@@ -536,7 +607,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			if (counter < limit) {
 				itemStatus.setText(translation.passwordStrength4("[a-z], [A-Z], [0-9], [!#%&()[]*+,./:;<=>?@^_`{}|~-]"));
 				passItem.setValidationState(ValidationState.ERROR);
-				return false;
+				events.onFinished(false);
+				return;
 			}
 
 			// TODO - check also against name, surname, personal number
@@ -548,7 +620,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 
 					itemStatus.setHTML(translation.passwordStrength2());
 					passItem.setValidationState(ValidationState.ERROR);
-					return false;
+					events.onFinished(false);
+					return;
 				}
 			}
 
@@ -559,7 +632,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			if(!matchFound2){
 				itemStatus.setText(translation.passwordStrength3());
 				passItem.setValidationState(ValidationState.ERROR);
-				return false;
+				events.onFinished(false);
+				return;
 			}
 
 		} else if (Objects.equals(namespace, "mu")) {
@@ -580,14 +654,16 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			if(matchCounter < 3){
 				passItem.setValidationState(ValidationState.ERROR);
 				itemStatus.setHTML(translation.muPasswordStrength());
-				return false;
+				events.onFinished(false);
+				return;
 			}
 
 			// check length
 			if (passwordTextBox.getValue().length() < 12) {
 				passItem.setValidationState(ValidationState.ERROR);
 				itemStatus.setHTML(translation.muPasswordLength());
-				return false;
+				events.onFinished(false);
+				return;
 			}
 
 		}
@@ -595,12 +671,37 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 		if (!Objects.equals(passwordTextBox.getValue(), passwordTextBox2.getValue())) {
 			passItem.setValidationState(ValidationState.ERROR);
 			itemStatus.setText(translation.passwordsDoesnMatch());
-			return false;
+			events.onFinished(false);
+			return;
 		}
 
-		itemStatus.setText("");
-		passItem.setValidationState(ValidationState.SUCCESS);
-		return true;
+		UsersManager.checkPasswordStrength(namespace, passwordTextBox.getValue(), new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				// check doesn't return anything
+				itemStatus.setText("");
+				passItem.setValidationState(ValidationState.SUCCESS);
+				events.onFinished(true);
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				if ("PasswordStrengthException".equalsIgnoreCase(error.getName())) {
+					itemStatus.setText(translation.weakPassword());
+					passItem.setValidationState(ValidationState.ERROR);
+				} else {
+					itemStatus.setText(translation.cantCheckPasswordStrength());
+					passItem.setValidationState(ValidationState.ERROR);
+				}
+				events.onFinished(false);
+			}
+
+			@Override
+			public void onLoadingStart() {
+				itemStatus.setText(translation.checkingPasswordStrength());
+				passItem.setValidationState(ValidationState.NONE);
+			}
+		});
 
 	}
 

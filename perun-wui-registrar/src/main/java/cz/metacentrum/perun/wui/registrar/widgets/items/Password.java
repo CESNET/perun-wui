@@ -4,6 +4,7 @@ import com.google.gwt.event.dom.client.BlurEvent;
 import com.google.gwt.event.dom.client.BlurHandler;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.json.Events;
+import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.EinfraPasswordValidator;
@@ -32,7 +33,7 @@ public class Password extends PerunFormItemEditable {
 		super(form, item, lang);
 		// FIXME - specific per-namespace validation
 		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunDestinationAttribute())) {
-				this.validator = new EinfraPasswordValidator();
+			this.validator = new EinfraPasswordValidator();
 		} else {
 			this.validator = new PasswordValidator();
 		}
@@ -102,17 +103,35 @@ public class Password extends PerunFormItemEditable {
 		if (isOnlyPreview()) {
 			return;
 		}
+
+		Events<Boolean> nothingEvent = new Events<Boolean>() {
+			@Override
+			public void onFinished(Boolean result) {
+
+			}
+
+			@Override
+			public void onError(PerunException error) {
+
+			}
+
+			@Override
+			public void onLoadingStart() {
+
+			}
+		};
+
 		getPassword().addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {
-				validateLocal();
+				validate(nothingEvent);
 			}
 		});
 
 		getPasswordSecond().addBlurHandler(new BlurHandler() {
 			@Override
 			public void onBlur(BlurEvent event) {
-				validateLocal();
+				validate(nothingEvent);
 			}
 		});
 	}
