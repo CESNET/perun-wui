@@ -332,4 +332,13 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Password must consist of <b>at least 3 of 4</b> character groups<ul><li>lower-case letters</li><li>upper-case letters</li><li>digits</li><li>special characters</li></ul>")
 	public String muPasswordStrength();
 
+	@DefaultMessage("Checking password strength...")
+	public String checkingPasswordStrength();
+
+	@DefaultMessage("Weak password!")
+	public String weakPassword();
+
+	@DefaultMessage("Unable to check password strength! Please check your internet connection and try again.")
+	public String cantCheckPasswordStrength();
+
 }
