@@ -81,6 +81,24 @@ public class RegistrarManager {
 	}
 
 	/**
+	 * Retrieve open applications for User.
+	 *
+	 * @param userId ID of user to get applications for or 0 if user unknown (search by authorization)
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getOpenApplicationsForUser(int userId, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (userId > 0) {
+			client.put("id", userId);
+		}
+		return client.call(REGISTRAR_MANAGER + "getOpenApplicationsForUser");
+
+	}
+
+	/**
 	 * Retrieve applications for Member.
 	 *
 	 * @param memberId ID of user to get applications for
