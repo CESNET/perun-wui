@@ -58,10 +58,7 @@ public class Combobox extends PerunFormItemEditable {
 		select.setShowTick(true);
 
 		select.clear();
-
-		if (!isRequired()) {
-			select.addItem(getTranslation().notSelected(), (String) null);
-		}
+		select.addItem(getTranslation().notSelected(), "");
 		select.addItem(getTranslation().customValue(), CUSTOM_ID);
 
 		Map<String, String> opts = parseItemOptions();
