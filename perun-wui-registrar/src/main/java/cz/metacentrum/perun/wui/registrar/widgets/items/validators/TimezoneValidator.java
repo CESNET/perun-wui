@@ -13,7 +13,7 @@ public class TimezoneValidator extends PerunFormItemValidatorImpl<Timezone> {
 
 		if (timezone.isRequired() && isNullOrEmpty(timezone.getValue())) {
 			setResult(Result.EMPTY_SELECT);
-			timezone.setRawStatus(getTransl().cantBeEmpty(), ValidationState.ERROR);
+			timezone.setRawStatus(getTransl().cantBeEmptySelect(), ValidationState.ERROR);
 			return false;
 		}
 
