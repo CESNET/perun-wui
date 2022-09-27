@@ -255,6 +255,15 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Submitted registrations")
 	public String submittedTitle();
 
+	@DefaultMessage("Open applications")
+	public String openAppsOnly();
+
+	@DefaultMessage("All applications")
+	public String allApps();
+
+	@DefaultMessage("This operation may take a while.")
+	public String slowOperation();
+
 	@DefaultMessage("Submitted")
 	public String submittedOn();
 
