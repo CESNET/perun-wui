@@ -130,8 +130,11 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Item <b>can`t be empty!</b>")
 	public String cantBeEmpty();
 
-	@DefaultMessage("You must select at least one option!")
+	@DefaultMessage("You must select one of the options!")
 	public String cantBeEmptySelect();
+
+	@DefaultMessage("You must select at least one option!")
+	public String cantBeEmptyCheckBox();
 
 	@DefaultMessage("Incorrect email address format!")
 	public String incorrectEmail();
