@@ -19,6 +19,7 @@ import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTransla
 import cz.metacentrum.perun.wui.registrar.model.ApplicationColumnProvider;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunDataGrid;
+import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.html.Text;
 
 /**
@@ -40,6 +41,15 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 	@UiField
 	PerunButton refresh;
 
+	@UiField
+	AnchorListItem openAppsOnly;
+
+	@UiField
+	AnchorListItem allApps;
+
+	@UiField
+	PerunButton filterButton;
+
 	private PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
 	@Inject
@@ -48,6 +58,10 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 		initWidget(binder.createAndBindUi(this));
 		text.setText(translation.submittedTitle());
 		refresh.setTooltipText(translation.refresh());
+		openAppsOnly.setText(translation.openAppsOnly());
+		allApps.setText(translation.allApps());
+		allApps.setTitle(translation.slowOperation());
+		filterButton.setText(translation.filter());
 		grid.setHeight("100%");
 
 	}
@@ -57,34 +71,83 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 		draw();
 	}
 
+	@UiHandler(value = "filterButton")
+	public void filterButton(ClickEvent event) {
+		draw();
+	}
+
+	@UiHandler(value = "allApps")
+	public void allApps(ClickEvent event) {
+		allApps.setActive(true);
+		openAppsOnly.setActive(false);
+		draw();
+	}
+
+	@UiHandler(value = "openAppsOnly")
+	public void openAppsOnly(ClickEvent event) {
+		openAppsOnly.setActive(true);
+		allApps.setActive(false);
+		draw();
+	}
+
 	public void draw() {
 
-		// make sure we search by identity and user session info
-		RegistrarManager.getApplicationsForUser(0, new JsonEvents() {
 
-			JsonEvents retry = this;
+		if (openAppsOnly.isActive()) {
+			// make sure we search by identity and user session info
+			RegistrarManager.getOpenApplicationsForUser(0, new JsonEvents() {
 
-			@Override
-			public void onFinished(JavaScriptObject jso) {
-				grid.setList(JsUtils.<Application>jsoAsList(jso));
-			}
+				JsonEvents retry = this;
 
-			@Override
-			public void onError(PerunException error) {
-				grid.getLoaderWidget().onError(error, new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						RegistrarManager.getApplicationsForUser(0, retry);
-					}
-				});
-			}
+				@Override
+				public void onFinished(JavaScriptObject jso) {
+					grid.setList(JsUtils.<Application>jsoAsList(jso));
+				}
 
-			@Override
-			public void onLoadingStart() {
-				grid.clearTable();
-				grid.getLoaderWidget().onLoading(translation.loadingApplications());
-			}
-		});
+				@Override
+				public void onError(PerunException error) {
+					grid.getLoaderWidget().onError(error, new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							RegistrarManager.getOpenApplicationsForUser(0, retry);
+						}
+					});
+				}
+
+				@Override
+				public void onLoadingStart() {
+					grid.clearTable();
+					grid.getLoaderWidget().onLoading(translation.loadingApplications());
+				}
+			});
+		} else {
+			// make sure we search by identity and user session info
+			RegistrarManager.getApplicationsForUser(0, new JsonEvents() {
+
+				JsonEvents retry = this;
+
+				@Override
+				public void onFinished(JavaScriptObject jso) {
+					grid.setList(JsUtils.<Application>jsoAsList(jso));
+				}
+
+				@Override
+				public void onError(PerunException error) {
+					grid.getLoaderWidget().onError(error, new ClickHandler() {
+						@Override
+						public void onClick(ClickEvent event) {
+							RegistrarManager.getApplicationsForUser(0, retry);
+						}
+					});
+				}
+
+				@Override
+				public void onLoadingStart() {
+					grid.clearTable();
+					grid.getLoaderWidget().onLoading(translation.loadingApplications());
+				}
+			});
+		}
 
 	}
 

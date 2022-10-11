@@ -15,7 +15,15 @@
 		<b:Heading size="H2" ui:field="pageTitle">
 			<b:Icon ui:field="icon" type="ARCHIVE" fixedWidth="true" />
 			<b.html:Text text="My registrations" ui:field="text"/>
-			<b.html:Small text=""/>
+			<b.html:Small text="" marginRight="20"/>
+			<b:ButtonGroup>
+				<p:PerunButton icon="FILTER" ui:field="filterButton">Filter</p:PerunButton>
+				<b:Button dataToggle="DROPDOWN" ui:field="dropdown"/>
+				<b:DropDownMenu>
+					<b:AnchorListItem ui:field="openAppsOnly" active="true">Open applications</b:AnchorListItem>
+					<b:AnchorListItem ui:field="allApps">All applications</b:AnchorListItem>
+				</b:DropDownMenu>
+			</b:ButtonGroup>
 			<p:PerunButton tooltipText="Refresh" icon="REFRESH" ui:field="refresh" marginLeft="20" />
 		</b:Heading>
 

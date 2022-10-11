@@ -39,9 +39,8 @@ public class Timezone extends PerunFormItemEditable {
 		getSelect().setWidth("100%");
 		getSelect().setShowTick(true);
 
-		if (!isRequired()) {
-			getSelect().addItem(getTranslation().notSelected(), (String) null);
-		}
+		getSelect().clear();
+		getSelect().addItem(getTranslation().notSelected(), "");
 
 		for (String timezone : Utils.getTimezones()) {
 			getSelect().addItem(timezone, timezone);
