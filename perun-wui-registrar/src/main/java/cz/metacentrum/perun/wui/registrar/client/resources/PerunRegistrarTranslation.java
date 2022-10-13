@@ -255,9 +255,6 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
-	@DefaultMessage("Submitted registrations")
-	public String submittedTitle();
-
 	@DefaultMessage("Open applications")
 	public String openAppsOnly();
 

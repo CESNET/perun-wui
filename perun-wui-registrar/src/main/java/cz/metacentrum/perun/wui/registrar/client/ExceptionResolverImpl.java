@@ -13,7 +13,6 @@ import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Group;
-import cz.metacentrum.perun.wui.model.beans.User;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 
@@ -120,7 +119,7 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			}
 
 			setInfo(trans.alreadySubmitted(getBeanName()),
-					text + trans.visitSubmitted(Window.Location.getHref().split("#")[0], application.getId(), trans.submittedTitle()));
+					text + trans.visitSubmitted(Window.Location.getHref().split("#")[0], application.getId(), trans.myApplications()));
 
 		} else if ("NoPrefilledUneditableRequiredDataException".equalsIgnoreCase(exception.getName())) {
 
