@@ -294,6 +294,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Mail verification message sent to <b>{0}</b>")
 	public String mailVerificationRequestSent(String mailAddress);
 
+	@DefaultMessage("This application is already in state <b>{0}</b>, try checking your 'Submitted applications' page.")
+	public String resendMailAlreadyApproved(String appState);
+
 	// -------------- APP DETAIL PAGE ------------------------ //
 
 	@DefaultMessage("Registration detail")

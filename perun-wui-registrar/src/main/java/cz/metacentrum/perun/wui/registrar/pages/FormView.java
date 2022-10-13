@@ -25,6 +25,7 @@ import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
+import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
@@ -145,11 +146,22 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 			@Override
 			public void onError(PerunException error) {
-				mailVerificationNotice.setType(AlertType.DANGER);
-				mailVerificationNotice.setVisible(true);
-				mailVerificationNotice.setHTML(ErrorTranslator.getTranslatedMessage(error));
-				mailVerificationNotice.setReportInfo(error);
-				resendNotification.setProcessing(false);
+				if ("ApplicationNotNewException".equalsIgnoreCase(error.getName())) {
+					mailVerificationAlert.setVisible(false);
+					resendNotification.setVisible(false);
+					mailVerificationNotice.setType(AlertType.SUCCESS);
+					mailVerificationNotice.setVisible(true);
+					mailVerificationNotice.setReportInfo(null);
+					mailVerificationNotice.setHTML(translation.resendMailAlreadyApproved(Application.translateState(error.getState())));
+
+
+				} else {
+					mailVerificationNotice.setType(AlertType.DANGER);
+					mailVerificationNotice.setVisible(true);
+					mailVerificationNotice.setHTML(ErrorTranslator.getTranslatedMessage(error));
+					mailVerificationNotice.setReportInfo(error);
+					resendNotification.setProcessing(false);
+				}
 			}
 
 			@Override

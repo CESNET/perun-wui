@@ -328,10 +328,20 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 									@Override
 									public void onError(PerunException error) {
-										alertErrorReporter.setVisible(true);
-										alertErrorReporter.setHTML(ErrorTranslator.getTranslatedMessage(error));
-										alertErrorReporter.setReportInfo(error);
-										resendNotification.setProcessing(false);
+										if ("ApplicationNotNewException".equalsIgnoreCase(error.getName())) {
+											mailVerificationAlert.setVisible(false);
+											resendNotification.setVisible(false);
+											alertErrorReporter.setType(AlertType.SUCCESS);
+											alertErrorReporter.setVisible(true);
+											alertErrorReporter.setReportInfo(null);
+											alertErrorReporter.setHTML(translation.resendMailAlreadyApproved(Application.translateState(error.getState())));
+
+										} else {
+											alertErrorReporter.setVisible(true);
+											alertErrorReporter.setHTML(ErrorTranslator.getTranslatedMessage(error));
+											alertErrorReporter.setReportInfo(error);
+											resendNotification.setProcessing(false);
+										}
 									}
 
 									@Override
