@@ -56,7 +56,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 	public AppsView(AppsViewUiBinder binder) {
 
 		initWidget(binder.createAndBindUi(this));
-		text.setText(translation.submittedTitle());
+		text.setText(translation.openAppsOnly());
 		refresh.setTooltipText(translation.refresh());
 		openAppsOnly.setText(translation.openAppsOnly());
 		allApps.setText(translation.allApps());
@@ -80,6 +80,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 	public void allApps(ClickEvent event) {
 		allApps.setActive(true);
 		openAppsOnly.setActive(false);
+		text.setText(translation.allApps());
 		draw();
 	}
 
@@ -87,6 +88,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 	public void openAppsOnly(ClickEvent event) {
 		openAppsOnly.setActive(true);
 		allApps.setActive(false);
+		text.setText(translation.openAppsOnly());
 		draw();
 	}
 
