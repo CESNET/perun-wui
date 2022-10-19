@@ -247,6 +247,9 @@ public class PerunException extends JavaScriptObject {
 	public final String getNamespace() {
 		return JsUtils.getNativePropertyString(this, "namespace");
 	}
+	public final String getState() {
+		return JsUtils.getNativePropertyString(this, "state");
+	}
 
 	public final native void setNamespace(String namespace) /*-{
         this.namespace = namespace;

@@ -5,6 +5,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.Events;
@@ -47,6 +48,7 @@ import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a final step in registration process. Show info.
@@ -640,7 +642,8 @@ public class SummaryStep implements Step {
 	private void verifyMailMessage(Summary summary, ListGroup messages, int appId) {
 		if (summary.mustRevalidateEmail() != null) {
 			verifyMail = new ListGroupItem();
-			verifyMail.add(new Paragraph(" " + translation.verifyMail(summary.mustRevalidateEmail())));
+			Paragraph verifyMailText = new Paragraph(" " + translation.verifyMail(summary.mustRevalidateEmail()));
+			verifyMail.add(verifyMailText);
 			verifyMail.setType(ListGroupItemType.WARNING);
 			AlertErrorReporter errorReporter = new AlertErrorReporter();
 			errorReporter.setVisible(false);
@@ -660,10 +663,20 @@ public class SummaryStep implements Step {
 
 				@Override
 				public void onError(PerunException error) {
-					errorReporter.setVisible(true);
-					errorReporter.setHTML(ErrorTranslator.getTranslatedMessage(error));
-					errorReporter.setReportInfo(error);
-					resendButton.setProcessing(false);
+					if ("ApplicationNotNewException".equalsIgnoreCase(error.getName())) {
+						verifyMailText.setVisible(false);
+						resendButton.setVisible(false);
+						errorReporter.setType(AlertType.SUCCESS);
+						errorReporter.setVisible(true);
+						errorReporter.setReportInfo(null);
+						errorReporter.setHTML(translation.resendMailAlreadyApproved(Application.translateState(error.getState())));
+
+					} else {
+						errorReporter.setVisible(true);
+						errorReporter.setHTML(ErrorTranslator.getTranslatedMessage(error));
+						errorReporter.setReportInfo(error);
+						resendButton.setProcessing(false);
+					}
 				}
 
 				@Override
