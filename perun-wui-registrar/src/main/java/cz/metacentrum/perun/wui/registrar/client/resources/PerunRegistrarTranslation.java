@@ -89,6 +89,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Please <b>avoid using accented characters</b>. It might not be supported by all backend components and services.")
 	public String dontUseAccents();
 
+	@DefaultMessage("Password must be at least {0} characters long.")
+	public String passwordLength(int length);
+
 	// OTHERS
 
 	@DefaultMessage("Do you want to extend a membership?")

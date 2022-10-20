@@ -24,6 +24,7 @@ import java.util.Objects;
  */
 public class Password extends PerunFormItemEditable {
 
+	public final static int MIN_LENGTH = 8;
 	public final static int MAX_LENGTH = 1024;
 	private final PasswordValidator validator;
 

@@ -31,6 +31,8 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	private HelpBlock help;
 	public PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
+	private static final int DEFAULT_MINIMUM_PASSWORD_LENGTH = 8;
+
 	public PerunFormItemEditable(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
 		add(initFormItem());
@@ -115,7 +117,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 			if (this instanceof Password &&
 					this.getItemData().getFormItem() != null &&
 					!"urn:perun:user:attribute-def:def:login-namespace:einfra".equals(this.getItemData().getFormItem().getPerunDestinationAttribute())) {
-				help.setHTML(help.getHTML() + "<p>" + translation.dontUseAccents());
+				help.setHTML(help.getHTML() + "<p>" + translation.passwordLength(DEFAULT_MINIMUM_PASSWORD_LENGTH) + " " + translation.dontUseAccents());
 			}
 
 			// replace EINFRA help texts to support HTML formatting

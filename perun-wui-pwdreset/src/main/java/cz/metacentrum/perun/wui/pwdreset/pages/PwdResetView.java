@@ -66,6 +66,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	private String namespace = "";
 	private String login = ""; // resolved login in namespace
 
+	private static final int DEFAULT_MINIMUM_PASSWORD_LENGTH = 8;
+
 	private boolean isAccountActivation = Window.Location.getParameterMap().containsKey("activation");
 
 	private PerunButton continueButton = PerunButton.getButton(PerunButtonType.CONTINUE, new ClickHandler() {
@@ -101,7 +103,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 		submit.setText((isAccountActivation) ? translation.submitActivateButton() : translation.submitPwdResetButton());
 		passLabel.setHTML(SafeHtmlUtils.htmlEscape(translation.pwdresetLabel())+"&#8203;<span style=\"color:#b94a48\">*</span>");
 
-		help.setHTML(translation.dontUseAccents());
+		help.setHTML(translation.passwordLength(DEFAULT_MINIMUM_PASSWORD_LENGTH) + " " + translation.dontUseAccents());
 
 		Events<Boolean> emptyEvent = new Events<Boolean>() {
 			@Override
@@ -666,6 +668,15 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 				return;
 			}
 
+		} else {
+
+			// check default minimum length for password
+			if (passwordTextBox.getValue().length() < DEFAULT_MINIMUM_PASSWORD_LENGTH) {
+				itemStatus.setText(translation.passwordLength(DEFAULT_MINIMUM_PASSWORD_LENGTH));
+				passItem.setValidationState(ValidationState.ERROR);
+				events.onFinished(false);
+				return;
+			}
 		}
 
 		if (!Objects.equals(passwordTextBox.getValue(), passwordTextBox2.getValue())) {
