@@ -89,6 +89,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Please <b>avoid using accented characters</b>. It might not be supported by all backend components and services.")
 	public String dontUseAccents();
 
+	@DefaultMessage("Password must be at least {0} characters long.")
+	public String passwordLength(int length);
+
 	// OTHERS
 
 	@DefaultMessage("Do you want to extend a membership?")
@@ -255,9 +258,6 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
-	@DefaultMessage("Submitted registrations")
-	public String submittedTitle();
-
 	@DefaultMessage("Open applications")
 	public String openAppsOnly();
 
@@ -293,6 +293,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	@DefaultMessage("Mail verification message sent to <b>{0}</b>")
 	public String mailVerificationRequestSent(String mailAddress);
+
+	@DefaultMessage("This application is already in state <b>{0}</b>, try checking your 'Submitted applications' page.")
+	public String resendMailAlreadyApproved(String appState);
 
 	// -------------- APP DETAIL PAGE ------------------------ //
 

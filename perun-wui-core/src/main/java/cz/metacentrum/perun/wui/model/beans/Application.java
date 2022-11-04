@@ -34,6 +34,13 @@ public class Application extends JavaScriptObject {
 
 	protected Application() {}
 
+	static public String translateState(String state) {
+		Application app = new JSONObject().getJavaScriptObject().cast();
+
+		app.setState(state);
+		return app.getTranslatedState();
+	}
+
 	/**
 	 * Creates new application object to submit it to the Perun.
 	 *
