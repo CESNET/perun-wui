@@ -130,6 +130,14 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 				}
 			}
 
+			// replace MU-ADM help texts to support HTML formatting
+			if (this.getItemData().getFormItem() != null &&
+					"urn:perun:user:attribute-def:def:login-namespace:mu-adm".equals(this.getItemData().getFormItem().getPerunDestinationAttribute())) {
+				if (this instanceof Password) {
+					help.setHTML(translation.muAdmPasswordHelp());
+				}
+			}
+
 			widgetWithTexts.add(help);
 
 		}
