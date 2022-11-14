@@ -8,6 +8,7 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.EinfraPasswordValidator;
+import cz.metacentrum.perun.wui.registrar.widgets.items.validators.MuAdmPasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
@@ -35,6 +36,8 @@ public class Password extends PerunFormItemEditable {
 		// FIXME - specific per-namespace validation
 		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunDestinationAttribute())) {
 			this.validator = new EinfraPasswordValidator();
+		} else if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:mu-adm", item.getFormItem().getPerunDestinationAttribute())) {
+			this.validator = new MuAdmPasswordValidator();
 		} else {
 			this.validator = new PasswordValidator();
 		}
