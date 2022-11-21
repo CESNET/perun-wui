@@ -104,6 +104,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 				@Override
 				public void onFinished(JavaScriptObject jso) {
 					grid.setList(JsUtils.<Application>jsoAsList(jso));
+					refresh.setEnabled(true);
 				}
 
 				@Override
@@ -114,10 +115,12 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 							RegistrarManager.getOpenApplicationsForUser(0, retry);
 						}
 					});
+					refresh.setEnabled(true);
 				}
 
 				@Override
 				public void onLoadingStart() {
+					refresh.setEnabled(false);
 					grid.clearTable();
 					grid.getLoaderWidget().onLoading(translation.loadingApplications());
 				}
@@ -131,6 +134,7 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 				@Override
 				public void onFinished(JavaScriptObject jso) {
 					grid.setList(JsUtils.<Application>jsoAsList(jso));
+					refresh.setEnabled(true);
 				}
 
 				@Override
@@ -141,10 +145,12 @@ public class AppsView extends ViewImpl implements AppsPresenter.MyView {
 							RegistrarManager.getApplicationsForUser(0, retry);
 						}
 					});
+					refresh.setEnabled(true);
 				}
 
 				@Override
 				public void onLoadingStart() {
+					refresh.setEnabled(false);
 					grid.clearTable();
 					grid.getLoaderWidget().onLoading(translation.loadingApplications());
 				}
