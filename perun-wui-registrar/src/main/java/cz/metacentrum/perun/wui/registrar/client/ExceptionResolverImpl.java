@@ -263,6 +263,8 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			setInfo(trans.cantSubmitLoA(), trans.notEligibleMETAIDP());
 		} else if (Objects.equals("NOT_ELIGIBLE_EINFRAIDP", exception.getReason())) {
 			setInfo(trans.cantSubmitLoA(), trans.notEligibleEINFRAIDP());
+		} else if (Objects.equals("NEVER_EXPIRATION", exception.getReason())) {
+			setInfo(trans.cantSubmitLoA(), trans.expirationNever());
 		} else {
 			setInfo(trans.cantSubmitLoA(), exception.getMessage());
 		}
