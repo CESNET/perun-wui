@@ -205,7 +205,7 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 				// FIXME - hack for BBMRI collections to pre-fill value from URL
 				if ((data.getValue() == null || data.getValue().isEmpty() || data.getValue().equals("null")) &&
 						(data.getPrefilledValue() == null || data.getPrefilledValue().isEmpty() || data.getPrefilledValue().equals("null")) &&
-						data.getFormItem().getShortname().equals("Comma or new-line separated list of IDs of collections you are representing:")) {
+						data.getFormItem().getShortname().equals("collectionIds")) {
 					final String bbmriCollections = Window.Location.getParameter("col");
 					data.setPrefilledValue((bbmriCollections != null) ? JsUtils.unzipString(JsUtils.decodeBase64UrlSafe(bbmriCollections)) : null);
 				}
