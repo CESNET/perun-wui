@@ -391,7 +391,7 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("Examples of password descriptions: “email on mobile phone” or “teleconferences on tablet”.")
 	String alternativePasswordsExample();
 
-	@DefaultMessage("Copy to clipbord")
+	@DefaultMessage("Copy to clipboard")
 	String copyPassword();
 
 	@DefaultMessage("Close")
