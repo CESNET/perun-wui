@@ -1,7 +1,5 @@
 package cz.metacentrum.perun.wui.profile.pages.resources;
 
-
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
@@ -24,7 +22,6 @@ import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Member;
-import cz.metacentrum.perun.wui.model.beans.Resource;
 import cz.metacentrum.perun.wui.model.beans.RichResource;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.profile.client.PerunProfileUtils;
@@ -129,7 +126,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 			@Override
 			public void onFinished(JavaScriptObject result) {
 				Member member = (Member) result;
-				loadResources(member.getId());
+				loadResources(member);
 			}
 
 			@Override
@@ -144,15 +141,15 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 		});
 	}
 
-	private void loadResources(int id) {
-		ResourcesManager.getAssignedRichResources(id, new JsonEvents() {
+	private void loadResources(Member member) {
+		ResourcesManager.getAssignedRichResources(member.getId(), new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject result) {
 				List<RichResource> resources = JsUtils.jsoAsList(result);
 				if (resources.isEmpty()) {
 					getView().setResources(new HashMap<>());
 				} else {
-					loadGroupsForResources(resources);
+					loadGroupsForResources(member, resources);
 				}
 			}
 
@@ -168,7 +165,7 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 		});
 	}
 
-	private void loadGroupsForResources(List<RichResource> richResources) {
+	private void loadGroupsForResources(Member member, List<RichResource> richResources) {
 		final Integer userId = PerunProfileUtils.getUserId(placeManager);
 
 		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
@@ -176,36 +173,20 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 		if (userId == null) {
 			placeManager.revealErrorPlace(request.getNameToken());
 		} else {
-
-			AbstractRepeatingJsonEvent memberEvent = new AbstractRepeatingJsonEvent(richResources.size()) {
-				@Override
-				public void done(List<JavaScriptObject> results) {
-					List<Member> members = JsUtils.jsListAsList(results);
-					loadGroupsFromMembers(richResources, members);
-				}
-
-				@Override
-				public void erred(PerunException exception) {
-					getView().setResourcesDataError(exception);
-				}
-
-				@Override
-				public void started() {
-					// do nothing
-				}
-			};
-
-			for (RichResource resource : richResources) {
-				MembersManager.getMemberByUser(userId, resource.getVoId(), memberEvent);
-			}
+			loadGroupsFromMember(richResources, member);
 		}
 	}
 
-	private void loadGroupsFromMembers(List<RichResource> resources, List<Member> members) {
+	private void loadGroupsFromMember(List<RichResource> resources, Member member) {
 
-		AbstractRepeatingJsonEvent resourceGroupsEvent = new AbstractRepeatingJsonEvent(members.size()) {
+		AbstractRepeatingJsonEvent event = new AbstractRepeatingJsonEvent(resources.size()) {
+
 			@Override
 			public void done(List<JavaScriptObject> results) {
+
+				// FIXME - this doesnt makes sense as AbstractRepeatingJsonEvent merges all results together
+				// and we don't have list of "list", but just the list of all groups assigned to all resources
+				// without any mapping (by id or other) between group and resource.
 				List<List<Group>> resourcesGroups = new ArrayList<>();
 
 				for (JavaScriptObject result : results) {
@@ -232,11 +213,18 @@ public class ResourcesPresenter extends Presenter<ResourcesPresenter.MyView, Res
 			}
 		};
 
-		for (int i = 0; i < members.size(); i++) {
-			Member member = members.get(i);
-			Resource resource = resources.get(i);
-
-			ResourcesManager.getAssignedGroups(resource.getId(), member.getId(), resourceGroupsEvent);
+		/* FIXME - temporary disabled
+		for (RichResource resource : resources) {
+			ResourcesManager.getAssignedGroups(resource.getId(), member.getId(), event);
 		}
+		*/
+
+		// pass with empty groups
+		Map<RichResource, List<Group>> resourceWithGroups = new HashMap<>();
+		for (RichResource resource : resources) {
+			resourceWithGroups.put(resource,new ArrayList<Group>());
+		}
+		getView().setResources(resourceWithGroups);
+
 	}
 }
