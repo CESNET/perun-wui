@@ -21,7 +21,9 @@ import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.managers.MembersManager;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
+import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -32,6 +34,8 @@ import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.ExtSource;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Identity;
+import cz.metacentrum.perun.wui.model.beans.Member;
+import cz.metacentrum.perun.wui.model.beans.RichMember;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.client.ExceptionResolver;
@@ -76,6 +80,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -92,9 +97,13 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 	private static PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
+	private static final String EXPIRATION_ATTRIBUTE_URN = "urn:perun:member:attribute-def:def:membershipExpiration";
+
 	private Vo vo;
 	private Group group;
 	private ExceptionResolver exceptionResolver;
+
+	private boolean neverExp = false;
 
 	@UiField
 	PerunForm form;
@@ -192,7 +201,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		final PerunLoader loader = new PerunLoader();
 		form.add(loader);
-
 		RegistrarManager.initializeRegistrar(voName, groupName, new JsonEvents() {
 
 			JsonEvents retry = this;
@@ -204,6 +212,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				// recreate VO and group
 				vo = registrar.getVo();
+
+
 
 				if (groupName != null && !groupName.isEmpty()) {
 					group = registrar.getGroup();
@@ -241,26 +251,95 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					});
 
 				} else {
+					// get member and his attributes to decide whether he is valid with no expiration date to know whether to display extension dialog or not
+					MembersManager.getMemberByUser(PerunSession.getInstance().getUserId(), vo.getId(), new JsonEvents() {
+						@Override
+						public void onFinished(JavaScriptObject result) {
+							Member member = (Member) result;
+							MembersManager.getRichMemberWithAttributes(member.getId(), new JsonEvents() {
+								@Override
+								public void onFinished(JavaScriptObject result) {
+									RichMember richMember = (RichMember) result;
+									if (Objects.equals(richMember.getMembershipStatus(), "VALID") &&
+										richMember.getAttribute(EXPIRATION_ATTRIBUTE_URN) == null) {
+										neverExp = true;
+									}
+									loader.onFinished();
+									loader.removeFromParent();
 
-					loader.onFinished();
-					loader.removeFromParent();
+									// CHECK SIMILAR USERS
+									// Make sure we load form only after user decide to skip identity joining
 
-					// CHECK SIMILAR USERS
-					// Make sure we load form only after user decide to skip identity joining
+									if (!registrar.getSimilarUsers().isEmpty() &&
+										!isApplicationPending(registrar) &&
+										!PerunConfiguration.findSimilarUsersDisabled()) {
+										showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
+											@Override
+											public void onClick(ClickEvent event) {
+												loadSteps(pp, registrar);
+											}
+										});
+									} else {
+										loadSteps(pp, registrar);
+									}
+								}
 
-					if (!registrar.getSimilarUsers().isEmpty() &&
-						!isApplicationPending(registrar) &&
-						!PerunConfiguration.findSimilarUsersDisabled()) {
-						showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
-							@Override
-							public void onClick(ClickEvent event) {
+								@Override
+								public void onError(PerunException error) {
+									loader.onFinished();
+									loader.removeFromParent();
+
+									// CHECK SIMILAR USERS
+									// Make sure we load form only after user decide to skip identity joining
+
+									if (!registrar.getSimilarUsers().isEmpty() &&
+										!isApplicationPending(registrar) &&
+										!PerunConfiguration.findSimilarUsersDisabled()) {
+										showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
+											@Override
+											public void onClick(ClickEvent event) {
+												loadSteps(pp, registrar);
+											}
+										});
+									} else {
+										loadSteps(pp, registrar);
+									}
+								}
+
+								@Override
+								public void onLoadingStart() {
+
+								}
+							});
+						}
+
+						@Override
+						public void onError(PerunException error) {
+							loader.onFinished();
+							loader.removeFromParent();
+
+							// CHECK SIMILAR USERS
+							// Make sure we load form only after user decide to skip identity joining
+
+							if (!registrar.getSimilarUsers().isEmpty() &&
+								!isApplicationPending(registrar) &&
+								!PerunConfiguration.findSimilarUsersDisabled()) {
+								showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
+									@Override
+									public void onClick(ClickEvent event) {
+										loadSteps(pp, registrar);
+									}
+								});
+							} else {
 								loadSteps(pp, registrar);
 							}
-						});
-					} else {
-						loadSteps(pp, registrar);
-					}
+						}
 
+						@Override
+						public void onLoadingStart() {
+
+						}
+					});
 				}
 
 			}
@@ -315,13 +394,14 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			} else if (voExtensionFormExists(registrar)) {
 
 				if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
-
-					for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
-						if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+					if (!neverExp) {
+						for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
+							if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
 								!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
-							// offer only when VO doesn't have empty or "You are registered" form.
-							stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
-							break;
+								// offer only when VO doesn't have empty or "You are registered" form.
+								stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
+								break;
+							}
 						}
 					}
 
@@ -331,13 +411,14 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				} else {
 
 					stepManager.addStep(new GroupInitStep(registrar, form));
-
-					for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
-						if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+					if (!neverExp) {
+						for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
+							if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
 								!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
-							// offer only when VO doesn't have empty or "You are registered" form.
-							stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
-							break;
+								// offer only when VO doesn't have empty or "You are registered" form.
+								stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
+								break;
+							}
 						}
 					}
 				}
