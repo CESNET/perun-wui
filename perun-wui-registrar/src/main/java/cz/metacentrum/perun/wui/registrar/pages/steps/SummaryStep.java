@@ -5,7 +5,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.Events;
@@ -48,7 +47,6 @@ import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a final step in registration process. Show info.
@@ -400,9 +398,58 @@ public class SummaryStep implements Step {
 		Result resultVo = summary.getVoInitResult();
 		Result resultGroup = summary.getGroupInitResult();
 
+		Application voInitApp = resultVo.getApplication();
+		Application.ApplicationState previousVoAppState = voInitApp.getState();
+		int voInitAppId = summary.getVoInitResult().getApplication().getId();
+
+		Application groupInitApp = resultGroup.getApplication();
+		Application.ApplicationState previousGroupAppState = groupInitApp.getState();
+		int groupInitAppId = summary.getGroupInitResult().getApplication().getId();
+
+		RegistrarManager.getApplicationById(voInitAppId, new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject jso) {
+				Application app  = jso.cast();
+				voInitApp.setState(app.getState());
+
+				RegistrarManager.getApplicationById(groupInitAppId, new JsonEvents() {
+					@Override
+					public void onFinished(JavaScriptObject jso) {
+						Application app  = jso.cast();
+						groupInitApp.setState(app.getState());
+						caseVoInitGroupInit(summary, resultVo, resultGroup, voInitApp, previousVoAppState, groupInitApp, previousGroupAppState);
+					}
+
+					@Override
+					public void onError(PerunException error) {
+					}
+
+					@Override
+					public void onLoadingStart() {
+					}
+				});
+			}
+
+			@Override
+			public void onError(PerunException error) {
+			}
+
+			@Override
+			public void onLoadingStart() {
+			}
+		});
+	}
+
+	private void caseVoInitGroupInit(Summary summary, Result resultVo, Result resultGroup, Application voInitApp, Application.ApplicationState previousVoAppState, Application groupInitApp, Application.ApplicationState previousGroupAppState) {
+		boolean emailsAreVerified = voInitApp.getState() != Application.ApplicationState.NEW
+			&& groupInitApp.getState() != Application.ApplicationState.NEW;
+		// set back the old state just in case they are needed later
+		voInitApp.setState(previousVoAppState);
+		groupInitApp.setState(previousGroupAppState);
+
 		// Show summary about initial application to VO
 		if (resultVo.isOk()) {
-			if (summary.mustRevalidateEmail() == null) {
+			if (emailsAreVerified) {
 				ListGroupItem msg = new ListGroupItem();
 
 				if (resultVo.hasAutoApproval()) {
@@ -423,7 +470,7 @@ public class SummaryStep implements Step {
 		} else if (resultVo.getException() != null && "CantBeApprovedException".equals(resultVo.getException().getName())) {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
-			if (summary.mustRevalidateEmail() == null) {
+			if (emailsAreVerified) {
 				ListGroupItem msg = new ListGroupItem();
 				msg.setText(translation.waitForAcceptation());
 				messages.add(msg);
@@ -439,7 +486,7 @@ public class SummaryStep implements Step {
 
 		// Show summary about application to group
 		if (resultGroup.isOk()) {
-			if (summary.mustRevalidateEmail() == null) {
+			if (emailsAreVerified) {
 				title.add(successIcon());
 				ListGroupItem msg = new ListGroupItem();
 
@@ -462,7 +509,7 @@ public class SummaryStep implements Step {
 		} else if (resultGroup.getException() != null && "CantBeApprovedException".equals(resultGroup.getException().getName())) {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO/Group manager can manually handle it.
-			if (summary.mustRevalidateEmail() == null) {
+			if (emailsAreVerified) {
 				title.add(successIcon());
 				ListGroupItem msg = new ListGroupItem();
 
