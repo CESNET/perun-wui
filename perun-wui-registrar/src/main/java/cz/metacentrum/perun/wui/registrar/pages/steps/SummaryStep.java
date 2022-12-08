@@ -5,7 +5,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.Events;
@@ -48,7 +47,6 @@ import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a final step in registration process. Show info.
@@ -139,11 +137,13 @@ public class SummaryStep implements Step {
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
-			title.add(new Text(" "+translation.initTitle()));
-			msg.setText(translation.waitForAcceptation());
-			messages.add(msg);
+			if (summary.mustRevalidateEmail() == null) {
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
+				title.add(new Text(" " + translation.initTitle()));
+				msg.setText(translation.waitForAcceptation());
+				messages.add(msg);
+			}
 			verifyMailMessage(summary, messages, res.getException().getApplicationId());
 
 		} else {
@@ -189,7 +189,6 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
-			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else if (res.isOk() && summary.mustRevalidateEmail() != null) {
 
@@ -200,11 +199,13 @@ public class SummaryStep implements Step {
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
-			title.add(new Text(" "+translation.extendTitle()));
-			msg.setText(translation.waitForExtAcceptation());
-			messages.add(msg);
+			if (summary.mustRevalidateEmail() == null) {
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
+				title.add(new Text(" " + translation.extendTitle()));
+				msg.setText(translation.waitForExtAcceptation());
+				messages.add(msg);
+			}
 			verifyMailMessage(summary, messages, res.getException().getApplicationId());
 
 		} else {
@@ -248,7 +249,7 @@ public class SummaryStep implements Step {
 	 */
 	private void caseGroupInit(Summary summary, Heading title, ListGroup messages) {
 		Result res = summary.getGroupInitResult();
-		if (res.isOk()) {
+		if (res.isOk() && summary.mustRevalidateEmail() == null) {
 			title.add(successIcon());
 			ListGroupItem msg = new ListGroupItem();
 
@@ -266,18 +267,25 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
+
+		} else if (res.isOk() && summary.mustRevalidateEmail() != null) {
+
+			title.add(new Icon(IconType.WARNING));
+			title.add(new Text(" " + translation.emailVerificationNeededTitle()));
 			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
+			if (summary.mustRevalidateEmail() == null) {
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
 
-			title.add(new Text(" "+translation.initTitle()));
-			msg.setText(translation.waitForAcceptation());
+				title.add(new Text(" " + translation.initTitle()));
+				msg.setText(translation.waitForAcceptation());
 
-			messages.add(msg);
+				messages.add(msg);
+			}
 			verifyMailMessage(summary, messages, res.getException().getApplicationId());
 
 		} else {
@@ -306,7 +314,7 @@ public class SummaryStep implements Step {
 	 */
 	private void caseGroupExt(Summary summary, Heading title, ListGroup messages) {
 		Result res = summary.getGroupExtResult();
-		if (res.isOk()) {
+		if (res.isOk() && summary.mustRevalidateEmail() == null) {
 			title.add(successIcon());
 			ListGroupItem msg = new ListGroupItem();
 
@@ -324,18 +332,25 @@ public class SummaryStep implements Step {
 			}
 
 			messages.add(msg);
+
+		} else if (res.isOk() && summary.mustRevalidateEmail() != null) {
+
+			title.add(new Icon(IconType.WARNING));
+			title.add(new Text(" " + translation.emailVerificationNeededTitle()));
 			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else if (res.getException() != null && "CantBeApprovedException".equals(res.getException().getName())) {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
+			if (summary.mustRevalidateEmail() == null) {
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
 
-			title.add(new Text(" "+translation.extendTitle()));
-			msg.setText(translation.waitForExtAcceptation());
+				title.add(new Text(" " + translation.extendTitle()));
+				msg.setText(translation.waitForExtAcceptation());
 
-			messages.add(msg);
+				messages.add(msg);
+			}
 			verifyMailMessage(summary, messages, res.getException().getApplicationId());
 
 		} else {
@@ -367,71 +382,82 @@ public class SummaryStep implements Step {
 	 * @param messages
 	 */
 	private void caseVoInitGroupInit(Summary summary, Heading title, ListGroup messages) {
-
 		Result resultVo = summary.getVoInitResult();
 		Result resultGroup = summary.getGroupInitResult();
 
 		// Show summary about initial application to VO
-		if (resultVo.isOk()) {
-			ListGroupItem msg = new ListGroupItem();
 
-			if (resultVo.hasAutoApproval()) {
-				msg.setText(translation.registered(resultVo.getBean().getName()));
-			} else {
-				// Message from group application is sufficient in this case.
-			}
+		// Email verification needed
+		if (resultGroup.isOk() && resultVo.isOk() && summary.mustRevalidateEmail() != null) {
 
-			if (!msg.getText().isEmpty()) {
-				messages.add(msg);
-			}
+			title.add(new Icon(IconType.WARNING));
+			title.add(new Text(" " + translation.emailVerificationNeededTitle()));
 			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
-		} else if (resultVo.getException() != null && "CantBeApprovedException".equals(resultVo.getException().getName())) {
-
-			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
-			ListGroupItem msg = new ListGroupItem();
-			msg.setText(translation.waitForAcceptation());
-			messages.add(msg);
-			verifyMailMessage(summary, messages, resultVo.getException().getApplicationId());
-
 		} else {
-			displayException(resultVo.getException(), resultVo.getBean());
-		}
+			if (resultVo.isOk()) {
+				ListGroupItem msg = new ListGroupItem();
 
-		// Show summary about application to group
-		if (resultGroup.isOk()) {
-
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
-
-			if (resultGroup.hasAutoApproval()) {
 				if (resultVo.hasAutoApproval()) {
-					title.add(new Text(" "+translation.initTitleAutoApproval()));
-					msg.setText(translation.registered(((Group) resultGroup.getBean()).getShortName()));
+					msg.setText(translation.registered(resultVo.getBean().getName()));
 				} else {
-					title.add(new Text(" "+translation.initTitle()));
-					msg.setText(translation.waitForVoAcceptation(((Group) resultGroup.getBean()).getShortName()));
+					// Message from group application is sufficient in this case.
 				}
+
+				if (!msg.getText().isEmpty()) {
+					messages.add(msg);
+				}
+				verifyMailMessage(summary, messages, summary.getApplication().getId());
+
+			} else if (resultVo.getException() != null && "CantBeApprovedException".equals(resultVo.getException().getName())) {
+
+				// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
+				if (summary.mustRevalidateEmail() == null) {
+					ListGroupItem msg = new ListGroupItem();
+					msg.setText(translation.waitForAcceptation());
+					messages.add(msg);
+				}
+				verifyMailMessage(summary, messages, resultVo.getException().getApplicationId());
+
 			} else {
-				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForAcceptation());
+				displayException(resultVo.getException(), resultVo.getBean());
 			}
 
-			messages.add(msg);
+			// Show summary about application to group
+			if (resultGroup.isOk()) {
 
-		} else if (resultGroup.getException() != null && "CantBeApprovedException".equals(resultGroup.getException().getName())) {
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
 
-			// FIXME - hack to ignore CantBeApprovedException since VO/Group manager can manually handle it.
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
+				if (resultGroup.hasAutoApproval()) {
+					if (resultVo.hasAutoApproval()) {
+						title.add(new Text(" " + translation.initTitleAutoApproval()));
+						msg.setText(translation.registered(((Group) resultGroup.getBean()).getShortName()));
+					} else {
+						title.add(new Text(" " + translation.initTitle()));
+						msg.setText(translation.waitForVoAcceptation(((Group) resultGroup.getBean()).getShortName()));
+					}
+				} else {
+					title.add(new Text(" " + translation.initTitle()));
+					msg.setText(translation.waitForAcceptation());
+				}
 
-			title.add(new Text(" "+translation.initTitle()));
-			msg.setText(translation.waitForAcceptation());
+				messages.add(msg);
 
-			messages.add(msg);
+			} else if (resultGroup.getException() != null && "CantBeApprovedException".equals(resultGroup.getException().getName())) {
 
-		} else {
-			displayException(resultGroup.getException(), resultGroup.getBean());
+				// FIXME - hack to ignore CantBeApprovedException since VO/Group manager can manually handle it.
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
+
+				title.add(new Text(" " + translation.initTitle()));
+				msg.setText(translation.waitForAcceptation());
+
+				messages.add(msg);
+
+			} else {
+				displayException(resultGroup.getException(), resultGroup.getBean());
+			}
 		}
 
 		// Show continue button
@@ -464,69 +490,77 @@ public class SummaryStep implements Step {
 		Result resultGroup = summary.getGroupInitResult();
 
 		// Show summary about extension application to VO
-		if (resultVo.isOk()) {
-			ListGroupItem msg = new ListGroupItem();
 
-			if (resultVo.hasAutoApproval()) {
-				msg.setText(translation.extended(resultVo.getBean().getName()));
-			} else {
-				// Message from group application is sufficient in this case.
-			}
+		if (resultVo.isOk() && resultGroup.isOk() && summary.mustRevalidateEmail() != null) {
 
-			if (!msg.getText().isEmpty()) {
-				messages.add(msg);
-			}
-
-		} else if (resultVo.getException() != null && "CantBeApprovedException".equals(resultVo.getException().getName())) {
-
-			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
-			ListGroupItem msg = new ListGroupItem();
-			msg.setText(translation.waitForExtAcceptation());
-			messages.add(msg);
+			title.add(new Icon(IconType.WARNING));
+			title.add(new Text(" " + translation.emailVerificationNeededTitle()));
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else {
-			// FIXME - solve this BLEEEH hack in better way.
-			if (resultVo.getException() != null && "DuplicateRegistrationAttemptException".equals(resultVo.getException().getName())) {
-				resultVo.getException().setName("DuplicateExtensionAttemptException");
-			}
-			displayException(resultVo.getException(), resultVo.getBean());
-		}
+			if (resultVo.isOk()) {
+				ListGroupItem msg = new ListGroupItem();
 
-		// Show summary about application to group
-		if (resultGroup.isOk()) {
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
-
-			if (resultGroup.hasAutoApproval()) {
-				if (resultVo.hasAutoApproval()) { // FIXME - tohle by se mělo vyhodnotit z předchozího stavu (není auto nebo byla chyba)
-					title.add(new Text(" "+translation.initTitleAutoApproval()));
-					msg.setText(translation.registered(((Group) resultGroup.getBean()).getShortName()));
+				if (resultVo.hasAutoApproval()) {
+					msg.setText(translation.extended(resultVo.getBean().getName()));
 				} else {
-					title.add(new Text(" "+translation.initTitle()));
-					msg.setText(translation.waitForVoExtension(((Group) resultGroup.getBean()).getShortName()));
+					// Message from group application is sufficient in this case.
 				}
+
+				if (!msg.getText().isEmpty()) {
+					messages.add(msg);
+				}
+
+			} else if (resultVo.getException() != null && "CantBeApprovedException".equals(resultVo.getException().getName())) {
+
+				// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
+				ListGroupItem msg = new ListGroupItem();
+				msg.setText(translation.waitForExtAcceptation());
+				messages.add(msg);
+
 			} else {
-				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForAcceptation());
+				// FIXME - solve this BLEEEH hack in better way.
+				if (resultVo.getException() != null && "DuplicateRegistrationAttemptException".equals(resultVo.getException().getName())) {
+					resultVo.getException().setName("DuplicateExtensionAttemptException");
+				}
+				displayException(resultVo.getException(), resultVo.getBean());
 			}
 
-			messages.add(msg);
+			// Show summary about application to group
+			if (resultGroup.isOk()) {
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
 
-		} else if (resultGroup.getException() != null && "CantBeApprovedException".equals(resultGroup.getException().getName())) {
+				if (resultGroup.hasAutoApproval()) {
+					if (resultVo.hasAutoApproval()) { // FIXME - tohle by se mělo vyhodnotit z předchozího stavu (není auto nebo byla chyba)
+						title.add(new Text(" " + translation.initTitleAutoApproval()));
+						msg.setText(translation.registered(((Group) resultGroup.getBean()).getShortName()));
+					} else {
+						title.add(new Text(" " + translation.initTitle()));
+						msg.setText(translation.waitForVoExtension(((Group) resultGroup.getBean()).getShortName()));
+					}
+				} else {
+					title.add(new Text(" " + translation.initTitle()));
+					msg.setText(translation.waitForAcceptation());
+				}
 
-			// FIXME - hack to ignore CantBeApprovedException since VO/Group manager can manually handle it.
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
+				messages.add(msg);
 
-			title.add(new Text(" "+translation.initTitle()));
-			msg.setText(translation.waitForAcceptation());
+			} else if (resultGroup.getException() != null && "CantBeApprovedException".equals(resultGroup.getException().getName())) {
 
-			messages.add(msg);
+				// FIXME - hack to ignore CantBeApprovedException since VO/Group manager can manually handle it.
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
 
-		} else {
-			displayException(resultGroup.getException(), resultGroup.getBean());
+				title.add(new Text(" " + translation.initTitle()));
+				msg.setText(translation.waitForAcceptation());
+
+				messages.add(msg);
+
+			} else {
+				displayException(resultGroup.getException(), resultGroup.getBean());
+			}
 		}
-
 		// Show continue button
 		PerunButton continueBtn = null;
 		if (summary.alreadyMemberOfGroup()) {
@@ -553,71 +587,79 @@ public class SummaryStep implements Step {
 		Result resultGroup = summary.getGroupExtResult();
 
 		// Show summary about extension application to VO
-		if (resultVo.isOk()) {
-			ListGroupItem msg = new ListGroupItem();
+		if (resultVo.isOk() && resultGroup.isOk() && summary.mustRevalidateEmail() != null) {
 
-			if (resultVo.hasAutoApproval()) {
-				msg.setText(translation.extended(resultVo.getBean().getName()));
-			} else {
-				// Message from group application is sufficient in this case.
-			}
-
-			if (!msg.getText().isEmpty()) {
-				messages.add(msg);
-			}
-
-		} else if (resultVo.getException() != null && "CantBeApprovedException".equals(resultVo.getException().getName())) {
-
-			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
-			ListGroupItem msg = new ListGroupItem();
-			msg.setText(translation.waitForExtAcceptation());
-			messages.add(msg);
+			title.add(new Icon(IconType.WARNING));
+			title.add(new Text(" " + translation.emailVerificationNeededTitle()));
+			verifyMailMessage(summary, messages, summary.getApplication().getId());
 
 		} else {
-			// FIXME - solve this BLEEEH hack in better way.
-			if (resultVo.getException() != null && "DuplicateRegistrationAttemptException".equals(resultVo.getException().getName())) {
-				resultVo.getException().setName("DuplicateExtensionAttemptException");
-			}
-			displayException(resultVo.getException(), resultVo.getBean());
-		}
+			if (resultVo.isOk() && summary.mustRevalidateEmail() == null) {
+				ListGroupItem msg = new ListGroupItem();
 
-		// Show summary about application to group
-		if (resultGroup.isOk()) {
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
-
-			if (resultGroup.hasAutoApproval()) {
 				if (resultVo.hasAutoApproval()) {
-					title.add(new Text(" "+translation.extendTitleAutoApproval()));
-					msg.setText(translation.extended(((Group) resultGroup.getBean()).getShortName()));
+					msg.setText(translation.extended(resultVo.getBean().getName()));
 				} else {
-					title.add(new Text(" "+translation.extendTitle()));
-					msg.setText(translation.waitForVoExtension(((Group) resultGroup.getBean()).getShortName()));
+					// Message from group application is sufficient in this case.
 				}
-			} else {
-				title.add(new Text(" "+translation.extendTitle()));
+
+				if (!msg.getText().isEmpty()) {
+					messages.add(msg);
+				}
+
+			} else if (resultVo.getException() != null && "CantBeApprovedException".equals(resultVo.getException().getName())) {
+
+				// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
+				ListGroupItem msg = new ListGroupItem();
 				msg.setText(translation.waitForExtAcceptation());
+				messages.add(msg);
+
+			} else {
+				// FIXME - solve this BLEEEH hack in better way.
+				if (resultVo.getException() != null && "DuplicateRegistrationAttemptException".equals(resultVo.getException().getName())) {
+					resultVo.getException().setName("DuplicateExtensionAttemptException");
+				}
+				displayException(resultVo.getException(), resultVo.getBean());
 			}
 
-			messages.add(msg);
+			// Show summary about application to group
+			if (resultGroup.isOk() && summary.mustRevalidateEmail() == null) {
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
 
-		} else if (resultGroup.getException() != null && "CantBeApprovedException".equals(resultGroup.getException().getName())) {
+				if (resultGroup.hasAutoApproval()) {
+					if (resultVo.hasAutoApproval()) {
+						title.add(new Text(" " + translation.extendTitleAutoApproval()));
+						msg.setText(translation.extended(((Group) resultGroup.getBean()).getShortName()));
+					} else {
+						title.add(new Text(" " + translation.extendTitle()));
+						msg.setText(translation.waitForVoExtension(((Group) resultGroup.getBean()).getShortName()));
+					}
+				} else {
+					title.add(new Text(" " + translation.extendTitle()));
+					msg.setText(translation.waitForExtAcceptation());
+				}
 
-			// FIXME - hack to ignore CantBeApprovedException since VO/Group manager can manually handle it.
-			title.add(successIcon());
-			ListGroupItem msg = new ListGroupItem();
+				messages.add(msg);
 
-			title.add(new Text(" "+translation.extendTitle()));
-			msg.setText(translation.waitForExtAcceptation());
+			} else if (resultGroup.getException() != null && "CantBeApprovedException".equals(resultGroup.getException().getName())) {
 
-			messages.add(msg);
+				// FIXME - hack to ignore CantBeApprovedException since VO/Group manager can manually handle it.
+				title.add(successIcon());
+				ListGroupItem msg = new ListGroupItem();
 
-		} else {
-			// FIXME - solve this BLEEEH hack in better way.
-			if ("DuplicateRegistrationAttemptException".equals(resultVo.getException().getName())) {
-				resultVo.getException().setName("DuplicateExtensionAttemptException");
+				title.add(new Text(" " + translation.extendTitle()));
+				msg.setText(translation.waitForExtAcceptation());
+
+				messages.add(msg);
+
+			} else {
+				// FIXME - solve this BLEEEH hack in better way.
+				if ("DuplicateRegistrationAttemptException".equals(resultVo.getException().getName())) {
+					resultVo.getException().setName("DuplicateExtensionAttemptException");
+				}
+				displayException(resultGroup.getException(), resultGroup.getBean());
 			}
-			displayException(resultGroup.getException(), resultGroup.getBean());
 		}
 
 		// Show continue button
