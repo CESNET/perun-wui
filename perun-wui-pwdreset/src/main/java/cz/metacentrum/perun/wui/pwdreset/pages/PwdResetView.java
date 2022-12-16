@@ -265,6 +265,14 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			public void onFinished(JavaScriptObject result) {
 				form.setVisible(true);
 
+				if (Objects.equals(namespace, "einfra")) {
+					help.setHTML("<p>" + translation.einfraPasswordHelp());
+				} else if (Objects.equals(namespace, "vsup")) {
+					help.setHTML("<p>"+translation.vsupHelp());
+				} else if (Objects.equals(namespace, "mu")) {
+					help.setHTML("<p>"+translation.muPasswordHelp());
+				}
+
 				setUpNonAuthzSubmitButton(token);
 			}
 
