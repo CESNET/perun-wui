@@ -7,7 +7,7 @@
 
 This project aims to deliver rich user graphical interface for Perun components. Project uses enterprise frameworks to make it work:
 
-* [Google Web Toolkit](http://www.gwtproject.org/)
+* [Google Web Toolkit](https://www.gwtproject.org/)
 * [GWT Platform (GWTP)](https://www.arcbees.com/#!/products/gwtp)
 * [GwtBootstrap3](https://github.com/gwtbootstrap3/gwtbootstrap3)
 
@@ -23,7 +23,7 @@ See https://perun-aai.org/ for more details about the base project.
 
 ### License ###
 
-&copy; 2010-2022 [CESNET](https://www.cesnet.cz/?lang=en) and [CERIT-SC](https://www.cerit-sc.cz/en/index.html), all rights reserved.
+&copy; 2010-2023 [CESNET](https://www.cesnet.cz/?lang=en) and [CERIT-SC](https://www.cerit-sc.cz/en/index.html), all rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
