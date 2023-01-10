@@ -32,7 +32,7 @@ public interface PerunPwdResetTranslation extends PerunTranslation {
 	@DefaultMessage("Reset password")
 	public String submitPwdResetButton();
 
-	@DefaultMessage("Passwords doesn`t match!")
+	@DefaultMessage("Passwords don`t match!")
 	public String passwordsDoesnMatch();
 
 	@DefaultMessage("Password can`t be empty!")

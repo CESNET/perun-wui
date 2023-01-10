@@ -11,6 +11,7 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.validators.EinfraPasswor
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.MuAdmPasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PasswordValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
+import cz.metacentrum.perun.wui.registrar.widgets.items.validators.AdminMetaPasswordValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedPasswordTextBox;
 import org.gwtbootstrap3.client.ui.InputGroup;
 import org.gwtbootstrap3.client.ui.InputGroupAddon;
@@ -38,6 +39,8 @@ public class Password extends PerunFormItemEditable {
 			this.validator = new EinfraPasswordValidator();
 		} else if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:mu-adm", item.getFormItem().getPerunDestinationAttribute())) {
 			this.validator = new MuAdmPasswordValidator();
+		} else if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:admin-meta", item.getFormItem().getPerunDestinationAttribute())) {
+			this.validator = new AdminMetaPasswordValidator();
 		} else {
 			this.validator = new PasswordValidator();
 		}

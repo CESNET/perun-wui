@@ -148,7 +148,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Password <b>can`t be empty!</b>")
 	public String passEmpty();
 
-	@DefaultMessage("Passwords doesn`t match!")
+	@DefaultMessage("Passwords don`t match!")
 	public String passMismatch();
 
 	@DefaultMessage("Confirm password!")
