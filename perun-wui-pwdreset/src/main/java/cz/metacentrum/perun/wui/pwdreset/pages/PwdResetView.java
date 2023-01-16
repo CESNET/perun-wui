@@ -387,6 +387,14 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			namespace = "";
 		}
 
+		if (Objects.equals(namespace, "einfra")) {
+			help.setHTML("<p>" + translation.einfraPasswordHelp());
+		} else if (Objects.equals(namespace, "vsup")) {
+			help.setHTML("<p>"+translation.vsupHelp());
+		} else if (Objects.equals(namespace, "mu")) {
+			help.setHTML("<p>"+translation.muPasswordHelp());
+		}
+
 		if (namespace.equals("vsup")) {
 
 			Image logo = new Image(PerunPwdResetResources.INSTANCE.getVsupLogo());
@@ -750,6 +758,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			namespaceLogoWrapper.add(logo);
 			namespaceLogoWrapper.setVisible(true);
 
+		}  else if (Objects.equals(namespace, "mu")) {
+			help.setHTML("<p>"+translation.muPasswordHelp());
 		}
 
 	}
