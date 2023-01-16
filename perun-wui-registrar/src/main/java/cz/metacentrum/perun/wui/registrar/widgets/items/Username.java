@@ -7,6 +7,7 @@ import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
+import cz.metacentrum.perun.wui.registrar.widgets.items.validators.AdminMetaUsernameValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.EinfraUsernameValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.UsernameValidator;
@@ -42,6 +43,8 @@ public class Username extends PerunFormItemEditable {
 		super(form, item, lang);
 		if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:einfra", item.getFormItem().getPerunDestinationAttribute())) {
 			this.validator = new EinfraUsernameValidator();
+		} else if (item.getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:admin-meta", item.getFormItem().getPerunDestinationAttribute())) {
+			this.validator = new AdminMetaUsernameValidator();
 		} else {
 			this.validator = new UsernameValidator();
 		}

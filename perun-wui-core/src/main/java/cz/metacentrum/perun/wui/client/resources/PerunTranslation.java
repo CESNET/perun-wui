@@ -267,14 +267,26 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Login must<ul><li>start with a lower-case letter<li>be 2-15 characters long<li>consist only of<ul><li>lower-case non-accented letters<li>digits<li>hyphens and underscores</ul></ul>")
 	public String einfraLoginHelp();
 
+	@DefaultMessage("Login must<ul><li>start with a lower-case letter<li>be 2-15 characters long<li>consist only of<ul><li>lower-case non-accented letters<li>digits<li>hyphens and underscores</ul></ul>")
+	public String adminMetaLoginHelp();
+
 	@DefaultMessage("Login must <b>be 2-15 characters long!</b>")
 	public String einfraLoginLength();
+
+	@DefaultMessage("Login must <b>be 2-15 characters long!</b>")
+	public String adminMetaLoginLength();
 
 	@DefaultMessage("Login must <b>start with lower-case letter!</b>")
 	public String einfraLoginStart();
 
+	@DefaultMessage("Login must <b>start with lower-case letter!</b>")
+	public String adminMetaLoginStart();
+
 	@DefaultMessage("Login can contain only<ul><li>lower-cased non-accented letters<li>digits<li>hyphens and underscores</ul>")
 	public String einfraLoginFormat();
+
+	@DefaultMessage("Login can contain only<ul><li>lower-cased non-accented letters<li>digits<li>hyphens and underscores</ul>")
+	public String adminMetaLoginFormat();
 
 	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 10 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
 	public String einfraPasswordHelp();
@@ -282,11 +294,17 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 14 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
 	public String muAdmPasswordHelp();
 
+	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 10 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
+	public String adminMetaPasswordHelp();
+
 	@DefaultMessage("Password must be <b>at least 10 characters</b> long!")
 	public String einfraPasswordLength();
 
 	@DefaultMessage("Password must be <b>at least 14 characters</b> long!")
 	public String muAdmPasswordLength();
+
+	@DefaultMessage("Password must be <b>at least 10 characters</b> long!")
+	public String adminMetaPasswordLength();
 
 	@DefaultMessage("Password <b>can`t contain accented characters (diacritics)</b> or non-printing and control characters!")
 	public String einfraPasswordFormat();
@@ -294,17 +312,26 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Password <b>can`t contain accented characters (diacritics)</b> or non-printing and control characters!")
 	public String muAdmPasswordFormat();
 
+	@DefaultMessage("Password <b>can`t contain accented characters (diacritics)</b> or non-printing and control characters!")
+	public String adminMetaPasswordFormat();
+
 	@DefaultMessage("Password must consist of <b>at least 3 of 4</b> character groups<ul><li>lower-case letters</li><li>upper-case letters</li><li>digits</li><li>special characters</li></ul>")
 	public String einfraPasswordStrength();
 
 	@DefaultMessage("Password must consist of <b>at least 3 of 4</b> character groups<ul><li>lower-case letters</li><li>upper-case letters</li><li>digits</li><li>special characters</li></ul>")
 	public String muAdmPasswordStrength();
 
+	@DefaultMessage("Password must consist of <b>at least 3 of 4</b> character groups<ul><li>lower-case letters</li><li>upper-case letters</li><li>digits</li><li>special characters</li></ul>")
+	public String adminMetaPasswordStrength();
+
 	@DefaultMessage("Password <b>can`t contain login, name or surname</b>, not even backwards!")
 	public String einfraPasswordStrengthForNameLogin();
 
 	@DefaultMessage("Password <b>can`t contain login</b>, not even backwards!")
 	public String muAdmPasswordStrengthForNameLogin();
+
+	@DefaultMessage("Password <b>can`t contain login, name or surname</b>, not even backwards!")
+	public String adminMetaPasswordStrengthForNameLogin();
 
 	@DefaultMessage("New password can`t be empty!")
 	public String passwordCantBeEmpty();

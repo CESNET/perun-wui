@@ -138,6 +138,16 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 				}
 			}
 
+			// replace admin-meta help texts to support HTML formatting
+			if (this.getItemData().getFormItem() != null &&
+				"urn:perun:user:attribute-def:def:login-namespace:admin-meta".equals(this.getItemData().getFormItem().getPerunDestinationAttribute())) {
+				if (this instanceof Password) {
+					help.setHTML(translation.adminMetaPasswordHelp());
+				} else if (this instanceof Username) {
+					help.setHTML(translation.adminMetaLoginHelp());
+				}
+			}
+
 			widgetWithTexts.add(help);
 
 		}
