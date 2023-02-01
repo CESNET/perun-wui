@@ -203,6 +203,24 @@ public class Application extends JavaScriptObject {
 	}-*/;
 
 	/**
+	 * Get error that occurred during the automatic approval of the application.
+	 *
+	 * @return error
+	 */
+	public final String getAutoApproveError() {
+		return JsUtils.getNativePropertyString(this, "autoApproveError");
+	}
+
+	/**
+	 * Set error that occurred during the automatic approval of the application.
+	 *
+	 * @param autoApproveError error
+	 */
+	public final native void setAutoApproveError(String autoApproveError) /*-{
+		this.autoApproveError = autoApproveError;
+	}-*/;
+
+	/**
 	 * Get name of used external authz system.
 	 *
 	 * @return Name of used external authz system.
