@@ -76,6 +76,7 @@ public class Application extends JavaScriptObject {
 		app.setExtSourceLoa(extSourceLoa);
 		app.setObjectType("Application");
 		app.setUser(user);
+		app.setAutoApproveError(null);
 		return app;
 	}
 
@@ -200,6 +201,24 @@ public class Application extends JavaScriptObject {
 	 */
 	public final native void setFederationInfo(String fedInfo) /*-{
 		this.fedInfo = fedInfo;
+	}-*/;
+
+	/**
+	 * Get error that occurred during the automatic approval of the application.
+	 *
+	 * @return error
+	 */
+	public final String getAutoApproveError() {
+		return JsUtils.getNativePropertyString(this, "autoApproveError");
+	}
+
+	/**
+	 * Set error that occurred during the automatic approval of the application.
+	 *
+	 * @param autoApproveError error
+	 */
+	public final native void setAutoApproveError(String autoApproveError) /*-{
+		this.autoApproveError = autoApproveError;
 	}-*/;
 
 	/**
