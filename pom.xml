@@ -6,7 +6,7 @@
 	<!-- PERUN -->
 	<groupId>cz.metacentrum.perun</groupId>
 	<artifactId>wui</artifactId>
-	<version>3.45.0</version>
+	<version>4.0.0</version>
 	<packaging>pom</packaging>
 
 	<!-- PERUN MODULES -->
