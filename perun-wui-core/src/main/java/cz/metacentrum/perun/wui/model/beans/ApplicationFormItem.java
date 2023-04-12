@@ -37,6 +37,7 @@ public class ApplicationFormItem extends JavaScriptObject {
 		HEADING,
 		TIMEZONE,
 		EMBEDDED_GROUP_APPLICATION,
+		EMBEDDED_SUBGROUP_APPLICATION,
 		LIST_INPUT_BOX,
 		MAP_INPUT_BOX
 	}

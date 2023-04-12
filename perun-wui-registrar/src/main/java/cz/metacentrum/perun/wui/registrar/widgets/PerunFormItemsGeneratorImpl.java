@@ -235,6 +235,7 @@ public class PerunFormItemsGeneratorImpl implements PerunFormItemsGenerator {
 			case AUTO_SUBMIT_BUTTON:
 				return new SubmitButton(form, data, lang, true);
 			case EMBEDDED_GROUP_APPLICATION:
+			case EMBEDDED_SUBGROUP_APPLICATION:
 				return new GroupCheckBox(form, data, lang);
 			case LIST_INPUT_BOX:
 				return new ListBox(form, data, lang);
