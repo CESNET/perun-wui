@@ -251,95 +251,124 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					});
 
 				} else {
-					// get member and his attributes to decide whether he is valid with no expiration date to know whether to display extension dialog or not
-					MembersManager.getMemberByUser(PerunSession.getInstance().getUserId(), vo.getId(), new JsonEvents() {
-						@Override
-						public void onFinished(JavaScriptObject result) {
-							Member member = (Member) result;
-							MembersManager.getRichMemberWithAttributes(member.getId(), new JsonEvents() {
-								@Override
-								public void onFinished(JavaScriptObject result) {
-									RichMember richMember = (RichMember) result;
-									if (Objects.equals(richMember.getMembershipStatus(), "VALID") &&
-										richMember.getAttribute(EXPIRATION_ATTRIBUTE_URN) == null) {
-										neverExp = true;
-									}
-									loader.onFinished();
-									loader.removeFromParent();
 
-									// CHECK SIMILAR USERS
-									// Make sure we load form only after user decide to skip identity joining
+					// if there is a known user
+					if (PerunSession.getInstance().getUserId() > 0) {
 
-									if (!registrar.getSimilarUsers().isEmpty() &&
-										!isApplicationPending(registrar) &&
-										!PerunConfiguration.findSimilarUsersDisabled()) {
-										showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
-											@Override
-											public void onClick(ClickEvent event) {
-												loadSteps(pp, registrar);
-											}
-										});
-									} else {
-										loadSteps(pp, registrar);
-									}
-								}
-
-								@Override
-								public void onError(PerunException error) {
-									loader.onFinished();
-									loader.removeFromParent();
-
-									// CHECK SIMILAR USERS
-									// Make sure we load form only after user decide to skip identity joining
-
-									if (!registrar.getSimilarUsers().isEmpty() &&
-										!isApplicationPending(registrar) &&
-										!PerunConfiguration.findSimilarUsersDisabled()) {
-										showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
-											@Override
-											public void onClick(ClickEvent event) {
-												loadSteps(pp, registrar);
-											}
-										});
-									} else {
-										loadSteps(pp, registrar);
-									}
-								}
-
-								@Override
-								public void onLoadingStart() {
-
-								}
-							});
-						}
-
-						@Override
-						public void onError(PerunException error) {
-							loader.onFinished();
-							loader.removeFromParent();
-
-							// CHECK SIMILAR USERS
-							// Make sure we load form only after user decide to skip identity joining
-
-							if (!registrar.getSimilarUsers().isEmpty() &&
-								!isApplicationPending(registrar) &&
-								!PerunConfiguration.findSimilarUsersDisabled()) {
-								showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
+						// get member and his attributes to decide whether he is valid with no expiration date to know whether to display extension dialog or not
+						MembersManager.getMemberByUser(PerunSession.getInstance().getUserId(), vo.getId(), new JsonEvents() {
+							@Override
+							public void onFinished(JavaScriptObject result) {
+								Member member = (Member) result;
+								MembersManager.getRichMemberWithAttributes(member.getId(), new JsonEvents() {
 									@Override
-									public void onClick(ClickEvent event) {
-										loadSteps(pp, registrar);
+									public void onFinished(JavaScriptObject result) {
+										RichMember richMember = (RichMember) result;
+										if (Objects.equals(richMember.getMembershipStatus(), "VALID") &&
+												richMember.getAttribute(EXPIRATION_ATTRIBUTE_URN) == null) {
+											neverExp = true;
+										}
+										loader.onFinished();
+										loader.removeFromParent();
+
+										// CHECK SIMILAR USERS
+										// Make sure we load form only after user decide to skip identity joining
+
+										if (!registrar.getSimilarUsers().isEmpty() &&
+												!isApplicationPending(registrar) &&
+												!PerunConfiguration.findSimilarUsersDisabled()) {
+											showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
+												@Override
+												public void onClick(ClickEvent event) {
+													loadSteps(pp, registrar);
+												}
+											});
+										} else {
+											loadSteps(pp, registrar);
+										}
+									}
+
+									@Override
+									public void onError(PerunException error) {
+										loader.onFinished();
+										loader.removeFromParent();
+
+										// CHECK SIMILAR USERS
+										// Make sure we load form only after user decide to skip identity joining
+
+										if (!registrar.getSimilarUsers().isEmpty() &&
+												!isApplicationPending(registrar) &&
+												!PerunConfiguration.findSimilarUsersDisabled()) {
+											showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
+												@Override
+												public void onClick(ClickEvent event) {
+													loadSteps(pp, registrar);
+												}
+											});
+										} else {
+											loadSteps(pp, registrar);
+										}
+									}
+
+									@Override
+									public void onLoadingStart() {
+
 									}
 								});
-							} else {
-								loadSteps(pp, registrar);
 							}
+
+							@Override
+							public void onError(PerunException error) {
+								loader.onFinished();
+								loader.removeFromParent();
+
+								// CHECK SIMILAR USERS
+								// Make sure we load form only after user decide to skip identity joining
+
+								if (!registrar.getSimilarUsers().isEmpty() &&
+										!isApplicationPending(registrar) &&
+										!PerunConfiguration.findSimilarUsersDisabled()) {
+									showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
+										@Override
+										public void onClick(ClickEvent event) {
+											loadSteps(pp, registrar);
+										}
+									});
+								} else {
+									loadSteps(pp, registrar);
+								}
+							}
+
+							@Override
+							public void onLoadingStart() {
+
+							}
+						});
+
+					} else {
+
+						// same as onError() of getMemberByUser
+						loader.onFinished();
+						loader.removeFromParent();
+
+						// CHECK SIMILAR USERS
+						// Make sure we load form only after user decide to skip identity joining
+
+						if (!registrar.getSimilarUsers().isEmpty() &&
+								!isApplicationPending(registrar) &&
+								!PerunConfiguration.findSimilarUsersDisabled()) {
+							showSimilarUsersDialog(registrar.getSimilarUsers(), new ClickHandler() {
+								@Override
+								public void onClick(ClickEvent event) {
+									loadSteps(pp, registrar);
+								}
+							});
+						} else {
+							loadSteps(pp, registrar);
 						}
 
-						@Override
-						public void onLoadingStart() {
+					}
 
-						}
-					});
 				}
 
 			}
