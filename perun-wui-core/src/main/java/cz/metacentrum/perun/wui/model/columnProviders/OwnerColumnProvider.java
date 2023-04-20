@@ -1,7 +1,6 @@
 package cz.metacentrum.perun.wui.model.columnProviders;
 
 import com.google.gwt.cell.client.FieldUpdater;
-import com.google.gwt.thirdparty.guava.common.collect.Sets;
 import cz.metacentrum.perun.wui.model.ColumnProvider;
 import cz.metacentrum.perun.wui.model.beans.Owner;
 import cz.metacentrum.perun.wui.model.resources.PerunComparator;
