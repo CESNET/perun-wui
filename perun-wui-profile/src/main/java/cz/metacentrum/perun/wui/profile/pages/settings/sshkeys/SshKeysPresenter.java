@@ -30,19 +30,12 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 
 		void setSshKeys(Attribute attribute);
 
-		void setAdminSshKeys(Attribute attribute);
-
 		void setSshKeysError(PerunException error);
-
-		void setAdminSshKeysError(PerunException error);
 
 		void setSshKeysLoading();
 
-		void setAdminSshKeysLoading();
-
 		void setRemoveSshKeyError(PerunException error, int n);
 
-		void setRemoveAdminSshKeyError(PerunException error, int n);
 	}
 
 	@NameToken(PerunProfilePlaceTokens.SETTINGS_SSH)
@@ -60,7 +53,6 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 	@Override
 	protected void onReveal() {
 		loadSshKeys();
-		loadAdminSshKeys();
 	}
 
 	@Override
@@ -105,47 +97,6 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 	}
 
 	@Override
-	public void removeAdminSshKey(Attribute attribute, int n) {
-		Integer userId = PerunProfileUtils.getUserId(placeManager);
-
-		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
-
-		if (userId == null || userId < 1) {
-			placeManager.revealErrorPlace(request.getNameToken());
-			return;
-		}
-
-		if (PerunSession.getInstance().isSelf(userId)) {
-			JsArrayString values = attribute.getValueAsJsArray();
-			JsArrayString newValues = (JsArrayString)JsArrayString.createArray();
-			for(int i = 0; i < values.length(); ++i) {
-				String value = values.get(i);
-				if (i != n) {
-					newValues.push(value);
-				}
-			}
-			attribute.setValueAsJsArray(newValues);
-
-			AttributesManager.setUserAttribute(userId, attribute, new JsonEvents() {
-				@Override
-				public void onFinished(JavaScriptObject result) {
-					loadAdminSshKeys();
-				}
-
-				@Override
-				public void onError(PerunException error) {
-					getView().setRemoveAdminSshKeyError(error, n);
-				}
-
-				@Override
-				public void onLoadingStart() {
-					// do nothing
-				}
-			});
-		}
-	}
-
-	@Override
 	public void loadSshKeys() {
 
 		Integer userId = PerunProfileUtils.getUserId(placeManager);
@@ -172,38 +123,6 @@ public class SshKeysPresenter extends Presenter<SshKeysPresenter.MyView, SshKeys
 				@Override
 				public void onLoadingStart() {
 					getView().setSshKeysLoading();
-				}
-			});
-		}
-	}
-
-	@Override
-	public void loadAdminSshKeys() {
-
-		Integer userId = PerunProfileUtils.getUserId(placeManager);
-
-		final PlaceRequest request = placeManager.getCurrentPlaceRequest();
-
-		if (userId == null || userId < 1) {
-			placeManager.revealErrorPlace(request.getNameToken());
-			return;
-		}
-
-		if (PerunSession.getInstance().isSelf(userId)) {
-			AttributesManager.getUserAttribute(userId, PerunProfileUtils.A_U_DEF_ADMIN_SSH_KEYS, new JsonEvents() {
-				@Override
-				public void onFinished(JavaScriptObject result) {
-					getView().setAdminSshKeys((Attribute)result);
-				}
-
-				@Override
-				public void onError(PerunException error) {
-					getView().setAdminSshKeysError(error);
-				}
-
-				@Override
-				public void onLoadingStart() {
-					getView().setAdminSshKeysLoading();
 				}
 			});
 		}

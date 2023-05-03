@@ -7,11 +7,7 @@ public interface SshKeysUiHandlers extends UiHandlers {
 
 	void removeSshKey(Attribute attribute, int n);
 
-	void removeAdminSshKey(Attribute attribute, int n);
-
 	void loadSshKeys();
-
-	void loadAdminSshKeys();
 
 	void navigateBack();
 }

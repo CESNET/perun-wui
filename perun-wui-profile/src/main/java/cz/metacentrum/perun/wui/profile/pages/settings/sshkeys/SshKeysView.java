@@ -39,13 +39,8 @@ public class SshKeysView extends ViewWithUiHandlers<SshKeysUiHandlers> implement
 	private PerunProfileTranslation translation = GWT.create(PerunProfileTranslation.class);
 
 	@UiField CellTable<String> sshKeysTable;
-
-	@UiField CellTable<String> adminSshKeysTable;
-	@UiField Button newAdminKeyButton;
-	@UiField Div newAdminKeyButtonDiv;
 	@UiField Button newKeyButton;
 	@UiField Div newKeyButtonDiv;
-	@UiField Div adminKeysDiv;
 
 	private Attribute sshKeysAttribute;
 	private Attribute adminSshKeysAttribute;
@@ -56,8 +51,6 @@ public class SshKeysView extends ViewWithUiHandlers<SshKeysUiHandlers> implement
 
 		initTable(sshKeysTable, translation.noSshKey(),
 				(i, value, buttonText) -> getUiHandlers().removeSshKey(sshKeysAttribute, i));
-		initTable(adminSshKeysTable, translation.noAdminSshKey(),
-				(i, value, buttonText) -> getUiHandlers().removeAdminSshKey(adminSshKeysAttribute, i));
 	}
 
 	private void initTable(CellTable<String> table, String emptyMessage, FieldUpdater<String, String> removeAction) {
@@ -95,25 +88,8 @@ public class SshKeysView extends ViewWithUiHandlers<SshKeysUiHandlers> implement
 	}
 
 	@Override
-	public void setAdminSshKeys(Attribute attribute) {
-		adminSshKeysAttribute = attribute;
-		((PerunLoader) adminSshKeysTable.getEmptyTableWidget()).onEmpty();
-		adminSshKeysTable.setRowData(parseValues(attribute));
-		adminKeysDiv.setVisible(true);
-	}
-
-	@Override
 	public void setSshKeysError(PerunException error) {
 		((PerunLoader) sshKeysTable.getEmptyTableWidget()).onError(error, event -> getUiHandlers().loadSshKeys());
-	}
-
-	@Override
-	public void setAdminSshKeysError(PerunException error) {
-		if ("AttributeNotExistsException".equals(error.getName())) {
-			adminKeysDiv.setVisible(false);
-		} else {
-			((PerunLoader) adminSshKeysTable.getEmptyTableWidget()).onError(error, event -> getUiHandlers().loadAdminSshKeys());
-		}
 	}
 
 	@Override
@@ -123,27 +99,11 @@ public class SshKeysView extends ViewWithUiHandlers<SshKeysUiHandlers> implement
 	}
 
 	@Override
-	public void setAdminSshKeysLoading() {
-		adminSshKeysTable.setRowData(new ArrayList<>());
-		((PerunLoader) adminSshKeysTable.getEmptyTableWidget()).onLoading();
-	}
-
-
-
-	@Override
 	public void setRemoveSshKeyError(PerunException error, int n) {
 		ClickHandler retry = clickEvent -> getUiHandlers().removeSshKey(sshKeysAttribute, n);
 
 		sshKeysTable.setRowData(new ArrayList<>());
 		((PerunLoader) sshKeysTable.getEmptyTableWidget()).onError(error, retry);
-	}
-
-	@Override
-	public void setRemoveAdminSshKeyError(PerunException error, int n) {
-		ClickHandler retry = clickEvent -> getUiHandlers().removeSshKey(adminSshKeysAttribute, n);
-
-		adminSshKeysTable.setRowData(new ArrayList<>());
-		((PerunLoader) adminSshKeysTable.getEmptyTableWidget()).onError(error, retry);
 	}
 
 	/**
@@ -163,11 +123,6 @@ public class SshKeysView extends ViewWithUiHandlers<SshKeysUiHandlers> implement
 		}
 
 		return values;
-	}
-
-	@UiHandler("newAdminKeyButton")
-	public void newAdminKeyButtonAction(ClickEvent event) {
-		Window.Location.assign("#" + PerunProfilePlaceTokens.SETTINGS_SSH_NEWADMINKEY);
 	}
 
 	@UiHandler("newKeyButton")

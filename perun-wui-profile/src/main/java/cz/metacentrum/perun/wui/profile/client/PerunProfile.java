@@ -38,8 +38,6 @@ import cz.metacentrum.perun.wui.profile.pages.settings.samba.SambaPasswordPresen
 import cz.metacentrum.perun.wui.profile.pages.settings.samba.SambaPasswordView;
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysView;
-import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newadminsshkey.NewAdminSshKeyPresenter;
-import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newadminsshkey.NewAdminSshKeyView;
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyView;
 import cz.metacentrum.perun.wui.profile.pages.settings.datalimits.DataQuotasPresenter;
@@ -78,7 +76,6 @@ public class PerunProfile extends AbstractPresenterModule implements EntryPoint 
 		bindPresenter(SshKeysPresenter.class, SshKeysPresenter.MyView.class, SshKeysView.class, SshKeysPresenter.MyProxy.class);
 		bindPresenter(SettingsPresenter.class, SettingsPresenter.MyView.class, SettingsView.class, SettingsPresenter.MyProxy.class);
 		bindPresenter(NewSshKeyPresenter.class, NewSshKeyPresenter.MyView.class, NewSshKeyView.class, NewSshKeyPresenter.MyProxy.class);
-		bindPresenter(NewAdminSshKeyPresenter.class, NewAdminSshKeyPresenter.MyView.class, NewAdminSshKeyView.class, NewAdminSshKeyPresenter.MyProxy.class);
 		bindPresenter(PreferredGroupNamesPresenter.class, PreferredGroupNamesPresenter.MyView.class, PreferredGroupNamesView.class, PreferredGroupNamesPresenter.MyProxy.class);
 		bindPresenter(PreferredShellsPresenter.class, PreferredShellsPresenter.MyView.class, PreferredShellsView.class, PreferredShellsPresenter.MyProxy.class);
 		bindPresenter(DataQuotasPresenter.class, DataQuotasPresenter.MyView.class, DataQuotasView.class, DataQuotasPresenter.MyProxy.class);
