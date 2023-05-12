@@ -223,9 +223,6 @@ public interface PerunProfileTranslation extends PerunTranslation {
 	@DefaultMessage("New key")
 	String newPublicKey();
 
-	@DefaultMessage("New admin key")
-	String newPublicAdminKey();
-
 	@DefaultMessage("SSH Keys")
 	String menuSettingsSshKeys();
 

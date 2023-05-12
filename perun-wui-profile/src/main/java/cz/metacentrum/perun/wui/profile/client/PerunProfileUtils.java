@@ -14,7 +14,6 @@ import java.util.List;
 public class PerunProfileUtils {
 
 	public static final String A_U_DEF_SSH_KEYS = "urn:perun:user:attribute-def:def:sshPublicKey";
-	public static final String A_U_DEF_ADMIN_SSH_KEYS = "urn:perun:user:attribute-def:def:sshPublicAdminKey";
 	public static final String A_U_DEF_USER_PREFERRED_UNIX_GROUP_NAME_NAMESPACE = "urn:perun:user:attribute-def:def:preferredUnixGroupName-namespace";
 
 	public static final String A_D_R_FILES_LIMIT_NAME = "filesLimit";

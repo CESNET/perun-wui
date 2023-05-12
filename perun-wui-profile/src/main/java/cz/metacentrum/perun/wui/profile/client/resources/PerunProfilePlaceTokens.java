@@ -21,7 +21,6 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 	public static final String SETTINGS = "settings";
 	public static final String SETTINGS_SSH = SETTINGS + "_sshkeys";
 	public static final String SETTINGS_SSH_NEWKEY = SETTINGS_SSH + "_newkey";
-	public static final String SETTINGS_SSH_NEWADMINKEY = SETTINGS_SSH + "_newadminkey";
 	public static final String SETTINGS_PREFERREDSHELLS = SETTINGS + "_preferredshells";
 	public static final String SETTINGS_PREFERREDGROUPNAMES = SETTINGS + "_preferredgroupnames";
 	public static final String SETTINGS_DATAQUOTAS = SETTINGS + "_dataquotas";
@@ -71,10 +70,6 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 
 	public static String getSettingsSshNewkey() {
 		return SETTINGS_SSH_NEWKEY;
-	}
-
-	public static String getSettingsSshNewadminkey() {
-		return SETTINGS_SSH_NEWADMINKEY;
 	}
 
 	public static String getSettingsPreferredShells() {
