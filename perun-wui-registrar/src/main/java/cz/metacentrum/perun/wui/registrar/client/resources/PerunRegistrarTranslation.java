@@ -55,15 +55,15 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 
 	// MESSAGES
 
+	@DefaultMessage("<p><p>You can <b>see or edit your application <a href=\"{0}#appdetail;id={1}\">here</b></a>.")
+	public String seeOrEditApplicationHere(String url, int id);
+
 	@DefaultMessage("Please check your mailbox {0} and click the link to verify your email address. " +
 			"Without verification it is not possible to approve your application.")
 	public String verifyMail(String mail);
 
 	@DefaultMessage("Please wait until your application has been approved. You will be notified by email.")
 	public String waitForAcceptation();
-
-	@DefaultMessage("<p><p>You can <b>see or edit your application <a href=\"{0}#appdetail;id={1}\">here</b></a>.")
-	public String seeOrEditApplicationHere(String url, int id);
 
 	@DefaultMessage("Please wait until your application for membership extension has been approved. You will be notified by email.")
 	public String waitForExtAcceptation();

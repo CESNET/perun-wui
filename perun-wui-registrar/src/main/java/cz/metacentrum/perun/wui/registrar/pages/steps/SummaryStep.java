@@ -9,10 +9,12 @@ import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.managers.AttributesManager;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
+import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
@@ -121,10 +123,10 @@ public class SummaryStep implements Step {
 
 			if (res.hasAutoApproval()) {
 				title.add(new Text(" "+translation.initTitleAutoApproval()));
-				msg.setText(translation.registered(res.getBean().getName()));
+				getVoRegisteredMessage(res.getBean().getId(), translation.registered(res.getBean().getName()), msg);
 			} else {
 				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForAcceptation());
+				getVoWaitForAcceptationMessage(res.getBean().getId(), translation.waitForAcceptation(), msg);
 			}
 
 			messages.add(msg);
@@ -141,7 +143,7 @@ public class SummaryStep implements Step {
 				title.add(successIcon());
 				ListGroupItem msg = new ListGroupItem();
 				title.add(new Text(" " + translation.initTitle()));
-				msg.setText(translation.waitForAcceptation());
+				getVoWaitForAcceptationMessage(res.getBean().getId(), translation.waitForAcceptation(), msg);
 				messages.add(msg);
 			} else {
 				title.add(new Icon(IconType.WARNING));
@@ -185,10 +187,10 @@ public class SummaryStep implements Step {
 
 			if (res.hasAutoApproval()) {
 				title.add(new Text(" "+translation.extendTitleAutoApproval()));
-				msg.setText(translation.extended(res.getBean().getName()));
+				getVoExtendedMessage(res.getBean().getId(), translation.extended(res.getBean().getName()), msg);
 			} else {
 				title.add(new Text(" "+translation.extendTitle()));
-				msg.setText(translation.waitForExtAcceptation());
+				getVoWaitForExtAcceptationMessage(res.getBean().getId(), translation.waitForExtAcceptation(), msg);
 			}
 
 			messages.add(msg);
@@ -206,7 +208,7 @@ public class SummaryStep implements Step {
 				title.add(successIcon());
 				ListGroupItem msg = new ListGroupItem();
 				title.add(new Text(" " + translation.extendTitle()));
-				msg.setText(translation.waitForExtAcceptation());
+				getVoWaitForExtAcceptationMessage(res.getBean().getId(), translation.waitForExtAcceptation(), msg);
 				messages.add(msg);
 			} else {
 				title.add(new Icon(IconType.WARNING));
@@ -263,14 +265,15 @@ public class SummaryStep implements Step {
 				if (res.hasAutoApproval()) {
 					if (summary.alreadyAppliedToVo()) {
 						title.add(new Text(" " + translation.initTitle()));
-						msg.setText(translation.waitForVoAcceptation(((Group) res.getBean()).getShortName()));
+						getGroupWaitForAcceptationMesage(res.getBean().getId(),
+							translation.waitForVoAcceptation(((Group) res.getBean()).getShortName()), msg);
 					} else {
 						title.add(new Text(" " + translation.initTitleAutoApproval()));
-						msg.setText(translation.registered(((Group) res.getBean()).getShortName()));
+						getGroupRegisteredMessage(res.getBean().getId(), translation.registered(((Group) res.getBean()).getShortName()), msg);
 					}
 				} else {
 					title.add(new Text(" " + translation.initTitle()));
-					msg.setText(translation.waitForAcceptation());
+					getGroupWaitForAcceptationMesage(res.getBean().getId(), translation.waitForAcceptation(), msg);
 				}
 
 				messages.add(msg);
@@ -288,7 +291,7 @@ public class SummaryStep implements Step {
 				ListGroupItem msg = new ListGroupItem();
 
 				title.add(new Text(" " + translation.initTitle()));
-				msg.setText(translation.waitForAcceptation());
+				getGroupWaitForAcceptationMesage(res.getBean().getId(), translation.waitForAcceptation(), msg);
 
 				messages.add(msg);
 			} else {
@@ -331,14 +334,15 @@ public class SummaryStep implements Step {
 				if (res.hasAutoApproval()) {
 					if (summary.alreadyAppliedForVoExtension()) {
 						title.add(new Text(" " + translation.extendTitle()));
-						msg.setText(translation.waitForVoExtension(((Group) res.getBean()).getShortName()));
+						getGroupWaitForVoExtensionMessage(
+							res.getBean().getId(), translation.waitForVoExtension(((Group) res.getBean()).getShortName()), msg);
 					} else {
 						title.add(new Text(" " + translation.extendTitleAutoApproval()));
-						msg.setText(translation.extended(((Group) res.getBean()).getShortName()));
+						getGroupExtendedMessage(res.getBean().getId(), translation.extended(((Group) res.getBean()).getShortName()), msg);
 					}
 				} else {
 					title.add(new Text(" " + translation.extendTitle()));
-					msg.setText(translation.waitForExtAcceptation());
+					getGroupWaitForExtAcceptationMessage(res.getBean().getId(), translation.waitForExtAcceptation(), msg);
 				}
 
 				messages.add(msg);
@@ -356,7 +360,7 @@ public class SummaryStep implements Step {
 				ListGroupItem msg = new ListGroupItem();
 
 				title.add(new Text(" " + translation.extendTitle()));
-				msg.setText(translation.waitForExtAcceptation());
+				getGroupWaitForExtAcceptationMessage(res.getBean().getId(), translation.waitForExtAcceptation(), msg);
 
 				messages.add(msg);
 			} else {
@@ -453,7 +457,7 @@ public class SummaryStep implements Step {
 				ListGroupItem msg = new ListGroupItem();
 
 				if (resultVo.hasAutoApproval()) {
-					msg.setText(translation.registered(resultVo.getBean().getName()));
+					getVoRegisteredMessage(resultVo.getBean().getId(), translation.registered(resultVo.getBean().getName()), msg);
 				} else {
 					// Message from group application is sufficient in this case.
 				}
@@ -472,7 +476,7 @@ public class SummaryStep implements Step {
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
 			if (emailsAreVerified) {
 				ListGroupItem msg = new ListGroupItem();
-				msg.setText(translation.waitForAcceptation());
+				getVoWaitForAcceptationMessage(resultVo.getBean().getId(), translation.waitForAcceptation(), msg);
 				messages.add(msg);
 			} else {
 				title.add(new Icon(IconType.WARNING));
@@ -493,14 +497,16 @@ public class SummaryStep implements Step {
 				if (resultGroup.hasAutoApproval()) {
 					if (resultVo.hasAutoApproval()) {
 						title.add(new Text(" " + translation.initTitleAutoApproval()));
-						msg.setText(translation.registered(((Group) resultGroup.getBean()).getShortName()));
+						getGroupRegisteredMessage(resultGroup.getBean().getId(),
+							translation.registered(((Group) resultGroup.getBean()).getShortName()), msg);
 					} else {
 						title.add(new Text(" " + translation.initTitle()));
-						msg.setText(translation.waitForVoAcceptation(((Group) resultGroup.getBean()).getShortName()));
+						getGroupWaitForAcceptationMesage(resultGroup.getBean().getId(),
+							translation.waitForVoAcceptation(((Group) resultGroup.getBean()).getShortName()), msg);
 					}
 				} else {
 					title.add(new Text(" " + translation.initTitle()));
-					msg.setText(translation.waitForAcceptation());
+					getGroupWaitForAcceptationMesage(resultGroup.getBean().getId(), translation.waitForAcceptation(), msg);
 				}
 
 				messages.add(msg);
@@ -514,7 +520,7 @@ public class SummaryStep implements Step {
 				ListGroupItem msg = new ListGroupItem();
 
 				title.add(new Text(" " + translation.initTitle()));
-				msg.setText(translation.waitForAcceptation());
+				getGroupWaitForAcceptationMesage(resultGroup.getBean().getId(), translation.waitForAcceptation(), msg);
 
 				messages.add(msg);
 			}
@@ -557,7 +563,7 @@ public class SummaryStep implements Step {
 			ListGroupItem msg = new ListGroupItem();
 
 			if (resultVo.hasAutoApproval()) {
-				msg.setText(translation.extended(resultVo.getBean().getName()));
+				getVoExtendedMessage(resultVo.getBean().getId(), translation.extended(resultVo.getBean().getName()), msg);
 			} else {
 				// Message from group application is sufficient in this case.
 			}
@@ -570,7 +576,7 @@ public class SummaryStep implements Step {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
 			ListGroupItem msg = new ListGroupItem();
-			msg.setText(translation.waitForExtAcceptation());
+			getVoWaitForExtAcceptationMessage(resultVo.getBean().getId(), translation.waitForExtAcceptation(), msg);
 			messages.add(msg);
 
 		} else {
@@ -589,14 +595,17 @@ public class SummaryStep implements Step {
 			if (resultGroup.hasAutoApproval()) {
 				if (resultVo.hasAutoApproval()) { // FIXME - tohle by se mělo vyhodnotit z předchozího stavu (není auto nebo byla chyba)
 					title.add(new Text(" "+translation.initTitleAutoApproval()));
-					msg.setText(translation.registered(((Group) resultGroup.getBean()).getShortName()));
+					getGroupRegisteredMessage(resultGroup.getBean().getId(),
+						translation.registered(((Group) resultGroup.getBean()).getShortName()), msg);
 				} else {
 					title.add(new Text(" "+translation.initTitle()));
-					msg.setText(translation.waitForVoExtension(((Group) resultGroup.getBean()).getShortName()));
+					getGroupWaitForVoExtensionMessage(
+						resultGroup.getBean().getId(),
+						translation.waitForVoExtension(((Group) resultGroup.getBean()).getShortName()), msg);
 				}
 			} else {
 				title.add(new Text(" "+translation.initTitle()));
-				msg.setText(translation.waitForAcceptation());
+				getGroupWaitForAcceptationMesage(resultGroup.getBean().getId(), translation.waitForAcceptation(), msg);
 			}
 
 			messages.add(msg);
@@ -608,7 +617,7 @@ public class SummaryStep implements Step {
 			ListGroupItem msg = new ListGroupItem();
 
 			title.add(new Text(" "+translation.initTitle()));
-			msg.setText(translation.waitForAcceptation());
+			getGroupWaitForAcceptationMesage(resultGroup.getBean().getId(), translation.waitForAcceptation(), msg);
 
 			messages.add(msg);
 
@@ -646,7 +655,7 @@ public class SummaryStep implements Step {
 			ListGroupItem msg = new ListGroupItem();
 
 			if (resultVo.hasAutoApproval()) {
-				msg.setText(translation.extended(resultVo.getBean().getName()));
+				getVoExtendedMessage(resultVo.getBean().getId(), translation.extended(resultVo.getBean().getName()), msg);
 			} else {
 				// Message from group application is sufficient in this case.
 			}
@@ -659,7 +668,7 @@ public class SummaryStep implements Step {
 
 			// FIXME - hack to ignore CantBeApprovedException since VO manager can manually handle it.
 			ListGroupItem msg = new ListGroupItem();
-			msg.setText(translation.waitForExtAcceptation());
+			getVoWaitForExtAcceptationMessage(resultVo.getBean().getId(), translation.waitForExtAcceptation(), msg);
 			messages.add(msg);
 
 		} else {
@@ -678,14 +687,17 @@ public class SummaryStep implements Step {
 			if (resultGroup.hasAutoApproval()) {
 				if (resultVo.hasAutoApproval()) {
 					title.add(new Text(" "+translation.extendTitleAutoApproval()));
-					msg.setText(translation.extended(((Group) resultGroup.getBean()).getShortName()));
+					getGroupExtendedMessage(resultGroup.getBean().getId(),
+						translation.extended(((Group) resultGroup.getBean()).getShortName()), msg);
 				} else {
 					title.add(new Text(" "+translation.extendTitle()));
-					msg.setText(translation.waitForVoExtension(((Group) resultGroup.getBean()).getShortName()));
+					getGroupWaitForVoExtensionMessage(
+						resultGroup.getBean().getId(),
+						translation.waitForVoExtension(((Group) resultGroup.getBean()).getShortName()), msg);
 				}
 			} else {
 				title.add(new Text(" "+translation.extendTitle()));
-				msg.setText(translation.waitForExtAcceptation());
+				getGroupWaitForExtAcceptationMessage(resultGroup.getBean().getId(), translation.waitForExtAcceptation(), msg);
 			}
 
 			messages.add(msg);
@@ -697,7 +709,7 @@ public class SummaryStep implements Step {
 			ListGroupItem msg = new ListGroupItem();
 
 			title.add(new Text(" "+translation.extendTitle()));
-			msg.setText(translation.waitForExtAcceptation());
+			getGroupWaitForExtAcceptationMessage(resultGroup.getBean().getId(), translation.waitForExtAcceptation(), msg);
 
 			messages.add(msg);
 
@@ -932,13 +944,31 @@ public class SummaryStep implements Step {
 
 									if (messages != null && messages.getWidgetCount() > 0) {
 										messages.clear();
+										Vo vo = currentAppState.getVo();
+										Group group = currentAppState.getGroup();
 										if (currentAppState.getType().equals(Application.ApplicationType.INITIAL)) {
 											ListGroupItem msg = new ListGroupItem();
-											msg.setText(translation.waitForAcceptation());
+											if (group != null) {
+												getGroupWaitForAcceptationMesage(
+													group.getId(), translation.waitForAcceptation(), msg);
+											} else if (vo != null) {
+												getVoWaitForAcceptationMessage(
+													vo.getId(), translation.waitForAcceptation(), msg);
+											} else {
+												msg.setText(translation.waitForAcceptation());
+											}
 											messages.add(msg);
 										} else if (currentAppState.getType().equals(Application.ApplicationType.EXTENSION)) {
 											ListGroupItem msg = new ListGroupItem();
-											msg.setText(translation.waitForExtAcceptation());
+											if (group != null) {
+												getGroupWaitForExtAcceptationMessage(
+													group.getId(), translation.waitForAcceptation(), msg);
+											} else if (vo != null) {
+												getVoWaitForExtAcceptationMessage(
+													vo.getId(), translation.waitForAcceptation(), msg);
+											} else {
+												msg.setText(translation.waitForExtAcceptation());
+											}
 											messages.add(msg);
 										}
 									}
@@ -1024,6 +1054,74 @@ public class SummaryStep implements Step {
 	private void displayException(PerunException ex, GeneralObject bean) {
 		formView.displayException(ex, bean);
 		exceptionDisplayed = true;
+	}
+
+	private void getVoRegisteredMessage(int id, String defaultText, ListGroupItem msgContainer) {
+		getVoMessage(id, defaultText, msgContainer,"urn:perun:vo:attribute-def:def:registrarRegisteredMessage");
+	}
+
+	private void getVoWaitForAcceptationMessage(int id, String defaultText, ListGroupItem msgContainer) {
+		getVoMessage(id, defaultText, msgContainer,"urn:perun:vo:attribute-def:def:registrarWaitForAcceptationMessage");
+	}
+
+	private void getVoExtendedMessage(int id, String defaultText, ListGroupItem msgContainer) {
+		getVoMessage(id, defaultText, msgContainer,"urn:perun:vo:attribute-def:def:registrarExtendedMessage");
+	}
+
+	private void getVoWaitForExtAcceptationMessage(int id, String defaultText, ListGroupItem msgContainer) {
+		getVoMessage(id, defaultText, msgContainer,"urn:perun:vo:attribute-def:def:registrarWaitForExtAcceptationMessage");
+	}
+
+	private void getVoMessage(int id, String defaultText, ListGroupItem msgContainer, String attrName) {
+		JsonEvents events = getMessageJsonEvents(defaultText, msgContainer);
+		AttributesManager.getVoAttribute(id, attrName, events);
+	}
+
+	private void getGroupRegisteredMessage(int id, String defaultText, ListGroupItem msgContainer) {
+		getGroupMessage(id, defaultText, msgContainer,"urn:perun:group:attribute-def:def:registrarRegisteredMessage");
+	}
+
+	private void getGroupWaitForAcceptationMesage(int id, String defaultText, ListGroupItem msgContainer) {
+		getGroupMessage(id, defaultText, msgContainer,"urn:perun:group:attribute-def:def:registrarWaitForAcceptationMessage");
+	}
+
+	private void getGroupExtendedMessage(int id, String defaultText, ListGroupItem msgContainer) {
+		getGroupMessage(id, defaultText, msgContainer,"urn:perun:group:attribute-def:def:registrarExtendedMessage");
+	}
+
+	private void getGroupWaitForVoExtensionMessage(int id, String defaultText, ListGroupItem msgContainer) {
+		getGroupMessage(id, defaultText, msgContainer,"urn:perun:group:attribute-def:def:registrarWaitForVoExtensionMessage");
+	}
+
+	private void getGroupWaitForExtAcceptationMessage(int id, String defaultText, ListGroupItem msgContainer) {
+		getGroupMessage(id, defaultText, msgContainer,"urn:perun:group:attribute-def:def:registrarWaitForExtAcceptationMessage");
+	}
+
+	private void getGroupMessage(int id, String defaultText, ListGroupItem msgContainer, String attrName) {
+		JsonEvents events = getMessageJsonEvents(defaultText, msgContainer);
+		AttributesManager.getGroupAttribute(id, attrName, events);
+	}
+
+	private JsonEvents getMessageJsonEvents(String defaultText, ListGroupItem msg) {
+		return new JsonEvents() {
+			@Override
+			public void onFinished(JavaScriptObject result) {
+				Attribute attr = (Attribute) result;
+				if (attr.getValue() != null && attr.getValue().trim().length() > 0) {
+					msg.setText(attr.getValue());
+				} else{
+					msg.setText(defaultText);
+				}
+			}
+
+			@Override
+			public void onError(PerunException error) {
+				msg.setText(defaultText);
+			}
+
+			@Override
+			public void onLoadingStart() {}
+		};
 	}
 
 	@Override
