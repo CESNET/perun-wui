@@ -1,5 +1,6 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items;
 
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Widget;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemTexts;
@@ -23,6 +24,25 @@ public class GroupCheckBox extends Checkbox {
 	}
 
 	private boolean preview = false;
+
+	@Override
+	protected Widget initWidget() {
+		super.initWidget();
+
+		boolean isGroupApplication = Window.Location.getParameter("group") != null;
+		if (isGroupApplication) {
+			for (Widget widget : getWidget()) {
+				if (widget instanceof CheckBox) {
+					CheckBox checkBox = (CheckBox) widget;
+					String[] parsedGroupName = checkBox.getText().split(Window.Location.getParameter("group") + ":");
+					// use group name without parent group prefix
+					checkBox.setText(parsedGroupName[1]);
+				}
+			}
+		}
+
+		return getWidget();
+	}
 
 	@Override
 	protected Widget initWidgetOnlyPreview() {
