@@ -24,7 +24,11 @@ public class CheckboxValidator extends PerunFormItemValidatorImpl<Checkbox> {
 			} else {
 				// single checkbox - prefer own error message
 				setResult(Result.EMPTY);
-				checkbox.setRawStatus(getErrorMsgOrDefault(checkbox), ValidationState.ERROR);
+				String msg = getErrorMsgOrDefault(checkbox);
+				if (msg.equals(getTransl().incorrectFormat())) {
+					msg = getTransl().cantBeEmptySingleCheckBox();
+				}
+				checkbox.setRawStatus(msg, ValidationState.ERROR);
 			}
 			return false;
 		}

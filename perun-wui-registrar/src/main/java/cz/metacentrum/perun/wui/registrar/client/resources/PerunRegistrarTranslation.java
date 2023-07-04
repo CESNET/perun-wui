@@ -139,6 +139,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You must select at least one option!")
 	public String cantBeEmptyCheckBox();
 
+	@DefaultMessage("You must check this box!")
+	public String cantBeEmptySingleCheckBox();
+
 	@DefaultMessage("Incorrect email address format!")
 	public String incorrectEmail();
 
