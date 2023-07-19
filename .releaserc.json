@@ -1,29 +1,132 @@
 {
-  "branches": [
-    "production",
-    "+([0-9])?(.{+([0-9]),x}).x",
-    { "name": "alpha", "prerelease": true },
-    { "name": "beta", "prerelease": true }
-  ],
-  "preset": "conventionalcommits",
-  "plugins": [
-    "@semantic-release/commit-analyzer",
-    "@semantic-release/release-notes-generator",
-    ["@semantic-release/exec", {
-      "prepareCmd": "./update-versions.sh ${nextRelease.version} && mvn -B clean install"
-    }],
-    ["@semantic-release/git", {
-      "assets": [["**/pom.xml"]],
-      "message": "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
-    }],
-    ["@semantic-release/github", {
-      "assets": [
-        {"path": "perun-wui-registrar/target/perun-wui-registrar.war"},
-        {"path": "perun-wui-consolidator/target/perun-wui-consolidator.war"},
-        {"path": "perun-wui-pwdreset/target/perun-wui-pwdreset.war"},
-        {"path": "perun-wui-profile/target/perun-wui-profile.war"}
-      ]
-    }]
-  ]
+	"branches": [
+		"production",
+		"+([0-9])?(.{+([0-9]),x}).x",
+		{
+			"name": "alpha",
+			"prerelease": true
+		},
+		{
+			"name": "beta",
+			"prerelease": true
+		}
+	],
+	"preset": "conventionalcommits",
+	"plugins": [
+		"@semantic-release/commit-analyzer",
+		[
+			"@semantic-release/release-notes-generator",
+			{
+				"preset": "conventionalcommits",
+				"presetConfig": {
+					"types": [
+						{
+							"type": "feat",
+							"section": "New features and notable changes",
+							"hidden": false
+						},
+						{
+							"type": "fix",
+							"hidden": true
+						},
+						{
+							"type": "perf",
+							"hidden": true
+						},
+						{
+							"type": "revert",
+							"hidden": true
+						},
+						{
+							"type": "docs",
+							"hidden": true
+						},
+						{
+							"type": "style",
+							"hidden": true
+						},
+						{
+							"type": "chore",
+							"hidden": true
+						},
+						{
+							"type": "refactor",
+							"hidden": true
+						},
+						{
+							"type": "test",
+							"hidden": true
+						},
+						{
+							"type": "build",
+							"hidden": true
+						},
+						{
+							"type": "ci",
+							"hidden": true
+						}
+					],
+					"issuePrefixes": [
+						"ST"
+					],
+					"issueUrlFormat": "https://perunaai.atlassian.net/browse/{{prefix}}{{id}}"
+				},
+				"parserOpts": {
+					"noteKeywords": [
+						"BREAKING CHANGE",
+						"BREAKING CHANGES",
+						"DEPLOYMENT NOTE",
+						"DEPLOYMENT NOTES",
+						"UPGRADE NOTE",
+						"UPGRADE NOTES"
+					]
+				}
+			}
+		],
+		[
+			"@semantic-release/changelog",
+			{
+				"changelogFile": "UPGRADE.md",
+				"changelogTitle": "Upgrade notes"
+			}
+		],
+		[
+			"@semantic-release/exec",
+			{
+				"prepareCmd": "./update-versions.sh ${nextRelease.version} && mvn -B clean install"
+			}
+		],
+		[
+			"@semantic-release/git",
+			{
+				"assets": [
+					[
+						"**/pom.xml"
+					],
+					"UPGRADE.md"
+				],
+				"message": "chore(release): ${nextRelease.version} \n\n${nextRelease.notes}"
+			}
+		],
+		[
+			"@semantic-release/github",
+			{
+				"assets": [
+					{
+						"path": "perun-wui-registrar/target/perun-wui-registrar.war"
+					},
+					{
+						"path": "perun-wui-consolidator/target/perun-wui-consolidator.war"
+					},
+					{
+						"path": "perun-wui-pwdreset/target/perun-wui-pwdreset.war"
+					},
+					{
+						"path": "perun-wui-profile/target/perun-wui-profile.war"
+					}
+				]
+			}
+		]
+	]
 }
 
