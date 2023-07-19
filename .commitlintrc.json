@@ -13,7 +13,9 @@
 				"core",
 				"profile",
 				"pwdreset",
-				"registrar"
+				"registrar",
+				"deps",
+				"deps-dev"
 			]
 		]
 	},
