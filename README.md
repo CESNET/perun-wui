@@ -1,27 +1,30 @@
-![](https://github.com/CESNET/perun-wui/workflows/Maven%20build/badge.svg?branch=master)
-
 <a href="https://perun-aai.org"><img style="float: left; position: relative;" src="https://raw.githubusercontent.com/CESNET/perun/master/perun-web-gui/src/main/webapp/img/logo.png"></a>
-## Perun WUI ##
+## Perun WUI
 
-### Web interface for Perun using GWT and Bootstrap3 ###
+[![conventional commits](https://img.shields.io/badge/semantic--release-conventional-e10079?logo=semantic-release)](https://www.conventionalcommits.org/)
+[![commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](https://commitizen.github.io/cz-cli/)
+[![CI status](https://github.com/CESNET/perun-wui/workflows/test%20build/badge.svg?branch=master)](https://github.com/CESNET/perun-wui/actions/workflows/maven.yml)
+[![latest release](https://img.shields.io/github/v/release/cesnet/perun-wui)](https://github.com/CESNET/perun-wui/releases)
+
+### Web interface for Perun using GWT and Bootstrap3
 
 This project aims to deliver rich user graphical interface for Perun components. Project uses enterprise frameworks to make it work:
 
-* [Google Web Toolkit](https://www.gwtproject.org/)
-* [GWT Platform (GWTP)](https://www.arcbees.com/#!/products/gwtp)
-* [GwtBootstrap3](https://github.com/gwtbootstrap3/gwtbootstrap3)
+-	[Google Web Toolkit](https://www.gwtproject.org/)
+-	[GWT Platform (GWTP)](https://www.arcbees.com/#!/products/gwtp)
+-	[GwtBootstrap3](https://github.com/gwtbootstrap3/gwtbootstrap3)
 
 See https://perun-aai.org/ for more details about the base project.
 
-### Related projects ###
+### Related projects
 
-* [Perun](https://github.com/CESNET/perun) - main Perun repository
-* [Perun Web Apps](https://github.com/CESNET/perun-web-apps) - new web user interface for Perun using Angular
-* [Perun ansible](https://github.com/CESNET/perun-ansible) - Perun installation automation using Ansible
-* [Perun services](https://github.com/CESNET/perun-services) - connectors Perun uses to manage services
-* [Google Group connector](https://github.com/CESNET/google-group-connector) - allow provisioning of Google groups on your domain
+-	[Perun](https://github.com/CESNET/perun) - main Perun repository
+-	[Perun Web Apps](https://github.com/CESNET/perun-web-apps) - new web user interface for Perun using Angular
+-	[Perun ansible](https://github.com/CESNET/perun-ansible) - Perun installation automation using Ansible
+-	[Perun services](https://github.com/CESNET/perun-services) - connectors Perun uses to manage services
+-	[Google Group connector](https://github.com/CESNET/google-group-connector) - allow provisioning of Google groups on your domain
 
-### License ###
+### License
 
 &copy; 2010-2023 [CESNET](https://www.cesnet.cz/?lang=en) and [CERIT-SC](https://www.cerit-sc.cz/en/index.html), all rights reserved.
 
@@ -44,6 +47,6 @@ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
 OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 POSSIBILITY OF SUCH DAMAGE.
 
-### Acknowledgement ###
+### Acknowledgement
 
 This work is co-funded by the EOSC-hub project (Horizon 2020) under Grant number 777536.

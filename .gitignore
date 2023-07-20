@@ -61,6 +61,7 @@ nb-configuration.xml
 !.gitattributes
 !.travis.yml
 !.github
+!.commitlintrc.json
 *~
 
 # Window ignore #
