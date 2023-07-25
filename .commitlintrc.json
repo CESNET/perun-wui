@@ -17,7 +17,8 @@
 				"deps",
 				"deps-dev"
 			]
-		]
+		],
+		"body-max-line-length": [2, "always", 200]
 	},
 	"prompt": {
 		"questions": {
