@@ -861,9 +861,8 @@ public class SummaryStep implements Step {
 				modal.setClosable(false);
 				modal.setWidth("750px");
 
-
 				Button button = new Button(translation.understand());
-				button.setType(ButtonType.PRIMARY);
+				button.setType(ButtonType.DEFAULT);
 				button.addClickHandler(new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
@@ -871,8 +870,19 @@ public class SummaryStep implements Step {
 					}
 				});
 
+				Button buttonContAnyway = new Button(translation.continueAnyway());
+				buttonContAnyway.setType(ButtonType.PRIMARY);
+				buttonContAnyway.addClickHandler(new ClickHandler() {
+					@Override
+					public void onClick(ClickEvent event) {
+						modal.hide();
+						redirectAfterTimeout(redirectTo);
+					}
+				});
+
 				ModalFooter footer = new ModalFooter();
 				footer.add(button);
+				footer.add(buttonContAnyway);
 
 				ModalBody body = new ModalBody();
 				modal.add(body);
