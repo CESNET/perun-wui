@@ -7,7 +7,6 @@ import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.PerunFormItemValidator;
-import cz.metacentrum.perun.wui.registrar.widgets.items.validators.SshKeysTextAreaValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.TextAreaValidator;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextArea;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
@@ -27,12 +26,7 @@ public class TextArea extends PerunFormItemEditable {
 	public TextArea(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
 
-		if ("urn:perun:user:attribute-def:def:sshPublicKey".equals(item.getFormItem().getPerunDestinationAttribute())) {
-			this.validator = new SshKeysTextAreaValidator();
-		} else {
-			this.validator = new TextAreaValidator();
-		}
-
+		this.validator = new TextAreaValidator();
 	}
 
 	protected Widget initWidget() {
