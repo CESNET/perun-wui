@@ -35,8 +35,10 @@ public class GroupCheckBox extends Checkbox {
 				if (widget instanceof CheckBox) {
 					CheckBox checkBox = (CheckBox) widget;
 					String[] parsedGroupName = checkBox.getText().split(Window.Location.getParameter("group") + ":");
-					// use group name without parent group prefix
-					checkBox.setText(parsedGroupName[1]);
+					// use group name without parent group prefix only if there is one
+					if (parsedGroupName[1] != null) {
+						checkBox.setText(parsedGroupName[1]);
+					}
 				}
 			}
 		}
