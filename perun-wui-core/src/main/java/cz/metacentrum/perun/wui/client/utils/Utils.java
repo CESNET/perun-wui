@@ -107,6 +107,7 @@ public class Utils {
 		organizationsTranslation.put("@elixir-europe.org", "Elixir Europe");
 		organizationsTranslation.put("@github.extidp.cesnet.cz", "GitHub");
 		organizationsTranslation.put("@orcid.extidp.cesnet.cz", "OrcID");
+		organizationsTranslation.put("@microsoft.extidp.cesnet.cz", "Microsoft");
 
 		organizationsTranslation.put("@google", "Google");
 		organizationsTranslation.put("@facebook", "Facebook");
@@ -116,6 +117,7 @@ public class Utils {
 		organizationsTranslation.put("@seznam", "Seznam");
 		organizationsTranslation.put("@github", "GitHub");
 		organizationsTranslation.put("@orcid", "OrcID");
+		organizationsTranslation.put("@microsoft", "Microsoft");
 
 		// kerberos
 		organizationsTranslation.put("META", "MetaCentrum");
