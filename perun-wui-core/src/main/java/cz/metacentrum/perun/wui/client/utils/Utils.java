@@ -107,6 +107,7 @@ public class Utils {
 		organizationsTranslation.put("@elixir-europe.org", "Elixir Europe");
 		organizationsTranslation.put("@github.extidp.cesnet.cz", "GitHub");
 		organizationsTranslation.put("@orcid.extidp.cesnet.cz", "OrcID");
+		organizationsTranslation.put("@microsoft.extidp.cesnet.cz", "Microsoft");
 
 		organizationsTranslation.put("@google", "Google");
 		organizationsTranslation.put("@facebook", "Facebook");
@@ -116,6 +117,7 @@ public class Utils {
 		organizationsTranslation.put("@seznam", "Seznam");
 		organizationsTranslation.put("@github", "GitHub");
 		organizationsTranslation.put("@orcid", "OrcID");
+		organizationsTranslation.put("@microsoft", "Microsoft");
 
 		// kerberos
 		organizationsTranslation.put("META", "MetaCentrum");
@@ -131,7 +133,8 @@ public class Utils {
 		//organizationsTranslation.put("https://login.e-infra.cz/idp/", "e-INFRA CZ AAI");
 
 		// EGI
-		organizationsTranslation.put("https://aai.egi.eu/proxy/saml2/idp/metadata.php", "EGI Check-In");
+		organizationsTranslation.put("https://aai.egi.eu/proxy/saml2/idp/metadata.php", "EGI CheckIn");
+		organizationsTranslation.put("https://aai.egi.eu/auth/realms/egi", "EGI CheckIn"); // keycoak based
 		organizationsTranslation.put("https://sso.egi.eu/edugainidp/shibboleth", "EGI Foundation");
 		organizationsTranslation.put("https://sso.egi.eu/egissoidp/shibboleth", "EGI SSO");
 		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI SSO");
