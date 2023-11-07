@@ -9,6 +9,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import cz.metacentrum.perun.wui.json.Events;
+import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.ListBoxValidator;
 import cz.metacentrum.perun.wui.registrar.widgets.items.validators.SshKeysListBoxValidator;
@@ -19,7 +20,9 @@ import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Represents ListBox form item.
@@ -30,6 +33,7 @@ public class ListBox extends WidgetBox {
 
 	private final ListBoxValidator validator;
 	List<ExtendedTextBox> inputList;
+	Map<ExtendedTextBox, BlurHandler> handlers;
 
 	public ListBox(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
@@ -78,6 +82,7 @@ public class ListBox extends WidgetBox {
 	@Override
 	protected Widget initWidget() {
 		inputList = new ArrayList<>();
+		handlers = new HashMap<>();
 		return super.initWidget();
 	}
 
@@ -95,13 +100,48 @@ public class ListBox extends WidgetBox {
 		if (isOnlyPreview()) {
 			return;
 		}
-		for (ExtendedTextBox input : inputList) {
-			input.addBlurHandler(new BlurHandler() {
+		if ("urn:perun:user:attribute-def:def:sshPublicKey".equals(this.getItemData().getFormItem().getPerunDestinationAttribute())) {
+			final Events<Boolean> nothingEvent = new Events<Boolean>() {
 				@Override
-				public void onBlur(BlurEvent event) {
-					validateLocal();
+				public void onFinished(Boolean result) {
+
 				}
-			});
+
+				@Override
+				public void onError(PerunException error) {
+
+				}
+
+				@Override
+				public void onLoadingStart() {
+
+				}
+			};
+
+			for (ExtendedTextBox input : inputList) {
+
+				if (!handlers.containsKey(input)) {
+					BlurHandler handler = new BlurHandler() {
+						@Override
+						public void onBlur(BlurEvent event) {
+							validate(nothingEvent);
+						}
+					};
+					input.addBlurHandler(handler);
+					handlers.put(input, handler);
+				}
+
+			}
+
+		} else {
+			for (ExtendedTextBox input : inputList) {
+				input.addBlurHandler(new BlurHandler() {
+					@Override
+					public void onBlur(BlurEvent event) {
+						validateLocal();
+					}
+				});
+			}
 		}
 	}
 
@@ -154,8 +194,19 @@ public class ListBox extends WidgetBox {
 		PerunButton removeButton = new PerunButton("", new ClickHandler() {
 			public void onClick(ClickEvent event) {
 				inputList.remove(input);
+				handlers.remove(input);
 				vp.remove(hp);
-				validateLocal();
+				validate(new Events<Boolean>() {
+					@Override
+					public void onFinished(Boolean result) {
+					}
+					@Override
+					public void onError(PerunException error) {
+					}
+					@Override
+					public void onLoadingStart() {
+					}
+				});
 			}
 		});
 		setupRemoveButton(removeButton);

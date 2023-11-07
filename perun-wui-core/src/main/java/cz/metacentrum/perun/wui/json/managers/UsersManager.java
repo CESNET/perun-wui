@@ -253,6 +253,19 @@ public class UsersManager {
 	}
 
 	/**
+	 * Validate ssh public key, throws exception if validation fails
+	 *
+	 * @param sshKey ssh public key to verify
+	 * @return Request unique request
+	 */
+	public static Request validateSSHKey(String sshKey, JsonEvents events) {
+		JsonClient client = new JsonClient(events);
+		client.put("sshKey", sshKey);
+
+		return client.call(USERS_MANAGER + "validateSSHKey");
+	}
+
+	/**
 	 * Change password in selected namespace
 	 *
 	 * @param userId Users ID

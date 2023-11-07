@@ -172,6 +172,8 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Unable to check login availability! Please check your internet connection and try again later.")
 	public String checkingLoginFailed();
 
+	@DefaultMessage("Unable to check SSH key validity! Please check your internet connection and try again later.")
+	public String checkingSSHFailed();
 	@DefaultMessage("Login contains invalid character(s) or is not allowed!")
 	public String loginNotAllowed();
 
