@@ -1,5 +1,14 @@
 Upgrade notes
 
+## [4.2.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.2.0...v4.2.1) (2023-11-10)
+
+
+### Bug Fixes
+
+* adapt semantic release to GitLab ([0ed4244](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/0ed4244c6eac2c597bb8a9282820054a5c1abc6c))
+* gitlab semantic release ([0b65847](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/0b65847ab3af1bd39c4cc6523b1f6ad4758327e7))
+* try semantic release ([bf2cdfe](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/bf2cdfe6b356c8e94e6a4e79f0986c34573449e8))
+
 ## [4.2.0](https://github.com/CESNET/perun-wui/compare/v4.1.2...v4.2.0) (2023-11-07)
 
 
