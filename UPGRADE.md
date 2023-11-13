@@ -98,6 +98,13 @@ Upgrade notes
 
 * empty commit to trigger first GitLab release ([40b4c33](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/40b4c33024c8069b791d7616bd8d439d70aba569))
 
+## [4.2.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.2.0...v4.2.1) (2023-11-13)
+
+
+### Bug Fixes
+
+* empty commit to trigger first GitLab release ([40b4c33](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/40b4c33024c8069b791d7616bd8d439d70aba569))
+
 ## [4.2.0](https://github.com/CESNET/perun-wui/compare/v4.1.2...v4.2.0) (2023-11-07)
 
 
