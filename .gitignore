@@ -60,8 +60,9 @@ nb-configuration.xml
 !.gitignore
 !.gitattributes
 !.travis.yml
-!.github
 !.commitlintrc.json
+!.gitlab-ci.yml
+!.npmrc
 *~
 
 # Window ignore #
