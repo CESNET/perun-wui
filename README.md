@@ -1,11 +1,6 @@
 <a href="https://perun-aai.org"><img style="float: left; position: relative;" src="https://raw.githubusercontent.com/CESNET/perun/master/perun-web-gui/src/main/webapp/img/logo.png"></a>
 ## Perun WUI
 
-[![conventional commits](https://img.shields.io/badge/semantic--release-conventional-e10079?logo=semantic-release)](https://www.conventionalcommits.org/)
-[![commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](https://commitizen.github.io/cz-cli/)
-[![CI status](https://github.com/CESNET/perun-wui/workflows/test%20build/badge.svg?branch=master)](https://github.com/CESNET/perun-wui/actions/workflows/maven.yml)
-[![latest release](https://img.shields.io/github/v/release/cesnet/perun-wui)](https://github.com/CESNET/perun-wui/releases)
-
 ### Web interface for Perun using GWT and Bootstrap3
 
 This project aims to deliver rich user graphical interface for Perun components. Project uses enterprise frameworks to make it work:
