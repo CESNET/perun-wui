@@ -13,10 +13,10 @@ See https://perun-aai.org/ for more details about the base project.
 
 ### Related projects
 
--	[Perun](https://github.com/CESNET/perun) - main Perun repository
--	[Perun Web Apps](https://github.com/CESNET/perun-web-apps) - new web user interface for Perun using Angular
+-	[Perun](https://gitlab.ics.muni.cz/perun/perun-idm/perun) - main Perun repository
+-	[Perun Web Apps](https://gitlab.ics.muni.cz/perun/perun-idm/perun-web-apps) - new web user interface for Perun using Angular
 -	[Perun ansible](https://github.com/CESNET/perun-ansible) - Perun installation automation using Ansible
--	[Perun services](https://github.com/CESNET/perun-services) - connectors Perun uses to manage services
+-	[Perun services](https://gitlab.ics.muni.cz/perun/perun-idm/perun-services) - connectors Perun uses to manage services
 -	[Google Group connector](https://github.com/CESNET/google-group-connector) - allow provisioning of Google groups on your domain
 
 ### License
