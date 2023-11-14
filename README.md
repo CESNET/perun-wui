@@ -1,4 +1,5 @@
-<a href="https://perun-aai.org"><img style="float: left; position: relative;" src="https://raw.githubusercontent.com/CESNET/perun/master/perun-web-gui/src/main/webapp/img/logo.png"></a>
+[![image](https://webcentrum.muni.cz/media/3153530/perun.svg)](https://perun-aai.org)
+
 ## Perun WUI
 
 ### Web interface for Perun using GWT and Bootstrap3
