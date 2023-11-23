@@ -113,16 +113,20 @@
 			{
 				"assets": [
 					{
-						"path": "perun-wui-registrar/target/perun-wui-registrar.war"
+						"path": "perun-wui-registrar/target/perun-wui-registrar.war",
+						"filepath": "perun-wui-registrar.war"
 					},
 					{
-						"path": "perun-wui-consolidator/target/perun-wui-consolidator.war"
+						"path": "perun-wui-consolidator/target/perun-wui-consolidator.war",
+						"filepath": "perun-wui-consolidator.war"
 					},
 					{
-						"path": "perun-wui-pwdreset/target/perun-wui-pwdreset.war"
+						"path": "perun-wui-pwdreset/target/perun-wui-pwdreset.war",
+						"filepath": "perun-wui-pwdreset.war"
 					},
 					{
-						"path": "perun-wui-profile/target/perun-wui-profile.war"
+						"path": "perun-wui-profile/target/perun-wui-profile.war",
+						"filepath": "perun-wui-profile.war"
 					}
 				]
 			}

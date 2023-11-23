@@ -14,5 +14,10 @@
 		"conventional-changelog-conventionalcommits": "^6.1.0",
 		"inquirer": "^8.2.5",
 		"semantic-release": "^21.0.7"
+	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/@commitlint/cz-commitlint"
+		}
 	}
 }

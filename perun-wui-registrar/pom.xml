@@ -18,8 +18,8 @@
     <description>Web interface for Perun Registrar.</description>
 
     <scm>
-        <connection>scm:git:https://github.com/CESNET/perun.git</connection>
-        <url>scm:git:https://github.com/CESNET/perun.git</url>
+        <connection>scm:git:https://gitlab.ics.muni.cz/perun/perun-idm/perun.git</connection>
+        <url>scm:git:https://gitlab.ics.muni.cz/perun/perun-idm/perun.git</url>
         <tag>HEAD</tag>
     </scm>
 

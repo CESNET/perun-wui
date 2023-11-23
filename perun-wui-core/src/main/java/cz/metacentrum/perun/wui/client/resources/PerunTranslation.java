@@ -176,7 +176,7 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("<i class=\"fa fa-support\">&nbsp;</i>Support: &nbsp;")
 	public String supportAtMails();
 
-	@DefaultMessage("Powered by <a href=\'https://perun.cesnet.cz/web/\'>Perun</a> &copy; {0} <a href=\'https://www.cesnet.cz/\'>CESNET</a> &amp; <a href=\'https://www.cerit-sc.cz/\'>CERIT-SC</a>, License: <a href=\'https://github.com/CESNET/perun/blob/master/LICENSE\'>BSD-2</a>")
+	@DefaultMessage("Powered by <a href=\'https://perun.cesnet.cz/web/\'>Perun</a> &copy; {0} <a href=\'https://www.cesnet.cz/\'>CESNET</a> &amp; <a href=\'https://www.cerit-sc.cz/\'>CERIT-SC</a>, License: <a href=\'https://gitlab.ics.muni.cz/perun/perun-idm/perun/-/blob/main/LICENSE\'>BSD-2</a>")
 	public String credits(int year);
 
 	@DefaultMessage("Version: {0}")
