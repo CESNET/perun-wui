@@ -7,7 +7,7 @@
     <parent>
         <artifactId>wui</artifactId>
         <groupId>cz.metacentrum.perun</groupId>
-        <version>4.3.0</version>
+        <version>4.3.1</version>
     </parent>
 
     <groupId>cz.metacentrum.perun.wui</groupId>

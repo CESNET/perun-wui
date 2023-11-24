@@ -1,5 +1,13 @@
 Upgrade notes
 
+## [4.3.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.3.0...v4.3.1) (2023-11-24)
+
+
+### Bug Fixes
+
+* change references from GitHub to GitLab ([644a77d](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/644a77d66fb39bbbc22d9a4e6d54baa1fc77ebda))
+* upload assets as generic package for release ([9c8bb76](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/9c8bb76bb777b6bbad3e961c73c52bc4ec6d61e4))
+
 ## [4.3.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.2.0...v4.3.0) (2023-11-13)
 
 
