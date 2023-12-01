@@ -1,4 +1,4 @@
-[![image](https://webcentrum.muni.cz/media/3153530/perun.svg)](https://perun-aai.org)
+[![Perun](https://webcentrum.muni.cz/media/3153530/perun.svg)](https://perun-aai.org)
 
 ## Perun WUI
 
@@ -11,6 +11,10 @@ This project aims to deliver rich user graphical interface for Perun components.
 -	[GwtBootstrap3](https://github.com/gwtbootstrap3/gwtbootstrap3)
 
 See https://perun-aai.org/ for more details about the base project.
+
+### Repository information
+
+-   All development takes place in [public repository](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui) on our self-hosted GitLab instance. This repository is mirrored on [GitHub](https://github.com/CESNET/perun-wui) for visibility.
 
 ### Related projects
 
