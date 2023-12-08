@@ -1,4 +1,4 @@
-[![Perun](https://webcentrum.muni.cz/media/3153530/perun.svg)](https://perun-aai.org)
+# [![Perun](https://webcentrum.muni.cz/media/3153530/perun.svg)](https://perun-aai.org)
 
 ## Perun WUI
 
@@ -14,15 +14,9 @@ See https://perun-aai.org/ for more details about the base project.
 
 ### Repository information
 
--   All development takes place in [public repository](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui) on our self-hosted GitLab instance. This repository is mirrored on [GitHub](https://github.com/CESNET/perun-wui) for visibility.
+All development takes place in [public repository](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui) on our self-hosted GitLab instance. This repository is mirrored on [GitHub](https://github.com/CESNET/perun-wui) for visibility.
 
-### Related projects
-
--	[Perun](https://gitlab.ics.muni.cz/perun/perun-idm/perun) - main Perun repository
--	[Perun Web Apps](https://gitlab.ics.muni.cz/perun/perun-idm/perun-web-apps) - new web user interface for Perun using Angular
--	[Perun ansible](https://github.com/CESNET/perun-ansible) - Perun installation automation using Ansible
--	[Perun services](https://gitlab.ics.muni.cz/perun/perun-idm/perun-services) - connectors Perun uses to manage services
--	[Google Group connector](https://github.com/CESNET/google-group-connector) - allow provisioning of Google groups on your domain
+See also other related repositories in the [Perun IdM](https://gitlab.ics.muni.cz/perun/perun-idm) group.
 
 ### License
 
