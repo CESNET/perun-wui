@@ -29,6 +29,8 @@ public class Password extends PerunFormItemEditable {
 	public final static int MIN_LENGTH = 8;
 	public final static int MAX_LENGTH = 1024;
 	private final PasswordValidator validator;
+	private ExtendedPasswordTextBox passwordBox;
+	private ExtendedPasswordTextBox passwordConfirmBox;
 
 	private InputGroup widget;
 
@@ -53,23 +55,23 @@ public class Password extends PerunFormItemEditable {
 		InputGroupAddon addon = new InputGroupAddon();
 		addon.setIcon(IconType.KEY);
 
-		ExtendedPasswordTextBox box = new ExtendedPasswordTextBox();
-		box.setMaxLength(MAX_LENGTH);
-		box.addStyleName("passwordFormItemFirst");
-		box.setPlaceholder(getTranslation().enterPassword());
+		passwordBox = new ExtendedPasswordTextBox();
+		passwordBox.setMaxLength(MAX_LENGTH);
+		passwordBox.addStyleName("passwordFormItemFirst");
+		passwordBox.setPlaceholder(getTranslation().enterPassword());
 
-		ExtendedPasswordTextBox box2 = new ExtendedPasswordTextBox();
-		box2.setMaxLength(MAX_LENGTH);
-		box2.addStyleName("passwordFormItemLast");
-		box2.setPlaceholder(getTranslation().confirmPassword());
+		passwordConfirmBox = new ExtendedPasswordTextBox();
+		passwordConfirmBox.setMaxLength(MAX_LENGTH);
+		passwordConfirmBox.addStyleName("passwordFormItemLast");
+		passwordConfirmBox.setPlaceholder(getTranslation().confirmPassword());
 
 		if (getItemData().getFormItem().getRegex() != null) {
-			box.setRegex(getItemData().getFormItem().getRegex());
+			passwordBox.setRegex(getItemData().getFormItem().getRegex());
 		}
 
 		widget.add(addon);
-		widget.add(box);
-		widget.add(box2);
+		widget.add(passwordBox);
+		widget.add(passwordConfirmBox);
 
 		return widget;
 
@@ -88,6 +90,16 @@ public class Password extends PerunFormItemEditable {
 	@Override
 	public PerunFormItemValidator.Result getLastValidationResult() {
 		return validator.getLastResult();
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		if (this.passwordBox != null) {
+			this.passwordBox.setEnabled(enabled);
+		}
+		if (this.passwordConfirmBox != null) {
+			this.passwordConfirmBox.setEnabled(enabled);
+		}
 	}
 
 	@Override
