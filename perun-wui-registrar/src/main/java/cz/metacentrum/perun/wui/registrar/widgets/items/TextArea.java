@@ -44,6 +44,13 @@ public class TextArea extends PerunFormItemEditable {
 	}
 
 	@Override
+	public void setEnabled(boolean enabled) {
+		if (getBox() != null) {
+			getBox().setEnabled(enabled);
+		}
+	}
+
+	@Override
 	public void validate(Events<Boolean> events) {
 		validator.validate(this, events);
 	}

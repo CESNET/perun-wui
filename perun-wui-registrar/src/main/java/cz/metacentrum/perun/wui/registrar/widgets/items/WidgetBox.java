@@ -15,6 +15,7 @@ import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
+
 /**
  * WidgetBox represent shared logic for ListBox and MapBox.
  *
@@ -23,6 +24,8 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 public class WidgetBox extends PerunFormItemEditable {
 
 	protected Widget widget;
+	protected PerunButton addButton;
+
 
 	public WidgetBox(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
@@ -54,7 +57,7 @@ public class WidgetBox extends PerunFormItemEditable {
 		VerticalPanel vp = new VerticalPanel();
 		vp.setWidth("100%");
 		vp.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
-		PerunButton addButton = generateAddButton(vp);
+		addButton = generateAddButton(vp);
 		addButton.setIcon(IconType.PLUS);
 		addButton.setType(ButtonType.SUCCESS);
 		addButton.setMarginRight(40);
