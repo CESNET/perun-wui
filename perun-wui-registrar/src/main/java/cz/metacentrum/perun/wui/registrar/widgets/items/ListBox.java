@@ -34,6 +34,7 @@ public class ListBox extends WidgetBox {
 	private final ListBoxValidator validator;
 	List<ExtendedTextBox> inputList;
 	Map<ExtendedTextBox, BlurHandler> handlers;
+	List<PerunButton> removeButtons;
 
 	public ListBox(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
@@ -41,6 +42,19 @@ public class ListBox extends WidgetBox {
 			this.validator = new SshKeysListBoxValidator();
 		} else {
 			this.validator = new ListBoxValidator();
+		}
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		if (addButton != null) {
+			addButton.setEnabled(enabled);
+		}
+		for (PerunButton button : removeButtons) {
+			button.setEnabled(enabled);
+		}
+		for (ExtendedTextBox input : inputList) {
+			input.setEnabled(enabled);
 		}
 	}
 
@@ -83,6 +97,7 @@ public class ListBox extends WidgetBox {
 	protected Widget initWidget() {
 		inputList = new ArrayList<>();
 		handlers = new HashMap<>();
+		removeButtons = new ArrayList<>();
 		return super.initWidget();
 	}
 
@@ -209,6 +224,7 @@ public class ListBox extends WidgetBox {
 				});
 			}
 		});
+		removeButtons.add(removeButton);
 		setupRemoveButton(removeButton);
 		hp.add(input);
 		hp.add(removeButton);

@@ -34,10 +34,26 @@ public class MapBox extends WidgetBox {
 	private final MapBoxValidator validator;
 	List<ExtendedTextBox> keys;
 	List<ExtendedTextBox> values;
-
+	List<PerunButton> removeButtons;
 	public MapBox(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);
 		this.validator = new MapBoxValidator();
+	}
+
+	@Override
+	public void setEnabled(boolean enabled) {
+		if (addButton != null) {
+			addButton.setEnabled(enabled);
+		}
+		for (PerunButton button : removeButtons) {
+			button.setEnabled(enabled);
+		}
+		for (ExtendedTextBox box : keys) {
+			box.setEnabled(enabled);
+		}
+		for (ExtendedTextBox box : values) {
+			box.setEnabled(enabled);
+		}
 	}
 
 	@Override
@@ -100,6 +116,7 @@ public class MapBox extends WidgetBox {
 	protected Widget initWidget() {
 		keys = new ArrayList<>();
 		values = new ArrayList<>();
+		removeButtons = new ArrayList<>();
 		return super.initWidget();
 	}
 
@@ -213,6 +230,7 @@ public class MapBox extends WidgetBox {
 				validateLocal();
 			}
 		});
+		removeButtons.add(removeButton);
 		setupRemoveButton(removeButton);
 		hp.add(key);
 		hp.add(equals);
