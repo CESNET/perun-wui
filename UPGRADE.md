@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.3.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.3.1...v4.3.2) (2024-01-02)
+
+
+### Bug Fixes
+
+* add missing setEnabled methods ([2bbe1bf](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/2bbe1bf36ca417f561d81760415d9f69c58d18bf))
+
 ## [4.3.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.3.0...v4.3.1) (2023-11-24)
 
 
