@@ -58,7 +58,7 @@ public class Checkbox extends PerunFormItemEditable {
 
 		for (Map.Entry<String, String> entry : opts.entrySet()) {
 
-			checkBox = new CheckBox(entry.getValue());
+			checkBox = new CheckBox(entry.getValue(), true);
 			checkBox.setName(entry.getKey());
 			widget.add(checkBox);
 
