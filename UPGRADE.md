@@ -1,5 +1,17 @@
 Upgrade notes
 
+## [4.4.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.3.2...v4.4.0) (2024-01-15)
+
+
+### Features
+
+* allow html in checkbox label ([d921f4d](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/d921f4d04571b2602582845f924c9ad2db17dcb5))
+
+
+### Bug Fixes
+
+* add missing setEnabled methods ([2fb368d](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/2fb368d4eb1416376c9b8856db9f547e01c39b55))
+
 ## [4.3.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.3.1...v4.3.2) (2024-01-02)
 
 
