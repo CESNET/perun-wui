@@ -3,6 +3,7 @@ package cz.metacentrum.perun.wui.registrar.widgets.items;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.user.client.ui.Widget;
+import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
@@ -54,14 +55,24 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 		Column statusWrap = new Column(PerunForm.STATUS_SIZE);
 
 		// We assure that * is at the same line
-		if (getItemData().getFormItem().isRequired()) {
-			label.setHTML(SafeHtmlUtils.htmlEscape(getLabelOrShortName())+"&#8203;<span style=\"color:#b94a48\">*</span>");
+
+		// CHECKBOX labels should allow html
+		if (getItemData().getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.CHECKBOX)) {
+			if (getItemData().getFormItem().isRequired()) {
+				label.setHTML(getLabelOrShortName()+"&#8203;<span style=\"color:#b94a48\">*</span>");
+			} else {
+				label.setHTML(getLabelOrShortName());
+			}
 		} else {
-			label.setText(getLabelOrShortName());
+			if (getItemData().getFormItem().isRequired()) {
+				label.setHTML(SafeHtmlUtils.htmlEscape(getLabelOrShortName())+"&#8203;<span style=\"color:#b94a48\">*</span>");
+			} else {
+				label.setText(getLabelOrShortName());
+			}
+			// original implementation
+			//label.setHTML(SafeHtmlUtils.htmlEscape(getLabelOrShortName()));
+			//label.setShowRequiredIndicator(getItemData().getFormItem().isRequired());
 		}
-		// original implementation
-		//label.setHTML(SafeHtmlUtils.htmlEscape(getLabelOrShortName()));
-		//label.setShowRequiredIndicator(getItemData().getFormItem().isRequired());
 
 		label.addStyleName(PerunForm.LABEL_SIZE.getCssName());
 		widgetWithTexts.addStyleName(PerunForm.WIDGET_WITH_TEXT_SIZE.getCssName());
