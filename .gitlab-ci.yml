@@ -2,16 +2,6 @@ include:
   - project: perun/common
     file: /templates/.gitlab-ci-template.yml
 
-# use same rules as in .releaserc.json
-semantic-release:
-  rules:
-    - if: '$CI_COMMIT_REF_NAME == "production" && $CI_PIPELINE_SOURCE != "schedule"'
-    - if: '$CI_COMMIT_REF_NAME =~ /^[0-9]+(\.([0-9]+|x))?\.x$/ && $CI_PIPELINE_SOURCE != "schedule"'
-
-maven-build:
-  image: $CI_DEPENDENCY_PROXY_DIRECT_GROUP_IMAGE_PREFIX/maven:3-openjdk-17
-  stage: build
-  script:
-    - mvn -B -Dmaven.repo.local=.m2/repository clean install
-  rules:
-    - if: "$CI_PIPELINE_SOURCE != 'schedule'"
+variables:
+  # release from production branch instead of main
+  RELEASE_FROM_PRODUCTION: 1
