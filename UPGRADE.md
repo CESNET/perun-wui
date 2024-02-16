@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.4.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.4.0...v4.4.1) (2024-02-16)
+
+
+### Bug Fixes
+
+* year set to 2024 in footer templates ([16120e5](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/16120e5251e989080dccc7624c0c04a673244041))
+
 ## [4.4.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.3.2...v4.4.0) (2024-01-15)
 
 
