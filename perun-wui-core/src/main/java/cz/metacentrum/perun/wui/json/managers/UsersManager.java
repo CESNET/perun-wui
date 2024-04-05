@@ -246,7 +246,7 @@ public class UsersManager {
 	public static Request validatePreferredEmailChange(int userId, String token, JsonEvents events) {
 
 		JsonClient client = new JsonClient(events);
-		if (userId > 0) client.put("user", userId);
+		if (userId > 0) client.put("u", userId);
 		if (token != null && !token.isEmpty()) client.put("token", token);
 		return client.call(USERS_MANAGER + "validatePreferredEmailChange");
 

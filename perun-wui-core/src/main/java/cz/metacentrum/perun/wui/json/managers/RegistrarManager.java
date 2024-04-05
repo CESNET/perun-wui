@@ -212,7 +212,7 @@ public class RegistrarManager {
 
 		JsonClient client = new JsonClient(events);
 		if (applicationId > 0) {
-			client.put("appId", applicationId);
+			client.put("id", applicationId);
 		}
 		return client.call(REGISTRAR_MANAGER + "getApplicationById");
 
