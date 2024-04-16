@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.4.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.4.1...v4.4.2) (2024-04-16)
+
+
+### Bug Fixes
+
+* handle both 503 a 502 http codes the same ([413099e](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/413099e58f9e01d9e649581804f499d613d6128a))
+
 ## [4.4.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.4.0...v4.4.1) (2024-02-16)
 
 
