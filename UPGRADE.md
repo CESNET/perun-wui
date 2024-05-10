@@ -1,5 +1,18 @@
 Upgrade notes
 
+## [4.5.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.4.2...v4.5.0) (2024-05-10)
+
+
+### Features
+
+* **pwdreset:** add analytics to mu template ([e37985d](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/e37985dca1bd2cdfec25f21f573b3757a1f96562))
+* **registrar:** add analytics to mu template ([d7e222c](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/d7e222ccd154209553118f92a3cc3bff9e4bf5e7))
+
+
+### Bug Fixes
+
+* unified reading of list config properties ([eeab89d](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/eeab89d798aaa2e28850fe52141d89d5d0fe3c2a))
+
 ## [4.4.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.4.1...v4.4.2) (2024-04-16)
 
 
