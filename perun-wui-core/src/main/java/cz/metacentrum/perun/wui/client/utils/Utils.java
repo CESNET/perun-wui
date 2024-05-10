@@ -1383,7 +1383,7 @@ public class Utils {
 	}
 
 	/**
-	 * Convert string to list
+	 * Convert string to list. Values are trimmed of whitespace.
 	 *
 	 * @param toList string to convert to list
 	 * @param delimiter
@@ -1394,7 +1394,7 @@ public class Utils {
 		if (toList != null && !toList.isEmpty()) {
 			String[] names = toList.split(delimiter);
 			for (int i = 0; i < names.length; i++) {
-				list.add(names[i]);
+				list.add(names[i].trim());
 			}
 		}
 		return list;
@@ -1404,8 +1404,8 @@ public class Utils {
 	 * If passed string is DN of certificate(recognized by "/CN=") then returns only CN part with unescaped chars.
 	 * If passed string is not DN of certificate, original string is returned.
 	 *
-	 * @param toConvert Convert DN of certificate to human readable string
-	 * @return CN part of certificate DN in human readable form or original value.
+	 * @param toConvert Convert DN of certificate to human-readable string
+	 * @return CN part of certificate DN in human-readable form or original value.
 	 */
 	static public String convertCertCN(String toConvert) {
 

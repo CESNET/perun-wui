@@ -82,6 +82,17 @@ public final class PerunConfiguration {
 	}
 
 	/**
+	 * Return List<String> value of property from perun config or empty list. "," is expected as delimiter.
+	 *
+	 * @param name property name
+	 * @return property value or empty list if anything fails
+	 */
+	private static ArrayList<String> getConfigPropertyListOfStrings(String name) {
+		String value = getConfigPropertyString(name);
+		return Utils.stringToList(value, ",");
+	}
+
+	/**
 	 * Return int value of property from perun config or 0.
 	 *
 	 * @param name property name
@@ -176,7 +187,7 @@ public final class PerunConfiguration {
 
 		ArrayList<String> languages = new ArrayList<>();
 		languages.add("en");
-		languages.addAll(Utils.stringToList(getConfigPropertyString("language.supported"),","));
+		languages.addAll(getConfigPropertyListOfStrings("language.supported"));
 		Collections.sort(languages);
 		return new HashSet<String>(languages);
 
@@ -407,7 +418,7 @@ public final class PerunConfiguration {
 	 * @return list of VOs short names
 	 */
 	public static ArrayList<String> getVosToSkipReCaptchaFor() {
-		return Utils.stringToList(getConfigPropertyString("reCaptcha.skipVos"),",");
+		return getConfigPropertyListOfStrings("reCaptcha.skipVos");
 	}
 
 	/**
@@ -416,7 +427,7 @@ public final class PerunConfiguration {
 	 * @return List of attribute names
 	 */
 	public static ArrayList<String> getAttributesForMemberTable() {
-		return Utils.stringToList(getConfigPropertyString("attributesForMemberTables"),",");
+		return getConfigPropertyListOfStrings("attributesForMemberTables");
 	}
 
 	/**
@@ -425,7 +436,7 @@ public final class PerunConfiguration {
 	 * @return List of attribute names
 	 */
 	public static ArrayList<String> getAttributesForUserTable() {
-		return Utils.stringToList(getConfigPropertyString("attributesForUserTables"),",");
+		return getConfigPropertyListOfStrings("attributesForUserTables");
 	}
 
 	/**
@@ -436,7 +447,7 @@ public final class PerunConfiguration {
 	 * @return list of supported namespaces
 	 */
 	public static ArrayList<String> getPreferredUnixGroupNamesNamespaces() {
-		return Utils.stringToList(getConfigPropertyString("namespacesForPreferredGroupNames"),",");
+		return getConfigPropertyListOfStrings("namespacesForPreferredGroupNames");
 	}
 
 	/**
@@ -445,8 +456,7 @@ public final class PerunConfiguration {
 	 * @return list of supported namespaces names
 	 */
 	public static ArrayList<String> getSupportedPasswordNamespaces() {
-		String value = getConfigPropertyString("supportedPasswordNamespaces");
-		return Utils.stringToList(value, ",");
+		return getConfigPropertyListOfStrings("supportedPasswordNamespaces");
 	}
 
 	/**
@@ -488,8 +498,7 @@ public final class PerunConfiguration {
 	 * @return list of all /fed/-like authz paths
 	 */
 	public static ArrayList<String> getFedAuthz() {
-		String value = getConfigPropertyString("fedAuthz");
-		return Utils.stringToList(value, ",");
+		return getConfigPropertyListOfStrings("fedAuthz");
 	}
 
 	/**
@@ -525,13 +534,11 @@ public final class PerunConfiguration {
 	}
 
 	public static List<String> getRegistrarEnforcedProxies() {
-		String value = getConfigPropertyString("registrar.enforceProxy");
-		return Utils.stringToList(value, ",");
+		return getConfigPropertyListOfStrings("registrar.enforceProxy");
 	}
 
 	public static List<String> getRegistrarHiddenProxies() {
-		String value = getConfigPropertyString("registrar.hideProxy");
-		return Utils.stringToList(value, ",");
+		return getConfigPropertyListOfStrings("registrar.hideProxy");
 	}
 
 	// ---------------------------   WAYF   ---------------------------- //
@@ -552,8 +559,7 @@ public final class PerunConfiguration {
 	 * @return list of all cert hostnames for IC
 	 */
 	public static ArrayList<String> getWayfCertHostnames() {
-		String value = getConfigPropertyString("wayf.cert.hosts");
-		return Utils.stringToList(value, ",");
+		return getConfigPropertyListOfStrings("wayf.cert.hosts");
 	}
 
 	/**
@@ -666,14 +672,7 @@ public final class PerunConfiguration {
 	 * @return names of pages to hide
 	 */
 	public static List<String> getProfilePagesToHide() {
-		List<String> attrNames = new ArrayList<>();
-		String data = getConfigPropertyString("profile.hidePages");
-		if (data != null) {
-			String[] values = data.replaceAll("\\s+","").split(",");
-			attrNames.addAll(Arrays.asList(values));
-		}
-
-		return attrNames;
+		return getConfigPropertyListOfStrings("profile.hidePages");
 	}
 
 	/**
@@ -682,14 +681,8 @@ public final class PerunConfiguration {
 	 * @return names of pages to hide
 	 */
 	public static List<String> getProfileSettingsPagesToHide() {
-		List<String> attrNames = new ArrayList<>();
-		String data = getConfigPropertyString("profile.settings.hidePages");
-		if (data != null) {
-			String[] values = data.replaceAll("\\s+","").split(",");
-			attrNames.addAll(Arrays.asList(values));
-		}
+		List<String> attrNames = getConfigPropertyListOfStrings("profile.settings.hidePages");
 		attrNames = attrNames.stream().map(s -> "settings_" + s).collect(Collectors.toList());
-
 		return attrNames;
 	}
 
@@ -700,14 +693,10 @@ public final class PerunConfiguration {
 	 */
 	public static List<PersonalAttribute> getProfilePersonalAttributesToShow() {
 		List<PersonalAttribute> attributes = new ArrayList<>();
-		String data = getConfigPropertyString("profile.personal.showAttributes");
-		if (data != null) {
-			String[] values = data.split(",");
-			for (String value : values) {
-				attributes.add(parsePersonalAttribute(value));
-			}
+		List<String> values = getConfigPropertyListOfStrings("profile.personal.showAttributes");
+		for (String value : values) {
+			attributes.add(parsePersonalAttribute(value));
 		}
-
 		return attributes;
 	}
 
@@ -731,13 +720,7 @@ public final class PerunConfiguration {
 	 * @return names of attributes that should be shown
 	 */
 	public static List<String> getRegistrarSkipSummaryFor() {
-		List<String> attributes = new ArrayList<>();
-		String data = getConfigPropertyString("registrar.skipSummaryFor");
-		if (data != null) {
-			String[] values = data.split(",");
-			attributes.addAll(Arrays.asList(values));
-		}
-		return attributes;
+		return getConfigPropertyListOfStrings("registrar.skipSummaryFor");
 	}
 
 	/**
