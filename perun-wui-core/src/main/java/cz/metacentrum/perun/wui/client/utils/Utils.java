@@ -72,7 +72,6 @@ public class Utils {
 		organizationsTranslation.put("https://id.vse.cz/idp/shibboleth", "University of Economics, Prague");
 		organizationsTranslation.put("https://shib.zcu.cz/idp/shibboleth", "University of West Bohemia");
 		organizationsTranslation.put("https://idptoo.osu.cz/simplesaml/saml2/idp/metadata.php", "University of Ostrava");
-		organizationsTranslation.put("https://login.ics.muni.cz/idp/shibboleth", "MetaCentrum");
 		organizationsTranslation.put("https://idp.hostel.eduid.cz/idp/shibboleth", "eduID.cz Hostel");
 		organizationsTranslation.put("https://shibboleth.techlib.cz/idp/shibboleth", "National Library of Technology");
 		organizationsTranslation.put("https://eduid.jamu.cz/idp/shibboleth", "Janacek Academy of Music and Performing Arts in Brno");
@@ -128,7 +127,6 @@ public class Utils {
 
 		// e-INFRA CZ
 		organizationsTranslation.put("https://idp.e-infra.cz/idp/", "e-INFRA CZ heslo");
-		organizationsTranslation.put("https://idp-cert.e-infra.cz/idp/", "e-INFRA CZ certifikát");
 		//organizationsTranslation.put("https://login.cesnet.cz/idp/", "CESNET eInfrastructure AAI");
 		//organizationsTranslation.put("https://login.e-infra.cz/idp/", "e-INFRA CZ AAI");
 
