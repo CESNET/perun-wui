@@ -259,8 +259,6 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 		} else if (Objects.equals("NOT_ELIGIBLE_EINFRA_EXTENSION", exception.getReason())) {
 			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/";
 			setInfo(trans.cantSubmitLoA(), trans.notEligibleEINFRAextension(Utils.getIdentityConsolidatorLink(true), url+PerunSession.getInstance().getRpcServer()+"/registrar/?vo=einfra&group=verified_users:catch_all"));
-		} else if (Objects.equals("NOT_ELIGIBLE_METAIDP", exception.getReason())) {
-			setInfo(trans.cantSubmitLoA(), trans.notEligibleMETAIDP());
 		} else if (Objects.equals("NOT_ELIGIBLE_EINFRAIDP", exception.getReason())) {
 			setInfo(trans.cantSubmitLoA(), trans.notEligibleEINFRAIDP());
 		} else if (Objects.equals("NEVER_EXPIRATION", exception.getReason())) {
