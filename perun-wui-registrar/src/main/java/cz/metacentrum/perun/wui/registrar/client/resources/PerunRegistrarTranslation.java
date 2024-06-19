@@ -359,6 +359,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You don`t have required Level of Assurance (LoA) to extend membership. Contact your IDP ({0}) and prove your identity to him by official ID card (passport, driving license). If you have another identity with higher Level of Assurance, try to use it instead.")
 	public String cantExtendMembershipInsufficientLoa(String idpName);
 
+	@DefaultMessage("You can`t extend membership in <i>{0}</i>. Your membership is managed through VO hierarchy relations.")
+	public String cantExtendMembershipLifescycleNotAlterable(String vo);
+
 	@DefaultMessage("You can`t register to {0}")
 	public String cantBecomeMember(String voOrGroupName);
 
