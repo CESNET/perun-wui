@@ -136,6 +136,22 @@ public class AttributesManager {
 	/**
 	 * Returns an Attribute by its name. Returns only non-empty attributes.
 	 *
+	 * @param group Group id
+	 * @param attrName Attribute name
+	 * @param events events done on callback
+	 * @return Request unique request
+	 */
+	public static Request getGroupAttribute(int group, String attrName, JsonEvents events) {
+
+		JsonClient client = new JsonClient(events);
+		if (group > 0) client.put("group", group);
+		if (attrName != null && !attrName.isEmpty()) client.put("attributeName", attrName);
+		return client.call(ATTRIBUTES_MANAGER + "getAttribute");
+	}
+
+	/**
+	 * Returns an Attribute by its name. Returns only non-empty attributes.
+	 *
 	 * @param user user id
 	 * @param attrName Attribute name
 	 * @param events events done on callback
