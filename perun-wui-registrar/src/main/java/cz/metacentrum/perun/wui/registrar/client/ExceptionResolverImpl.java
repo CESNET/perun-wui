@@ -247,6 +247,10 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			setInfo(trans.cantExtendMembership(), trans.cantExtendMembershipInsufficientLoa(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
 
+		} else if ("LIFECYCLENOTALTERABLE".equals(exception.getReason())) {
+
+			setInfo(trans.cantExtendMembership(), trans.cantExtendMembershipLifescycleNotAlterable(((Vo)getBean()).getName()));
+
 		}
 	}
 
