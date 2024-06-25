@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.5.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.5.0...v4.5.1) (2024-06-25)
+
+
+### Bug Fixes
+
+* **registrar:** handle member lifecycle not alterable case ([28cc262](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/28cc2626ef50f6f4f2ca833af568d7ae2462620e))
+
 ## [4.5.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.4.2...v4.5.0) (2024-05-10)
 
 
