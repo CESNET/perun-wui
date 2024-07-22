@@ -17,7 +17,8 @@ public class GroupExtStep extends FormStep {
 
 	public GroupExtStep(RegistrarObject registrar, PerunForm form) {
 		super(registrar, form);
-		this.result = new Result(Type.GROUP_EXT, registrar.getGroup(), registrar.hasGroupFormAutoApprovalExtension());
+		this.result = new Result(Type.GROUP_EXT, registrar.getGroup(),
+			registrar.hasGroupFormAutoApprovalExtension() || form.getInvitation() != null);
 	}
 
 	@Override
@@ -32,6 +33,9 @@ public class GroupExtStep extends FormStep {
 		}
 
 		form.setFormItems(registrar.getGroupFormExtension());
+		if (form.getInvitation() != null) {
+			form.setInvitationMailToValidateEmails(form.getInvitation().getReceiverEmail());
+		}
 
 		if (!form.containsSubmitButton() && !form.containsOnlyTextItems()) {
 			PerunException ex = PerunException.createNew("0", "FormWrongFormedException", "Group extension form is wrongly formed.");

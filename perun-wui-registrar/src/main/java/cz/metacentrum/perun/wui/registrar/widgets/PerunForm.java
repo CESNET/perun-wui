@@ -17,12 +17,14 @@ import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItem;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import cz.metacentrum.perun.wui.model.beans.Identity;
+import cz.metacentrum.perun.wui.model.beans.Invitation;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarResources;
 import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Header;
 import cz.metacentrum.perun.wui.registrar.widgets.items.HtmlComment;
 import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
 import cz.metacentrum.perun.wui.registrar.widgets.items.SubmitButton;
+import cz.metacentrum.perun.wui.registrar.widgets.items.ValidatedEmail;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,7 +63,7 @@ public class PerunForm extends FieldSet {
 	private FormState formState;
 	private boolean seeHiddenItems;
 	private Application app;
-	private String invitationToken;
+	private Invitation invitation = null;
 	private JsonEvents onSubmitEvent;
 	private PerunTranslation perunTranslation = GWT.create(PerunTranslation.class);
 
@@ -359,7 +361,8 @@ public class PerunForm extends FieldSet {
 	 */
 	private void createApplication(final PerunButton button) {
 
-		RegistrarManager.createApplication(app, getFormItemDataToSubmit(), getInvitationToken(), new JsonEvents() {
+		RegistrarManager.createApplication(app, getFormItemDataToSubmit(),
+			invitation != null ? invitation.getToken() : null, new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 
@@ -515,12 +518,12 @@ public class PerunForm extends FieldSet {
 		this.app = app;
 	}
 
-	public String getInvitationToken() {
-		return invitationToken;
+	public Invitation getInvitation() {
+		return invitation;
 	}
 
-	public void setInvitationToken(String invitationToken) {
-		this.invitationToken = invitationToken;
+	public void setInvitation(Invitation invitation) {
+		this.invitation = invitation;
 	}
 
 	public JsonEvents getOnSubmitEvent() {
@@ -639,6 +642,20 @@ public class PerunForm extends FieldSet {
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Set the email from invitation (if present) to the validated email fields, so it can later be used
+	 * to not display the hint for email verification if the user inputs the email from the invitation.
+	 *
+	 * @param invitationEmail the email from the invitation
+	 */
+	public void setInvitationMailToValidateEmails(String invitationEmail) {
+		for (PerunFormItem item : items) {
+			if (item instanceof ValidatedEmail) {
+				((ValidatedEmail) item).setInvitationMail(invitationEmail);
+			}
+		}
 	}
 
 }
