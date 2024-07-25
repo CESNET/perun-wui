@@ -401,6 +401,15 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Your application to {0} has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
 	public String registrarException(String voOrGroupName);
 
+	@DefaultMessage("The pre-approved invitation you have received is in an invalid state.")
+	public String InvalidInvitationStatus();
+
+	@DefaultMessage("The pre-approved invitation you have received does not exist.")
+	public String InvitationNotExists();
+
+	@DefaultMessage("The pre-approved invitation is already assigned to an existing application.")
+	public String InvitationAlreadyAssignedToAnApplication();
+
 	@DefaultMessage("Application to {0} has been submitted, but not approved automatically, due to unexpected error. Your administrator has been informed and he will deal with it.")
 	public String cantBeApproved(String voOrGroupName);
 

@@ -21,9 +21,9 @@ import cz.metacentrum.perun.wui.client.resources.PerunSession;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.ErrorTranslator;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.managers.InvitationsManager;
 import cz.metacentrum.perun.wui.json.managers.MembersManager;
 import cz.metacentrum.perun.wui.json.managers.RegistrarManager;
-import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.BasicOverlayObject;
 import cz.metacentrum.perun.wui.model.GeneralObject;
 import cz.metacentrum.perun.wui.model.PerunException;
@@ -56,6 +56,14 @@ import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.PerunLoader;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
@@ -73,15 +81,6 @@ import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
 
 /**
  * View for displaying registration form of VO / Group
@@ -412,66 +411,30 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		//////// This block of code should represent (guess) WHAT USER WANT to do. /////////
 		if (isApplyingToGroup(registrar)) {
 
-			if (voInitialFormExists(registrar)) {
+			String invitationToken = (Window.Location.getParameter("token") != null) ?
+				URL.decodeQueryString(Window.Location.getParameter("token")) : null;
+			if (invitationToken != null) {
+				InvitationsManager.canInvitationBeAccepted(invitationToken, new JsonEvents() {
 
-				// vo initial can't have group extension
-				stepManager.addStep(new VoInitStep(registrar, form));
-				stepManager.addStep(new GroupInitStep(registrar, form));
-				stepManager.addStep(new SummaryStep(formView));
-				stepManager.begin();
-
-			} else if (voExtensionFormExists(registrar)) {
-
-				if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
-					if (!neverExp) {
-						for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
-							if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
-								!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
-								// offer only when VO doesn't have empty or "You are registered" form.
-								stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
-								break;
-							}
-						}
+					@Override
+					public void onFinished(JavaScriptObject result) {
+						form.setInvitationToken(invitationToken);
+						loadGroupForm(registrar, stepManager);
 					}
 
-					// only members with correct extension form can extend
-					stepManager.addStep(new GroupExtStep(registrar, form));
-
-				} else {
-
-					stepManager.addStep(new GroupInitStep(registrar, form));
-					if (!neverExp) {
-						for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
-							if (!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
-								!item.getFormItem().getType().equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
-								// offer only when VO doesn't have empty or "You are registered" form.
-								stepManager.addStep(new VoExtOfferStep(registrar, form)); // will offer only if form is valid
-								break;
-							}
-						}
+					@Override
+					public void onError(PerunException error) {
+						displayException(error, null);
 					}
-				}
 
-				stepManager.addStep(new SummaryStep(formView));
-				stepManager.begin();
+					@Override
+					public void onLoadingStart() {
 
+					}
+				});
 			} else {
-
-				// Because vo initial form can be empty (admin did not create it).
-				if (!isMemberOfVo(registrar) && !appliedToVo(registrar))
-					stepManager.addStep(new VoInitStep(registrar, form));
-
-				if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
-					// only members with correct extension form can extend
-					stepManager.addStep(new GroupExtStep(registrar, form));
-				} else {
-					stepManager.addStep(new GroupInitStep(registrar, form));
-				}
-				stepManager.addStep(new SummaryStep(formView));
-				stepManager.begin();
-
+				loadGroupForm(registrar, stepManager);
 			}
-
 		} else {
 
 			if (voInitialFormExists(registrar)) {
@@ -501,6 +464,74 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		}
 
+	}
+
+	private void loadGroupForm(RegistrarObject registrar, StepManager stepManager) {
+		if (voInitialFormExists(registrar)) {
+
+			// vo initial can't have group extension
+			stepManager.addStep(new VoInitStep(registrar, form));
+			stepManager.addStep(new GroupInitStep(registrar, form));
+			stepManager.addStep(new SummaryStep(formView));
+			stepManager.begin();
+
+		} else if (voExtensionFormExists(registrar)) {
+
+			if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
+				if (!neverExp) {
+					for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
+						if (!item.getFormItem().getType()
+							.equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+							!item.getFormItem().getType()
+								.equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
+							// offer only when VO doesn't have empty or "You are registered" form.
+							stepManager.addStep(new VoExtOfferStep(registrar,
+								form)); // will offer only if form is valid
+							break;
+						}
+					}
+				}
+
+				// only members with correct extension form can extend
+				stepManager.addStep(new GroupExtStep(registrar, form));
+
+			} else {
+
+				stepManager.addStep(new GroupInitStep(registrar, form));
+				if (!neverExp) {
+					for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
+						if (!item.getFormItem().getType()
+							.equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+							!item.getFormItem().getType()
+								.equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
+							// offer only when VO doesn't have empty or "You are registered" form.
+							stepManager.addStep(new VoExtOfferStep(registrar,
+								form)); // will offer only if form is valid
+							break;
+						}
+					}
+				}
+			}
+
+			stepManager.addStep(new SummaryStep(formView));
+			stepManager.begin();
+
+		} else {
+
+			// Because vo initial form can be empty (admin did not create it).
+			if (!isMemberOfVo(registrar) && !appliedToVo(registrar))
+				stepManager.addStep(new VoInitStep(registrar, form));
+
+			if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
+				// only members with correct extension form can extend
+				stepManager.addStep(new GroupExtStep(registrar, form));
+			} else {
+				stepManager.addStep(new GroupInitStep(registrar, form));
+			}
+			stepManager.addStep(new SummaryStep(formView));
+			stepManager.begin();
+
+		}
 	}
 
 	private boolean voInitialFormExists(RegistrarObject ro) {

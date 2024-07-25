@@ -24,16 +24,15 @@ import cz.metacentrum.perun.wui.registrar.widgets.items.HtmlComment;
 import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
 import cz.metacentrum.perun.wui.registrar.widgets.items.SubmitButton;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import org.gwtbootstrap3.client.ui.FieldSet;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * Utility class used to handle Perun Application forms.
@@ -62,6 +61,7 @@ public class PerunForm extends FieldSet {
 	private FormState formState;
 	private boolean seeHiddenItems;
 	private Application app;
+	private String invitationToken;
 	private JsonEvents onSubmitEvent;
 	private PerunTranslation perunTranslation = GWT.create(PerunTranslation.class);
 
@@ -359,7 +359,7 @@ public class PerunForm extends FieldSet {
 	 */
 	private void createApplication(final PerunButton button) {
 
-		RegistrarManager.createApplication(app, getFormItemDataToSubmit(), new JsonEvents() {
+		RegistrarManager.createApplication(app, getFormItemDataToSubmit(), getInvitationToken(), new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
 
@@ -513,6 +513,14 @@ public class PerunForm extends FieldSet {
 
 	public void setApp(Application app) {
 		this.app = app;
+	}
+
+	public String getInvitationToken() {
+		return invitationToken;
+	}
+
+	public void setInvitationToken(String invitationToken) {
+		this.invitationToken = invitationToken;
 	}
 
 	public JsonEvents getOnSubmitEvent() {

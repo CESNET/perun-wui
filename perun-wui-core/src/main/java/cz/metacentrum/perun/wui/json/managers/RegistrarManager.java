@@ -5,7 +5,6 @@ import cz.metacentrum.perun.wui.json.JsonClient;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -245,11 +244,15 @@ public class RegistrarManager {
 	 *
 	 * @return Request unique request
 	 */
-	public static Request createApplication(Application application, List<ApplicationFormItemData> data, JsonEvents events) {
+	public static Request createApplication(Application application, List<ApplicationFormItemData> data, String invitationToken, JsonEvents events) {
 
 		JsonClient client = new JsonClient(true, events);
 		if (application != null) {
 			client.put("app", application);
+
+			if (application.getGroup() != null  && invitationToken != null) {
+				client.put("token", invitationToken);
+			}
 		}
 		if (data != null) {
 			client.put("data", data);
@@ -381,5 +384,4 @@ public class RegistrarManager {
 		return client.call(REGISTRAR_MANAGER + "updateFormItemsData");
 
 	}
-
 }
