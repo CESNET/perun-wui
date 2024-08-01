@@ -261,6 +261,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Enter value")
 	String enterValue();
 
+	@DefaultMessage("You are already a member of this group")
+	String alreadyMemberOfThisGroup();
+
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
 	@DefaultMessage("Open applications")
