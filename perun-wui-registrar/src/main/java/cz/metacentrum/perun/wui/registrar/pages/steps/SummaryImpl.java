@@ -37,7 +37,9 @@ public class SummaryImpl implements Summary {
 	@Override
 	public String mustRevalidateEmail() {
 		for(Result result : results) {
-			if (result.getRegisteredMail() != null) {
+			if (result.getRegisteredMail() != null &&
+				!result.getApplication().getState().equals(Application.ApplicationState.VERIFIED) &&
+				!result.getApplication().getState().equals(Application.ApplicationState.APPROVED)) {
 				return result.getRegisteredMail();
 			}
 		}

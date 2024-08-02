@@ -171,6 +171,15 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			setInfo(trans.registrarException(getBeanName()), null);
 
+		} else if ("InvalidInvitationStatusException".equalsIgnoreCase(exception.getName())) {
+			setInfo(trans.InvalidInvitationStatus(), null, false);
+
+		} else if ("InvitationNotExistsException".equalsIgnoreCase(exception.getName())) {
+			setInfo(trans.InvitationNotExists(), null, false);
+
+		} else if ("InvitationAlreadyAssignedToAnApplicationException".equalsIgnoreCase(exception.getName())) {
+			setInfo(trans.InvitationAlreadyAssignedToAnApplication(), null, false);
+
 		} else if ("0".equals(exception.getErrorId())) {
 
 			setInfo(trans.unableToSubmit(), trans.error0(), false);
