@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.6.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.5.1...v4.6.0) (2024-08-02)
+
+
+### Features
+
+* pair application with invitation ([240f278](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/240f278ba30c15c658ade02afa82ef2fdedcb437))
+
 ## [4.5.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.5.0...v4.5.1) (2024-06-25)
 
 
