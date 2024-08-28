@@ -1,5 +1,13 @@
 Upgrade notes
 
+## [4.7.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.6.0...v4.7.0) (2024-08-28)
+
+
+### Features
+
+* disable groups user is already member of on embedded ([4461dcf](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/4461dcf01e77ac0bfd32de2b833783ba94969949))
+* verbose fail messages on invalid invitation ([6684b85](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/6684b850b52ad7ffff1e75513f2e80be94cd6706))
+
 ## [4.6.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.5.1...v4.6.0) (2024-08-02)
 
 
