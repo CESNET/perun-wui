@@ -78,7 +78,8 @@ public class ValidatedEmailValidator extends PerunFormItemValidatorImpl<Validate
 			validMails.addAll(prefilledMails);
 		}
 
-		if (!validMails.contains(mail.getValue()) && !isNullOrEmpty(mail.getValue())) {
+		if (!validMails.contains(mail.getValue()) && !isNullOrEmpty(mail.getValue()) &&
+		    !mail.getValue().equals(mail.getInvitationMail())) {
 
 			setResult(Result.MUST_VALIDATE_EMAIL);
 			mail.setStatus(getTransl().mustValidateEmail(), ValidationState.WARNING);

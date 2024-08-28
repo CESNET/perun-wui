@@ -24,9 +24,10 @@ public class InvitationsManager {
 	 *
 	 * @return Request unique request
 	 */
-	public static Request canInvitationBeAccepted(String invitationUUID, JsonEvents events) {
+	public static Request canInvitationBeAccepted(String invitationUUID, int groupId, JsonEvents events) {
 		JsonClient client = new JsonClient(events);
 		client.put("uuid", invitationUUID);
+		client.put("group", groupId);
 		return client.call(INVITATIONS_MANAGER + "canInvitationBeAccepted");
 
 	}

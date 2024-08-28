@@ -21,6 +21,7 @@ import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.widgets.AlertErrorReporter;
 import cz.metacentrum.perun.wui.widgets.PerunButton;
 import cz.metacentrum.perun.wui.widgets.resources.PerunButtonType;
+import java.util.List;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.Heading;
@@ -45,8 +46,6 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.client.ui.html.Text;
 import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
 import org.gwtbootstrap3.extras.notify.client.ui.Notify;
-
-import java.util.List;
 
 /**
  * Represents a final step in registration process. Show info.
@@ -827,9 +826,12 @@ public class SummaryStep implements Step {
 
 	private PerunButton getContinueButton(final String urlParameter, final Result previousResult) {
 
-		if (Window.Location.getParameter(urlParameter) != null) {
+		String redirectFromInvitation = formView.getForm().getInvitation() != null ?
+			formView.getForm().getInvitation().getRedirectUrl() : null;
+		if (Window.Location.getParameter(urlParameter) != null || redirectFromInvitation != null) {
 
-			redirectTo = Window.Location.getParameter(urlParameter);
+			redirectTo = redirectFromInvitation != null ?
+				redirectFromInvitation : Window.Location.getParameter(urlParameter);
 
 			PerunButton continueButton = PerunButton.getButton(PerunButtonType.CONTINUE);
 			// make button more visible to the users

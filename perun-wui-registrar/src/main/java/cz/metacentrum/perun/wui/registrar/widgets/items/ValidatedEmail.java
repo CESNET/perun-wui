@@ -35,6 +35,8 @@ public class ValidatedEmail extends PerunFormItemEditable {
 	public final static int MAX_LENGTH = 1024;
 	public final static String CUSTOM_ID = "custom";
 	private final ValidatedEmailValidator validator;
+	// a bit of a hack to put the email from invitation here to be able to validate the filled email locally agains it
+	private String invitationMail;
 
 	private InputGroup widget;
 
@@ -272,4 +274,11 @@ public class ValidatedEmail extends PerunFormItemEditable {
 		return false;
 	}
 
+	public String getInvitationMail() {
+		return invitationMail;
+	}
+
+	public void setInvitationMail(String invitationMail) {
+		this.invitationMail = invitationMail;
+	}
 }

@@ -261,6 +261,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Enter value")
 	String enterValue();
 
+	@DefaultMessage("You are already a member of this group")
+	String alreadyMemberOfThisGroup();
+
 	// -------------- SUBMITTED APPS PAGE ------------------------ //
 
 	@DefaultMessage("Open applications")
@@ -401,14 +404,23 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Your application to {0} has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
 	public String registrarException(String voOrGroupName);
 
-	@DefaultMessage("The pre-approved invitation you have received is in an invalid state.")
+	@DefaultMessage("The preapproved invitation you have received is in an invalid state.")
 	public String InvalidInvitationStatus();
 
-	@DefaultMessage("The pre-approved invitation you have received does not exist.")
+	@DefaultMessage("The preapproved invitation you have received has already been accepted.")
+	public String InvalidInvitationStatusAccepted();
+
+	@DefaultMessage("The preapproved invitation you have received is expired.")
+	public String InvalidInvitationStatusExpired();
+
+	@DefaultMessage("The preapproved invitation you have received is revoked.")
+	public String InvalidInvitationStatusRevoked();
+
+	@DefaultMessage("The preapproved invitation you have received has been deleted.")
 	public String InvitationNotExists();
 
-	@DefaultMessage("The pre-approved invitation is already assigned to an existing application.")
-	public String InvitationAlreadyAssignedToAnApplication();
+	@DefaultMessage("There is a mismatch between the group you were invited to and the group you are applying to. Please contact your administrator.")
+	public String InvitationWrongGroup();
 
 	@DefaultMessage("Application to {0} has been submitted, but not approved automatically, due to unexpected error. Your administrator has been informed and he will deal with it.")
 	public String cantBeApproved(String voOrGroupName);

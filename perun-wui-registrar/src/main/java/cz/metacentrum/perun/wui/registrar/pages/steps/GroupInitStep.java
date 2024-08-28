@@ -23,7 +23,8 @@ public class GroupInitStep extends FormStep {
 
 	public GroupInitStep(RegistrarObject registrar, PerunForm form) {
 		super(registrar, form);
-		this.result = new Result(Type.GROUP_INIT, registrar.getGroup(), registrar.hasGroupFormAutoApproval());
+		this.result = new Result(Type.GROUP_INIT, registrar.getGroup(),
+			registrar.hasGroupFormAutoApproval() || form.getInvitation() != null);
 	}
 
 	@Override
@@ -74,6 +75,9 @@ public class GroupInitStep extends FormStep {
 		}
 
 		form.setFormItems(registrar.getGroupFormInitial());
+		if (form.getInvitation() != null) {
+			form.setInvitationMailToValidateEmails(form.getInvitation().getReceiverEmail());
+		}
 
 		if (!form.containsSubmitButton() && !form.containsOnlyTextItems()) {
 			PerunException ex = PerunException.createNew("0", "FormWrongFormedException", "Group registration form is wrongly formed.");

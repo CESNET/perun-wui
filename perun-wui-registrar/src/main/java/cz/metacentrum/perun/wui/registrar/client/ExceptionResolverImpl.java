@@ -172,13 +172,18 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			setInfo(trans.registrarException(getBeanName()), null);
 
 		} else if ("InvalidInvitationStatusException".equalsIgnoreCase(exception.getName())) {
-			setInfo(trans.InvalidInvitationStatus(), null, false);
+
+			resolveInvalidInvitationStatusException();
 
 		} else if ("InvitationNotExistsException".equalsIgnoreCase(exception.getName())) {
 			setInfo(trans.InvitationNotExists(), null, false);
 
 		} else if ("InvitationAlreadyAssignedToAnApplicationException".equalsIgnoreCase(exception.getName())) {
-			setInfo(trans.InvitationAlreadyAssignedToAnApplication(), null, false);
+			setInfo(trans.InvalidInvitationStatusAccepted(), null, false);
+
+		} else if ("IllegalArgumentException".equalsIgnoreCase(exception.getType()) &&
+			exception.getMessage().contains("Wrong group!")) {
+			setInfo(trans.InvitationWrongGroup(), null, false);
 
 		} else if ("0".equals(exception.getErrorId())) {
 
@@ -278,6 +283,20 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			setInfo(trans.cantSubmitLoA(), trans.expirationNever());
 		} else {
 			setInfo(trans.cantSubmitLoA(), exception.getMessage());
+		}
+
+	}
+
+	private void resolveInvalidInvitationStatusException() {
+
+		if (exception.getMessage().contains("ACCEPTED")) {
+			setInfo(trans.InvalidInvitationStatusAccepted(), null, false);
+		} else if (exception.getMessage().contains("EXPIRED")) {
+			setInfo(trans.InvalidInvitationStatusExpired(), null, false);
+		} else if (exception.getMessage().contains("REVOKED")) {
+			setInfo(trans.InvalidInvitationStatusRevoked(), null, false);
+		} else {
+			setInfo(trans.InvalidInvitationStatus(), exception.getMessage());
 		}
 
 	}

@@ -34,6 +34,7 @@ import cz.metacentrum.perun.wui.model.beans.Attribute;
 import cz.metacentrum.perun.wui.model.beans.ExtSource;
 import cz.metacentrum.perun.wui.model.beans.Group;
 import cz.metacentrum.perun.wui.model.beans.Identity;
+import cz.metacentrum.perun.wui.model.beans.Invitation;
 import cz.metacentrum.perun.wui.model.beans.Member;
 import cz.metacentrum.perun.wui.model.beans.RichMember;
 import cz.metacentrum.perun.wui.model.beans.Vo;
@@ -414,11 +415,12 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			String invitationToken = (Window.Location.getParameter("token") != null) ?
 				URL.decodeQueryString(Window.Location.getParameter("token")) : null;
 			if (invitationToken != null) {
-				InvitationsManager.canInvitationBeAccepted(invitationToken, new JsonEvents() {
+				InvitationsManager.canInvitationBeAccepted(invitationToken, group.getId(), new JsonEvents() {
 
 					@Override
 					public void onFinished(JavaScriptObject result) {
-						form.setInvitationToken(invitationToken);
+						Invitation invitation = (Invitation) result;
+						form.setInvitation(invitation);
 						loadGroupForm(registrar, stepManager);
 					}
 

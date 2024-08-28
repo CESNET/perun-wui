@@ -9,11 +9,10 @@ import org.gwtbootstrap3.client.ui.CheckBox;
 
 /**
  * Represents checkboxes for Group selection.
- * Value is a list of group names and ids, separated by "#". Groups are separated by pipe '|'.
- * It does not contain unchecked values.
- *
+ * Value is a list of group names and ids along with optional ENABLED/DISABLED flag, separated by "#".
+ * Groups are separated by pipe '|'. It does not contain unchecked values.
  * Example of a value:
- * "Group A#124|Group B#1212|Group C#1212"
+ * "Group A#124#ENABLED|Group B#1212#DISABLED|Group C#1212#ENABLED"
  *
  * @author Vojtech Sassmann
  */
@@ -34,6 +33,16 @@ public class GroupCheckBox extends Checkbox {
 			for (Widget widget : getWidget()) {
 				if (widget instanceof CheckBox) {
 					CheckBox checkBox = (CheckBox) widget;
+					// option appended with 'DISABLED' means that the user is already a member of that group
+					if (checkBox.getText().split("#").length > 1) {
+						String disabledFlag = checkBox.getText().split("#")[1];
+						checkBox.setText(checkBox.getText().split("#")[0]);
+						if (disabledFlag.equals("DISABLED")) {
+							checkBox.setEnabled(false);
+							checkBox.setTitle(translation.alreadyMemberOfThisGroup());
+						}
+					}
+
 					String[] parsedGroupName = checkBox.getText().split(Window.Location.getParameter("group") + ":");
 					// use group name without parent group prefix only if there is one
 					if (parsedGroupName[1] != null) {
