@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.7.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.7.0...v4.7.1) (2024-09-20)
+
+
+### Bug Fixes
+
+* vo application checkbox labels ([016a69d](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/016a69d13a5e8e7d3563e19efa3b8d399e16f44f))
+
 ## [4.7.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.6.0...v4.7.0) (2024-08-28)
 
 
