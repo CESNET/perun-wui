@@ -29,27 +29,27 @@ public class GroupCheckBox extends Checkbox {
 		super.initWidget();
 
 		boolean isGroupApplication = Window.Location.getParameter("group") != null;
-		if (isGroupApplication) {
-			for (Widget widget : getWidget()) {
-				if (widget instanceof CheckBox) {
-					CheckBox checkBox = (CheckBox) widget;
-					// option appended with 'DISABLED' means that the user is already a member of that group
-					if (checkBox.getText().split("#").length > 1) {
-						String disabledFlag = checkBox.getText().split("#")[1];
-						checkBox.setText(checkBox.getText().split("#")[0]);
-						if (disabledFlag.equals("DISABLED")) {
-							checkBox.setEnabled(false);
-							checkBox.setTitle(translation.alreadyMemberOfThisGroup());
-						}
-					}
 
-					String[] parsedGroupName = checkBox.getText().split(Window.Location.getParameter("group") + ":");
-					// use group name without parent group prefix only if there is one
-					if (parsedGroupName[1] != null) {
-						checkBox.setText(parsedGroupName[1]);
-					}
-				}
-			}
+        for (Widget widget : getWidget()) {
+            if (widget instanceof CheckBox) {
+                CheckBox checkBox = (CheckBox) widget;
+                // option appended with 'DISABLED' means that the user is already a member of that group
+                if (checkBox.getText().split("#").length > 1) {
+                    String disabledFlag = checkBox.getText().split("#")[1];
+                    checkBox.setText(checkBox.getText().split("#")[0]);
+                    if (disabledFlag.equals("DISABLED")) {
+                        checkBox.setEnabled(false);
+                        checkBox.setTitle(translation.alreadyMemberOfThisGroup());
+                    }
+                }
+                if (isGroupApplication) {
+                  String[] parsedGroupName = checkBox.getText().split(Window.Location.getParameter("group") + ":");
+                  // use group name without parent group prefix only if there is one
+                  if (parsedGroupName[1] != null) {
+                      checkBox.setText(parsedGroupName[1]);
+                  }
+            }
+          }
 		}
 
 		return getWidget();
