@@ -64,6 +64,7 @@ public class SummaryStep implements Step {
 
 	private boolean exceptionDisplayed = false;
 	private String redirectTo = null;
+	private boolean redirectPresent;
 	private ListGroupItem verifyMail;
 	private ListGroup messages;
 	private Heading title;
@@ -71,6 +72,10 @@ public class SummaryStep implements Step {
 	public SummaryStep(FormView formView) {
 		this.formView = formView;
 		this.translation = formView.getTranslation();
+		String redirectFromInvitation = formView.getForm().getInvitation() != null ?
+				formView.getForm().getInvitation().getRedirectUrl() : null;
+		String redirectFromUrlNew = Window.Location.getParameter(TARGET_NEW);
+		this.redirectPresent = redirectFromUrlNew != null || redirectFromInvitation != null;
 	}
 
 	@Override
@@ -120,7 +125,9 @@ public class SummaryStep implements Step {
 
 			if (res.hasAutoApproval()) {
 				title.add(new Text(" "+translation.initTitleAutoApproval()));
-				msg.setText(translation.registered(res.getBean().getName()));
+				msg.setText(redirectPresent ?
+						translation.registeredRedirect(res.getBean().getName()) :
+						translation.registered(res.getBean().getName()));
 			} else {
 				title.add(new Text(" "+translation.initTitle()));
 				msg.setText(translation.waitForAcceptation());
@@ -265,7 +272,9 @@ public class SummaryStep implements Step {
 						msg.setText(translation.waitForVoAcceptation(((Group) res.getBean()).getShortName()));
 					} else {
 						title.add(new Text(" " + translation.initTitleAutoApproval()));
-						msg.setText(translation.registered(((Group) res.getBean()).getShortName()));
+						msg.setText(redirectPresent ?
+								translation.registeredRedirect(((Group) res.getBean()).getShortName()) :
+								translation.registered(((Group) res.getBean()).getShortName()));
 					}
 				} else {
 					title.add(new Text(" " + translation.initTitle()));
@@ -452,7 +461,9 @@ public class SummaryStep implements Step {
 				ListGroupItem msg = new ListGroupItem();
 
 				if (resultVo.hasAutoApproval()) {
-					msg.setText(translation.registered(resultVo.getBean().getName()));
+					msg.setText(redirectPresent ?
+							translation.registeredRedirect(resultVo.getBean().getName()) :
+							translation.registered(resultVo.getBean().getName()));
 				} else {
 					// Message from group application is sufficient in this case.
 				}
@@ -492,7 +503,9 @@ public class SummaryStep implements Step {
 				if (resultGroup.hasAutoApproval()) {
 					if (resultVo.hasAutoApproval()) {
 						title.add(new Text(" " + translation.initTitleAutoApproval()));
-						msg.setText(translation.registered(((Group) resultGroup.getBean()).getShortName()));
+						msg.setText(redirectPresent ?
+								translation.registeredRedirect(((Group) resultGroup.getBean()).getShortName()) :
+								translation.registered(((Group) resultGroup.getBean()).getShortName()));
 					} else {
 						title.add(new Text(" " + translation.initTitle()));
 						msg.setText(translation.waitForVoAcceptation(((Group) resultGroup.getBean()).getShortName()));
@@ -588,7 +601,9 @@ public class SummaryStep implements Step {
 			if (resultGroup.hasAutoApproval()) {
 				if (resultVo.hasAutoApproval()) { // FIXME - tohle by se mělo vyhodnotit z předchozího stavu (není auto nebo byla chyba)
 					title.add(new Text(" "+translation.initTitleAutoApproval()));
-					msg.setText(translation.registered(((Group) resultGroup.getBean()).getShortName()));
+					msg.setText(redirectPresent ?
+							translation.registeredRedirect(((Group) resultGroup.getBean()).getShortName()) :
+							translation.registered(((Group) resultGroup.getBean()).getShortName()));
 				} else {
 					title.add(new Text(" "+translation.initTitle()));
 					msg.setText(translation.waitForVoExtension(((Group) resultGroup.getBean()).getShortName()));
