@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.8.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.7.1...v4.8.0) (2024-10-24)
+
+
+### Features
+
+* ux improvements connected to prapproved invites ([ed2dd9b](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/ed2dd9bd3a06b51364e4573a363ffd135a28e53a))
+
 ## [4.7.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.7.0...v4.7.1) (2024-09-20)
 
 
