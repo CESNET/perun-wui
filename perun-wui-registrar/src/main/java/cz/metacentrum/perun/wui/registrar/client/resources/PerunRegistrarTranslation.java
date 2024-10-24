@@ -50,13 +50,13 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Email verification needed")
 	public String emailVerificationNeededTitle();
 
-	@DefaultMessage("You have successfully extend your membership")
+	@DefaultMessage("You have successfully extended your membership")
 	public String extendTitleAutoApproval();
 
 	// MESSAGES
 
 	@DefaultMessage("Please check your mailbox {0} and click the link to verify your email address. " +
-			"Without verification it is not possible to approve your application.")
+			"Your membership application is pending until then.")
 	public String verifyMail(String mail);
 
 	@DefaultMessage("Please wait until your application has been approved. You will be notified by email.")
@@ -74,8 +74,11 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("After acceptation you will become member of \"{0}\" automatically.")
 	String waitForVoExtension(String groupName);
 
-	@DefaultMessage("You are now a member of {0}.")
+	@DefaultMessage("You became a member of {0}. It can take several minutes before you can access all services. You may close this window now.")
 	public String registered(String voOrGroupName);
+
+	@DefaultMessage("You became a member of {0}. It can take several minutes before you can access all services.")
+	public String registeredRedirect(String voOrGroupName);
 
 	@DefaultMessage("Your membership in {0} is valid now.")
 	public String extended(String voOrGroupName);
@@ -109,7 +112,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("<i>User don`t have identity suitable for automatic joining. If it`s you, <b>please contact support at: <a href=\"mailto:{0}\">{0}</a></b>.</i>")
 	public String noIdentityForJoining(String mailAddress);
 
-	@DefaultMessage("Please wait, redirecting you back to the service ...")
+	@DefaultMessage("Please wait, we will redirect you to the next page in several seconds ...")
 	public String redirectingBackToService();
 
 
@@ -407,7 +410,7 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("The preapproved invitation you have received is in an invalid state.")
 	public String InvalidInvitationStatus();
 
-	@DefaultMessage("The preapproved invitation you have received has already been accepted.")
+	@DefaultMessage("This invitation was accepted. If you have problem with access, try waiting for a few minutes. If the problem persists, contact support.")
 	public String InvalidInvitationStatusAccepted();
 
 	@DefaultMessage("The preapproved invitation you have received is expired.")
@@ -416,10 +419,10 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("The preapproved invitation you have received is revoked.")
 	public String InvalidInvitationStatusRevoked();
 
-	@DefaultMessage("The preapproved invitation you have received has been deleted.")
+	@DefaultMessage("This invitation was not found in the system. Ask the sender to send new invitation or contact support.")
 	public String InvitationNotExists();
 
-	@DefaultMessage("There is a mismatch between the group you were invited to and the group you are applying to. Please contact your administrator.")
+	@DefaultMessage("This invitation cannot be used because it is for another group. Ask the sender to send new invitation or contact support.")
 	public String InvitationWrongGroup();
 
 	@DefaultMessage("Application to {0} has been submitted, but not approved automatically, due to unexpected error. Your administrator has been informed and he will deal with it.")
