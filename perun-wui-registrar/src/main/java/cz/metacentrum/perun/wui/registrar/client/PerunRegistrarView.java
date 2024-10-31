@@ -139,6 +139,14 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		collapse.hide();
 	}
 
+	@Override
+	public void hideFooter() {
+		Element footer = DOM.getElementById("perun-footer");
+		if (footer != null) {
+			footer.getStyle().setProperty("display", "none");
+		}
+	}
+
 	@Inject
 	PerunRegistrarView(final PerunRegistrarViewUiBinder binder) {
 

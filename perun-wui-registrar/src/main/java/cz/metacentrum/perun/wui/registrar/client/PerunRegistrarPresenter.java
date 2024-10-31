@@ -63,6 +63,8 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 
 		void hideNavbar();
 
+		void hideFooter();
+
 		void setActiveMenuItem(String anchor);
 
 	}
@@ -85,6 +87,10 @@ public class PerunRegistrarPresenter extends PerunPresenter<PerunRegistrarPresen
 			// skip captcha on mail verification
 			captchaOK = true;
 			History.newItem(PerunRegistrarPlaceTokens.getVerify(), false);
+		}
+
+		if (PerunConfiguration.isFooterDisabled()) {
+			getView().hideFooter();
 		}
 
 		loadVoAttributes(new Events<List<Attribute>>() {
