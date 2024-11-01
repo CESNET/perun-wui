@@ -50,6 +50,9 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	NavbarNav topMenu;
 
 	@UiField
+	Div menuWrapper;
+
+	@UiField
 	NavbarCollapse collapse;
 
 	@UiField
@@ -157,6 +160,10 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		logo.setHeight("50px");
 		//logo.setPull(Pull.LEFT);
 		logoWrapper.add(logo);
+
+		if (PerunConfiguration.isHeaderDisabled()) {
+			menuWrapper.setVisible(false);
+		}
 
 		if (!PerunConfiguration.isLangSwitchingDisabled()) {
 			UiUtils.addLanguageSwitcher(topMenu);
