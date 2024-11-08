@@ -1,5 +1,18 @@
 Upgrade notes
 
+## [4.9.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.8.0...v4.9.0) (2024-11-08)
+
+
+### Features
+
+* **registrar:** allow disabling top menu ([9950a03](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/9950a03115a95551d6a3bc691e101df7a825657a))
+* **registrar:** option to hide footer ([0c93ca0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/0c93ca0a37968b4afd4f7b4afa4109450395d1ec))
+
+
+### Bug Fixes
+
+* **registrar:** fix skip summary ([6933595](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/6933595ba8992ae1c14b68cf2740aadcad2c1311))
+
 ## [4.8.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.7.1...v4.8.0) (2024-10-24)
 
 
