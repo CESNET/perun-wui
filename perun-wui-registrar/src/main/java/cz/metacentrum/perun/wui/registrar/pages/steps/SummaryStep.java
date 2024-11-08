@@ -813,7 +813,8 @@ public class SummaryStep implements Step {
 		List<String> skippedSummary = PerunConfiguration.getRegistrarSkipSummaryFor();
 		skipSummary = skippedSummary.contains(resultKey);
 
-		if (skipSummary && !exceptionDisplayed && continueButton != null && redirectTo != null) {
+		if (skipSummary && !exceptionDisplayed && continueButton != null && redirectTo != null
+			&& verifyMail == null) {
 
 			// make sure LDAP backend is updated and go to the end-service
 			redirectAfterTimeout(redirectTo);

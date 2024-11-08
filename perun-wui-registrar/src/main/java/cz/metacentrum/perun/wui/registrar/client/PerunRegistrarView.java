@@ -50,6 +50,9 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 	NavbarNav topMenu;
 
 	@UiField
+	Div menuWrapper;
+
+	@UiField
 	NavbarCollapse collapse;
 
 	@UiField
@@ -139,6 +142,14 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		collapse.hide();
 	}
 
+	@Override
+	public void hideFooter() {
+		Element footer = DOM.getElementById("perun-footer");
+		if (footer != null) {
+			footer.getStyle().setProperty("display", "none");
+		}
+	}
+
 	@Inject
 	PerunRegistrarView(final PerunRegistrarViewUiBinder binder) {
 
@@ -157,6 +168,10 @@ public class PerunRegistrarView extends ViewImpl implements PerunRegistrarPresen
 		logo.setHeight("50px");
 		//logo.setPull(Pull.LEFT);
 		logoWrapper.add(logo);
+
+		if (PerunConfiguration.isHeaderDisabled()) {
+			menuWrapper.setVisible(false);
+		}
 
 		if (!PerunConfiguration.isLangSwitchingDisabled()) {
 			UiUtils.addLanguageSwitcher(topMenu);
