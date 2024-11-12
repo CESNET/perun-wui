@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.9.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.9.0...v4.9.1) (2024-11-12)
+
+
+### Bug Fixes
+
+* **registrar:** allow for uppercase in top level domain of email ([90a64cc](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/90a64ccd579bdc1a634f4133d4fdc581506614d1))
+
 ## [4.9.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.8.0...v4.9.0) (2024-11-08)
 
 
