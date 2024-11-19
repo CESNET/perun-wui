@@ -225,12 +225,12 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 		String missingItems = "<ul>";
 		if (!exception.getFormItems().isEmpty()) {
 			for (ApplicationFormItemData item : exception.getFormItems()) {
-				missingItems += "<li>" + item.getFormItem().getFederationAttribute() + "</li>";
+				missingItems += "<li>" + item.getFormItem().getShortname() + "</li>";
 			}
 		}
 		missingItems += "</ul>";
 
-		setInfo(trans.missingRequiredData(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())), missingItems, false);
+		setInfo(trans.missingRequiredData(), missingItems, false);
 	}
 
 
