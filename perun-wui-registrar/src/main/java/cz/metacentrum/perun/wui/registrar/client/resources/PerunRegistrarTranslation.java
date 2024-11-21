@@ -377,11 +377,11 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("<br/>You don`t have required Level of Assurance (LoA) to display registration form. Contact your IDP ({0}) and prove your identity to him by official ID card (passport, driving license). If you have another identity with higher Level of Assurance, try to use it instead.")
 	public String cantBecomeMemberInsufficientLoa(String idpName);
 
-	@DefaultMessage("<h4>You can`t submit the registration</h4><p><br/>The following required form items couldn`t be automatically pre-filled and their value is not editable. Please contact the administrator.")
+	@DefaultMessage("<h4>You can`t submit the registration</h4><p><br/>The administrator set the following required form items as not editable and their value is not prefilled. Please contact the administrator.")
 	public String noPrefilledUneditableRequiredData();
 
-	@DefaultMessage("<h4>You can`t submit the registration</h4><p><br/>The Identity Provider you used to log-in ({0}) doesn`t provide data required by the registration form OR you don`t have the following required attributes OR the administrator set up this form wrongly. Please contact the administrator eventually ask your IDP to publish the following attributes or use different IDP.")
-	public String missingRequiredData(String idpName);
+	@DefaultMessage("<h4>You can`t submit the registration</h4><p><br/>Some required data was either not provided by your Identity provider or was not found in the system. Please contact the administrator about the problems with these items.")
+	public String missingRequiredData();
 
 	@DefaultMessage("Organization / project with name <i>{0}</i> doesn`t exist. Please check the address used in a browser.")
 	public String voNotExistsException(String voName);
