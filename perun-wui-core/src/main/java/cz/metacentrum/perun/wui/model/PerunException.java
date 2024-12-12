@@ -218,12 +218,6 @@ public class PerunException extends JavaScriptObject {
 		return JsUtils.getNativePropertyObject(this, "group").cast();
 	}
 
-	/* FIXME - add SecurityTeam bean
-	public final SecurityTeam getSecurityTeam() {
-		return JsUtils.getNativePropertyObject(this, "securityTeam").cast();
-	}
-	*/
-
 	public final User getUser() {
 		return JsUtils.getNativePropertyObject(this, "user").cast();
 	}
