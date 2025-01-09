@@ -133,11 +133,6 @@ public class ErrorTranslator {
 			} else if (error.getGroup() != null) {
 				text += " is already manager of Group: " + SafeHtmlUtils.fromString(error.getGroup().getName()).asString();
 			}
-			/* TODO - add SecurityTeam bean
-			else if (error.getSecurityTeam() != null) {
-				text += " is already manager of SecurityTeam: " + error.getSecurityTeam().getName();
-			}
-			*/
 			return text;
 
 		} else if ("AlreadyMemberException".equalsIgnoreCase(errorName)) {
@@ -542,16 +537,6 @@ public class ErrorTranslator {
 
 			// FIXME - must contain also resource
 			return SafeHtmlUtils.fromString(error.getMessage()).asString();
-
-		} else if ("SecurityTeamAlreadyAssignedException".equalsIgnoreCase(errorName)) {
-
-			/* - TODO
-			if (error.getSecurityTeam() != null) {
-				return "SecurityTeam <i>" + error.getSecurityTeam().getName() + "</i> is already assigned to facility.";
-			} else {
-				return "Same SecurityTeam is already assigned to facility.";
-			}
-			*/
 
 		} else if ("ServiceAlreadyAssignedException".equalsIgnoreCase(errorName)) {
 
