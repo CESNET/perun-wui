@@ -1,5 +1,26 @@
 Upgrade notes
 
+## [4.10.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.9.2...v4.10.0) (2025-01-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* removed security teams
+
+### Features
+
+* new regex for email address validation ([d2e0295](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/d2e0295fe6a3e4ab459855af7b1ab76b74a7480c))
+
+
+### Bug Fixes
+
+* updated year in webapp templates, readme and license ([0b5e238](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/0b5e238ebe46cc0b66e72945de1856b3e4a2e28c))
+
+
+### Others
+
+* remove security teams ([6ccf7df](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/6ccf7df92c9977d4542348e556c13967dbe51433))
+
 ## [4.9.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.9.1...v4.9.2) (2024-11-21)
 
 
