@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.dom.client.KeyUpEvent;
 import com.google.gwt.event.dom.client.KeyUpHandler;
+import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONValue;
 import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.safehtml.shared.SafeHtmlUtils;
@@ -25,6 +26,8 @@ import cz.metacentrum.perun.wui.client.resources.beans.Locale;
 import cz.metacentrum.perun.wui.client.resources.beans.PersonalAttribute;
 import cz.metacentrum.perun.wui.client.utils.Utils;
 import cz.metacentrum.perun.wui.json.JsonEvents;
+import cz.metacentrum.perun.wui.json.JsonUtils;
+import cz.metacentrum.perun.wui.json.managers.ConfigManager;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Attribute;
@@ -614,7 +617,25 @@ public class PersonalView extends ViewWithUiHandlers<PersonalUiHandlers> impleme
 
 		// if it is preferred email, add change button
 		if (URN_PREFERRED_EMAIL.matches(personalAttribute.getUrn())) {
-			addEmailChangeButton(innerValueColumn);
+			ConfigManager.getPersonalDataChangeConfig(new JsonEvents() {
+				@Override
+				public void onFinished(JavaScriptObject result) {
+					Map<String, JSONValue> config = JsonUtils.parseJsonToMap(result);
+					if (Objects.equals("true", config.get("enableCustomEmail").toString())) {
+						addEmailChangeButton(innerValueColumn);
+					}
+				}
+
+				@Override
+				public void onError(PerunException error) {
+
+				}
+
+				@Override
+				public void onLoadingStart() {
+
+				}
+			});
 		}
 
 		// FIXME - support other namespaces
