@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.11.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.10.0...v4.11.0) (2025-03-10)
+
+
+### Features
+
+* **profile:** prevent preferred email change if disabled in config ([8bd3d24](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/8bd3d24a5c548ed8b85d5f621f29f6b1441a947c))
+
 ## [4.10.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.9.2...v4.10.0) (2025-01-09)
 
 
