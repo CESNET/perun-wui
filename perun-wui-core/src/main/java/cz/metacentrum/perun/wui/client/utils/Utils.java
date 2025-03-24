@@ -131,8 +131,9 @@ public class Utils {
 		//organizationsTranslation.put("https://login.e-infra.cz/idp/", "e-INFRA CZ AAI");
 
 		// EGI
-		organizationsTranslation.put("https://aai.egi.eu/proxy/saml2/idp/metadata.php", "EGI CheckIn");
-		organizationsTranslation.put("https://aai.egi.eu/auth/realms/egi", "EGI CheckIn"); // keycoak based
+		organizationsTranslation.put("https://aai.egi.eu/proxy/saml2/idp/metadata.php", "EGI CheckIn"); // old
+		organizationsTranslation.put("https://aai.egi.eu/auth/realms/egi", "EGI CheckIn"); // keycloak based - EGI perun (internal services)
+		organizationsTranslation.put("https://aai.egi.eu/auth/realms/id", "EGI CheckIn"); // keycloak based - community
 		organizationsTranslation.put("https://sso.egi.eu/edugainidp/shibboleth", "EGI Foundation");
 		organizationsTranslation.put("https://sso.egi.eu/egissoidp/shibboleth", "EGI SSO");
 		organizationsTranslation.put("https://www.egi.eu/idp/shibboleth", "EGI SSO");
