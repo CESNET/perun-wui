@@ -1,5 +1,13 @@
 Upgrade notes
 
+## [4.11.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.11.0...v4.11.1) (2025-03-24)
+
+
+### Bug Fixes
+
+* **consolidator:** reflect entityid change on migration of checkin to keycloak ([f677855](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/f6778559a12b4e93d79aac1883a8889fa8e67f9d))
+* **consolidator:** removed option to join personal certificates ([f8ca619](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/f8ca6194dd40bea1ae547cb473c24809b47eb94b))
+
 ## [4.11.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.10.0...v4.11.0) (2025-03-10)
 
 
