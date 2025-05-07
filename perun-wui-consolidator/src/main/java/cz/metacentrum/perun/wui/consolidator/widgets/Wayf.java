@@ -117,8 +117,8 @@ public class Wayf extends Composite {
 
 						// TODO - we won't support template in a future
 						String consolidatorUrl = Utils.getIdentityConsolidatorLink(group.getUrl(), false) + URL.encodeQueryString("?token=" + token + target);
-						String authnContextClassRef = "urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified%20urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport%20urn:cesnet:proxyidp:template:cesnet";
 
+						String authnContextClassRef = PerunConfiguration.getAuthnContextClassRef();
 						// button is single IdP - pass it to the proxy
 						if (group.getIdpEntityID() != null && !group.getIdpEntityID().isEmpty()) {
 							authnContextClassRef += "%20urn:cesnet:proxyidp:idpentityid:"+group.getIdpEntityID();

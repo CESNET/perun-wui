@@ -741,7 +741,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 										// FINAL URL must logout from SP, login to SP using specified IdP, redirect to IC and after that return to application form
 										String token = ((BasicOverlayObject) jso).getString();
 										String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true) + URL.encodeQueryString("&token=" + token);
-										String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?authnContextClassRef=urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified%20urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport%20urn:cesnet:proxyidp:template:cesnet%20urn:cesnet:proxyidp:idpentityid:" + finalEntityId + "&target=" + consolidatorUrl);
+										String authnContextClassRef = PerunConfiguration.getAuthnContextClassRef();
+										String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?authnContextClassRef="+authnContextClassRef+"%20urn:cesnet:proxyidp:idpentityid:" + finalEntityId + "&target=" + consolidatorUrl);
 										Window.Location.assign(redirectUrl);
 									}
 
