@@ -1,5 +1,17 @@
 Upgrade notes
 
+## [4.12.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.11.1...v4.12.0) (2025-05-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* Set `wayf.authnContextClassRef` to "urn:oasis:names:tc:SAML:2.0:ac:classes:unspecified%20
+urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport%20urn:cesnet:proxyidp:template:cesnet".
+
+### Features
+
+* make authn context class refs configurable ([15d12e2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/15d12e239c1854a7e35d692fb5f0c02afda85290))
+
 ## [4.11.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.11.0...v4.11.1) (2025-03-24)
 
 
