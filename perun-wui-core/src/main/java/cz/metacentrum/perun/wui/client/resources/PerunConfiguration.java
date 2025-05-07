@@ -638,6 +638,22 @@ public final class PerunConfiguration {
 	}
 
 	/**
+	 * Returns URNs of authn context class ref passed during identity consolidation
+	 * Return empty string if undefined.
+	 *
+	 * @return default AuthnContextClassRef used in SAML request for consolidator
+	 */
+	public static String getAuthnContextClassRef() {
+
+		String authnContextClassRef = getConfigPropertyString("wayf.authnContextClassRef");
+		if (authnContextClassRef == null || authnContextClassRef.isEmpty()) {
+			return "";
+		}
+		return authnContextClassRef;
+
+	}
+
+	/**
 	 * Return map of customized IdP (or ext source) translations.
 	 *
 	 * @return map of translated IdPs
