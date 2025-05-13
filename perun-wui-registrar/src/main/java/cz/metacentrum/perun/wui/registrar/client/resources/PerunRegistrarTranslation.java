@@ -296,10 +296,10 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Show")
 	public String showDetail();
 
-	@DefaultMessage("Please check inbox of <b>{0}</b> for mail verification message. If you didn`t receive any, check your SPAM folder or use button below to re-send.")
+	@DefaultMessage("Please check inbox of <b>{0}</b> for mail verification message. If you did not receive it, check your SPAM folder or use the button below to resend.")
 	public String mailVerificationText(String mailAddress);
 
-	@DefaultMessage("Re-send mail verification message")
+	@DefaultMessage("Resend mail verification message")
 	public String reSendMailVerificationButton();
 
 	@DefaultMessage("Mail verification message sent to <b>{0}</b>")
@@ -347,10 +347,10 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("You are already registered in {0}")
 	public String alreadyRegistered(String voOrGroupName);
 
-	@DefaultMessage("You already have submitted registration to {0}")
+	@DefaultMessage("You have already submitted a registration to {0}")
 	public String alreadySubmitted(String voOrGroupName);
 
-	@DefaultMessage("You have already submitted extension application to {0}")
+	@DefaultMessage("You have already submitted an extension application to {0}")
 	public String alreadySubmittedExtension(String voName);
 
 	@DefaultMessage("<p>You can <b>see or edit your application <a href=\"{0}#appdetail;id={1}\">here</b></a>. You can see all your applications in section <a href=\"{0}#submitted\">{2}</a>.")
