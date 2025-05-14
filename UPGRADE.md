@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.12.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.12.0...v4.12.1) (2025-05-14)
+
+
+### Bug Fixes
+
+* grammar and stylistic fixes in registrar ([7d61ab3](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/7d61ab380ef0906c478b9c57ea9a4fdf1074c132))
+
 ## [4.12.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.11.1...v4.12.0) (2025-05-07)
 
 
