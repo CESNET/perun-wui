@@ -62,10 +62,10 @@ public interface ExceptionResolver {
 	GeneralObject getBean();
 
 	/**
-	 * Whether we should show "Re-send mail validation notification" button while DuplicateRegistrationAttemptException
+	 * Whether we should show "Resend mail validation notification" button while DuplicateRegistrationAttemptException
 	 * You SHOULD call {@link #resolve(PerunException, GeneralObject)} method before. Otherwise this will always return false.
 	 *
-	 * @return TRUE if mail verification notification can be re-send.
+	 * @return TRUE if mail verification notification can be resent.
 	 */
 	boolean isShowMailVerificationReSendButton();
 
