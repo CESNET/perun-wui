@@ -129,6 +129,10 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			resolveMissingRequiredDataException();
 
+		} else if ("MissingRequiredDataCertException".equalsIgnoreCase(exception.getName())) {
+
+			resolveMissingRequiredDataCertException();
+
 		} else if ("VoNotExistsException".equalsIgnoreCase(exception.getName())) {
 
 			String voName = (Window.Location.getParameter("vo") != null) ? URL.decodeQueryString(Window.Location.getParameter("vo")) : null;
@@ -231,6 +235,19 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 		missingItems += "</ul>";
 
 		setInfo(trans.missingRequiredData(), missingItems, false);
+	}
+
+	private void resolveMissingRequiredDataCertException() {
+
+		String missingItems = "<ul>";
+		if (!exception.getFormItems().isEmpty()) {
+			for (ApplicationFormItemData item : exception.getFormItems()) {
+				missingItems += "<li>" + item.getFormItem().getShortname() + "</li>";
+			}
+		}
+		missingItems += "</ul>";
+
+		setInfo(trans.missingRequiredCertData(), missingItems, false);
 	}
 
 
