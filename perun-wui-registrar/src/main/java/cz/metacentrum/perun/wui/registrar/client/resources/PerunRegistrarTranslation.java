@@ -383,6 +383,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("<h4>You can`t submit the registration</h4><p><br/>Some required data was either not provided by your Identity provider or was not found in the system. Please contact the administrator about the problems with these items.")
 	public String missingRequiredData();
 
+	@DefaultMessage("<h4>You can`t submit the registration</h4><p><br/>Some required data was either not provided by your personal certificate or was not found in the system. Please contact the administrator about the problems with these items.")
+	public String missingRequiredCertData();
+
 	@DefaultMessage("Organization / project with name <i>{0}</i> doesn`t exist. Please check the address used in a browser.")
 	public String voNotExistsException(String voName);
 
