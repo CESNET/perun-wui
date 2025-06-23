@@ -695,6 +695,21 @@ public class ErrorTranslator {
 
 			return result;
 
+		} else if ("MissingRequiredDataCertException".equalsIgnoreCase(errorName)) {
+            // pretty sure this should not happen, since the exception always gets caught in BE and put into the registrar object
+			String result = "Your certificate doesn't provide all required data for this application form. Please contact the organization/group administrator to resolve this issue or log-in using different certificate.";
+
+			String missingItems = "<p>";
+			for (ApplicationFormItemData item : error.getFormItems()) {
+				missingItems += "<strong>Missing attribute: </strong>";
+				missingItems += SafeHtmlUtils.fromString(item.getFormItem().getFederationAttribute()).asString();
+				missingItems += "<br />";
+			}
+
+			result += missingItems;
+
+			return result;
+
 		} else if ("RequestTimeout".equalsIgnoreCase(errorName)) {
 
 			return translation.requestTimeout();
