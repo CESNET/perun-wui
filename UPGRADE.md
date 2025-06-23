@@ -1,5 +1,13 @@
 Upgrade notes
 
+## [4.12.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.12.1...v4.12.2) (2025-06-23)
+
+
+### Bug Fixes
+
+* empty prefilled required form field adjustment ([2dc4c25](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/2dc4c2523f314464d6a317bd57b11c0b45198b9d))
+* updated footer template for cesnet and einfra ([25c0dce](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/25c0dce971781dfbfb05521b0e58f4aff7a8133e))
+
 ## [4.12.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.12.0...v4.12.1) (2025-05-14)
 
 
