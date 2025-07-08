@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [4.12.3](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.12.2...v4.12.3) (2025-07-08)
+
+
+### Bug Fixes
+
+* **consolidator:** migrate elixir to lslogin ([6ec10f4](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/6ec10f4118e9f01ee1d117e84d5f6398ba7e60de))
+
 ## [4.12.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.12.1...v4.12.2) (2025-06-23)
 
 
