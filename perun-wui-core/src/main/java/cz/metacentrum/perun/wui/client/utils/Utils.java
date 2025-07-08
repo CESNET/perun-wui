@@ -80,7 +80,7 @@ public class Utils {
 		organizationsTranslation.put("https://engine.elixir-czech.org/authentication/idp/metadata", "Elixir Europe");
 		organizationsTranslation.put("https://login.elixir-czech.org/idp/", "ELIXIR AAI");
 		organizationsTranslation.put("https://mojeid.cz/saml/idp.xml", "MojeID");
-
+		organizationsTranslation.put("https://login.aai.lifescience-ri.eu/idp/", "LifeScience AAI");
 
 		organizationsTranslation.put("https://login.ceitec.cz/idp/", "CEITEC");
 		organizationsTranslation.put("https://login.cesnet.cz/google-idp/", "Google (CESNET gateway)");
