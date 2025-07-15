@@ -10,6 +10,7 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
+import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 
 /**
@@ -106,7 +107,7 @@ public class GroupInitStep extends FormStep {
 				localPP = result.cast();
 
 				// since this is a group initi form we know that vo and group are not null.
-				RegistrarManager.initializeRegistrar(registrar.getVo().getShortName(), registrar.getGroup().getName(), new JsonEvents() {
+				RegistrarManager.initializeRegistrar(registrar.getVo().getShortName(), registrar.getGroup().getName(), FormView.getExternalParams(), new JsonEvents() {
 					@Override
 					public void onFinished(JavaScriptObject result) {
 						RegistrarObject ro = result.cast();

@@ -63,6 +63,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import org.gwtbootstrap3.client.ui.Alert;
@@ -201,7 +202,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		final PerunLoader loader = new PerunLoader();
 		form.add(loader);
-		RegistrarManager.initializeRegistrar(voName, groupName, new JsonEvents() {
+		RegistrarManager.initializeRegistrar(voName, groupName, getExternalParams(), new JsonEvents() {
 
 			JsonEvents retry = this;
 
@@ -230,9 +231,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				}
 
 				if (registrar.getException() != null) {
-					if (registrar.getException().getName().equals("VoNotExistsException") ||
-							registrar.getException().getName().equals("GroupNotExistsException") ||
-							registrar.getException().getName().equals("FormNotExistsException")) {
+					if ("VoNotExistsException".equals(registrar.getException().getName()) ||
+							"GroupNotExistsException".equals(registrar.getException().getName()) ||
+							"FormNotExistsException".equals(registrar.getException().getName())) {
 						if (loader != null) {
 							loader.onFinished();
 							loader.removeFromParent();
@@ -246,7 +247,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					loader.onError(registrar.getException(), new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
-							RegistrarManager.initializeRegistrar(voName, groupName, retry);
+							RegistrarManager.initializeRegistrar(voName, groupName, getExternalParams(), retry);
 						}
 					});
 
@@ -378,7 +379,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				loader.onError(error, new ClickHandler() {
 					@Override
 					public void onClick(ClickEvent event) {
-						RegistrarManager.initializeRegistrar(voName, groupName, retry);
+						RegistrarManager.initializeRegistrar(voName, groupName, getExternalParams(), retry);
 					}
 				});
 			}
@@ -413,7 +414,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		if (isApplyingToGroup(registrar)) {
 
 			String invitationToken = (Window.Location.getParameter("token") != null) ?
-				URL.decodeQueryString(Window.Location.getParameter("token")) : null;
+					URL.decodeQueryString(Window.Location.getParameter("token")) : null;
 			if (invitationToken != null) {
 				InvitationsManager.canInvitationBeAccepted(invitationToken, group.getId(), new JsonEvents() {
 
@@ -483,12 +484,12 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				if (!neverExp) {
 					for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
 						if (!item.getFormItem().getType()
-							.equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
-							!item.getFormItem().getType()
-								.equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
+								.equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+								!item.getFormItem().getType()
+										.equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
 							// offer only when VO doesn't have empty or "You are registered" form.
 							stepManager.addStep(new VoExtOfferStep(registrar,
-								form)); // will offer only if form is valid
+									form)); // will offer only if form is valid
 							break;
 						}
 					}
@@ -503,12 +504,12 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 				if (!neverExp) {
 					for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
 						if (!item.getFormItem().getType()
-							.equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
-							!item.getFormItem().getType()
-								.equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
+								.equals(ApplicationFormItem.ApplicationFormItemType.HTML_COMMENT) &&
+								!item.getFormItem().getType()
+										.equals(ApplicationFormItem.ApplicationFormItemType.HEADING)) {
 							// offer only when VO doesn't have empty or "You are registered" form.
 							stepManager.addStep(new VoExtOfferStep(registrar,
-								form)); // will offer only if form is valid
+									form)); // will offer only if form is valid
 							break;
 						}
 					}
@@ -988,6 +989,28 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		othButt.setIconFixedWidth(true);
 		othButt.setType(ButtonType.SUCCESS);
 		return othButt;
+
+	}
+
+	/**
+	 * Read all URL query params and remove standard params used by the registrar.
+	 * @return Mapping of all query params and their values
+	 */
+	public static Map<String,List<String>> getExternalParams() {
+
+		Map<String,List<String>> externalParams = new HashMap<>(Window.Location.getParameterMap());
+		// remove standardized params
+		externalParams.remove("vo");
+		externalParams.remove("group");
+		externalParams.remove("i");
+		externalParams.remove("m");
+		externalParams.remove("col");
+		externalParams.remove("targetextended");
+		externalParams.remove("targetexisting");
+		externalParams.remove("targetnew");
+		externalParams.remove("page");
+		externalParams.remove("token");
+		return externalParams;
 
 	}
 

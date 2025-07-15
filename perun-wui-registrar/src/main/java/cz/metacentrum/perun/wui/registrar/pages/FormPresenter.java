@@ -1,6 +1,5 @@
 package cz.metacentrum.perun.wui.registrar.pages;
 
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
 import com.google.web.bindery.event.shared.EventBus;
