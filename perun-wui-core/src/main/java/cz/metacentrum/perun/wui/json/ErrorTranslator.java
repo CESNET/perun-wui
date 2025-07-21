@@ -580,15 +580,6 @@ public class ErrorTranslator {
 
 			return "Requested service (by id or name) doesn't exists.";
 
-		} else if ("ServicesPackageExistsException".equalsIgnoreCase(errorName)) {
-
-			// TODO - we don't support service packages yet
-			return SafeHtmlUtils.fromString(error.getMessage()).asString();
-
-		} else if ("ServiceAlreadyRemovedFromServicePackageException".equalsIgnoreCase(errorName)) {
-
-			return "Same service was already removed from service package.";
-
 		} else if ("ServiceAlreadyRemovedException".equalsIgnoreCase(errorName)) {
 
 			return "Same service was already deleted.";
