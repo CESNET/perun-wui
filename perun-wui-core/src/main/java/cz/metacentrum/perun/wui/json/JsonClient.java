@@ -201,6 +201,34 @@ public class JsonClient {
 	 * Put custom parameter into payload of a request.
 	 *
 	 * @param key key (parameter name)
+	 * @param data Map<String,List<String></String>> data to send (parameter value) (works only for POST requests)
+	 */
+	public <T extends JavaScriptObject> void put(String key, Map<String,List<String>> data) {
+
+		JSONObject jsonObj = new JSONObject();
+		if (data != null && !data.isEmpty()) {
+			for (Map.Entry<String, List<String>> entry : data.entrySet()) {
+				JSONArray jsonArray = new JSONArray();
+				if (entry.getValue() != null && !entry.getValue().isEmpty()) {
+					int index = 0;
+					for (String value : entry.getValue()) {
+						jsonArray.set(index, new JSONString(value));
+						index++;
+					}
+				}
+				jsonObj.put(entry.getKey(), jsonArray);
+			}
+			put(key, (JSONValue)jsonObj);
+		} else {
+			put(key, (JSONValue)null);
+		}
+
+	}
+
+	/**
+	 * Put custom parameter into payload of a request.
+	 *
+	 * @param key key (parameter name)
 	 * @param data List data to send as one parameter (parameter values)
 	 */
 	public void put(String key, List<? extends Object> data) {
