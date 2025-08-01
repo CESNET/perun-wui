@@ -1,5 +1,22 @@
 Upgrade notes
 
+## [5.0.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.12.3...v5.0.0) (2025-08-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* ServicesPackage and all related functionality removed
+
+### Features
+
+* **registrar:** support ceitec-specific registrations ([53cca5c](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/53cca5cbc7f5f8cfa229cda9c0b5ac40083c51c2))
+* **registrar:** support passing custom url params to registrar initialization ([52d3fdc](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/52d3fdc363a80d43ea75ec1c2ac4af9db9742635))
+
+
+### Others
+
+* remove ServicesPackage ([b49145d](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/b49145d1732953210df396588d0a448724ed6f98))
+
 ## [4.12.3](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.12.2...v4.12.3) (2025-07-08)
 
 
