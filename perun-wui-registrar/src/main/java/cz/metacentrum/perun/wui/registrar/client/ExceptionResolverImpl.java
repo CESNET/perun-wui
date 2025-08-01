@@ -296,6 +296,10 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 			setInfo(trans.cantSubmitLoA(), trans.notEligibleEINFRAextension(Utils.getIdentityConsolidatorLink(true), url+PerunSession.getInstance().getRpcServer()+"/registrar/?vo=einfra&group=verified_users:catch_all"));
 		} else if (Objects.equals("NOT_ELIGIBLE_EINFRAIDP", exception.getReason())) {
 			setInfo(trans.cantSubmitLoA(), trans.notEligibleEINFRAIDP());
+		} else if (Objects.equals("NOT_ELIGIBLE_CEITEC", exception.getReason())) {
+			setInfo(trans.cantSubmitLoA(), trans.notEligibleCEITEC(), false);
+		} else if (Objects.equals("NOT_CEITEC_USER", exception.getReason())) {
+			setInfo(trans.cantSubmitLoA(), trans.notCEITECUser(), false);
 		} else if (Objects.equals("NEVER_EXPIRATION", exception.getReason())) {
 			setInfo(trans.cantSubmitLoA(), trans.expirationNever());
 		} else {

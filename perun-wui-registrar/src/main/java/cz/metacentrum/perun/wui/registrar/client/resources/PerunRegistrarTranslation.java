@@ -443,6 +443,12 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("In order to access CESNET services you must log-in using verified academic identity (at least once a year). Please use such identity to access this form.")
 	public String notEligibleCESNET();
 
+	@DefaultMessage("Registration for CEITEC in e-INFRA CZ is now opened only for current CEITEC members. Check that your registration link contains \"ceitec_id\" parameter.")
+	public String notEligibleCEITEC();
+
+	@DefaultMessage("Registration for CEITEC in e-INFRA CZ is now opened only for current CEITEC members. Provided \"ceitec_id\" parameter is not valid.")
+	public String notCEITECUser();
+
 	@DefaultMessage("<p>To renew your membership, <b>verification of academic status</b> is required for your e-Infrastructure account. <p><ul><li>I have a verified account</li><ul><li>The verification may have expired. In this case, please sign in to your account with a verified academic identity, which will extend the validity of the verification.</li></ul></ul><ul><li>I don`t have a verified account</li><ul><li>Please <a href=\"{0}\">add verified identity</a> to your account from some academic institution (involved in eduId).</li><li><a href=\"{1}\">Ask for manual verification</a> of your academic background (if your institution is not involved in the eduId federation).</li></ul>")
 	public String notEligibleEINFRAextension(String consolidatorUrl, String einfraVerifyUrl);
 

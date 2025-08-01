@@ -7,6 +7,7 @@ import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Manager with standard callbacks to Perun's API (RegistrarManager).
@@ -47,15 +48,19 @@ public class RegistrarManager {
 	 *
 	 * @param voName Name of VO to get data for
 	 * @param groupName Full name of Group to get data for (optional)
+	 * @param externalParams external params read from the URL
 	 * @param events Events done on callback
 	 *
 	 * @return Request unique request
 	 */
-	public static Request initializeRegistrar(String voName, String groupName, JsonEvents events) {
+	public static Request initializeRegistrar(String voName, String groupName, Map<String,List<String>> externalParams, JsonEvents events) {
 
 		JsonClient client = new JsonClient(events);
 		client.put("vo", voName);
 		if (groupName != null && !groupName.isEmpty()) client.put("group", groupName);
+		if (externalParams != null && !externalParams.isEmpty()) {
+			client.put("externalParams", externalParams);
+		}
 
 		return client.call(REGISTRAR_MANAGER + "initializeRegistrar");
 
