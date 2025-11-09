@@ -54,7 +54,11 @@ public class MuAdmPasswordValidator extends PasswordValidator {
 			return false;
 		}
 
-		if (!checkOnNamesAndLogins(getLoginValue(password), password)) return false;
+		if (!checkOnNamesAndLogins(getLoginValue(password), password, "[-_]")) {
+			setResult(Result.INVALID_FORMAT);
+			password.setStatus(getTransl().passwordLogin(), ValidationState.ERROR);
+			return false;
+		}
 
 		// check length
 		if (password.getValue().length() < 14) {
@@ -80,41 +84,31 @@ public class MuAdmPasswordValidator extends PasswordValidator {
 
 	}
 
-	private String getLoginValue(Password password) {
-
-		List<PerunFormItem> items = password.getForm().getPerunFormItems();
-		for (PerunFormItem item : items) {
-			if (item instanceof Username) {
-				if (item.getItemData().getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:mu-adm", item.getItemData().getFormItem().getPerunDestinationAttribute())) {
-					return item.getValue();
-				}
-			}
-		}
-		return null;
-
-	}
-
 	public static String reverse(String string) {
 		if (string == null || string.isEmpty() || string.length() == 1) return string;
 		return string.charAt(string.length()-1)+reverse(string.substring(1, string.length()-1))+string.charAt(0);
 	}
 
 	/**
-	 * Return FALSE if password contains "login"
+	 * Return FALSE if password contains "string", or some delimeter separated part of it.
 	 *
 	 * @param string
 	 * @param password
+	 * @param delimeter the delimeter, default whitespace regex
 	 * @return
 	 */
-	public boolean checkOnNamesAndLogins(String string, Password password) {
+	public boolean checkOnNamesAndLogins(String string, Password password, String delimeter) {
 
+		if (delimeter == null) {
+			delimeter = "\\s";
+		}
 		// do not check too small string parts !!
 		if (string == null || string.length() < 3) return true;
 
-		if (string.split("\\s").length > 1) {
+		if (string.split(delimeter).length > 1) {
 
 			// consist of more pieces - check them individually - each piece must be relevant
-			String[] splitedString = string.split("\\s");
+			String[] splitedString = string.split(delimeter);
 			for (String s : splitedString) {
 
 				// too small part, skip
@@ -122,11 +116,11 @@ public class MuAdmPasswordValidator extends PasswordValidator {
 
 				// check part
 				if (password.getValue().toLowerCase().contains(s.toLowerCase()) ||
-						password.getValue().toLowerCase().contains(reverse(s.toLowerCase())) ||
-						normalizeString(password.getValue()).contains(normalizeString(s)) ||
-						normalizeString(password.getValue()).contains(normalizeString(reverse(s)))) {
+					password.getValue().toLowerCase().contains(reverse(s.toLowerCase())) ||
+					normalizeString(password.getValue()).contains(normalizeString(s)) ||
+					normalizeString(password.getValue()).contains(normalizeString(reverse(s)))) {
 					setResult(Result.INVALID_FORMAT);
-					password.setRawStatus(getTransl().muAdmPasswordStrengthForNameLogin(), ValidationState.ERROR);
+					password.setRawStatus(getTransl().passwordStrengthForNameLogin(), ValidationState.ERROR);
 					return false;
 				}
 
@@ -136,11 +130,11 @@ public class MuAdmPasswordValidator extends PasswordValidator {
 
 		// check also whole string
 		if (password.getValue().toLowerCase().contains(string.toLowerCase()) ||
-				password.getValue().toLowerCase().contains(reverse(string.toLowerCase())) ||
-				normalizeString(password.getValue()).contains(normalizeString(string)) ||
-				normalizeString(password.getValue()).contains(normalizeString(reverse(string)))) {
+			password.getValue().toLowerCase().contains(reverse(string.toLowerCase())) ||
+			normalizeString(password.getValue()).contains(normalizeString(string)) ||
+			normalizeString(password.getValue()).contains(normalizeString(reverse(string)))) {
 			setResult(Result.INVALID_FORMAT);
-			password.setRawStatus(getTransl().muAdmPasswordStrengthForNameLogin(), ValidationState.ERROR);
+			password.setRawStatus(getTransl().passwordStrengthForNameLogin(), ValidationState.ERROR);
 			return false;
 		}
 
