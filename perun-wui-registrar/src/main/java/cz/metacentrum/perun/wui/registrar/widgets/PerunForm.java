@@ -60,7 +60,7 @@ public class PerunForm extends FieldSet {
 
 	// contains info about onlyPreview and seeHiddenItems
 	private PerunFormItemsGenerator generator;
-	private FormState formState;
+	private FormState formState = FormState.PREFILLED;
 	private boolean seeHiddenItems;
 	private Application app;
 	private Invitation invitation = null;
@@ -135,7 +135,6 @@ public class PerunForm extends FieldSet {
 				add(item);
 			}
 			this.items.addAll(items);
-
 		}
 
 		if (this.items.isEmpty() ||
