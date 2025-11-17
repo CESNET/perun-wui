@@ -95,6 +95,12 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Password must be at least {0} characters long.")
 	public String passwordLength(int length);
 
+	@DefaultMessage("Password cannot contain login, nor any meaningful parts of it, not even backwards.")
+	public String passwordLogin();
+
+	@DefaultMessage("Password cannot contain name, nor any meaningful parts of it, not even backwards.")
+	public String passwordName();
+
 	// OTHERS
 
 	@DefaultMessage("Do you want to extend a membership?")

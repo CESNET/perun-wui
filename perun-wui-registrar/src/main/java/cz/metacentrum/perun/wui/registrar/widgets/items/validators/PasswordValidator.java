@@ -1,11 +1,15 @@
 package cz.metacentrum.perun.wui.registrar.widgets.items.validators;
 
+import java.util.List;
+import java.util.Objects;
 import com.google.gwt.core.client.JavaScriptObject;
 import cz.metacentrum.perun.wui.json.Events;
 import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.json.managers.UsersManager;
 import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.registrar.widgets.items.Password;
+import cz.metacentrum.perun.wui.registrar.widgets.items.PerunFormItem;
+import cz.metacentrum.perun.wui.registrar.widgets.items.Username;
 import org.gwtbootstrap3.client.ui.constants.ValidationState;
 
 /**
@@ -29,6 +33,27 @@ public class PasswordValidator extends PerunFormItemValidatorImpl<Password> {
 			// if user wants to set his password, it must conform minimum length requirements
 			setResult(Result.PASSWORD_TOO_SHORT);
 			password.setRawStatus(getTransl().passwordLength(Password.MIN_LENGTH), ValidationState.ERROR);
+			return false;
+		}
+
+		if (!checkOnNamesAndLogins(getLoginValue(password), password, "[-_]")) {
+			setResult(Result.INVALID_FORMAT);
+			password.setStatus(getTransl().passwordLogin(), ValidationState.ERROR);
+			return false;
+		}
+		if (!checkOnNamesAndLogins(getName(password), password, null)) {
+			setResult(Result.INVALID_FORMAT);
+			password.setStatus(getTransl().passwordName(), ValidationState.ERROR);
+			return false;
+		}
+		if (!checkOnNamesAndLogins(getFirstName(password), password, null)) {
+			setResult(Result.INVALID_FORMAT);
+			password.setStatus(getTransl().passwordName(), ValidationState.ERROR);
+			return false;
+		}
+		if (!checkOnNamesAndLogins(getSurname(password), password, null)) {
+			setResult(Result.INVALID_FORMAT);
+			password.setStatus(getTransl().passwordName(), ValidationState.ERROR);
 			return false;
 		}
 
@@ -98,5 +123,131 @@ public class PasswordValidator extends PerunFormItemValidatorImpl<Password> {
 			}
 		});
 
+	}
+
+	/**
+	 * Return FALSE if password contains "string", or some delimeter separated part of it.
+	 *
+	 * @param string
+	 * @param password
+	 * @param delimeter the delimeter, default whitespace regex
+	 * @return
+	 */
+	public boolean checkOnNamesAndLogins(String string, Password password, String delimeter) {
+
+		if (delimeter == null) {
+			delimeter = "\\s";
+		}
+		// do not check too small string parts !!
+		if (string == null || string.length() < 3) return true;
+
+		if (string.split(delimeter).length > 1) {
+
+			// consist of more pieces - check them individually - each piece must be relevant
+			String[] splitedString = string.split(delimeter);
+			for (String s : splitedString) {
+
+				// too small part, skip
+				if (s == null || s.length() < 3) continue;
+
+				// check part
+				if (password.getValue().toLowerCase().contains(s.toLowerCase()) ||
+					password.getValue().toLowerCase().contains(reverse(s.toLowerCase())) ||
+					normalizeString(password.getValue()).contains(normalizeString(s)) ||
+					normalizeString(password.getValue()).contains(normalizeString(reverse(s)))) {
+					setResult(Result.INVALID_FORMAT);
+					password.setRawStatus(getTransl().passwordStrengthForNameLogin(), ValidationState.ERROR);
+					return false;
+				}
+
+			}
+
+		}
+
+		// check also whole string
+		if (password.getValue().toLowerCase().contains(string.toLowerCase()) ||
+			password.getValue().toLowerCase().contains(reverse(string.toLowerCase())) ||
+			normalizeString(password.getValue()).contains(normalizeString(string)) ||
+			normalizeString(password.getValue()).contains(normalizeString(reverse(string)))) {
+			setResult(Result.INVALID_FORMAT);
+			password.setRawStatus(getTransl().passwordStrengthForNameLogin(), ValidationState.ERROR);
+			return false;
+		}
+
+		return true;
+
+	}
+
+	private String normalizeString(String string) {
+		String result = normalizeStringToNFD(string);
+		result = result.replaceAll("\\s","");
+		return result;
+	}
+
+	private final native String normalizeStringToNFD(String input) /*-{
+		if (typeof input.normalize !== "undefined") {
+			// convert to normal decomposed form and replace all combining-diacritics marks
+			return input.normalize('NFD').replace(/[\u0300-\u036f]/g, "").toLowerCase();
+		}
+		// just lowercase
+		return input.toLowerCase();
+	}-*/;
+
+	public static String getLoginValue(Password password) {
+		String[] parts = password.getItemData().getFormItem().getPerunDestinationAttribute().split(":");
+		String namespace = parts.length > 0 ? parts[parts.length - 1] : "";
+		List<PerunFormItem> items = password.getForm().getPerunFormItems();
+		for (PerunFormItem item : items) {
+			if (item instanceof Username) {
+				if (item.getItemData().getFormItem() != null && Objects.equals(
+					"urn:perun:user:attribute-def:def:login-namespace:" + namespace,
+					item.getItemData().getFormItem().getPerunDestinationAttribute())) {
+					return item.getValue();
+				}
+			}
+		}
+		return null;
+
+	}
+
+	public static String getName(Password password) {
+
+		List<PerunFormItem> items = password.getForm().getPerunFormItems();
+		for (PerunFormItem item : items) {
+			if (item.getItemData().getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:core:displayName", item.getItemData().getFormItem().getPerunDestinationAttribute())) {
+				return item.getValue();
+			}
+		}
+		return null;
+
+	}
+
+	public static String getFirstName(Password password) {
+
+		List<PerunFormItem> items = password.getForm().getPerunFormItems();
+		for (PerunFormItem item : items) {
+			if (item.getItemData().getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:core:firstName", item.getItemData().getFormItem().getPerunDestinationAttribute())) {
+				return item.getValue();
+			}
+		}
+		return null;
+
+	}
+
+	public static String getSurname(Password password) {
+
+		List<PerunFormItem> items = password.getForm().getPerunFormItems();
+		for (PerunFormItem item : items) {
+			if (item.getItemData().getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:core:lastName", item.getItemData().getFormItem().getPerunDestinationAttribute())) {
+				return item.getValue();
+			}
+		}
+		return null;
+
+	}
+
+	public static String reverse(String string) {
+		if (string == null || string.isEmpty() || string.length() == 1) return string;
+		return string.charAt(string.length()-1)+reverse(string.substring(1, string.length()-1))+string.charAt(0);
 	}
 }
