@@ -324,14 +324,11 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Password must consist of <b>at least 3 of 4</b> character groups<ul><li>lower-case letters</li><li>upper-case letters</li><li>digits</li><li>special characters</li></ul>")
 	public String adminMetaPasswordStrength();
 
+	@DefaultMessage("Password <b>can`t contain login or parts of it, name or surname</b>, not even backwards!")
+	public String passwordStrengthForNameLogin();
+
 	@DefaultMessage("Password <b>can`t contain login, name or surname</b>, not even backwards!")
 	public String einfraPasswordStrengthForNameLogin();
-
-	@DefaultMessage("Password <b>can`t contain login</b>, not even backwards!")
-	public String muAdmPasswordStrengthForNameLogin();
-
-	@DefaultMessage("Password <b>can`t contain login, name or surname</b>, not even backwards!")
-	public String adminMetaPasswordStrengthForNameLogin();
 
 	@DefaultMessage("New password can`t be empty!")
 	public String passwordCantBeEmpty();

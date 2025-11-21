@@ -52,10 +52,26 @@ public class AdminMetaPasswordValidator extends PasswordValidator {
 			return false;
 		}
 
-		if (!checkOnNamesAndLogins(getLoginValue(password), password)) return false;
-		if (!checkOnNamesAndLogins(getName(password), password)) return false;
-		if (!checkOnNamesAndLogins(getFirstName(password), password)) return false;
-		if (!checkOnNamesAndLogins(getSurname(password), password)) return false;
+		if (!checkOnNamesAndLogins(getLoginValue(password), password, "[-_]")) {
+			setResult(Result.INVALID_FORMAT);
+			password.setStatus(getTransl().passwordLogin(), ValidationState.ERROR);
+			return false;
+		}
+		if (!checkOnNamesAndLogins(getName(password), password, null)) {
+			setResult(Result.INVALID_FORMAT);
+			password.setStatus(getTransl().passwordName(), ValidationState.ERROR);
+			return false;
+		}
+		if (!checkOnNamesAndLogins(getFirstName(password), password, null)) {
+			setResult(Result.INVALID_FORMAT);
+			password.setStatus(getTransl().passwordName(), ValidationState.ERROR);
+			return false;
+		}
+		if (!checkOnNamesAndLogins(getSurname(password), password, null)) {
+			setResult(Result.INVALID_FORMAT);
+			password.setStatus(getTransl().passwordName(), ValidationState.ERROR);
+			return false;
+		}
 
 		// check length
 		if (password.getValue().length() < 10) {
@@ -81,77 +97,31 @@ public class AdminMetaPasswordValidator extends PasswordValidator {
 
 	}
 
-	private String getLoginValue(Password password) {
-
-		List<PerunFormItem> items = password.getForm().getPerunFormItems();
-		for (PerunFormItem item : items) {
-			if (item instanceof Username) {
-				if (item.getItemData().getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:def:login-namespace:admin-meta", item.getItemData().getFormItem().getPerunDestinationAttribute())) {
-					return item.getValue();
-				}
-			}
-		}
-		return null;
-
-	}
-
-	private String getName(Password password) {
-
-		List<PerunFormItem> items = password.getForm().getPerunFormItems();
-		for (PerunFormItem item : items) {
-			if (item.getItemData().getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:core:displayName", item.getItemData().getFormItem().getPerunDestinationAttribute())) {
-				return item.getValue();
-			}
-		}
-		return null;
-
-	}
-
-	private String getFirstName(Password password) {
-
-		List<PerunFormItem> items = password.getForm().getPerunFormItems();
-		for (PerunFormItem item : items) {
-			if (item.getItemData().getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:core:firstName", item.getItemData().getFormItem().getPerunDestinationAttribute())) {
-				return item.getValue();
-			}
-		}
-		return null;
-
-	}
-
-	private String getSurname(Password password) {
-
-		List<PerunFormItem> items = password.getForm().getPerunFormItems();
-		for (PerunFormItem item : items) {
-			if (item.getItemData().getFormItem() != null && Objects.equals("urn:perun:user:attribute-def:core:lastName", item.getItemData().getFormItem().getPerunDestinationAttribute())) {
-				return item.getValue();
-			}
-		}
-		return null;
-
-	}
-
 	public static String reverse(String string) {
 		if (string == null || string.isEmpty() || string.length() == 1) return string;
 		return string.charAt(string.length()-1)+reverse(string.substring(1, string.length()-1))+string.charAt(0);
 	}
 
 	/**
-	 * Return FALSE if password contains "login"
+	 * Return FALSE if password contains "string", or some delimeter separated part of it.
 	 *
 	 * @param string
 	 * @param password
+	 * @param delimeter the delimeter, default whitespace regex
 	 * @return
 	 */
-	public boolean checkOnNamesAndLogins(String string, Password password) {
+	public boolean checkOnNamesAndLogins(String string, Password password, String delimeter) {
 
+		if (delimeter == null) {
+			delimeter = "\\s";
+		}
 		// do not check too small string parts !!
 		if (string == null || string.length() < 3) return true;
 
-		if (string.split("\\s").length > 1) {
+		if (string.split(delimeter).length > 1) {
 
 			// consist of more pieces - check them individually - each piece must be relevant
-			String[] splitedString = string.split("\\s");
+			String[] splitedString = string.split(delimeter);
 			for (String s : splitedString) {
 
 				// too small part, skip
@@ -163,7 +133,7 @@ public class AdminMetaPasswordValidator extends PasswordValidator {
 					normalizeString(password.getValue()).contains(normalizeString(s)) ||
 					normalizeString(password.getValue()).contains(normalizeString(reverse(s)))) {
 					setResult(Result.INVALID_FORMAT);
-					password.setRawStatus(getTransl().adminMetaPasswordStrengthForNameLogin(), ValidationState.ERROR);
+					password.setRawStatus(getTransl().passwordStrengthForNameLogin(), ValidationState.ERROR);
 					return false;
 				}
 
@@ -177,7 +147,7 @@ public class AdminMetaPasswordValidator extends PasswordValidator {
 			normalizeString(password.getValue()).contains(normalizeString(string)) ||
 			normalizeString(password.getValue()).contains(normalizeString(reverse(string)))) {
 			setResult(Result.INVALID_FORMAT);
-			password.setRawStatus(getTransl().adminMetaPasswordStrengthForNameLogin(), ValidationState.ERROR);
+			password.setRawStatus(getTransl().passwordStrengthForNameLogin(), ValidationState.ERROR);
 			return false;
 		}
 
