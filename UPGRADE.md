@@ -1,5 +1,21 @@
 Upgrade notes
 
+## [5.1.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.0.0...v5.1.0) (2025-11-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* **registrar:** previously broken `checkSimilarUsersAgain` functionality will now be triggered, check `findSimilarUsers` config
+
+### Features
+
+* password validation now always checks whether parts of login are present ([1fe0bc5](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/1fe0bc571853fd9bb3225175528961899f8bf7ea))
+
+
+### Bug Fixes
+
+* **registrar:** set PREFILLED form state ([a7742dc](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/a7742dc315cbf52f3660aa91790eaa499c70d19c))
+
 ## [5.0.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v4.12.3...v5.0.0) (2025-08-01)
 
 
