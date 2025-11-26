@@ -76,7 +76,7 @@ public class EinfraPasswordValidator extends PasswordValidator {
 		}
 
 		// check length
-		if (password.getValue().length() < 10) {
+		if (password.getValue().length() < 12) {
 			setResult(Result.INVALID_FORMAT);
 			password.setRawStatus(getTransl().einfraPasswordLength(), ValidationState.ERROR);
 			return false;
