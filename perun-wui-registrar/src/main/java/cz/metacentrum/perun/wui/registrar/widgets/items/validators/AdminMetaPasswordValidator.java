@@ -74,7 +74,7 @@ public class AdminMetaPasswordValidator extends PasswordValidator {
 		}
 
 		// check length
-		if (password.getValue().length() < 10) {
+		if (password.getValue().length() < 12) {
 			setResult(Result.INVALID_FORMAT);
 			password.setRawStatus(getTransl().adminMetaPasswordLength(), ValidationState.ERROR);
 			return false;

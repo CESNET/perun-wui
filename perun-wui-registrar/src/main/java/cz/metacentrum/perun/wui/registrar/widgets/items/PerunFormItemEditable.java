@@ -32,7 +32,7 @@ public abstract class PerunFormItemEditable extends PerunFormItem {
 	private HelpBlock help;
 	public PerunRegistrarTranslation translation = GWT.create(PerunRegistrarTranslation.class);
 
-	private static final int DEFAULT_MINIMUM_PASSWORD_LENGTH = 8;
+	private static final int DEFAULT_MINIMUM_PASSWORD_LENGTH = 12;
 
 	public PerunFormItemEditable(PerunForm form, ApplicationFormItemData item, String lang) {
 		super(form, item, lang);

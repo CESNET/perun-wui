@@ -66,7 +66,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 	private String namespace = "";
 	private String login = ""; // resolved login in namespace
 
-	private static final int DEFAULT_MINIMUM_PASSWORD_LENGTH = 8;
+	private static final int DEFAULT_MINIMUM_PASSWORD_LENGTH = 12;
 
 	private boolean isAccountActivation = Window.Location.getParameterMap().containsKey("activation");
 
@@ -572,7 +572,7 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 			}
 
 			// check length
-			if (passwordTextBox.getValue().length() < 10) {
+			if (passwordTextBox.getValue().length() < 12) {
 				passItem.setValidationState(ValidationState.ERROR);
 				itemStatus.setHTML(translation.einfraPasswordLength());
 				events.onFinished(false);
@@ -599,8 +599,8 @@ public class PwdResetView extends ViewImpl implements PwdResetPresenter.MyView {
 		} else if (Objects.equals(namespace, "vsup")) {
 
 			// check length
-			if (passwordTextBox.getValue().length() < 8) {
-				itemStatus.setText(translation.passwordLength(8));
+			if (passwordTextBox.getValue().length() < 12) {
+				itemStatus.setText(translation.passwordLength(12));
 				passItem.setValidationState(ValidationState.ERROR);
 				events.onFinished(false);
 				return;
