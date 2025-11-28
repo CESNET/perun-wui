@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [5.2.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.1.0...v5.2.0) (2025-11-28)
+
+
+### Features
+
+* **registrar:** raise minimum password length to 12 characters ([5db8cac](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/5db8cacdd738be9a66db1e966007cfb15c5a4c4c))
+
 ## [5.1.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.0.0...v5.1.0) (2025-11-21)
 
 
