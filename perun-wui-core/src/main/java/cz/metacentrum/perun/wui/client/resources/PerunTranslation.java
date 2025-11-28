@@ -288,22 +288,22 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Login can contain only<ul><li>lower-cased non-accented letters<li>digits<li>hyphens and underscores</ul>")
 	public String adminMetaLoginFormat();
 
-	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 10 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
+	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 12 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
 	public String einfraPasswordHelp();
 
 	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 14 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
 	public String muAdmPasswordHelp();
 
-	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 10 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
+	@DefaultMessage("Password must <ul><li>contain only printing (non-accented) characters<li>be at least 12 characters long<li>consist of at least 3 of 4 character groups<ul><li>lower-case letters<li>upper-case letters<li>digits<li>special characters</ul></ul>")
 	public String adminMetaPasswordHelp();
 
-	@DefaultMessage("Password must be <b>at least 10 characters</b> long!")
+	@DefaultMessage("Password must be <b>at least 12 characters</b> long!")
 	public String einfraPasswordLength();
 
 	@DefaultMessage("Password must be <b>at least 14 characters</b> long!")
 	public String muAdmPasswordLength();
 
-	@DefaultMessage("Password must be <b>at least 10 characters</b> long!")
+	@DefaultMessage("Password must be <b>at least 12 characters</b> long!")
 	public String adminMetaPasswordLength();
 
 	@DefaultMessage("Password <b>can`t contain accented characters (diacritics)</b> or non-printing and control characters!")
