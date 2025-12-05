@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [5.2.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.2.0...v5.2.1) (2025-12-05)
+
+
+### Bug Fixes
+
+* **pwdreset:** fixed translation of vsup password help ([6f57e28](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/6f57e28735e0f2bedbced0986a24708a7a2b1fbd))
+
 ## [5.2.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.1.0...v5.2.0) (2025-11-28)
 
 
