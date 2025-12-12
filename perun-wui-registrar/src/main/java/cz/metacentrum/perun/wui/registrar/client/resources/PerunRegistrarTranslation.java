@@ -443,11 +443,11 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Can`t submit the form")
 	public String cantSubmitLoA();
 
-	@DefaultMessage("Based on information provided by <i>{0}</i> you are <b>not active academia member</b>. Please sing out and use your home institution (University you are active member) when signing in.")
-	public String notAcademicLoA(String idp);
-
 	@DefaultMessage("In order to access CESNET services you must log-in using verified academic identity (at least once a year). Please use such identity to access this form.")
 	public String notEligibleCESNET();
+
+	@DefaultMessage("<p><b>Cannot submit the application – there is no active affiliation with the academic institution</b></p><p>To submit an application, it is required to sign in using an account/identity that has active affiliation with the academic institution (researcher, employee, student, etc.). The current session does not contain such affiliation.</p><p>What can you do?</p><ol><li>If you have an existing e-INFRA CZ account, add active academic identity:<ol type=\"a\"><li>Go to the <a href=\"https://profile.e-infra.cz/profile/\" target=\"_blank\">profile page</a> of your e-INFRA CZ account.</li><li>In the <a href=\"https://profile.e-infra.cz/profile/identities\" target=\"_blank\">Linked accounts</a> section, select <b>Add</b>, select your institution, and sign in.</li><li>After linking the account, return to this form and <b>refresh the page</b>.</li></ol></li><li>Your first time here?<ol type=\"a\"><li><b>Close all browser windows</b> and <b>repeat the process</b>.</li><li>When signing in, <b>select an institution you have active affiliation with</b>.</li></ol></li></ol><p>Need help? Contact <a href=\"mailto:support@e-infra.cz\" target=\"_blank\">support@e-infra.cz</a> – we`ll be glad to help.</p>")
+	public String notEligibleEINFRACZ();
 
 	@DefaultMessage("Registration for CEITEC in e-INFRA CZ is now opened only for current CEITEC members. Check that your registration link contains \"ceitec_id\" parameter.")
 	public String notEligibleCEITEC();

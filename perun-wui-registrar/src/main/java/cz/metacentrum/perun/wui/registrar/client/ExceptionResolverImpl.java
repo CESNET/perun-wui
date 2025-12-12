@@ -287,10 +287,10 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 	private void resolveCantBeSubmittedException() {
 
-		if (Objects.equals("NOT_ACADEMIC", exception.getReason())) {
-			setInfo(trans.cantSubmitLoA(), trans.notAcademicLoA(Utils.translateIdp(PerunSession.getInstance().getPerunPrincipal().getExtSource())));
-		} else if (Objects.equals("NOT_ELIGIBLE", exception.getReason())) {
+		if (Objects.equals("NOT_ELIGIBLE", exception.getReason())) {
 			setInfo(trans.cantSubmitLoA(), trans.notEligibleCESNET());
+		} else if (Objects.equals("NOT_ELIGIBLE_EINFRACZ", exception.getReason())) {
+			setInfo(trans.cantSubmitLoA(), trans.notEligibleEINFRACZ());
 		} else if (Objects.equals("NOT_ELIGIBLE_EINFRA_EXTENSION", exception.getReason())) {
 			String url = Window.Location.getProtocol() + "//" + Window.Location.getHost() + "/";
 			setInfo(trans.cantSubmitLoA(), trans.notEligibleEINFRAextension(Utils.getIdentityConsolidatorLink(true), url+PerunSession.getInstance().getRpcServer()+"/registrar/?vo=einfra&group=verified_users:catch_all"));
