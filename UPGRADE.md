@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [5.3.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.2.1...v5.3.0) (2025-12-14)
+
+
+### Features
+
+* **registrar:** add message for non-eligible e-INFRA CZ applicants ([70f832f](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/70f832f8f8dd34df49c4f0efb0d5d0e0b9e4765b))
+
 ## [5.2.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.2.0...v5.2.1) (2025-12-05)
 
 
