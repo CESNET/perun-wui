@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [5.3.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.3.0...v5.3.1) (2026-01-28)
+
+
+### Bug Fixes
+
+* updated year in all templates, license and readme ([a10fde4](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/a10fde4db11ab526bb70ac85b35da710c3f43354))
+
 ## [5.3.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.2.1...v5.3.0) (2025-12-14)
 
 
