@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [5.3.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.3.1...v5.3.2) (2026-02-03)
+
+
+### Bug Fixes
+
+* remove locale from external query params ([34876d7](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/34876d778f3ac7b52acac85e18448e94119239a3))
+
 ## [5.3.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.3.0...v5.3.1) (2026-01-28)
 
 
