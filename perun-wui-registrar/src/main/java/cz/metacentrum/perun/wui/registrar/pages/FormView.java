@@ -1010,6 +1010,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		externalParams.remove("targetnew");
 		externalParams.remove("page");
 		externalParams.remove("token");
+		externalParams.remove("locale");
 		return externalParams;
 
 	}
