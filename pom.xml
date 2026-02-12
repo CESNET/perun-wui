@@ -20,16 +20,16 @@
 
 	<!-- common environmental and version properties-->
 	<properties>
-		<maven.compiler.source>8</maven.compiler.source>
-		<maven.compiler.target>8</maven.compiler.target>
+		<maven.compiler.source>11</maven.compiler.source>
+		<maven.compiler.target>11</maven.compiler.target>
 
 		<!-- USE UTF-8 in whole project -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<!-- Project wide GWT version -->
-		<gwtVersion>2.9.0</gwtVersion>
-		<gwtPluginVersion>2.9.0</gwtPluginVersion>
+		<gwtVersion>2.10.0</gwtVersion>
+		<gwtPluginVersion>2.10.0</gwtPluginVersion>
 		<gwtp.version>1.6</gwtp.version>
 		<gin.version>2.1.2</gin.version>
 	</properties>
@@ -76,8 +76,8 @@
 						</execution>
 					</executions>
 					<configuration>
-						<sourceLevel>1.8</sourceLevel>
-						<extraJvmArgs>--add-opens java.base/java.lang=ALL-UNNAMED</extraJvmArgs>
+						<sourceLevel>1.11</sourceLevel>
+						<extraJvmArgs>--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED --add-opens java.base/java.io=ALL-UNNAMED --add-opens java.base/java.lang.reflect=ALL-UNNAMED --add-opens java.base/jdk.internal.loader=ALL-UNNAMED</extraJvmArgs>
 					</configuration>
 				</plugin>
 
@@ -116,17 +116,24 @@
 			<!-- OTHERS -->
 
 			<dependency>
-				<groupId>com.google.gwt</groupId>
+				<groupId>org.gwtproject</groupId>
 				<artifactId>gwt-user</artifactId>
+				<version>${gwtVersion}</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.gwtproject</groupId>
+				<artifactId>gwt-dev</artifactId>
 				<version>${gwtVersion}</version>
 				<scope>provided</scope>
 			</dependency>
 
 			<dependency>
-				<groupId>com.google.gwt</groupId>
-				<artifactId>gwt-dev</artifactId>
+				<groupId>org.gwtproject</groupId>
+				<artifactId>gwt</artifactId>
 				<version>${gwtVersion}</version>
-				<scope>provided</scope>
+				<type>pom</type>
+				<scope>import</scope>
 			</dependency>
 
 			<!-- GWT Bootstrap 3 -->

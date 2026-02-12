@@ -22,11 +22,6 @@
 
 	<extend-property name="locale" values="cs" />
 
-	<!--  Support only these browsers -->
-	<set-property name="user.agent" value="gecko1_8"/>
-	<extend-property name="user.agent" values="safari"/>
-	<extend-property name="user.agent" values="ie10"/>
-
 	<!-- Specify the paths for translatable code -->
 
 	<source path='client'/>
