@@ -87,7 +87,7 @@
         <!-- GWT -->
 
         <dependency>
-            <groupId>com.google.gwt</groupId>
+            <groupId>org.gwtproject</groupId>
             <artifactId>gwt-user</artifactId>
         </dependency>
 
@@ -113,6 +113,20 @@
             <artifactId>gwtp-mvp-client</artifactId>
             <scope>provided</scope>
         </dependency>
+
+	    <!-- Fix injections in Java 11 and modern GWT by using newer guice/guava -->
+	    <dependency>
+		    <groupId>com.google.inject</groupId>
+		    <artifactId>guice</artifactId>
+	    </dependency>
+	    <dependency>
+		    <groupId>com.google.inject.extensions</groupId>
+		    <artifactId>guice-assistedinject</artifactId>
+	    </dependency>
+	    <dependency>
+		    <groupId>com.google.guava</groupId>
+		    <artifactId>guava</artifactId>
+	    </dependency>
 
     </dependencies>
 
