@@ -4,6 +4,7 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.place.shared.PlaceHistoryHandler;
 import com.google.gwt.user.client.Window;
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.google.web.bindery.event.shared.EventBus;
 import com.gwtplatform.mvp.client.annotations.DefaultPlace;
 import com.gwtplatform.mvp.client.proxy.PlaceManagerImpl;
@@ -20,6 +21,7 @@ import cz.metacentrum.perun.wui.client.resources.PlaceTokens;
  *
  * @author Pavel Zlámal <zlamal@cesnet.cz>
  */
+@Singleton
 public class PerunPlaceManager extends PlaceManagerImpl {
 
 	private final PlaceRequest defaultPlaceRequest;

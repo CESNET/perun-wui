@@ -34,9 +34,18 @@
 	<set-configuration-property name="CssResource.gssDefaultInUiBinder" value="true" />-->
 
 	<!--  Support only these browsers -->
-	<set-property name="user.agent" value="gecko1_8"/>
-	<extend-property name="user.agent" values="safari"/>
-	<extend-property name="user.agent" values="ie10"/>
+	<set-property name="user.agent" value="gecko1_8,safari" />
+
+	<!-- 2. Pomozte GwtBootstrap3 s výběrem správné implementace pro moderní prohlížeče -->
+	<replace-with class="com.google.gwt.dom.client.DOMImplWebkit">
+		<when-type-is class="com.google.gwt.dom.client.DOMImpl" />
+		<when-property-is name="user.agent" value="safari" />
+	</replace-with>
+
+	<replace-with class="com.google.gwt.user.client.impl.DOMImplWebkit">
+		<when-type-is class="com.google.gwt.user.client.impl.DOMImpl" />
+		<when-property-is name="user.agent" value="safari" />
+	</replace-with>
 
 	<!-- Specify the paths for translatable code -->
 	<source path='client'/>
