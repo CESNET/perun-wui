@@ -12,6 +12,9 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Not found")
 	public String notFoundPageTitle();
 
+    @DefaultMessage("The organization or group uses the new Registrar application for registration, you will be redirected in a few seconds.")
+    public String redirectingToNewRegistrar();
+
 	@DefaultMessage("Requested page was not found. Please check your URL and try again.")
 	public String notFoundPageText();
 

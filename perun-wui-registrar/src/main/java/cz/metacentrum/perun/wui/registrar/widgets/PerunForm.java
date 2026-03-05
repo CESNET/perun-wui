@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.JavaScriptObject;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import cz.metacentrum.perun.wui.client.resources.PerunConfiguration;
 import cz.metacentrum.perun.wui.client.resources.PerunSession;
@@ -30,11 +31,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.FieldSet;
 import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
 import org.gwtbootstrap3.client.ui.constants.ColumnSize;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
+import org.gwtbootstrap3.client.ui.constants.IconSize;
+import org.gwtbootstrap3.client.ui.constants.IconType;
+import org.gwtbootstrap3.client.ui.constants.Pull;
 
 /**
  * Utility class used to handle Perun Application forms.
@@ -617,6 +623,42 @@ public class PerunForm extends FieldSet {
 
 		return data;
 
+	}
+
+
+    /**
+	 * Clears form and perform redirect after specified time. Also prints info about redirection.
+	 *
+	 * @param redirectTo URL to redirect to
+	 */
+	public void redirectAfterTimeout(String redirectTo) {
+
+		clear();
+
+		Heading head = new Heading(HeadingSize.H4, perunTranslation.redirectingToNewRegistrar());
+		Icon spin = new Icon(IconType.SPINNER);
+		spin.setSpin(true);
+		spin.setSize(IconSize.LARGE);
+		spin.setPull(Pull.LEFT);
+		spin.setMarginTop(10);
+
+		Column column = new Column(ColumnSize.MD_8, ColumnSize.LG_6, ColumnSize.SM_10, ColumnSize.XS_12);
+		column.setOffset(ColumnOffset.MD_2,ColumnOffset.LG_3,ColumnOffset.SM_1,ColumnOffset.XS_0);
+
+		column.add(spin);
+		column.add(head);
+		column.setMarginTop(30);
+
+		add(column);
+
+		// WAIT 5 SEC BEFORE REDIRECT back to service so that LDAP in Perun is updated
+		Timer timer = new Timer() {
+			@Override
+			public void run() {
+				Window.Location.assign(redirectTo);
+			}
+		};
+		timer.schedule(5000);
 	}
 
 	/**
