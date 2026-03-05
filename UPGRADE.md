@@ -1,5 +1,22 @@
 Upgrade notes
 
+## [6.0.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.3.2...v6.0.0) (2026-03-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* Older browsers like IE10 are no longer supported.
+
+### Features
+
+* update project to gwt 2.10.0 and java 11 ([fde78ce](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/fde78cefb20a23a4f5e6cfc34a359d2b31a1ca36))
+* update project to gwt 2.13.0 ([9a9204c](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/9a9204cbec40b8debde28627da5abec2a8cc4e8f))
+
+
+### Bug Fixes
+
+* changed hardcoded site id for analytics on mu instance ([9e3968c](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/9e3968c3d48dcfa2a4d4260ce542d12c7a199870))
+
 ## [5.3.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.3.1...v5.3.2) (2026-02-03)
 
 
