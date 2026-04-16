@@ -121,6 +121,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Please wait, we will redirect you to the next page in several seconds ...")
 	public String redirectingBackToService();
 
+    @DefaultMessage("The organization or group uses the new Registrar application for registration, you will be redirected in a few seconds.")
+    public String redirectingToNewRegistrar();
+
 
 	// -------------- REGISTRATION FORM WIDGETS ------------------------ //
 
