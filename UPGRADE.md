@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [6.1.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.0.0...v6.1.0) (2026-06-02)
+
+
+### Features
+
+* **registrar:** redirect to new registrar ([6ed9f4e](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/6ed9f4ed36751ee9804536bd1adc76636800c115))
+
 ## [6.0.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v5.3.2...v6.0.0) (2026-03-05)
 
 
