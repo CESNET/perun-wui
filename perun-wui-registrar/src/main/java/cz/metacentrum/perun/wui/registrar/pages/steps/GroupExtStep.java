@@ -26,6 +26,11 @@ public class GroupExtStep extends FormStep {
 
 		events.onLoadingStart();
 
+        if (registrar.getGroupNewRegistrarUrl() != null) {
+          form.redirectAfterTimeout(registrar.getGroupNewRegistrarUrl());
+          return;
+      }
+
 		if (registrar.getGroupFormExtensionException() != null) {
 			result.setException(registrar.getGroupFormExtensionException());
 			events.onFinished(getResult());

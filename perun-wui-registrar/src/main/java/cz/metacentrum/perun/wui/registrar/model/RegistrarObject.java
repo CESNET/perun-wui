@@ -195,6 +195,26 @@ public class RegistrarObject extends JavaScriptObject {
 	}
 
 	/**
+	 * Returns URL to the new Registrar application with parameters to form of the VO, so that user can be redirected
+	 * there.
+	 * Returns null if the VO is still configured to old Registrar
+	 * @return URL of new Registrar with that form
+	 */
+    public final String getVoNewRegistrarUrl() {
+      return JsUtils.getNativePropertyString(this, "newRegistrarUrl");
+    }
+
+	/**
+	 * Returns URL to the new Registrar application with parameters to form of the group, so that user can be redirected
+	 * there.
+	 * Returns null if the group is still configured to old Registrar
+	 * @return URL of new Registrar with that form
+	 */
+    public final String getGroupNewRegistrarUrl() {
+      return JsUtils.getNativePropertyString(this, "groupNewRegistrarUrl");
+    }
+
+	/**
 	 * Set Group initial form content to the registrar object
 	 *
 	 * @param form form to be set

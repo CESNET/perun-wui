@@ -10,6 +10,7 @@ import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.uibinder.client.UiHandler;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
@@ -70,15 +71,23 @@ import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.AnchorListItem;
 import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.ButtonGroup;
+import org.gwtbootstrap3.client.ui.Column;
 import org.gwtbootstrap3.client.ui.DropDownMenu;
+import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.Icon;
 import org.gwtbootstrap3.client.ui.Image;
 import org.gwtbootstrap3.client.ui.Modal;
 import org.gwtbootstrap3.client.ui.ModalBody;
 import org.gwtbootstrap3.client.ui.ModalFooter;
 import org.gwtbootstrap3.client.ui.constants.AlertType;
 import org.gwtbootstrap3.client.ui.constants.ButtonType;
+import org.gwtbootstrap3.client.ui.constants.ColumnOffset;
+import org.gwtbootstrap3.client.ui.constants.ColumnSize;
+import org.gwtbootstrap3.client.ui.constants.HeadingSize;
+import org.gwtbootstrap3.client.ui.constants.IconSize;
 import org.gwtbootstrap3.client.ui.constants.IconType;
 import org.gwtbootstrap3.client.ui.constants.ModalBackdrop;
+import org.gwtbootstrap3.client.ui.constants.Pull;
 import org.gwtbootstrap3.client.ui.constants.Toggle;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 import org.gwtbootstrap3.extras.notify.client.constants.NotifyType;
@@ -229,6 +238,11 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 						}
 					}
 				}
+
+                if (registrar.getVoNewRegistrarUrl() != null) {
+                  redirectAfterTimeout(registrar.getVoNewRegistrarUrl());
+                  return;
+                }
 
 				if (registrar.getException() != null) {
 					if ("VoNotExistsException".equals(registrar.getException().getName()) ||
@@ -480,7 +494,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 		} else if (voExtensionFormExists(registrar)) {
 
-			if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
+			if ((isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) ||
+                  registrar.getGroupNewRegistrarUrl() != null ) { // if redirect url, just add, redirect, and let new reg decide
 				if (!neverExp) {
 					for (ApplicationFormItemData item : registrar.getVoFormExtension()) {
 						if (!item.getFormItem().getType()
@@ -573,6 +588,42 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		} else {
 			return false;
 		}
+	}
+
+    /**
+	 * Clears form and perform redirect after specified time. Also prints info about redirection.
+	 *
+	 * @param redirectTo URL to redirect to
+	 */
+	private void redirectAfterTimeout(String redirectTo) {
+
+		formView.getForm().clear();
+		formView.hideMailVerificationAlert();
+
+		Heading head = new Heading(HeadingSize.H4, translation.redirectingToNewRegistrar());
+		Icon spin = new Icon(IconType.SPINNER);
+		spin.setSpin(true);
+		spin.setSize(IconSize.LARGE);
+		spin.setPull(Pull.LEFT);
+		spin.setMarginTop(10);
+
+		Column column = new Column(ColumnSize.MD_8, ColumnSize.LG_6, ColumnSize.SM_10, ColumnSize.XS_12);
+		column.setOffset(ColumnOffset.MD_2,ColumnOffset.LG_3,ColumnOffset.SM_1,ColumnOffset.XS_0);
+
+		column.add(spin);
+		column.add(head);
+		column.setMarginTop(30);
+
+		formView.getForm().add(column);
+
+		// WAIT 7 SEC BEFORE REDIRECT back to service so that LDAP in Perun is updated
+		Timer timer = new Timer() {
+			@Override
+			public void run() {
+				Window.Location.assign(redirectTo);
+			}
+		};
+		timer.schedule(5000);
 	}
 
 	private boolean appliedToVo(RegistrarObject ro) {

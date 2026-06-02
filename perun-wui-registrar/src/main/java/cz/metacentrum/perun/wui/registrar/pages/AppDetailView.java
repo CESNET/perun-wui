@@ -281,6 +281,8 @@ public class AppDetailView extends ViewImpl implements AppDetailPresenter.MyView
 
 		form.clear();
 
+        // todo consider warning if vo/group is new registrar managed?
+
 		RegistrarManager.getApplicationDataById(app.getId(), new JsonEvents() {
 
 			final JsonEvents retry = this;

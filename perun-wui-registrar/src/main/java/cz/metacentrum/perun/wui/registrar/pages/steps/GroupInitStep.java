@@ -69,6 +69,11 @@ public class GroupInitStep extends FormStep {
 	 */
 	private void continueWithForm(final Events<Result> events) {
 
+      if (registrar.getGroupNewRegistrarUrl() != null) {
+        form.redirectAfterTimeout(registrar.getGroupNewRegistrarUrl());
+        return;
+      }
+
 		if (registrar.getGroupFormInitialException() != null) {
 			result.setException(registrar.getGroupFormInitialException());
 			events.onFinished(getResult());
