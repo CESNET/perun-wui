@@ -537,7 +537,7 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		} else {
 
 			// Because vo initial form can be empty (admin did not create it).
-			if (!isMemberOfVo(registrar) && !appliedToVo(registrar))
+			if (!isMemberOfVo(registrar) && !alreadyAppliedToVo(registrar))
 				stepManager.addStep(new VoInitStep(registrar, form));
 
 			if (isMemberOfGroup(registrar) && groupExtensionFormExists(registrar)) {
@@ -626,15 +626,14 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 		timer.schedule(5000);
 	}
 
-	private boolean appliedToVo(RegistrarObject ro) {
+	private boolean alreadyAppliedToVo(RegistrarObject ro) {
+		if (ro.hasNewRegistrarVoApp()) {
+			return true;
+		}
 		if (ro.getVoFormInitialException() == null) {
 			return false;
 		}
-		if (ro.getVoFormInitialException().getName().equals("DuplicateRegistrationAttemptException")) {
-			return true;
-		} else {
-			return false;
-		}
+      	return ro.getVoFormInitialException().getName().equals("DuplicateRegistrationAttemptException");
 	}
 	private boolean appliedForExtension(RegistrarObject ro) {
 		if (ro.getVoFormExtensionException() == null) {
