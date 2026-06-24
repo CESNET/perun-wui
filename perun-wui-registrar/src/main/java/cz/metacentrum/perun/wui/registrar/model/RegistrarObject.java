@@ -205,6 +205,14 @@ public class RegistrarObject extends JavaScriptObject {
     }
 
 	/**
+	 * Returns TRUE if the user has an open application for the VO in new Registrar
+	 * @return
+	 */
+    public final boolean hasNewRegistrarVoApp() {
+      return JsUtils.getNativePropertyBoolean(this, "newRegistrarVoOpen");
+    }
+
+	/**
 	 * Returns URL to the new Registrar application with parameters to form of the group, so that user can be redirected
 	 * there.
 	 * Returns null if the group is still configured to old Registrar
