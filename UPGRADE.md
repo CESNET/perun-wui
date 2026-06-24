@@ -1,5 +1,17 @@
 Upgrade notes
 
+## [6.2.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.1.0...v6.2.0) (2026-06-24)
+
+
+### Features
+
+* **registrar:** also check whether user is applied to VO in new Registrar ([f9ef8e7](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/f9ef8e7bc914fa2ce7d1dfb195aa8987de2a2e81))
+
+
+### Bug Fixes
+
+* **deps:** update gwtversion to v2.13.1 ([0d2e5f7](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/0d2e5f7eb48a93b2a85a3c30d2940d7abc8b4911))
+
 ## [6.1.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.0.0...v6.1.0) (2026-06-02)
 
 
