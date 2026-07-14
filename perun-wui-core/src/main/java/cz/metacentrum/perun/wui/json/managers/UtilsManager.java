@@ -97,11 +97,6 @@ public class UtilsManager {
 	 * @return Request unique request
 	 */
 	public static Request sendMessageToRT(String subject, String message, JsonEvents events) {
-
-		// appended space after each new line ("\n" to "\n ")
-		// required by RT system to be parsed as multi-line text
-		message = message.replace("\n", "\n ");
-
 		JsonClient client = new JsonClient(events);
 		client.put("queue", "perun");
 		client.put("subject", subject);

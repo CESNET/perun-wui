@@ -368,7 +368,6 @@ public class DataQuotasPresenter extends Presenter<DataQuotasPresenter.MyView, D
 		text += "Reason: " + reason + "\n";
 		text += SIGNATURE;
 
-		text = text.replace("\n", "\n ");
 		return text;
 
 	}
