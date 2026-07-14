@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [6.2.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.2.0...v6.2.1) (2026-07-14)
+
+
+### Bug Fixes
+
+* remove newline formatting when sending rt message ([053ece7](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/053ece7e9ad6bbe124d4c09934b3f577e70d7dbc))
+
 ## [6.2.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.1.0...v6.2.0) (2026-06-24)
 
 
