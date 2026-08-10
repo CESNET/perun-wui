@@ -40,6 +40,13 @@ public class EinfraUsernameValidator extends UsernameValidator {
 			return false;
 		}
 
+		// must not contain consecutive hyphens
+		if (username.getValue().contains("--")) {
+			setResult(Result.INVALID_FORMAT);
+			username.setRawStatus(getTransl().einfraLoginHyphens(), ValidationState.ERROR);
+			return false;
+		}
+
 		// must have valid length
 		if (username.getValue().length() < 2 || username.getValue().length() > 15) {
 			setResult(Result.INVALID_FORMAT);
