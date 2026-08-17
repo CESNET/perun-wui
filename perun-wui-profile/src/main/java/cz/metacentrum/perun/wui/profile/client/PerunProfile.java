@@ -13,7 +13,14 @@ import cz.metacentrum.perun.wui.client.PerunRootPresenter;
 import cz.metacentrum.perun.wui.client.resources.ExceptionLogger;
 import cz.metacentrum.perun.wui.client.resources.PerunResources;
 import cz.metacentrum.perun.wui.client.utils.Utils;
-import cz.metacentrum.perun.wui.pages.*;
+import cz.metacentrum.perun.wui.pages.LogoutPresenter;
+import cz.metacentrum.perun.wui.pages.LogoutView;
+import cz.metacentrum.perun.wui.pages.NotAuthorizedPresenter;
+import cz.metacentrum.perun.wui.pages.NotAuthorizedView;
+import cz.metacentrum.perun.wui.pages.NotFoundPresenter;
+import cz.metacentrum.perun.wui.pages.NotFoundView;
+import cz.metacentrum.perun.wui.pages.NotUserPresenter;
+import cz.metacentrum.perun.wui.pages.NotUserView;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfilePlaceTokens;
 import cz.metacentrum.perun.wui.profile.client.resources.PerunProfileResources;
 import cz.metacentrum.perun.wui.profile.pages.completeinfo.CompleteInfoPresenter;
@@ -34,18 +41,16 @@ import cz.metacentrum.perun.wui.profile.pages.settings.SettingsPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.SettingsView;
 import cz.metacentrum.perun.wui.profile.pages.settings.altPasswords.AltPasswordsPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.altPasswords.AltPasswordsView;
-import cz.metacentrum.perun.wui.profile.pages.settings.samba.SambaPasswordPresenter;
-import cz.metacentrum.perun.wui.profile.pages.settings.samba.SambaPasswordView;
-import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysPresenter;
-import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysView;
-import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyPresenter;
-import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyView;
 import cz.metacentrum.perun.wui.profile.pages.settings.datalimits.DataQuotasPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.datalimits.DataQuotasView;
 import cz.metacentrum.perun.wui.profile.pages.settings.preferredgroupnames.PreferredGroupNamesPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.preferredgroupnames.PreferredGroupNamesView;
 import cz.metacentrum.perun.wui.profile.pages.settings.preferredshells.PreferredShellsPresenter;
 import cz.metacentrum.perun.wui.profile.pages.settings.preferredshells.PreferredShellsView;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.SshKeysView;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyPresenter;
+import cz.metacentrum.perun.wui.profile.pages.settings.sshkeys.newsshkey.NewSshKeyView;
 
 /**
  * Entry point class and GWTP module for Perun WUI User profile.
@@ -80,7 +85,6 @@ public class PerunProfile extends AbstractPresenterModule implements EntryPoint 
 		bindPresenter(PreferredShellsPresenter.class, PreferredShellsPresenter.MyView.class, PreferredShellsView.class, PreferredShellsPresenter.MyProxy.class);
 		bindPresenter(DataQuotasPresenter.class, DataQuotasPresenter.MyView.class, DataQuotasView.class, DataQuotasPresenter.MyProxy.class);
 		bindPresenter(AltPasswordsPresenter.class, AltPasswordsPresenter.MyView.class, AltPasswordsView.class, AltPasswordsPresenter.MyProxy.class);
-		bindPresenter(SambaPasswordPresenter.class, SambaPasswordPresenter.MyView.class, SambaPasswordView.class, SambaPasswordPresenter.MyProxy.class);
 
 		// pre-defined places
 		bindConstant().annotatedWith(DefaultPlace.class).to(PerunProfilePlaceTokens.PERSONAL);
