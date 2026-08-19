@@ -28,7 +28,6 @@ public class SettingsView extends ViewWithUiHandlers<SettingsUiHandlers> impleme
 	@UiField AnchorListItem preferredShells;
 	@UiField AnchorListItem dataQuotas;
 	@UiField AnchorListItem alternativePasswords;
-	@UiField AnchorListItem sambaPassword;
 
 	private void applyHideConfiguration() {
 		setPageVisibility(PerunProfilePlaceTokens.SETTINGS_SSH, sshKeys);
@@ -36,7 +35,6 @@ public class SettingsView extends ViewWithUiHandlers<SettingsUiHandlers> impleme
 		setPageVisibility(PerunProfilePlaceTokens.SETTINGS_PREFERREDSHELLS, preferredShells);
 		setPageVisibility(PerunProfilePlaceTokens.SETTINGS_DATAQUOTAS, dataQuotas);
 		setPageVisibility(PerunProfilePlaceTokens.SETTINGS_ALTPASSWORDS, alternativePasswords);
-		setPageVisibility(PerunProfilePlaceTokens.SETTINGS_SAMBA, sambaPassword);
 	}
 
 	private void setPageVisibility(String name, Widget menuWidget) {

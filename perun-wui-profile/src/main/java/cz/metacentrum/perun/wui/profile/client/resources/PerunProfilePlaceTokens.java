@@ -26,7 +26,6 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 	public static final String SETTINGS_DATAQUOTAS = SETTINGS + "_dataquotas";
 	public static final String SETTINGS_ALTPASSWORDS = SETTINGS + "_altpasswords";
 	public static final String SETTINGS_MAILING = SETTINGS + "_mailing";
-	public static final String SETTINGS_SAMBA = SETTINGS + "_samba";
 
 	public static String getCompleteInfo() {
 		return COMPLETE_INFO;
@@ -90,10 +89,6 @@ public class PerunProfilePlaceTokens extends PlaceTokens {
 
 	public static String getSettingsMailing() {
 		return SETTINGS_MAILING;
-	}
-
-	public static String getSettingsSamba() {
-		return SETTINGS_SAMBA;
 	}
 
 }
