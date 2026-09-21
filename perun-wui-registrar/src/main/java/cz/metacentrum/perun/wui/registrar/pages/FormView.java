@@ -770,11 +770,15 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 					String entityId = source.getName();
 
-					// skip more identities from same IdP or hidden IdPs
-					if (offeredIdPs.contains(entityId) || hiddenProxies.contains(entityId)) continue;
+					// skip more identities from the same IdP or
+					// skip all identities from hidden IdPs (config "registrar.hideProxy")
+					if (offeredIdPs.contains(entityId) || hiddenProxies.contains(entityId)) {
+						continue;
+					}
 
-					// IF Perun is behind proxy, offer only allowed proxies !!!
-					// IF not proxy, show all
+					// Process IdP only if there is no filter or IdP is allowed by filter (config "registrar.enforceProxy").
+					// This allows us to advertise joining identities using only Proxy IdP as a whole and not pass source IdP identities
+					// (when proxy doesn't understand our idp filter)
 					if (proxies.isEmpty() || proxies.contains(entityId)) {
 
 						offeredIdPs.add(entityId);
@@ -789,11 +793,24 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 								RegistrarManager.getConsolidatorToken(new JsonEvents() {
 									@Override
 									public void onFinished(JavaScriptObject jso) {
-										// FINAL URL must logout from SP, login to SP using specified IdP, redirect to IC and after that return to application form
+										// FINAL URL must logout from SP, login to SP using specified IdP (or as proxy with empty filter)
+										// redirect back to IC and after that return to registrar application form
 										String token = ((BasicOverlayObject) jso).getString();
 										String consolidatorUrl = Utils.getIdentityConsolidatorLink("fed", true) + URL.encodeQueryString("&token=" + token);
-										String authnContextClassRef = PerunConfiguration.getAuthnContextClassRef();
-										String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl() + URL.encodeQueryString("?authnContextClassRef="+authnContextClassRef+"%20urn:cesnet:proxyidp:idpentityid:" + finalEntityId + "&target=" + consolidatorUrl);
+
+										String authnContextClassRefValue = PerunConfiguration.getAuthnContextClassRef();
+										String authnContextClassRef = (!authnContextClassRefValue.isEmpty()) ? ("authnContextClassRef=" + authnContextClassRefValue) : "";
+
+										String redirectUrl = PerunConfiguration.getWayfSpLogoutUrl() + "?return=" + PerunConfiguration.getWayfSpLoginUrl();
+
+										if (proxies.contains(entityId)) {
+											// IF we filter IdPs to join with, they are Proxy IdPs and we do not pass any IdP filter as proxies usually don't understand them.
+											// do not pass authnContextClassRef if empty
+											redirectUrl =  redirectUrl + URL.encodeQueryString(((!authnContextClassRefValue.isEmpty()) ? ("?" + authnContextClassRef +"&") : ("?")) + "target=" + consolidatorUrl);
+										} else {
+											// when IDPs are not filtered, we always send "filter" to proxy
+											redirectUrl = redirectUrl + URL.encodeQueryString("?authnContextClassRef="+authnContextClassRefValue+"%20urn:cesnet:proxyidp:idpentityid:" + finalEntityId + "&target=" + consolidatorUrl);
+										}
 										Window.Location.assign(redirectUrl);
 									}
 
