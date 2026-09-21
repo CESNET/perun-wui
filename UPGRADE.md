@@ -1,5 +1,30 @@
 Upgrade notes
 
+## [6.3.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.2.1...v6.3.0) (2026-09-21)
+
+
+### ⚠ BREAKING CHANGES
+
+* need to update documentation/configuration
+
+### Features
+
+* added basic branding for CESID ([d2304b0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/d2304b0de4fb1508963af084adb98b2df3625b4f))
+* **consolidator:** added template for LS CAS proxy ([0af2270](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/0af2270d6d5e62fc9823474603a3cc854e034945))
+* **registrar:** add hyphens check to einfra login ([1725d3a](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/1725d3a22fa9d9b49efeeafc285b2b2da20f2dd9))
+
+
+### Bug Fixes
+
+* matomo analytics uses specific port in MU template ([182b7a6](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/182b7a662ffae775298486945bc1455864338f23))
+* **registrar:** enforce using CESID proxy when on CESID branding ([bf60361](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/bf60361eda2e97a34b9ad0c671130374b87189d6))
+* remove reference to EGI from LS footer ([4dc1a3e](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/4dc1a3e8596a4122906729903c75c465e741554e))
+
+
+### Others
+
+* remove support for samba password ([5d8c402](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/5d8c402d9e9bc6bce13b8bf6c8e49f60351412d4))
+
 ## [6.2.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.2.0...v6.2.1) (2026-07-14)
 
 
