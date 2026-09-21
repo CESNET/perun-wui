@@ -75,15 +75,11 @@
 
             <!-- GWT Maven Plugin -->
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                                <groupId>net.ltgt.gwt.maven</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <!-- Plugin configuration. There are many available options, see
-                  gwt-maven-plugin documentation at codehaus.org -->
                 <configuration>
-	                <module>cz.metacentrum.perun.wui.admin.perun-wui-admin</module>
-                    <runTarget>PerunWui.html</runTarget>
-                    <hostedWebapp>${webappDirectory}</hostedWebapp>
-                    <outputDirectory>${webappDirectory}</outputDirectory>
+	                <moduleName>cz.metacentrum.perun.wui.admin.perun-wui-admin</moduleName>
+                                        <webappDirectory>${webappDirectory}</webappDirectory>
                 </configuration>
 
             </plugin>
@@ -122,6 +118,12 @@
 		    <groupId>org.gwtproject</groupId>
 		    <artifactId>gwt-user</artifactId>
 	    </dependency>
+
+        <dependency>
+            <groupId>org.gwtproject</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
 	    <!-- GWT Bootstrap 3 -->
 

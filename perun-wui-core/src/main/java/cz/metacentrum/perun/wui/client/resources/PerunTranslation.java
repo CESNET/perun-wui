@@ -285,8 +285,11 @@ public interface PerunTranslation extends Messages {
 	@DefaultMessage("Login must <b>start with lower-case letter!</b>")
 	public String adminMetaLoginStart();
 
-	@DefaultMessage("Login can contain only<ul><li>lower-cased non-accented letters<li>digits<li>hyphens and underscores</ul>")
+	@DefaultMessage("Login can contain only<ul><li>lower-cased non-accented letters<li>digits<li>hyphens and underscores (no consecutive hyphens)</ul>")
 	public String einfraLoginFormat();
+
+	@DefaultMessage("Login <b>cannot</b> contain two or more hyphens in succession!")
+	public String einfraLoginHyphens();
 
 	@DefaultMessage("Login can contain only<ul><li>lower-cased non-accented letters<li>digits<li>hyphens and underscores</ul>")
 	public String adminMetaLoginFormat();
