@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [6.3.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.3.0...v6.3.1) (2026-09-22)
+
+
+### Reverts
+
+* chore: migrate to newer gwt plugin ([243c8fc](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/243c8fc5f143d9b7ab3994593ea185b49ffe83a0))
+
 ## [6.3.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.2.1...v6.3.0) (2026-09-21)
 
 
