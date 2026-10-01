@@ -152,6 +152,8 @@
 			"wayf.spLogoutUrl" : "https://signup.cesid.cesnet.cz/CesidConsolidator.sso/Logout",
 			// allow similar users join only over CESID proxy - FIXME - all users need to have identity with this proxy !!
 			"registrar.enforceProxy": "https://login.cesid.cesnet.cz/cas/idp",
+			// FIXME - we need to override hidden proxies as we by default hide all of them - so remove CESID from the list
+			"registrar.hideProxy": "https://idp.hostel.eduid.cz/idp/shibboleth,https://login.cesnet.cz/idp/,https://login.e-infra.cz/idp/",
 			// FIXME - clear context class ref so there is no filter passed to CESID Proxy
 			"wayf.authnContextClassRef": ""
 		}
