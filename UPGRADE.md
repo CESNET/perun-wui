@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [6.3.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.3.1...v6.3.2) (2026-10-05)
+
+
+### Bug Fixes
+
+* **registrar:** do not hide cesid proxy from options ([c101fe8](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/c101fe8448336a0f455a438049f754b12d0eca85))
+
 ## [6.3.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.3.0...v6.3.1) (2026-09-22)
 
 
