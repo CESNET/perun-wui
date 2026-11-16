@@ -30,6 +30,8 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.common.RTMessage;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextArea;
 import cz.metacentrum.perun.wui.widgets.boxes.ExtendedTextBox;
+import java.util.ArrayList;
+import java.util.List;
 import org.gwtbootstrap3.client.shared.event.ModalHiddenEvent;
 import org.gwtbootstrap3.client.shared.event.ModalHiddenHandler;
 import org.gwtbootstrap3.client.shared.event.ModalShownEvent;
@@ -75,14 +77,17 @@ public class ErrorReporter {
 	@UiField FormGroup formGroupFrom;
 	@UiField Text heading;
 	private Modal widget;
+    private List<Integer> passwordItemIds = new ArrayList<>();
 
 	public ErrorReporter(final PerunException ex) {
-		this(ex, null);
+		this(ex, null, new ArrayList<>());
 	}
 
-	public ErrorReporter(final PerunException ex, final PerunButton originalReportButton) {
+	public ErrorReporter(final PerunException ex, final PerunButton originalReportButton,
+                         List<Integer> passwordItemIdsArg) {
 
 		widget = ourUiBinder.createAndBindUi(this);
+        passwordItemIds = passwordItemIdsArg;
 
 		subject.setText("Reported error: " + ((ex.getRequestURL() != null) ? ex.getRequestURL() : ex.getName()) + " (" +ex.getErrorId() + ")");
 		message.setHeight("100px");
@@ -304,7 +309,7 @@ public class ErrorReporter {
 	 *
 	 * @param object object to clear
 	 */
-	private static void clearPasswords(JSONObject object) {
+	private void clearPasswords(JSONObject object) {
 
 		if (object == null) return;
 
@@ -341,6 +346,14 @@ public class ErrorReporter {
 					}
 				}
 			}
+            JSONObject data = object.get("data").isObject();
+            if (data != null) {
+                for (Integer id : passwordItemIds) {
+                    if (data.containsKey(String.valueOf(id))) {
+                      data.put(String.valueOf(id), new JSONString(""));
+                    }
+                }
+            }
 		}
 	}
 

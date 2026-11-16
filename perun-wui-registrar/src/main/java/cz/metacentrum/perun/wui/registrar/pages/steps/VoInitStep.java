@@ -6,6 +6,7 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.common.PerunPrincipal;
 import cz.metacentrum.perun.wui.registrar.model.RegistrarObject;
+import cz.metacentrum.perun.wui.registrar.pages.FormView;
 import cz.metacentrum.perun.wui.registrar.widgets.PerunForm;
 
 /**
@@ -42,6 +43,7 @@ public class VoInitStep extends FormStep {
 
 		form.setApp(Application.createNew(registrar.getVo(), null, Application.ApplicationType.INITIAL,
 				getFedInfo(pp, Window.Location.getParameter("targetnew")), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa(), pp.getUser()));
+        form.setRedirectUrl(Window.Location.getParameter("targetnew"));
 
 		form.setOnSubmitEvent(getOnSubmitEvent(events));
 

@@ -17,6 +17,7 @@ import cz.metacentrum.perun.wui.model.beans.Vo;
 import cz.metacentrum.perun.wui.registrar.client.resources.PerunRegistrarTranslation;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,6 +34,7 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 	private String mailToVerify = "";
 	private Application application;
 	private PerunRegistrarTranslation trans = GWT.create(PerunRegistrarTranslation.class);
+    private static final List<String> validationExceptions = List.of("ForeignItemsDetectedException", "IllegalEmbeddedGroupException", "RequiredItemMissingException", "RegexValidationFailedException", "SelectionValidationFailedException", "ItemVisibilityBrokenException");
 
 	public void resolve(PerunException exception, GeneralObject bean) {
 		this.exception = exception;
@@ -171,7 +173,7 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			setInfo(trans.applicationNotCreated(), null, false);
 
-		}  else if ("RegistrarException".equalsIgnoreCase(exception.getName())) {
+		} else if ("RegistrarException".equalsIgnoreCase(exception.getName())) {
 
 			setInfo(trans.registrarException(getBeanName()), null);
 
@@ -193,7 +195,11 @@ public class ExceptionResolverImpl implements ExceptionResolver {
 
 			setInfo(trans.unableToSubmit(), trans.error0(), false);
 
-		} else {
+		} else if (validationExceptions.contains(exception.getName())) {
+
+            setInfo(trans.validationFailed(), exception.getMessage(), false);
+
+        }  else {
 
 			if (JsUtils.checkParseInt(exception.getErrorId())) {
 				int exceptionId = Integer.parseInt(exception.getErrorId());
