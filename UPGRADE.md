@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [6.4.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.3.2...v6.4.0) (2026-11-19)
+
+
+### Features
+
+* **registrar:** adapt WUI to changes to the backend API ([d1b9a48](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/d1b9a4878efc8937eec7d92104aa779b604da3b7))
+
 ## [6.3.2](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.3.1...v6.3.2) (2026-10-05)
 
 
