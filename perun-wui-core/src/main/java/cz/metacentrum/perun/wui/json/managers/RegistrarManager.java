@@ -6,6 +6,7 @@ import cz.metacentrum.perun.wui.json.JsonEvents;
 import cz.metacentrum.perun.wui.model.beans.Application;
 import cz.metacentrum.perun.wui.model.beans.ApplicationFormItemData;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -243,24 +244,43 @@ public class RegistrarManager {
 	/**
 	 * Get application data by application ID.
 	 *
-	 * @param application Application to create
+	 * @param voId target vo
+	 * @param groupId target group
+	 * @param type type of the application, INITIAL/EXTENSION
+	 * @param redirectUrl redirectUrl of the application
+	 * @param externalParams any external parameters
+	 * @param invitationToken invitation token if defined (for group application)
 	 * @param data Data from application form items to save
 	 * @param events Events done on callback
 	 *
 	 * @return Request unique request
 	 */
-	public static Request createApplication(Application application, List<ApplicationFormItemData> data, String invitationToken, JsonEvents events) {
+	public static Request createApplication(int voId, Integer groupId, List<ApplicationFormItemData> data,
+                                            Application.ApplicationType type, String redirectUrl,
+                                            Map<String,List<String>> externalParams,
+                                            String invitationToken, JsonEvents events) {
 
 		JsonClient client = new JsonClient(true, events);
-		if (application != null) {
-			client.put("app", application);
-
-			if (application.getGroup() != null  && invitationToken != null) {
-				client.put("token", invitationToken);
-			}
-		}
+        client.put("voId", voId);
+        if (groupId != null) {
+          client.put("groupId", groupId);
+          if (invitationToken != null) {
+            client.put("token", invitationToken);
+          }
+        }
+        if (externalParams != null) {
+          client.put("externalParams", externalParams);
+        }
+        if (redirectUrl != null) {
+          client.put("redirectUrl", redirectUrl);
+        }
+        client.put("appType", type.toString());
 		if (data != null) {
-			client.put("data", data);
+            Map<Integer, String> dataMap = new HashMap<>();
+            for (ApplicationFormItemData itemData : data) {
+              dataMap.put(itemData.getFormItem().getId(), itemData.getValue());
+            }
+			client.putIntegerStringMap("data", dataMap);
 		}
 		return client.call(REGISTRAR_MANAGER + "submitApplication");
 

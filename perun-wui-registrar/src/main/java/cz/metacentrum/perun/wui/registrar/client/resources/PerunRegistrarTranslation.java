@@ -416,6 +416,9 @@ public interface PerunRegistrarTranslation extends PerunTranslation {
 	@DefaultMessage("Application couldn`t been created.")
 	public String applicationNotCreated();
 
+	@DefaultMessage("Application couldn`t been created due to failing item validation.")
+	public String validationFailed();
+
 	@DefaultMessage("Your application to {0} has been submitted but there were an unexpected error. Your administrator has been informed and he will deal with it.")
 	public String registrarException(String voOrGroupName);
 

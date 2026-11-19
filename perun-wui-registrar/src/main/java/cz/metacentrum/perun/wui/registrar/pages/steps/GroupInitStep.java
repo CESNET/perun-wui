@@ -94,7 +94,7 @@ public class GroupInitStep extends FormStep {
 
 		form.setApp(Application.createNew(registrar.getVo(), registrar.getGroup(), Application.ApplicationType.INITIAL,
 				getFedInfo(localPP, Window.Location.getParameter("targetnew")), localPP.getActor(), localPP.getExtSource(), localPP.getExtSourceType(), localPP.getExtSourceLoa(), localPP.getUser()));
-
+        form.setRedirectUrl(Window.Location.getParameter("targetnew"));
 		form.setOnSubmitEvent(getOnSubmitEvent(events));
 
 		form.performAutoSubmit();

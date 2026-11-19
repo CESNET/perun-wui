@@ -13,6 +13,7 @@ import com.google.gwt.http.client.Response;
 import com.google.gwt.http.client.URL;
 import com.google.gwt.json.client.JSONArray;
 import com.google.gwt.json.client.JSONBoolean;
+import com.google.gwt.json.client.JSONNull;
 import com.google.gwt.json.client.JSONNumber;
 import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONString;
@@ -224,6 +225,28 @@ public class JsonClient {
 		}
 
 	}
+
+    /**
+     * Put custom parameter into payload of a request.
+     *
+     * @param key key (parameter name)
+     * @param data Map<Integer, String> data to send
+     */
+    public void putIntegerStringMap(String key, Map<Integer, String> data) {
+
+        JSONObject jsonObj = new JSONObject();
+
+        if (data != null && !data.isEmpty()) {
+            for (Map.Entry<Integer, String> entry : data.entrySet()) {
+                jsonObj.put(
+                    String.valueOf(entry.getKey()),
+                    entry.getValue() != null ? new JSONString(entry.getValue()) : JSONNull.getInstance()
+                );
+            }
+        }
+
+        put(key, (JSONValue) jsonObj);
+    }
 
 	/**
 	 * Put custom parameter into payload of a request.

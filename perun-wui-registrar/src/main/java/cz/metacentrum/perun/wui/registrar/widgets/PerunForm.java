@@ -69,6 +69,7 @@ public class PerunForm extends FieldSet {
 	private FormState formState = FormState.PREFILLED;
 	private boolean seeHiddenItems;
 	private Application app;
+    private String redirectUrl;
 	private Invitation invitation = null;
 	private JsonEvents onSubmitEvent;
 	private PerunTranslation perunTranslation = GWT.create(PerunTranslation.class);
@@ -366,7 +367,8 @@ public class PerunForm extends FieldSet {
 	 */
 	private void createApplication(final PerunButton button) {
 
-		RegistrarManager.createApplication(app, getFormItemDataToSubmit(),
+		RegistrarManager.createApplication(app.getVo().getId(), app.getGroup() == null ? null : app.getGroup().getId(),
+            getFormItemDataToSubmit(), app.getType(), getRedirectUrl(), FormView.getExternalParams(),
 			invitation != null ? invitation.getToken() : null, new JsonEvents() {
 			@Override
 			public void onFinished(JavaScriptObject jso) {
@@ -522,6 +524,14 @@ public class PerunForm extends FieldSet {
 	public void setApp(Application app) {
 		this.app = app;
 	}
+
+    public String getRedirectUrl() {
+      return redirectUrl;
+    }
+
+    public void setRedirectUrl(String redirectUrl) {
+      this.redirectUrl = redirectUrl;
+    }
 
 	public Invitation getInvitation() {
 		return invitation;

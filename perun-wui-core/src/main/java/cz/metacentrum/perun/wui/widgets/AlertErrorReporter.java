@@ -10,6 +10,8 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHTML;
 import cz.metacentrum.perun.wui.client.resources.PerunTranslation;
 import cz.metacentrum.perun.wui.model.PerunException;
+import java.util.ArrayList;
+import java.util.List;
 import org.gwtbootstrap3.client.ui.Alert;
 import org.gwtbootstrap3.client.ui.ButtonToolBar;
 import org.gwtbootstrap3.client.ui.base.HasType;
@@ -40,6 +42,8 @@ public class AlertErrorReporter extends Div implements HasHTML, HasType<AlertTyp
 	private HandlerRegistration lastRetryHandler;
 
 	private PerunException exception;
+    private ErrorReporter errorReporter;
+    private List<Integer> passwordItemsIds = new ArrayList<>();
 
 	/**
 	 * Create new default AlertErrorReporter instance
@@ -56,8 +60,8 @@ public class AlertErrorReporter extends Div implements HasHTML, HasType<AlertTyp
 			@Override
 			public void onClick(ClickEvent event) {
 				if (exception != null) {
-					ErrorReporter reportBox = new ErrorReporter(exception, report);
-					reportBox.getWidget().show();
+					errorReporter = new ErrorReporter(exception, report, passwordItemsIds);
+					errorReporter.getWidget().show();
 				}
 			}
 		});
@@ -108,6 +112,10 @@ public class AlertErrorReporter extends Div implements HasHTML, HasType<AlertTyp
 			}
 		}
 	}
+
+    public void setPasswordItemsIds(List<Integer> passwordItemsIds) {
+      this.passwordItemsIds = passwordItemsIds;
+    }
 
 	/**
 	 * Get button toolbar for adding more action buttons

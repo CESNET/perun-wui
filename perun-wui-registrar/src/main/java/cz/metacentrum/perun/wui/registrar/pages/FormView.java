@@ -219,6 +219,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 			public void onFinished(JavaScriptObject jso) {
 
 				final RegistrarObject registrar = jso.cast();
+                // set password its to reporter instances so they can filter them out from requests
+                mailVerificationNotice.setPasswordItemsIds(registrar.getAllPasswordItemsIds());
+                notice.setPasswordItemsIds(registrar.getAllPasswordItemsIds());
 
 				// recreate VO and group
 				vo = registrar.getVo();
