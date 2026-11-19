@@ -57,7 +57,7 @@ public class GroupExtStep extends FormStep {
 
 		form.setApp(Application.createNew(registrar.getVo(), registrar.getGroup(), Application.ApplicationType.EXTENSION,
 				getFedInfo(pp, Window.Location.getParameter("targetextended")), pp.getActor(), pp.getExtSource(), pp.getExtSourceType(), pp.getExtSourceLoa(), pp.getUser()));
-
+        form.setRedirectUrl(Window.Location.getParameter("targetextended"));
 		form.setOnSubmitEvent(getOnSubmitEvent(events));
 
 		form.performAutoSubmit();

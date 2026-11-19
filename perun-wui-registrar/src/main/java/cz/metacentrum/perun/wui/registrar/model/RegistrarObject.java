@@ -7,6 +7,8 @@ import cz.metacentrum.perun.wui.model.PerunException;
 import cz.metacentrum.perun.wui.model.beans.*;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Main Registrar object containing all necessary data to resolve
@@ -242,6 +244,27 @@ public class RegistrarObject extends JavaScriptObject {
 		}
 
 	}
+
+    public final List<Integer> getAllPasswordItemsIds() {
+      List<Integer> result = new ArrayList<>();
+      result.addAll(getVoFormInitial().stream()
+                        .filter(itemData -> itemData.getFormItem().getType().equals(
+                            ApplicationFormItem.ApplicationFormItemType.PASSWORD)).map(itemData -> itemData.getFormItem().getId())
+                                 .collect(Collectors.toList()));
+      result.addAll(getVoFormExtension().stream()
+                        .filter(itemData -> itemData.getFormItem().getType().equals(
+                            ApplicationFormItem.ApplicationFormItemType.PASSWORD)).map(itemData -> itemData.getFormItem().getId())
+                                 .collect(Collectors.toList()));
+      result.addAll(getGroupFormInitial().stream()
+                        .filter(itemData -> itemData.getFormItem().getType().equals(
+                            ApplicationFormItem.ApplicationFormItemType.PASSWORD)).map(itemData -> itemData.getFormItem().getId())
+                                 .collect(Collectors.toList()));
+      result.addAll(getGroupFormExtension().stream()
+                        .filter(itemData -> itemData.getFormItem().getType().equals(
+                            ApplicationFormItem.ApplicationFormItemType.PASSWORD)).map(itemData -> itemData.getFormItem().getId())
+                                 .collect(Collectors.toList()));
+      return result;
+    }
 
 	/**
 	 * Set native JS array of ApplicationFormItems.
