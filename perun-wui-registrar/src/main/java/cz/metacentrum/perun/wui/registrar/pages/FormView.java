@@ -743,8 +743,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 				if (source.getType().equals(ExtSource.ExtSourceType.X509.getType())) {
 
-					AnchorListItem link = new AnchorListItem(Utils.convertCertCN(source.getName()));
-					certItems.put(link, new ClickHandler() {
+					final AnchorListItem link = new AnchorListItem(Utils.convertCertCN(source.getName()));
+					ClickHandler certHandler = new ClickHandler() {
 						@Override
 						public void onClick(ClickEvent event) {
 							RegistrarManager.getConsolidatorToken(new JsonEvents() {
@@ -765,7 +765,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 								}
 							});
 						}
-					});
+					};
+					link.addClickHandler(certHandler);
+					certItems.put(link, certHandler);
 
 
 
@@ -788,8 +790,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 
 						final String finalEntityId = entityId;
 
-						AnchorListItem link = new AnchorListItem(Utils.translateIdp(entityId));
-						idpItems.put(link, new ClickHandler() {
+						final AnchorListItem link = new AnchorListItem(Utils.translateIdp(entityId));
+						final ClickHandler idpHandler = new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
 
@@ -828,7 +830,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 									}
 								});
 							}
-						});
+						};
+						link.addClickHandler(idpHandler);
+						idpItems.put(link, idpHandler);
 
 					}
 
@@ -843,8 +847,8 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 						// others goes to /krb/ on their respective instances
 						final String prefix = toBePrefix;
 
-						AnchorListItem link = new AnchorListItem(Utils.translateKerberos(source.getName()));
-						othersItems.put(link, new ClickHandler() {
+						final AnchorListItem link = new AnchorListItem(Utils.translateKerberos(source.getName()));
+						final ClickHandler othersHandler = new ClickHandler() {
 							@Override
 							public void onClick(ClickEvent event) {
 
@@ -867,7 +871,9 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 									}
 								});
 							}
-						});
+						};
+						link.addClickHandler(othersHandler);
+						othersItems.put(link, othersHandler);
 
 					}
 
@@ -878,7 +884,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					if (certItems.size() > 1) {
 						ft.setWidget(row, 1, certGroup);
 						for (AnchorListItem link : certItems.keySet()) {
-							link.addClickHandler(certItems.get(link));
 							menu.add(link);
 						}
 					} else {
@@ -895,7 +900,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					if (idpItems.size() > 1) {
 						ft.setWidget(row, 2, idpGroup);
 						for (AnchorListItem link : idpItems.keySet()) {
-							link.addClickHandler(idpItems.get(link));
 							menu2.add(link);
 						}
 					} else {
@@ -911,7 +915,6 @@ public class FormView extends ViewImpl implements FormPresenter.MyView {
 					if (othersItems.size() > 1) {
 						ft.setWidget(row, 3, othersGroup);
 						for (AnchorListItem link : othersItems.keySet()) {
-							link.addClickHandler(othersItems.get(link));
 							menu3.add(link);
 						}
 					} else {

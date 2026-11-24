@@ -33,6 +33,39 @@ public interface PerunConsolidatorTranslation extends PerunTranslation {
 
 	/* --  JOIN PAGE -- */
 
+	@DefaultMessage("Link identity")
+	public String joinConfirmHeading();
+
+	@DefaultMessage("You are about to link this identity with your account.")
+	public String joinConfirmQuestion();
+
+	@DefaultMessage("Continue only if you requested this action and you recognize the identity.")
+	public String joinConfirmWarning();
+
+	@DefaultMessage("Identity: {0}")
+	public String joinConfirmIdentity(String identity);
+
+	@DefaultMessage("Identity provider: {0}")
+	public String joinConfirmFriendlyProvider(String provider);
+
+	@DefaultMessage("Email: {0}")
+	public String joinConfirmEmail(String email);
+
+	@DefaultMessage("Organization: {0}")
+	public String joinConfirmOrganization(String organization);
+
+	@DefaultMessage("Identifier: {0}")
+	public String joinConfirmIdentifier(String identifier);
+
+	@DefaultMessage("Provider: {0}")
+	public String joinConfirmProvider(String provider);
+
+	@DefaultMessage("The identity data cannot be loaded. Please try again.")
+	public String joinInvalidPreview();
+
+	@DefaultMessage("Link identity")
+	public String joinConfirmLink();
+
 	@DefaultMessage("Continue")
 	public String finishButtonContinue();
 
