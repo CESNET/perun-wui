@@ -321,6 +321,22 @@ public class RegistrarManager {
 	}
 
 	/**
+	 * Get identity represented by consolidator token without consuming it.
+	 *
+	 * @param token Token used to identify some identity
+	 * @param events Events done on callback
+	 *
+	 * @return Request unique request
+	 */
+	public static Request getIdentityByConsolidatorToken(String token, JsonEvents events) {
+
+		JsonClient client = new JsonClient(true, events);
+		client.put("token", token);
+		return client.call(REGISTRAR_MANAGER + "getIdentityByConsolidatorToken");
+
+	}
+
+	/**
 	 * Verify email address provided on registration form.
 	 *
 	 * @param i Token used to identify email to verify
