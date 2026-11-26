@@ -1,5 +1,12 @@
 Upgrade notes
 
+## [6.4.1](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.4.0...v6.4.1) (2026-11-26)
+
+
+### Bug Fixes
+
+* **consolidator:** confirmation dialog when consolidating via token ([f5d94d6](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/commit/f5d94d6d5fb48d193213eced82e1bb8db795afa6))
+
 ## [6.4.0](https://gitlab.ics.muni.cz/perun/perun-idm/perun-wui/compare/v6.3.2...v6.4.0) (2026-11-19)
 
 
